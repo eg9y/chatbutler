@@ -1,0 +1,40 @@
+{
+  "env": {
+    "browser": true,
+    "es6": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:react/jsx-runtime",
+    "plugin:prettier/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 2018,
+    "sourceType": "module"
+  },
+  // disalbe reac
+"plugins": ["react", "@typescript-eslint", "eslint-plugin-react-hooks"],
+  "root": true,
+  "rules": {
+    "react-hooks/exhaustive-deps": "error",
+    "no-var": "error",
+    "brace-style": "error",
+    "prefer-template": "error",
+    "space-before-blocks": "error",
+    "import/prefer-default-export": "off",
+    "prettier/prettier": ["error", { "endOfLine": "auto" }],
+    "@typescript-eslint/ban-ts-comment": "warn"
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  }
+}

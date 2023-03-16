@@ -2,11 +2,7 @@ import { Switch } from '@headlessui/react';
 import { useState } from 'react';
 import { CustomNode } from '../../nodes/types/NodeTypes';
 import { parsePromptInputs } from '../../openai/openai';
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function classNames(...classes: any) {
-	return classes.filter(Boolean).join(' ');
-}
+import { classNames } from '../../utils/classNames';
 
 export default function OutputPanel({ selectedNode }: { selectedNode: CustomNode | null }) {
 	const [showPromptInOutput, setShowPromptInOutput] = useState(false);

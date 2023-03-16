@@ -3,59 +3,20 @@ import useStore, { selector } from '../../../../../store/useStore';
 import { shallow } from 'zustand/shallow';
 import { PlayIcon } from '@heroicons/react/20/solid';
 import { LLMPromptNodeDataType, TextInputNodeDataType } from '../../../../../nodes/types/NodeTypes';
-import RunButton from '../../../../../components/RunButton';
 
 export default function TestTab({
 	selectedNode,
-	updateNode,
 }: {
 	selectedNode: Node<LLMPromptNodeDataType>;
 	updateNode: (id: string, data: LLMPromptNodeDataType | TextInputNodeDataType) => void;
 }) {
-	const { updateInputExample, openAIApiKey } = useStore(selector, shallow);
-
-	function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-		e.preventDefault();
-	}
+	const { updateInputExample } = useStore(selector, shallow);
 
 	return (
 		<>
 			{selectedNode && (
 				<div className="text-sm font-medium leading-6 text-gray-900">
-					{/* form div scrollable using tailwind */}
-					<form onSubmit={handleSubmit} className="flex flex-col">
-						<div className="">
-							<p className="">Current inputs</p>
-						</div>
-						<div className="flex flex-col gap-2">
-							{selectedNode.data.inputs.inputNodes.map((inputNode) => (
-								<div key={inputNode.id} className="text-xs text-justify">
-									<p>{inputNode.data.name}</p>
-									<div
-										className="block w-full rounded-md border-0 bg-emerald-200 text-emerald-800 px-2 
-                  shadow-sm ring-1 ring-inset ring-emerald-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:py-1.5"
-									>
-										<p className="trunscate">
-											{inputNode.data?.prompt}
-
-											{/* highlight below with span */}
-											<span className="bg-emerald-300">
-												{inputNode.data.response}
-											</span>
-										</p>
-									</div>
-								</div>
-							))}
-						</div>
-					</form>
-					<RunButton
-						apiKey={openAIApiKey}
-						id={selectedNode.id}
-						data={selectedNode.data}
-						inputNodes={selectedNode.data.inputs.inputNodes}
-						updateNode={updateNode}
-					/>
-					<div className="pt-2 ">
+					<div className="">
 						<p className="">Test inputs</p>
 						{selectedNode.data.inputs.inputExamples.map((inputExample, index) => {
 							return (

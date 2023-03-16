@@ -6,11 +6,17 @@ import { getOpenAIResponse } from '../openAI/openAI';
 import { useState } from 'react';
 
 export default function RunButton({
+	text = 'Run',
+	Icon = (
+		<PlayIcon className={'text-blue-300 -ml-1 mr-1 h-5 w-5 flex-shrink-0'} aria-hidden="true" />
+	),
 	id,
 	data,
 	apiKey,
 	updateNode,
 }: {
+	text?: string;
+	Icon?: JSX.Element;
 	id: string;
 	data: LLMPromptNodeDataType;
 	inputNodes: InputNode[];
@@ -44,7 +50,7 @@ export default function RunButton({
 
 	return (
 		<button
-			className="bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold py-1 px-2 my-2 rounded flex items-center"
+			className="bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold py-1 px-2 my-2 rounded flex items-center"
 			onClick={getResponse()}
 		>
 			{isLoading ? (
@@ -69,12 +75,9 @@ export default function RunButton({
 					></path>
 				</svg>
 			) : (
-				<PlayIcon
-					className={'text-blue-300 -ml-1 mr-1 h-5 w-5 flex-shrink-0'}
-					aria-hidden="true"
-				/>
+				<>{Icon}</>
 			)}
-			<span>Run</span>
+			<span>{text}</span>
 		</button>
 	);
 }

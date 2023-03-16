@@ -42,7 +42,13 @@ export interface RFState {
 	onEdgesDelete: OnEdgesDelete;
 	onNodeDragStop: NodeMouseHandler;
 	onConnect: OnConnect;
-	onAdd: (type: NodeTypesEnum, x: number, y: number) => void;
+	onAdd: (
+		type: NodeTypesEnum,
+		position: {
+			x: number;
+			y: number;
+		},
+	) => void;
 
 	// TODO: type this
 	updateNode: any;
@@ -113,13 +119,18 @@ const useStore = create<RFState>()(
 			onEdgesDelete: (edges: Edge[]) => {
 				// console.log("onEdgesDelete called");
 				const nodes = get().nodes;
-				const edgesToDelete = edges.map((e) => e.source);
 				let selectedNode = get().selectedNode;
+
 				const updatedNodes = nodes.map((node) => {
 					if (node.type === NodeTypesEnum.llmPrompt && node.data.inputs) {
-						node.data.inputs.deleteInputs(edgesToDelete);
-						if (node.id === get().selectedNode?.id) {
-							selectedNode = node;
+						const edgesToDelete = edges
+							.filter((edge) => edge.target === node.id)
+							.map((edge) => edge.source);
+						if (edgesToDelete) {
+							node.data.inputs.deleteInputs(edgesToDelete);
+							if (node.id === get().selectedNode?.id) {
+								selectedNode = node;
+							}
 						}
 					}
 					return node;
@@ -129,20 +140,31 @@ const useStore = create<RFState>()(
 					selectedNode,
 				});
 			},
-			onAdd: (type: NodeTypesEnum, x = 0, y = 0) => {
-				// console.log("onAdd called");
+			onAdd: (
+				type: NodeTypesEnum,
+				position: {
+					x: number;
+					y: number;
+				},
+			) => {
+				const x = position.x;
+				const y = position.y;
 
 				const nodes = get().nodes;
 
 				// TODO: set different defaults based on the node type (e.g. text input won't include a prompt field)
+				const nodeLength = nodes.length + 1;
 				set({
 					nodes: nodes.concat({
-						id: `${type}-${nodes.length + 1}`,
+						id: `${type}-${nodeLength}`,
 						type,
-						position: { x, y },
+						position: {
+							x,
+							y,
+						},
 						data: {
-							name: `test prompt ${nodes.length + 1}`,
-							prompt: `This is a test prompt ${nodes.length + 1}`,
+							name: `test prompt ${nodeLength}`,
+							prompt: `This is a test prompt ${nodeLength}`,
 							model: 'text-davinci-003',
 							temperature: 0.7,
 							max_tokens: 256,

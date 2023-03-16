@@ -5,6 +5,7 @@ import ReactFlow, {
 	BackgroundVariant,
 	Panel,
 	MarkerType,
+	ReactFlowInstance,
 } from 'reactflow';
 
 import 'reactflow/dist/base.css';
@@ -21,7 +22,8 @@ import LLMPromptNode from './nodes/LLMPromptNode';
 import TextInputNode from './nodes/TextInputNode';
 import ConnectionLine from './connection/ConnectionLine';
 import Notification from './components/Notification';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { NodeTypesEnum } from './nodes/types/NodeTypes';
 
 const nodeTypes = { llmPrompt: LLMPromptNode, textInput: TextInputNode };
 
@@ -74,6 +76,41 @@ export default function App() {
 		};
 	}, [isResizing]);
 
+	const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
+	const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
+
+	const handleDrop = useCallback(
+		(event: React.DragEvent<HTMLDivElement>) => {
+			event.preventDefault();
+			if (!(reactFlowWrapper && reactFlowWrapper.current && reactFlowInstance)) {
+				return;
+			}
+
+			const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
+			const type = event.dataTransfer.getData('application/reactflow');
+
+			// check if the dropped element is valid
+			if (typeof type === 'undefined' || !type) {
+				return;
+			}
+
+			let nodeTypeEnum = NodeTypesEnum.llmPrompt;
+			if (type === 'llmPrompt') {
+				nodeTypeEnum = NodeTypesEnum.llmPrompt;
+			} else if (type === 'textInput') {
+				nodeTypeEnum = NodeTypesEnum.textInput;
+			}
+
+			const position = reactFlowInstance.project({
+				x: event.clientX - reactFlowBounds.left,
+				y: event.clientY - reactFlowBounds.top,
+			});
+
+			onAdd(nodeTypeEnum, position);
+		},
+		[onAdd, reactFlowInstance],
+	);
+
 	return (
 		<div
 			style={{
@@ -90,7 +127,13 @@ export default function App() {
 				}}
 				className="absolute z-10 flex max-w-sm"
 			>
-				{nodeView && <LeftSidePanel onAdd={onAdd} />}
+				{nodeView && (
+					<LeftSidePanel
+						onAdd={onAdd}
+						reactFlowWrapper={reactFlowWrapper}
+						reactFlowInstance={reactFlowInstance}
+					/>
+				)}
 				<div
 					style={{
 						height: '30px',
@@ -131,8 +174,13 @@ export default function App() {
 					width: '100vw',
 				}}
 			>
-				<div style={{}}>
+				<div style={{}} ref={reactFlowWrapper}>
 					<ReactFlow
+						onDrop={handleDrop}
+						onInit={(reactFlowInstance: ReactFlowInstance) =>
+							setReactFlowInstance(reactFlowInstance)
+						}
+						onDragOver={(e) => e.preventDefault()}
 						nodes={nodes}
 						edges={edges}
 						onNodesChange={onNodesChange}

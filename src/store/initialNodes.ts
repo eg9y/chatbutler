@@ -11,6 +11,7 @@ const textInputNode = {
 		inputs: new Inputs(),
 	},
 };
+
 export default [
 	textInputNode,
 	{

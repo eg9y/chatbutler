@@ -1,9 +1,25 @@
 import { InputNode } from './NodeTypes';
 
+type InputExample = {
+	[key: string]: {
+		name: string;
+		value: string;
+	};
+};
 export class Inputs {
-	inputs: Set<string> = new Set([]);
-	inputNodes: InputNode[] = [];
-	inputExamples: { [key: string]: string }[] = [{}];
+	inputs: Set<string>;
+	inputNodes: InputNode[];
+	inputExamples: InputExample[];
+
+	constructor(
+		inputs: Set<string> = new Set([]),
+		inputNodes: InputNode[] = [],
+		inputExamples: InputExample[] = [{}],
+	) {
+		this.inputs = inputs;
+		this.inputExamples = [...inputExamples];
+		this.inputNodes = inputNodes;
+	}
 
 	addInput(input: string, nodes: InputNode[]) {
 		this.inputs.add(input);
@@ -13,7 +29,10 @@ export class Inputs {
 			this.inputExamples = this.inputExamples.map((example) => {
 				return {
 					...example,
-					[`${inputNode.data.name}`]: '',
+					[`${inputNode.id}`]: {
+						name: inputNode.data.name,
+						value: '',
+					},
 				};
 			});
 		}
@@ -29,6 +48,12 @@ export class Inputs {
 					return inputNode;
 				}
 				return node;
+			});
+
+			// for each input example, update the name of the key to the new name, and ignore other keys
+			this.inputExamples = this.inputExamples.map((example) => {
+				example[input].name = inputNode.data.name;
+				return example;
 			});
 		}
 
@@ -48,12 +73,13 @@ export class Inputs {
 		return this;
 	}
 
-	handleInputExampleChange(name: string, value: string, index: number) {
+	handleInputExampleChange(id: string, value: string, index: number) {
 		this.inputExamples[index] = {
 			...this.inputExamples[index],
-			[name]: value,
+			[id]: {
+				...this.inputExamples[index][id],
+				value,
+			},
 		};
-
-		console.log(this.inputExamples);
 	}
 }

@@ -1,6 +1,6 @@
 import ReactFlow, {
 	MiniMap,
-	Controls,
+	// Controls,
 	Background,
 	BackgroundVariant,
 	Panel,
@@ -20,6 +20,7 @@ import SettingsPanel from './windows/SettingsPanel/panel';
 import LLMPromptNode from './nodes/LLMPromptNode';
 import TextInputNode from './nodes/TextInputNode';
 import ConnectionLine from './connection/ConnectionLine';
+import Notification from './components/Notification';
 import { useEffect, useState } from 'react';
 
 const nodeTypes = { llmPrompt: LLMPromptNode, textInput: TextInputNode };
@@ -85,9 +86,9 @@ export default function App() {
 				style={{
 					height: '100vh',
 					width: '15vw',
+					maxWidth: '200px',
 				}}
-				// make absolute and place in left side of screen
-				className="absolute z-10 flex"
+				className="absolute z-10 flex max-w-sm"
 			>
 				{nodeView && <LeftSidePanel onAdd={onAdd} />}
 				<div
@@ -147,28 +148,30 @@ export default function App() {
 							animated: true,
 							style: {
 								strokeWidth: 2,
-								// stroke: '#FF0072',
 								stroke: '#002',
 							},
 							markerEnd: {
 								type: MarkerType.ArrowClosed,
 								width: 25,
 								height: 25,
-								// color: "#FF0072",
 								color: '#002',
 							},
 						}}
 					>
-						<Controls
+						{/* <Controls
 							// shift right enough to not be overlapped by LeftSidePanel
+							position="bottom-right"
 							style={{
-								marginLeft: `${nodeView ? '15vw' : '1vw'}`,
+								marginRight: 'calc( + 20px)',
 							}}
-						/>
+						/> */}
 						<MiniMap
 						// shift left enough to not be overlapped by SettingsPanel
 						/>
 						<Background variant={BackgroundVariant.Dots} gap={12} size={1} />
+						<Panel position="top-center">
+							<Notification />
+						</Panel>
 						<Panel
 							position="top-right"
 							className="m-0 cursor-pointer shadow-lg bg-slate-200 border-b-1 border-l-1 border-slate-300"

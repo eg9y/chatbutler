@@ -2,17 +2,17 @@ import { Node } from 'reactflow';
 import useStore, { selector } from '../../../../../store/useStore';
 import { shallow } from 'zustand/shallow';
 import { PlayIcon } from '@heroicons/react/20/solid';
-import { getOpenAIResponse } from '../../../../../openai/openai';
-import { LLMPromptNodeDataType } from '../../../../../nodes/types/NodeTypes';
+import { LLMPromptNodeDataType, TextInputNodeDataType } from '../../../../../nodes/types/NodeTypes';
+import RunButton from '../../../../../components/RunButton';
 
 export default function TestTab({
 	selectedNode,
 	updateNode,
 }: {
 	selectedNode: Node<LLMPromptNodeDataType>;
-	updateNode: (id: string, data: any) => void;
+	updateNode: (id: string, data: LLMPromptNodeDataType | TextInputNodeDataType) => void;
 }) {
-	const { openAIKey, updateInputExample } = useStore(selector, shallow);
+	const { updateInputExample, openAIApiKey } = useStore(selector, shallow);
 
 	function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
@@ -48,53 +48,38 @@ export default function TestTab({
 							))}
 						</div>
 					</form>
-					<button
-						className="bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold py-1 px-2 my-2 rounded flex items-center"
-						onClick={async () => {
-							// const response = await getOpenAIResponse(
-							//   selectedNode.data,
-							//   selectedNode.data.inputs.inputNodes
-							// );
-							// console.log(JSON.stringify(response, null, 2));
-							// const completion = response.data.choices[0].text;
-							// if (completion) {
-							//   selectedNode.data.response = completion;
-							// }
-							selectedNode.data.response = 'test output';
-							console.log(selectedNode.data.response);
-							updateNode(selectedNode.id, selectedNode.data);
-							console.log(selectedNode);
-						}}
-					>
-						<PlayIcon
-							className={'text-blue-300 -ml-1 mr-1 h-5 w-5 flex-shrink-0'}
-							aria-hidden="true"
-						/>
-						<span>Run</span>
-					</button>
+					<RunButton
+						apiKey={openAIApiKey}
+						id={selectedNode.id}
+						data={selectedNode.data}
+						inputNodes={selectedNode.data.inputs.inputNodes}
+						updateNode={updateNode}
+					/>
 					<div className="pt-2 ">
 						<p className="">Test inputs</p>
 						{selectedNode.data.inputs.inputExamples.map((inputExample, index) => {
 							return (
 								<div
-									key={`${inputExample.name}-${index}`}
+									key={`${inputExample.id}-${index}`}
 									className="flex flex-col text-xs gap-1"
 								>
 									<form className="flex flex-col gap-2">
-										{Object.keys(inputExample).map((inputName) => {
+										{Object.keys(inputExample).map((inputId) => {
 											return (
-												<div key={inputName} className="">
-													<label htmlFor={inputName}>{inputName}</label>
+												<div key={inputId} className="">
+													<label htmlFor={inputId}>
+														{inputExample[inputId].name}
+													</label>
 													<input
 														type="text"
-														name={inputName}
-														id={`${inputName}-${index}`}
+														name={inputId}
+														id={`${inputId}-${index}`}
 														className="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:py-1.5 sm:text-sm sm:leading-6"
-														value={inputExample[inputName]}
+														value={inputExample[inputId].value}
 														onChange={(e) => {
 															updateInputExample(
 																selectedNode.id,
-																inputName,
+																inputId,
 																e.target.value,
 																index,
 															);

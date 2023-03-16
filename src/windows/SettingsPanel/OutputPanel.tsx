@@ -1,7 +1,7 @@
 import { Switch } from '@headlessui/react';
 import { useState } from 'react';
 import { CustomNode } from '../../nodes/types/NodeTypes';
-import { parsePromptInputs } from '../../openai/openai';
+import { parsePromptInputs } from '../../openAI/openAI';
 import { classNames } from '../../utils/classNames';
 
 export default function OutputPanel({ selectedNode }: { selectedNode: CustomNode | null }) {
@@ -9,7 +9,7 @@ export default function OutputPanel({ selectedNode }: { selectedNode: CustomNode
 	return (
 		<>
 			<div className="p-3 flex flex-col justify-between h-full">
-				<div className="text-xs flex-grow min-h-0">
+				<div className="text-xs flex-grow min-h-0 whitespace-pre-wrap">
 					{showPromptInOutput &&
 						selectedNode?.data?.prompt &&
 						parsePromptInputs(

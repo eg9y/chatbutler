@@ -1,11 +1,6 @@
 import { Configuration, OpenAIApi } from 'openai';
 import { InputNode, LLMPromptNodeDataType } from '../nodes/types/NodeTypes';
 
-const configuration = new Configuration({
-	apiKey: process.env.OPENAI_API_KEY,
-});
-export const openAi = new OpenAIApi(configuration);
-
 export function parsePromptInputs(prompt: string, inputNodes: InputNode[]): string {
 	let parsedPrompt = prompt;
 	inputNodes.forEach((inputNode) => {
@@ -14,14 +9,23 @@ export function parsePromptInputs(prompt: string, inputNodes: InputNode[]): stri
 			inputNode.data.response,
 		);
 	});
-	console.log(parsedPrompt);
 	return parsedPrompt;
 }
 
-export async function getOpenAIResponse(llmPrompt: LLMPromptNodeDataType, inputNodes: InputNode[]) {
+export async function getOpenAIResponse(
+	apiKey: string | null,
+	llmPrompt: LLMPromptNodeDataType,
+	inputNodes: InputNode[],
+) {
+	if (!apiKey) {
+		throw new Error(
+			'OpenAI API key is not set. Please set it in the settings at the bottom left panel.',
+		);
+	}
+
 	const parsedPrompt = parsePromptInputs(llmPrompt.prompt, inputNodes);
 
-	const config = {
+	const settings = {
 		model: llmPrompt.model,
 		prompt: parsedPrompt,
 		max_tokens: llmPrompt.max_tokens,
@@ -31,12 +35,17 @@ export async function getOpenAIResponse(llmPrompt: LLMPromptNodeDataType, inputN
 		frequency_penalty: llmPrompt.frequency_penalty,
 		best_of: llmPrompt.best_of,
 
+		// TODO: make these fields configurable
 		// n: llmPrompt.n,
 		// stream: llmPrompt.stream,
 		// stop: llmPrompt.stop,
 	};
+	console.log('openAI prompt settings', settings);
 
-	console.log('config', config);
-	const response = await openAi.createCompletion(config);
+	const config = new Configuration({
+		apiKey,
+	});
+	const openAi = new OpenAIApi(config);
+	const response = await openAi.createCompletion(settings);
 	return response;
 }

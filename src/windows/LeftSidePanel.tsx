@@ -9,9 +9,9 @@ const centerY = window.innerHeight / 2;
 export default function LeftSidePanel({
 	onAdd,
 }: {
-	onAdd: (type: NodeTypesEnum, x: number | undefined, y: number | undefined) => void;
+	onAdd: (type: NodeTypesEnum, x: number, y: number) => void;
 }) {
-	const { openAIKey, setOpenAiKey } = useStore(selector, shallow);
+	const { setOpenAiKey } = useStore(selector, shallow);
 
 	return (
 		<aside
@@ -96,7 +96,7 @@ export default function LeftSidePanel({
 									}
 									aria-hidden="true"
 								/>
-								<span className="truncate">Code</span>
+								<span className="truncate">Classifier</span>
 							</a>
 						</div>
 					</div>
@@ -105,14 +105,21 @@ export default function LeftSidePanel({
 					<div className="mt-1 space-y-1" aria-labelledby="projects-headline">
 						<a
 							className="group flex items-center rounded-md px-3 py-2 text-sm font-medium text-gray-600 bg-slate-100 hover:text-gray-900 cursor-pointer border-2 border-slate-400"
-							onClick={() => {
+							onClick={async () => {
+								const currentKey = localStorage.getItem('openAIKey') || '';
 								const newOpenAIKey = window.prompt(
 									'Enter your OpenAI Key here',
-									openAIKey,
+									currentKey,
 								);
-								if (newOpenAIKey) {
-									setOpenAiKey(newOpenAIKey);
+
+								if (newOpenAIKey === null) {
+									return;
 								}
+
+								if (newOpenAIKey === '') {
+									console.log('No key entered');
+								}
+								setOpenAiKey(newOpenAIKey);
 							}}
 						>
 							<Cog6ToothIcon

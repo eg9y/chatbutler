@@ -1,5 +1,5 @@
 import { memo, FC } from 'react';
-import { Handle, Position, NodeProps, Connection, Edge } from 'reactflow';
+import { Handle, Position, NodeProps } from 'reactflow';
 import { TextInputNodeDataType } from './types/NodeTypes';
 
 const TextInput: FC<NodeProps<TextInputNodeDataType>> = ({ data, selected }) => {

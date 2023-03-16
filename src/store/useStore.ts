@@ -27,8 +27,9 @@ import {
 	NodeTypesEnum,
 	TextInputNodeDataType,
 } from '../nodes/types/NodeTypes';
+import storage from './storage';
 
-interface RFState {
+export interface RFState {
 	uiErrorMessage: string | null;
 	setUiErrorMessage: (message: string | null) => void;
 	openAIApiKey: string | null;
@@ -203,62 +204,7 @@ const useStore = create<RFState>()(
 		}),
 		{
 			name: 'promptsandbox.io',
-			storage: {
-				getItem: (name) => {
-					const str = localStorage.getItem(name);
-					const obj = str ? JSON.parse(str) : null;
-
-					// convert nodes.data.inputs
-					const nodes: CustomNode[] = obj.state.nodes.map((node: CustomNode) => {
-						if (node.type === 'textInput') {
-							return node;
-						}
-						const inputSet = new Set(node.data.inputs.inputs);
-						return {
-							...node,
-							data: {
-								...node.data,
-								inputs: new Inputs(
-									inputSet,
-									node.data.inputs.inputNodes,
-									node.data.inputs.inputExamples,
-								),
-							},
-						};
-					});
-
-					return {
-						state: {
-							...(obj ? obj.state : {}),
-							nodes,
-						},
-					};
-				},
-				setItem: (name, newValue: { state: RFState }) => {
-					const str = JSON.stringify({
-						state: {
-							...newValue.state,
-							nodes: newValue.state.nodes.map((node: CustomNode) => {
-								if (node.type === 'textInput') {
-									return node;
-								}
-								return {
-									...node,
-									data: {
-										...node.data,
-										inputs: {
-											...node.data.inputs,
-											inputs: [...node.data.inputs.inputs],
-										},
-									},
-								};
-							}),
-						},
-					});
-					localStorage.setItem(name, str);
-				},
-				removeItem: (name) => localStorage.removeItem(name),
-			},
+			storage,
 		},
 	),
 );

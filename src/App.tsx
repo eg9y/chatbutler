@@ -183,6 +183,11 @@ export default function App() {
 						onDragOver={(e) => e.preventDefault()}
 						nodes={nodes}
 						edges={edges}
+						defaultViewport={{
+							x: 0,
+							y: 0,
+							zoom: 0,
+						}}
 						onNodesChange={onNodesChange}
 						onEdgesChange={onEdgesChange}
 						onConnect={onConnect}

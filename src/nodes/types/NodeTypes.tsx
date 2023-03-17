@@ -4,6 +4,7 @@ import { Inputs } from './Input';
 
 export type DefaultNodeDataType = {
 	inputs: Inputs;
+	isLoading: boolean;
 };
 
 export type CustomNode = Node<LLMPromptNodeDataType & TextInputNodeDataType>;

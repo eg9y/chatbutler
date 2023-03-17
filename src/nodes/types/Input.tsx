@@ -8,24 +8,17 @@ type InputExample = {
 };
 export class Inputs {
 	inputs: Set<string>;
-	inputNodes: InputNode[];
 	inputExamples: InputExample[];
 
-	constructor(
-		inputs: Set<string> = new Set([]),
-		inputNodes: InputNode[] = [],
-		inputExamples: InputExample[] = [{}],
-	) {
+	constructor(inputs: Set<string> = new Set([]), inputExamples: InputExample[] = [{}]) {
 		this.inputs = inputs;
 		this.inputExamples = [...inputExamples];
-		this.inputNodes = inputNodes;
 	}
 
 	addInput(input: string, nodes: InputNode[]) {
 		this.inputs.add(input);
 		const inputNode = nodes.find((node) => node.id === input);
 		if (inputNode) {
-			this.inputNodes.push(inputNode);
 			this.inputExamples = this.inputExamples.map((example) => {
 				return {
 					...example,
@@ -43,13 +36,6 @@ export class Inputs {
 	updateInput(input: string, nodes: InputNode[]) {
 		const inputNode = nodes.find((node) => node.id === input);
 		if (inputNode) {
-			this.inputNodes = this.inputNodes.map((node) => {
-				if (node.id === input) {
-					return inputNode;
-				}
-				return node;
-			});
-
 			// for each input example, update the name of the key to the new name, and ignore other keys
 			this.inputExamples = this.inputExamples.map((example) => {
 				example[input].name = inputNode.data.name;
@@ -63,7 +49,6 @@ export class Inputs {
 	deleteInputs(edgesToDelete: string[]) {
 		edgesToDelete.forEach((edge) => {
 			this.inputs.delete(edge);
-			this.inputNodes = this.inputNodes.filter((node) => node.id !== edge);
 			this.inputExamples = this.inputExamples.map((example) => {
 				const { [edge]: _, ...rest } = example;
 				return rest;

@@ -28,9 +28,12 @@ import {
 	TextInputNodeDataType,
 } from '../nodes/types/NodeTypes';
 import storage from './storage';
+import { Graph } from './Graph';
+import { getOpenAIResponse } from '../openAI/openAI';
 
 export interface RFState {
 	uiErrorMessage: string | null;
+	unlockGraph: boolean;
 	setUiErrorMessage: (message: string | null) => void;
 	openAIApiKey: string | null;
 	setOpenAiKey: (key: string | null) => void;
@@ -49,16 +52,22 @@ export interface RFState {
 			y: number;
 		},
 	) => void;
+	getInputNodes: (inputs: Set<string>) => InputNode[];
 
 	// TODO: type this
 	updateNode: any;
 	updateInputExample: any;
+
+	getSortedNodes: () => CustomNode[];
+	runGraph: (sortedNodes: CustomNode[], sortedNodeIndex: number) => void;
+	clearAllNodeResponses: () => void;
 }
 
 // this is our useStore hook that we can use in our components to get parts of the store and call actions
 const useStore = create<RFState>()(
 	persist(
 		(set, get) => ({
+			unlockGraph: true,
 			uiErrorMessage: null,
 			openAIApiKey: null,
 			// get nodes from local storage or use initial nodes
@@ -84,26 +93,22 @@ const useStore = create<RFState>()(
 				}
 			},
 			onNodeDragStop: (_: React.MouseEvent<Element, MouseEvent>, node: CustomNode) => {
-				// console.log("onNodeDragStop called");
 				set({
 					selectedNode: node,
 				});
 			},
 			onNodesChange: (changes: NodeChange[]) => {
 				const nodes = get().nodes;
-				// console.log("onNodesChange called");
 				set({
 					nodes: applyNodeChanges(changes, nodes),
 				});
 			},
 			onEdgesChange: (changes: EdgeChange[]) => {
-				// console.log("onEdgesChange called");
 				set({
 					edges: applyEdgeChanges(changes, get().edges),
 				});
 			},
 			onConnect: (connection: Connection) => {
-				// console.log("onConnect called");
 				const nodes = get().nodes;
 				const targetNode = nodes.find((n) => n.id === connection.target);
 				if (targetNode && targetNode.type === NodeTypesEnum.llmPrompt) {
@@ -117,7 +122,6 @@ const useStore = create<RFState>()(
 				});
 			},
 			onEdgesDelete: (edges: Edge[]) => {
-				// console.log("onEdgesDelete called");
 				const nodes = get().nodes;
 				let selectedNode = get().selectedNode;
 
@@ -165,6 +169,7 @@ const useStore = create<RFState>()(
 						data: {
 							name: `test prompt ${nodeLength}`,
 							prompt: `This is a test prompt ${nodeLength}`,
+							isLoading: false,
 							model: 'text-davinci-003',
 							temperature: 0.7,
 							max_tokens: 256,
@@ -178,8 +183,14 @@ const useStore = create<RFState>()(
 					}),
 				});
 			},
+
+			getInputNodes: (inputs: Set<string>) => {
+				const nodes = get().nodes;
+				const inputNodes = nodes.filter((node) => inputs.has(node.id));
+				return inputNodes as InputNode[];
+			},
+
 			updateNode: (nodeId: string, data: LLMPromptNodeDataType & TextInputNodeDataType) => {
-				// console.log("updateNode called");
 				let selectedNode: Node | null = null;
 				const nodes = get().nodes.map((node) => {
 					if (node.id === nodeId) {
@@ -207,7 +218,6 @@ const useStore = create<RFState>()(
 				});
 			},
 			updateInputExample: (nodeId: string, inputId: string, value: string, index: number) => {
-				// console.log("updateInputExample called");
 				let selectedNode: Node | null = null;
 				const nodes = get().nodes.map((node) => {
 					if (node.id === nodeId) {
@@ -221,6 +231,88 @@ const useStore = create<RFState>()(
 				set({
 					nodes,
 					selectedNode,
+				});
+			},
+
+			getSortedNodes: () => {
+				const nodes = get().nodes;
+				const edges = get().edges;
+
+				const graph = new Graph();
+				edges.forEach((edge) => {
+					graph.addEdge(edge.source, edge.target);
+				});
+
+				const sorted = graph.topologicalSort();
+
+				// get nodes in the order of the sorted array
+				const sortedNodes = sorted.map((id) =>
+					nodes.find((n) => n.id === id),
+				) as CustomNode[];
+
+				return sortedNodes;
+			},
+
+			clearAllNodeResponses: () => {
+				const nodes = get().nodes;
+				const updatedNodes = nodes.map((node) => {
+					if (node.type === NodeTypesEnum.llmPrompt) {
+						node.data.response = '';
+					}
+					return node;
+				});
+				set({
+					nodes: updatedNodes,
+				});
+			},
+
+			runGraph: async (sortedNodes: CustomNode[], sortedNodeIndex: number) => {
+				set({
+					unlockGraph: false,
+				});
+				if (sortedNodes[sortedNodeIndex]?.type === NodeTypesEnum.llmPrompt) {
+					sortedNodes[sortedNodeIndex].data = {
+						...sortedNodes[sortedNodeIndex].data,
+						isLoading: true,
+						response: '',
+					};
+					set({
+						nodes: [...sortedNodes],
+					});
+					// get response from nodes with inputs
+					const inputs = sortedNodes[sortedNodeIndex].data.inputs;
+					if (inputs) {
+						const response = await getOpenAIResponse(
+							get().openAIApiKey,
+							sortedNodes[sortedNodeIndex].data,
+							get().getInputNodes(inputs.inputs),
+						);
+						// const mockResponse = {
+						// 	data: {
+						// 		choices: [
+						// 			{
+						// 				text:
+						// 					Math.random().toString(36).substring(2, 15) +
+						// 					Math.random().toString(36).substring(2, 15),
+						// 			},
+						// 		],
+						// 	},
+						// };
+						// const completion = mockResponse.data.choices[0].text;
+						const completion = response.data.choices[0].text;
+						if (completion) {
+							sortedNodes[sortedNodeIndex].data = {
+								...sortedNodes[sortedNodeIndex].data,
+								response: completion,
+								isLoading: false,
+							};
+						}
+					}
+				}
+				set({
+					nodes: [...sortedNodes],
+					selectedNode: null,
+					unlockGraph: true,
 				});
 			},
 		}),

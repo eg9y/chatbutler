@@ -40,12 +40,12 @@ export async function getOpenAIResponse(
 		// stream: llmPrompt.stream,
 		// stop: llmPrompt.stop,
 	};
-	console.log('openAI prompt settings', settings);
 
 	const config = new Configuration({
 		apiKey,
 	});
 	const openAi = new OpenAIApi(config);
+	// TODO: Other openAI APIs especially Chat
 	const response = await openAi.createCompletion(settings);
 	return response;
 }

@@ -9,7 +9,11 @@ import ReactFlow, {
 
 import 'reactflow/dist/base.css';
 
-import { ChevronDoubleRightIcon, ChevronDoubleLeftIcon } from '@heroicons/react/20/solid';
+import {
+	ChevronDoubleRightIcon,
+	ChevronDoubleLeftIcon,
+	TrashIcon,
+} from '@heroicons/react/20/solid';
 
 import { shallow } from 'zustand/shallow';
 
@@ -23,6 +27,7 @@ import ConnectionLine from './connection/ConnectionLine';
 import Notification from './components/Notification';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { NodeTypesEnum } from './nodes/types/NodeTypes';
+import RunFromStart from './components/RunFromStart';
 
 const nodeTypes = { llmPrompt: LLMPromptNode, textInput: TextInputNode };
 
@@ -36,6 +41,7 @@ export default function App() {
 		onAdd,
 		onNodeDragStop,
 		onEdgesDelete,
+		unlockGraph,
 	} = useStore(selector, shallow);
 
 	const [settingsView, setSettingsView] = useState(true);
@@ -176,6 +182,11 @@ export default function App() {
 				<div style={{}} ref={reactFlowWrapper}>
 					<ReactFlow
 						onDrop={handleDrop}
+						nodesDraggable={unlockGraph}
+						nodesConnectable={unlockGraph}
+						nodesFocusable={unlockGraph}
+						edgesFocusable={unlockGraph}
+						elementsSelectable={unlockGraph}
 						onInit={(reactFlowInstance: ReactFlowInstance) =>
 							setReactFlowInstance(reactFlowInstance)
 						}
@@ -196,7 +207,7 @@ export default function App() {
 						onNodeClick={onNodeDragStop}
 						onEdgesDelete={onEdgesDelete}
 						defaultEdgeOptions={{
-							type: 'smoothstep',
+							type: 'default',
 							animated: true,
 							style: {
 								strokeWidth: 2,
@@ -211,13 +222,19 @@ export default function App() {
 						}}
 					>
 						<MiniMap />
-						<Background variant={BackgroundVariant.Dots} gap={12} size={1} />
-						{/* TODO: graph toolbar to run entire chain */}
+						<Background variant={BackgroundVariant.Lines} gap={12} size={1} />
 						<Panel position="top-center" aria-label="graph-runner">
-							{/* toolbar to run entire chain, comprising of a run button */}
+							<div className="flex gap-4">
+								{/* TODO: Clear graph logic */}
+								<button className="bg-red-500 hover:bg-red-600 text-white text-md font-semibold py-1 px-2  rounded flex items-center gap-1">
+									<TrashIcon
+										className={' group-hover:text-gray-500  mx-auto h-5 w-5'}
+										aria-hidden="true"
+									/>
+									<span>Clear graph</span>
+								</button>
 
-							<div className="bg-slate-50 w-50 p-4 border-2 border-slate-200 rounded-lg shadow-md">
-								<button className="btn btn-primary">Run Chain</button>
+								<RunFromStart />
 							</div>
 						</Panel>
 						<Panel position="top-center">

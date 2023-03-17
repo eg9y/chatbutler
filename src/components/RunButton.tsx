@@ -1,7 +1,7 @@
 import { PlayIcon } from '@heroicons/react/20/solid';
 import useStore, { selector } from '../store/useStore';
 import { shallow } from 'zustand/shallow';
-import { InputNode, LLMPromptNodeDataType, TextInputNodeDataType } from '../nodes/types/NodeTypes';
+import { LLMPromptNodeDataType, TextInputNodeDataType } from '../nodes/types/NodeTypes';
 import { getOpenAIResponse } from '../openAI/openAI';
 import { useState } from 'react';
 
@@ -19,19 +19,23 @@ export default function RunButton({
 	Icon?: JSX.Element;
 	id: string;
 	data: LLMPromptNodeDataType;
-	inputNodes: InputNode[];
 	apiKey: string | null;
 	updateNode: (id: string, data: LLMPromptNodeDataType | TextInputNodeDataType) => void;
 }) {
-	const { setUiErrorMessage } = useStore(selector, shallow);
+	const { setUiErrorMessage, getInputNodes } = useStore(selector, shallow);
 
 	const [isLoading, setIsLoading] = useState(false);
 
+	// TODO: refactor fn to state
 	function getResponse() {
 		return async () => {
 			setIsLoading(true);
 			try {
-				const response = await getOpenAIResponse(apiKey, data, data.inputs.inputNodes);
+				const response = await getOpenAIResponse(
+					apiKey,
+					data,
+					getInputNodes(data.inputs.inputs),
+				);
 				console.log(JSON.stringify(response, null, 2));
 				const completion = response.data.choices[0].text;
 				if (completion) {
@@ -50,7 +54,7 @@ export default function RunButton({
 
 	return (
 		<button
-			className="bg-blue-500 hover:bg-blue-600 text-white text-md font-semibold py-1 px-2 my-2 rounded flex items-center"
+			className="bg-blue-500 hover:bg-blue-600 text-white text-md font-semibold py-1 px-2  rounded flex items-center"
 			onClick={getResponse()}
 		>
 			{isLoading ? (

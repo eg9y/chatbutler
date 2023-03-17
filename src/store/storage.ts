@@ -18,11 +18,7 @@ const storage: PersistStorage<RFState> = {
 				...node,
 				data: {
 					...node.data,
-					inputs: new Inputs(
-						inputSet,
-						node.data.inputs.inputNodes,
-						node.data.inputs.inputExamples,
-					),
+					inputs: new Inputs(inputSet, node.data.inputs.inputExamples),
 				},
 			};
 		});

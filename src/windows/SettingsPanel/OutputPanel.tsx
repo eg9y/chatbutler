@@ -1,11 +1,15 @@
 import { Switch } from '@headlessui/react';
 import { useState } from 'react';
+import { shallow } from 'zustand/shallow';
 import { CustomNode } from '../../nodes/types/NodeTypes';
 import { parsePromptInputs } from '../../openAI/openAI';
+import useStore, { selector } from '../../store/useStore';
 import { conditionalClassNames } from '../../utils/classNames';
 
 export default function OutputPanel({ selectedNode }: { selectedNode: CustomNode | null }) {
 	const [showPromptInOutput, setShowPromptInOutput] = useState(false);
+	const { getInputNodes } = useStore(selector, shallow);
+
 	return (
 		<>
 			<div className="p-3 flex flex-col justify-between h-full">
@@ -14,7 +18,7 @@ export default function OutputPanel({ selectedNode }: { selectedNode: CustomNode
 						selectedNode?.data?.prompt &&
 						parsePromptInputs(
 							selectedNode?.data?.prompt,
-							selectedNode?.data?.inputs.inputNodes,
+							getInputNodes(selectedNode?.data?.inputs.inputs),
 						)}
 					<span className="bg-emerald-300">{selectedNode?.data.response}</span>
 				</div>

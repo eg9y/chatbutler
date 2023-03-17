@@ -50,7 +50,7 @@ export default function RunButton({
 
 	return (
 		<button
-			className="bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold py-1 px-2 my-2 rounded flex items-center"
+			className="bg-blue-500 hover:bg-blue-600 text-white text-md font-semibold py-1 px-2 my-2 rounded flex items-center"
 			onClick={getResponse()}
 		>
 			{isLoading ? (

@@ -1,6 +1,5 @@
 import ReactFlow, {
 	MiniMap,
-	// Controls,
 	Background,
 	BackgroundVariant,
 	Panel,
@@ -211,17 +210,16 @@ export default function App() {
 							},
 						}}
 					>
-						{/* <Controls
-							// shift right enough to not be overlapped by LeftSidePanel
-							position="bottom-right"
-							style={{
-								marginRight: 'calc( + 20px)',
-							}}
-						/> */}
-						<MiniMap
-						// shift left enough to not be overlapped by SettingsPanel
-						/>
+						<MiniMap />
 						<Background variant={BackgroundVariant.Dots} gap={12} size={1} />
+						{/* TODO: graph toolbar to run entire chain */}
+						<Panel position="top-center" aria-label="graph-runner">
+							{/* toolbar to run entire chain, comprising of a run button */}
+
+							<div className="bg-slate-50 w-50 p-4 border-2 border-slate-200 rounded-lg shadow-md">
+								<button className="btn btn-primary">Run Chain</button>
+							</div>
+						</Panel>
 						<Panel position="top-center">
 							<Notification />
 						</Panel>

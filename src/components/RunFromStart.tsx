@@ -18,6 +18,10 @@ export default function RunFromStart() {
 			const sortedNodes = getSortedNodes();
 			for (let i = 0; i < sortedNodes.length; i++) {
 				await runGraph(sortedNodes, i);
+				if (sortedNodes[i].data.isBreakpoint) {
+					// TODO: breakpoint notification
+					break;
+				}
 			}
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} catch (error: any) {

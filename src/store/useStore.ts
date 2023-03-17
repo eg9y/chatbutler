@@ -179,6 +179,7 @@ const useStore = create<RFState>()(
 							best_of: 1,
 							inputs: new Inputs(),
 							response: '',
+							isBreakpoint: false,
 						},
 					}),
 				});
@@ -270,50 +271,60 @@ const useStore = create<RFState>()(
 				set({
 					unlockGraph: false,
 				});
-				if (sortedNodes[sortedNodeIndex]?.type === NodeTypesEnum.llmPrompt) {
-					sortedNodes[sortedNodeIndex].data = {
-						...sortedNodes[sortedNodeIndex].data,
-						isLoading: true,
-						response: '',
-					};
-					set({
-						nodes: [...sortedNodes],
-					});
-					// get response from nodes with inputs
-					const inputs = sortedNodes[sortedNodeIndex].data.inputs;
-					if (inputs) {
-						const response = await getOpenAIResponse(
-							get().openAIApiKey,
-							sortedNodes[sortedNodeIndex].data,
-							get().getInputNodes(inputs.inputs),
-						);
-						// const mockResponse = {
-						// 	data: {
-						// 		choices: [
-						// 			{
-						// 				text:
-						// 					Math.random().toString(36).substring(2, 15) +
-						// 					Math.random().toString(36).substring(2, 15),
-						// 			},
-						// 		],
-						// 	},
-						// };
-						// const completion = mockResponse.data.choices[0].text;
-						const completion = response.data.choices[0].text;
-						if (completion) {
-							sortedNodes[sortedNodeIndex].data = {
-								...sortedNodes[sortedNodeIndex].data,
-								response: completion,
-								isLoading: false,
-							};
+				try {
+					if (sortedNodes[sortedNodeIndex]?.type === NodeTypesEnum.llmPrompt) {
+						sortedNodes[sortedNodeIndex].data = {
+							...sortedNodes[sortedNodeIndex].data,
+							isLoading: true,
+							response: '',
+						};
+						set({
+							nodes: [...sortedNodes],
+						});
+						// get response from nodes with inputs
+						const inputs = sortedNodes[sortedNodeIndex].data.inputs;
+						if (inputs) {
+							const response = await getOpenAIResponse(
+								get().openAIApiKey,
+								sortedNodes[sortedNodeIndex].data,
+								get().getInputNodes(inputs.inputs),
+							);
+							// const mockResponse = {
+							// 	data: {
+							// 		choices: [
+							// 			{
+							// 				text:
+							// 					Math.random().toString(36).substring(2, 15) +
+							// 					Math.random().toString(36).substring(2, 15),
+							// 			},
+							// 		],
+							// 	},
+							// };
+							// const completion = mockResponse.data.choices[0].text;
+							const completion = response.data.choices[0].text;
+							if (completion) {
+								sortedNodes[sortedNodeIndex].data = {
+									...sortedNodes[sortedNodeIndex].data,
+									response: completion,
+									isLoading: false,
+								};
+							}
 						}
 					}
+					set({
+						nodes: [...sortedNodes],
+						selectedNode: null,
+						unlockGraph: true,
+					});
+				} catch (error: any) {
+					throw new Error(error);
+				} finally {
+					sortedNodes[sortedNodeIndex].data.isLoading = false;
+					set({
+						nodes: [...sortedNodes],
+						unlockGraph: true,
+					});
 				}
-				set({
-					nodes: [...sortedNodes],
-					selectedNode: null,
-					unlockGraph: true,
-				});
 			},
 		}),
 		{

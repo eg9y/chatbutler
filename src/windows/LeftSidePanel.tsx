@@ -54,9 +54,12 @@ export default function LeftSidePanel({
 				<div className="space-y-1">
 					<div className="pb-4 px-2">
 						<h1 className="font-bold text-lg">PromptSandbox.io</h1>
-						<p className="text-xs">
-							Create intricate workflows with Open AI APIs through visual programming.
+						<p className="text-xs text-slate-700">
+							Free visual programming tool that makes it easy to work with OpenAI APIs
+							like GPT-4, allowing you to create and link nodes to generate complex
+							outputs with ease.
 						</p>
+						<a className="text-xs text-blue-600 cursor-pointer">more info</a>
 					</div>
 					<div>
 						<div className="bg-slate-200 flex justify-between">

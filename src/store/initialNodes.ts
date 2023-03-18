@@ -7,6 +7,7 @@ const textInputNode = {
 	type: NodeTypesEnum.textInput,
 	data: {
 		name: 'language',
+		text: 'Bahasa Indonesia',
 		response: 'Bahasa Indonesia',
 		inputs: new Inputs(),
 	},
@@ -20,7 +21,7 @@ export default [
 		type: NodeTypesEnum.llmPrompt,
 		data: {
 			name: `English translator`,
-			prompt: `Translate this phrase from {{language}} to English:`,
+			text: `Translate this phrase from {{language}} to English:`,
 			model: 'text-davinci-003',
 			temperature: 0.7,
 			max_tokens: 256,

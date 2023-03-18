@@ -1,15 +1,10 @@
-import {
-	LLMPromptNodeDataType,
-	NodeTypesEnum,
-	TextInputNodeDataType,
-} from '../nodes/types/NodeTypes';
+import { DefaultNodeDataType } from '../nodes/types/NodeTypes';
 
 export function handleChange(
 	e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
 	nodeId: string,
-	data: LLMPromptNodeDataType | TextInputNodeDataType,
+	data: DefaultNodeDataType,
 	updateNode: (id: string, data: any) => void,
-	type: NodeTypesEnum = NodeTypesEnum.llmPrompt,
 ) {
 	let name = e.target.name;
 	// if there's a -slider at the end of name, remove it

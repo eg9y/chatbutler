@@ -23,7 +23,7 @@ export async function getOpenAIResponse(
 		);
 	}
 
-	const parsedPrompt = parsePromptInputs(llmPrompt.prompt, inputNodes);
+	const parsedPrompt = parsePromptInputs(llmPrompt.text, inputNodes);
 
 	const settings = {
 		model: llmPrompt.model,

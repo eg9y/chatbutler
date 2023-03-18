@@ -10,9 +10,6 @@ const storage: PersistStorage<RFState> = {
 
 		// convert nodes.data.inputs
 		const nodes: CustomNode[] = obj.state.nodes.map((node: CustomNode) => {
-			if (node.type === 'textInput') {
-				return node;
-			}
 			const inputSet = new Set(node.data.inputs.inputs);
 			return {
 				...node,
@@ -35,9 +32,6 @@ const storage: PersistStorage<RFState> = {
 			state: {
 				...newValue.state,
 				nodes: newValue.state.nodes.map((node: CustomNode) => {
-					if (node.type === 'textInput') {
-						return node;
-					}
 					return {
 						...node,
 						data: {

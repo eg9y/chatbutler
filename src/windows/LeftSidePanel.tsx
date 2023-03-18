@@ -64,7 +64,7 @@ export default function LeftSidePanel({
 					<div>
 						<div className="bg-slate-200 flex justify-between">
 							<p className="text-start text-slate-900 font-semibold text-md pr-2 pl-4 py-1">
-								Nodes
+								Add Nodes
 							</p>
 						</div>
 						<div className="flex flex-col gap-1 px-2 py-2">

@@ -29,7 +29,7 @@ import {
 } from '../nodes/types/NodeTypes';
 import storage from './storage';
 import { Graph } from './Graph';
-import { getOpenAIResponse } from '../openAI/openAI';
+import { getOpenAIResponse, parsePromptInputs } from '../openAI/openAI';
 
 export interface RFState {
 	uiErrorMessage: string | null;
@@ -111,10 +111,8 @@ const useStore = create<RFState>()(
 			onConnect: (connection: Connection) => {
 				const nodes = get().nodes;
 				const targetNode = nodes.find((n) => n.id === connection.target);
-				if (targetNode && targetNode.type === NodeTypesEnum.llmPrompt) {
-					if (connection.source) {
-						targetNode.data.inputs.addInput(connection.source, nodes as InputNode[]);
-					}
+				if (targetNode && connection.source) {
+					targetNode.data.inputs.addInput(connection.source, nodes as InputNode[]);
 				}
 
 				set({
@@ -126,7 +124,7 @@ const useStore = create<RFState>()(
 				let selectedNode = get().selectedNode;
 
 				const updatedNodes = nodes.map((node) => {
-					if (node.type === NodeTypesEnum.llmPrompt && node.data.inputs) {
+					if (node.data.inputs) {
 						const edgesToDelete = edges
 							.filter((edge) => edge.target === node.id)
 							.map((edge) => edge.source);
@@ -158,8 +156,10 @@ const useStore = create<RFState>()(
 
 				// TODO: set different defaults based on the node type (e.g. text input won't include a prompt field)
 				const nodeLength = nodes.length + 1;
-				set({
-					nodes: nodes.concat({
+
+				let node: CustomNode | null = null;
+				if (type === NodeTypesEnum.llmPrompt) {
+					node = {
 						id: `${type}-${nodeLength}`,
 						type,
 						position: {
@@ -168,7 +168,7 @@ const useStore = create<RFState>()(
 						},
 						data: {
 							name: `test prompt ${nodeLength}`,
-							prompt: `This is a test prompt ${nodeLength}`,
+							text: `This is a test prompt ${nodeLength}`,
 							isLoading: false,
 							model: 'text-davinci-003',
 							temperature: 0.7,
@@ -181,8 +181,31 @@ const useStore = create<RFState>()(
 							response: '',
 							isBreakpoint: false,
 						},
-					}),
-				});
+					};
+				} else if (type === NodeTypesEnum.textInput) {
+					node = {
+						id: `${type}-${nodeLength}`,
+						type,
+						position: {
+							x,
+							y,
+						},
+						data: {
+							name: `test input ${nodeLength}`,
+							text: `This is a test input ${nodeLength}`,
+							inputs: new Inputs(),
+							response: `This is a test input ${nodeLength}`,
+							isLoading: false,
+							isBreakpoint: false,
+						},
+					};
+				}
+
+				if (node) {
+					set({
+						nodes: nodes.concat(node),
+					});
+				}
 			},
 
 			getInputNodes: (inputs: Set<string>) => {
@@ -286,7 +309,7 @@ const useStore = create<RFState>()(
 						if (inputs) {
 							const response = await getOpenAIResponse(
 								get().openAIApiKey,
-								sortedNodes[sortedNodeIndex].data,
+								sortedNodes[sortedNodeIndex].data as LLMPromptNodeDataType,
 								get().getInputNodes(inputs.inputs),
 							);
 							// const mockResponse = {
@@ -310,6 +333,11 @@ const useStore = create<RFState>()(
 								};
 							}
 						}
+					} else if (sortedNodes[sortedNodeIndex]?.type === NodeTypesEnum.textInput) {
+						sortedNodes[sortedNodeIndex].data.response = parsePromptInputs(
+							sortedNodes[sortedNodeIndex].data.text,
+							get().getInputNodes(sortedNodes[sortedNodeIndex].data.inputs.inputs),
+						);
 					}
 					set({
 						nodes: [...sortedNodes],

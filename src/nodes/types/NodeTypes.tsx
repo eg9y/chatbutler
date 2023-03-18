@@ -3,17 +3,18 @@ import { Node } from 'reactflow';
 import { Inputs } from './Input';
 
 export type DefaultNodeDataType = {
+	name: string;
+	text: string;
 	inputs: Inputs;
+	response: string;
 	isLoading: boolean;
 	isBreakpoint: boolean;
 };
 
-export type CustomNode = Node<LLMPromptNodeDataType & TextInputNodeDataType>;
-export type InputNode = Node<LLMPromptNodeDataType & TextInputNodeDataType>;
+export type CustomNode = Node<LLMPromptNodeDataType | TextInputNodeDataType>;
+export type InputNode = Node<LLMPromptNodeDataType | TextInputNodeDataType>;
 
 export type LLMPromptNodeDataType = {
-	name: string;
-	prompt: string;
 	model: string;
 	temperature: number;
 	top_p: number;
@@ -24,10 +25,7 @@ export type LLMPromptNodeDataType = {
 	response: string;
 } & DefaultNodeDataType;
 
-export type TextInputNodeDataType = {
-	name: string;
-	response: string;
-} & DefaultNodeDataType;
+export type TextInputNodeDataType = DefaultNodeDataType & DefaultNodeDataType;
 
 export enum NodeTypesEnum {
 	llmPrompt = 'llmPrompt',

@@ -84,7 +84,7 @@ export default function SettingsPanel() {
 					onClick={() => setBottomDivCollapsed(!bottomDivCollapsed)}
 				>
 					<p className="text-start text-slate-900 font-semibold text-md pr-2 pl-4 py-1">
-						Output
+						Nodes
 					</p>
 					<button className="text-slate-900 font-semibold text-md px-2 py-1">
 						{bottomDivCollapsed ? (

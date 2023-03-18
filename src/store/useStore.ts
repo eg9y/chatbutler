@@ -99,9 +99,17 @@ const useStore = create<RFState>()(
 			},
 			onNodesChange: (changes: NodeChange[]) => {
 				const nodes = get().nodes;
-				set({
+				const selectedNode = get().selectedNode;
+				const isSelectedNodeDeleted = changes.some(
+					(change) => change.type === 'remove' && change.id === selectedNode?.id,
+				);
+				const update: any = {
 					nodes: applyNodeChanges(changes, nodes),
-				});
+				};
+				if (isSelectedNodeDeleted) {
+					update.selectedNode = null;
+				}
+				set(update);
 			},
 			onEdgesChange: (changes: EdgeChange[]) => {
 				set({
@@ -180,6 +188,7 @@ const useStore = create<RFState>()(
 							inputs: new Inputs(),
 							response: '',
 							isBreakpoint: false,
+							stop: [],
 						},
 					};
 				} else if (type === NodeTypesEnum.textInput) {

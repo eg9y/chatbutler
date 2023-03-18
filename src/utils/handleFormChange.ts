@@ -1,27 +1,36 @@
 import { DefaultNodeDataType } from '../nodes/types/NodeTypes';
 
 export function handleChange(
-	e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+	event:
+		| React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+		| {
+				target: {
+					name: string;
+					value: string[];
+					type: null;
+				};
+		  },
 	nodeId: string,
 	data: DefaultNodeDataType,
+
 	updateNode: (id: string, data: any) => void,
 ) {
-	let name = e.target.name;
+	let name = event.target.name;
 	// if there's a -slider at the end of name, remove it
 	if (name.endsWith('-slider')) {
 		name = name.slice(0, -7);
 		const input = document.querySelector(`input[name=${name}]`) as HTMLInputElement;
-		input.value = e.target.value;
+		input.value = event.target.value.toString();
 	}
 
-	if (e.target.type === 'number') {
+	if (event.target.type === 'number') {
 		const range = document.querySelector(`input[name=${name}-slider]`) as HTMLInputElement;
-		range.value = e.target.value;
+		range.value = event.target.value.toString();
 	}
 
 	// get range value
 	updateNode(nodeId, {
 		...data,
-		[name]: e.target.value,
+		[name]: event.target.value,
 	});
 }

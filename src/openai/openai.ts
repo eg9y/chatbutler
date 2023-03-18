@@ -38,7 +38,7 @@ export async function getOpenAIResponse(
 		// TODO: make these fields configurable
 		// n: llmPrompt.n,
 		// stream: llmPrompt.stream,
-		// stop: llmPrompt.stop,
+		stop: llmPrompt.stop,
 	};
 
 	const config = new Configuration({

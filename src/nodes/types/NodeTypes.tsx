@@ -23,6 +23,7 @@ export type LLMPromptNodeDataType = {
 	best_of: number;
 	max_tokens: number;
 	response: string;
+	stop: string[];
 } & DefaultNodeDataType;
 
 export type TextInputNodeDataType = DefaultNodeDataType & DefaultNodeDataType;

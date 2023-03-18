@@ -138,7 +138,7 @@ export default function LeftSidePanel({
 							onClick={async () => {
 								const currentKey = localStorage.getItem('openAIKey') || '';
 								const newOpenAIKey = window.prompt(
-									'Enter your OpenAI Key here',
+									"Enter your OpenAI Key here (It'll be saved in your browser)",
 									currentKey,
 								);
 

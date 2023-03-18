@@ -31,6 +31,7 @@ export default [
 			best_of: 1,
 			inputs: new Inputs().addInput('text-input', [textInputNode as InputNode]),
 			response: '',
+			stop: [],
 		},
 	},
 ] as CustomNode[];

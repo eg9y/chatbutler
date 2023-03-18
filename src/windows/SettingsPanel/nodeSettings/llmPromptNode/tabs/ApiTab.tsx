@@ -10,7 +10,15 @@ export default function ApiPromptTab({
 }: {
 	selectedNode: Node | null;
 	handleChange: (
-		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+		e:
+			| React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+			| {
+					target: {
+						name: string;
+						value: string[];
+						type: null;
+					};
+			  },
 	) => void;
 }) {
 	function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -84,7 +92,11 @@ export default function ApiPromptTab({
 							max={20}
 							step={1}
 						/>
-						<ChipsInput />
+						<ChipsInput
+							stringArrayValue={selectedNode.data.stop}
+							propertyName={'stop'}
+							handleChange={handleChange}
+						/>
 					</form>
 				</div>
 			)}

@@ -225,15 +225,6 @@ export default function App() {
 						<Background variant={BackgroundVariant.Lines} gap={12} size={1} />
 						<Panel position="top-center" aria-label="graph-runner">
 							<div className="flex gap-4">
-								{/* TODO: Clear graph logic */}
-								<button className="bg-red-500 hover:bg-red-600 text-white text-md font-semibold py-1 px-2  rounded flex items-center gap-1">
-									<TrashIcon
-										className={' group-hover:text-gray-500  mx-auto h-5 w-5'}
-										aria-hidden="true"
-									/>
-									<span>Clear graph</span>
-								</button>
-
 								<RunFromStart />
 							</div>
 						</Panel>

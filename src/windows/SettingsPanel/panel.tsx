@@ -10,7 +10,7 @@ import useStore, { selector } from '../../store/useStore';
 import LLMPromptTabs from './nodeSettings/llmPromptNode/tabs';
 import TextInputTabs from './nodeSettings/textInputNode/tabs';
 import { LLMPromptNodeDataType, NodeTypesEnum } from '../../nodes/types/NodeTypes';
-import OutputPanel from './OutputPanel';
+import NodesPanel from './NodesPanel';
 
 export default function SettingsPanel() {
 	const { selectedNode, updateNode } = useStore(selector, shallow);
@@ -104,9 +104,11 @@ export default function SettingsPanel() {
 						)}
 					</button>
 				</div>
-				<div className="h-full">
-					<OutputPanel selectedNode={selectedNode} />
-				</div>
+				{!bottomDivCollapsed && (
+					<div className="">
+						<NodesPanel selectedNode={selectedNode} />
+					</div>
+				)}
 			</div>
 		</div>
 	);

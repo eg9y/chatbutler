@@ -7,6 +7,9 @@ Promptsandbox is a free node-based visual programming tool that enables users to
 
 Check out the demo here: [https://promptsandbox.io/](https://promptsandbox.io/)
 
+<!-- display png from ./public/promptsandbox.png -->
+![Promtsandbox dashboard](./public/promptsandbox.png)
+
 ## Getting Started
 
 1. Clone repo

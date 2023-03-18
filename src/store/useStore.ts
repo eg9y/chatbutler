@@ -29,7 +29,7 @@ import {
 } from '../nodes/types/NodeTypes';
 import storage from './storage';
 import { Graph } from './Graph';
-import { getOpenAIResponse, parsePromptInputs } from '../openAI/openAI';
+import { getOpenAIResponse, parsePromptInputs } from '../openai/openai';
 
 export interface RFState {
 	uiErrorMessage: string | null;

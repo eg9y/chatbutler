@@ -3,7 +3,7 @@ import { TrashIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
 import { shallow } from 'zustand/shallow';
 import { CustomNode } from '../../nodes/types/NodeTypes';
-import { parsePromptInputs } from '../../openAI/openAI';
+import { parsePromptInputs } from '../../openai/openai';
 import useStore, { selector } from '../../store/useStore';
 import { conditionalClassNames } from '../../utils/classNames';
 

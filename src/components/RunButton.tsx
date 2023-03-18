@@ -2,7 +2,7 @@ import { PlayIcon } from '@heroicons/react/20/solid';
 import useStore, { selector } from '../store/useStore';
 import { shallow } from 'zustand/shallow';
 import { LLMPromptNodeDataType, TextInputNodeDataType } from '../nodes/types/NodeTypes';
-import { getOpenAIResponse } from '../openAI/openAI';
+import { getOpenAIResponse } from '../openai/openai';
 import { useState } from 'react';
 
 export default function RunButton({

@@ -1,5 +1,5 @@
 import { Node } from 'reactflow';
-import { models } from '../../../../../openAI/models';
+import { models } from '../../../../../openai/models';
 import ChipsInput from '../../../inputs/ChipsInput';
 
 import RangeInput from '../../../inputs/RangeInput';

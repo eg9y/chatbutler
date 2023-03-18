@@ -65,29 +65,32 @@ const TextInput: FC<NodeProps<TextInputNodeDataType>> = (props) => {
 											className={colorClass}
 											onClick={() => {
 												// append {{inputNode.data.name}} to textarea
-												const prompt = document.getElementById(
-													`prompt-${id}`,
+												const text = document.getElementById(
+													`text-${id}`,
 												) as HTMLTextAreaElement;
 												// insert in the current text cursor position
-												const start = prompt.selectionStart;
-												const end = prompt.selectionEnd;
-												const text = prompt.value;
-												const before = text.substring(0, start);
-												const after = text.substring(end, text.length);
-												prompt.value = `${before}{{${inputNode.data.name}}}${after}`;
+												const start = text.selectionStart;
+												const end = text.selectionEnd;
+												const textValue = text.value;
+												const before = textValue.substring(0, start);
+												const after = textValue.substring(
+													end,
+													textValue.length,
+												);
+												text.value = `${before}{{${inputNode.data.name}}}${after}`;
 
-												setText(prompt.value);
+												setText(text.value);
 												// focus on the text cursor position after the inserted text
-												prompt.focus();
+												text.focus();
 
-												prompt.selectionStart =
+												text.selectionStart =
 													start + 4 + inputNode.data.name.length;
-												prompt.selectionEnd =
+												text.selectionEnd =
 													start + 4 + inputNode.data.name.length;
 
 												return updateNode(id, {
 													...data,
-													text: prompt.value,
+													text: text.value,
 												});
 											}}
 										>

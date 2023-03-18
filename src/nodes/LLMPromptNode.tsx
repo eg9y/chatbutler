@@ -10,6 +10,7 @@ import { Disclosure } from '@headlessui/react';
 import { SignalIcon } from '@heroicons/react/20/solid';
 import RunnableToolbarTemplate from './templates/RunnableToolbarTemplate';
 import TextAreaTemplate from './templates/TextAreaTemplate';
+import { ClipboardIcon } from '@heroicons/react/24/outline';
 
 const LLMPrompt: FC<NodeProps<LLMPromptNodeDataType>> = (props) => {
 	const { data, selected, id } = props;
@@ -69,29 +70,32 @@ const LLMPrompt: FC<NodeProps<LLMPromptNodeDataType>> = (props) => {
 											className={colorClass}
 											onClick={() => {
 												// append {{inputNode.data.name}} to textarea
-												const prompt = document.getElementById(
-													`prompt-${id}`,
+												const text = document.getElementById(
+													`text-${id}`,
 												) as HTMLTextAreaElement;
 												// insert in the current text cursor position
-												const start = prompt.selectionStart;
-												const end = prompt.selectionEnd;
-												const text = prompt.value;
-												const before = text.substring(0, start);
-												const after = text.substring(end, text.length);
-												prompt.value = `${before}{{${inputNode.data.name}}}${after}`;
+												const start = text.selectionStart;
+												const end = text.selectionEnd;
+												const textValue = text.value;
+												const before = textValue.substring(0, start);
+												const after = textValue.substring(
+													end,
+													textValue.length,
+												);
+												text.value = `${before}{{${inputNode.data.name}}}${after}`;
 
-												setText(prompt.value);
+												setText(text.value);
 												// focus on the text cursor position after the inserted text
-												prompt.focus();
+												text.focus();
 
-												prompt.selectionStart =
+												text.selectionStart =
 													start + 4 + inputNode.data.name.length;
-												prompt.selectionEnd =
+												text.selectionEnd =
 													start + 4 + inputNode.data.name.length;
 
 												return updateNode(id, {
 													...data,
-													text: prompt.value,
+													text: text.value,
 												});
 											}}
 										>
@@ -161,9 +165,18 @@ const LLMPrompt: FC<NodeProps<LLMPromptNodeDataType>> = (props) => {
 						<Disclosure.Panel className="space-y-1 mb-10">
 							<div
 								className="p-3 bg-slate-50 border-1 border-t-0 
-							border-slate-400 rounded-b-lg flex flex-col justify-between gap-4"
+							border-slate-400 rounded-b-lg flex flex-col justify-between gap-4 items-end"
 							>
 								<p>{data.response}</p>
+								<ClipboardIcon
+									className={conditionalClassNames(
+										' -ml-1 mr-1 h-7 w-7 flex-shrink-0 cursor-pointer text-slate-500 hover:text-slate-900 active:scale-50',
+									)}
+									aria-hidden="true"
+									onClick={() => {
+										navigator.clipboard.writeText(data.response);
+									}}
+								/>
 							</div>
 						</Disclosure.Panel>
 					</div>

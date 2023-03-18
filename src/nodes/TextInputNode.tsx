@@ -87,7 +87,7 @@ const TextInput: FC<NodeProps<TextInputNodeDataType>> = (props) => {
 
 												return updateNode(id, {
 													...data,
-													prompt: prompt.value,
+													text: prompt.value,
 												});
 											}}
 										>

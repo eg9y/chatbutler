@@ -91,7 +91,7 @@ const LLMPrompt: FC<NodeProps<LLMPromptNodeDataType>> = (props) => {
 
 												return updateNode(id, {
 													...data,
-													prompt: prompt.value,
+													text: prompt.value,
 												});
 											}}
 										>

@@ -74,15 +74,15 @@ const TextAreaTemplate: FC<
 			{show && (
 				<div className="h-full text-xl ">
 					{/* list of data.inputs string Set */}
-					<div className="h-full flex flex-col gap-1 p-4 text-gray-900">
-						<label htmlFor="prompt" className="block font-medium leading-6 ">
+					<div className="h-full flex flex-col gap-1 p-4 text-slate-900">
+						<label htmlFor="text" className="block font-medium leading-6 ">
 							{fieldName}:
 						</label>
 						<textarea
 							rows={4}
-							name="prompt"
-							id={`prompt-${id}`}
-							className="nodrag flex-grow w-full rounded-md border-0 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-slate-400 sm:leading-6"
+							name="text"
+							id={`text-${id}`}
+							className="nodrag flex-grow w-full rounded-md border-0 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-1 focus:ring-inset focus:ring-slate-400 sm:leading-6"
 							value={presentText}
 							onFocus={(e) => {
 								e.target.selectionStart = 0;
@@ -108,7 +108,7 @@ function ShowPromptSwitch(showPrompt: boolean, setshowPrompt: (visible: boolean)
 				checked={showPrompt}
 				onChange={setshowPrompt}
 				className={conditionalClassNames(
-					showPrompt ? 'bg-green-600' : 'bg-gray-200',
+					showPrompt ? 'bg-green-600' : 'bg-slate-400',
 					'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ',
 				)}
 			>
@@ -120,7 +120,7 @@ function ShowPromptSwitch(showPrompt: boolean, setshowPrompt: (visible: boolean)
 					)}
 				/>
 			</Switch>
-			<Switch.Label as="span" className="ml-3 text-md font-medium text-gray-900">
+			<Switch.Label as="span" className="ml-3 text-md font-medium text-slate-900">
 				Detail
 			</Switch.Label>
 		</Switch.Group>

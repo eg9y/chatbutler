@@ -27,13 +27,7 @@ export default function TextInputTabs({
 						<TextInputTab
 							selectedNode={selectedNode}
 							handleChange={(e) => {
-								handleChange(
-									e,
-									selectedNode.id,
-									selectedNode.data,
-									updateNode,
-									NodeTypesEnum.textInput,
-								);
+								handleChange(e, selectedNode.id, selectedNode.data, updateNode);
 							}}
 						/>
 					)}

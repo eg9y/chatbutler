@@ -5,7 +5,10 @@ Promptsandbox is a free node-based visual programming tool that enables users to
 
 ## Demo
 
-Check out the demo here: [https://promptsandbox.io/](https://promptsandbox.io/)
+1. Check out the demo here: [https://promptsandbox.io/](https://promptsandbox.io/)
+2. enter OpenAI API key by clicking the button at the bottom left corner
+P.S. It has persistent storage, so you can save your workflows and come back to them later.
+
 
 <!-- display png from ./public/promptsandbox.png -->
 ![Promtsandbox dashboard](./public/promptsandbox.png)

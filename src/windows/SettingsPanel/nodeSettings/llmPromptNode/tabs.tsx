@@ -7,7 +7,7 @@ import ApiTab from './tabs/ApiTab';
 import PromptTab from './tabs/PromptTab';
 import { handleChange } from '../../../../utils/handleFormChange';
 import TestTab from './tabs/TestTab';
-import { LLMPromptNodeDataType, NodeTypesEnum } from '../../../../nodes/types/NodeTypes';
+import { LLMPromptNodeDataType } from '../../../../nodes/types/NodeTypes';
 
 const tabs = [
 	{ name: 'API', icon: GlobeAltIcon },
@@ -34,13 +34,7 @@ export default function LLMPromptTabs({
 							<PromptTab
 								selectedNode={selectedNode}
 								handleChange={(e) =>
-									handleChange(
-										e,
-										selectedNode.id,
-										selectedNode.data,
-										updateNode,
-										NodeTypesEnum.llmPrompt,
-									)
+									handleChange(e, selectedNode.id, selectedNode.data, updateNode)
 								}
 							/>
 						)}
@@ -48,13 +42,7 @@ export default function LLMPromptTabs({
 							<ApiTab
 								selectedNode={selectedNode}
 								handleChange={(e) =>
-									handleChange(
-										e,
-										selectedNode.id,
-										selectedNode.data,
-										updateNode,
-										NodeTypesEnum.llmPrompt,
-									)
+									handleChange(e, selectedNode.id, selectedNode.data, updateNode)
 								}
 							/>
 						)}

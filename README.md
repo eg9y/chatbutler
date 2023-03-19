@@ -14,6 +14,7 @@ P.S. This app has persistent storage, so you can save your workflows and come ba
 - Node-based visual programming interface for creating workflows.
 - Integration with OpenAI APIs, including the Completion and Chat APIs.
 - Support for various node types, such as Text Input, LLM Prompt, Chat Message, Chat API, and more.
+- Debugging tools for inspecting the data passed between nodes.
 - Easy-to-use templating system for passing data between nodes and building dynamic prompts.
 - Extensibility with additional node types for more complex workflows, such as API nodes, Code Runner nodes, and Conditional/Branching nodes.
 

@@ -23,6 +23,10 @@ export default function SettingsPanel() {
 			return 'LLM Prompt';
 		} else if (selectedNode.type === NodeTypesEnum.textInput) {
 			return 'Input Text';
+		} else if (selectedNode.type === NodeTypesEnum.chatPrompt) {
+			return 'Chat Prompt';
+		} else if (selectedNode.type === NodeTypesEnum.chatExample) {
+			return 'Chat Example';
 		}
 	}
 

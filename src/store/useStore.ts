@@ -15,6 +15,7 @@ import {
 	applyEdgeChanges,
 	OnEdgesDelete,
 	NodeMouseHandler,
+	MarkerType,
 } from 'reactflow';
 
 import initialNodes from './initialNodes';
@@ -25,6 +26,7 @@ import {
 	InputNode,
 	LLMPromptNodeDataType,
 	NodeTypesEnum,
+	PlaceholderDataType,
 	TextInputNodeDataType,
 } from '../nodes/types/NodeTypes';
 import storage from './storage';
@@ -51,7 +53,9 @@ export interface RFState {
 			x: number;
 			y: number;
 		},
+		parentNode?: string,
 	) => void;
+	onPlaceholderAdd: (placeholderId: string, type: NodeTypesEnum) => void;
 	getInputNodes: (inputs: Set<string>) => InputNode[];
 
 	// TODO: type this
@@ -103,6 +107,7 @@ const useStore = create<RFState>()(
 				const isSelectedNodeDeleted = changes.some(
 					(change) => change.type === 'remove' && change.id === selectedNode?.id,
 				);
+
 				const update: any = {
 					nodes: applyNodeChanges(changes, nodes),
 				};
@@ -119,7 +124,12 @@ const useStore = create<RFState>()(
 			onConnect: (connection: Connection) => {
 				const nodes = get().nodes;
 				const targetNode = nodes.find((n) => n.id === connection.target);
-				if (targetNode && connection.source) {
+				if (
+					targetNode &&
+					connection.source &&
+					connection.sourceHandle !== 'placeholder' &&
+					connection.sourceHandle !== 'chat-prompt-start'
+				) {
 					targetNode.data.inputs.addInput(connection.source, nodes as InputNode[]);
 				}
 
@@ -156,6 +166,7 @@ const useStore = create<RFState>()(
 					x: number;
 					y: number;
 				},
+				parentNode?: string,
 			) => {
 				const x = position.x;
 				const y = position.y;
@@ -208,6 +219,104 @@ const useStore = create<RFState>()(
 							isBreakpoint: false,
 						},
 					};
+				} else if (type === NodeTypesEnum.chatPrompt) {
+					const nodeId = `${type}-${nodeLength}`;
+					node = {
+						id: nodeId,
+						type,
+						position: {
+							x,
+							y,
+						},
+						data: {
+							name: `test prompt ${nodeLength}`,
+							text: `this is a system message ${nodeLength}`,
+							isLoading: false,
+							model: 'gpt-4',
+							temperature: 0.7,
+							max_tokens: 256,
+							top_p: 1,
+							frequency_penalty: 0.0,
+							presence_penalty: 0.0,
+							best_of: 1,
+							inputs: new Inputs(),
+							response: '',
+							isBreakpoint: false,
+							stop: [],
+						},
+					};
+
+					const placeHolderId = `placeholder-${nodeId}-${nodeLength}`;
+					const placeHolderNode: Node<PlaceholderDataType> = {
+						id: placeHolderId,
+						type: NodeTypesEnum.placeholder,
+						parentNode: nodeId,
+						position: {
+							x: 600,
+							y: 0,
+						},
+						data: {
+							typeToCreate: NodeTypesEnum.chatExample,
+							name: `placeholder ${nodeId}`,
+							text: `placeholder ${nodeId}`,
+							inputs: new Inputs(),
+							response: `placeholder ${nodeId}`,
+							isLoading: false,
+							isBreakpoint: false,
+						},
+					};
+
+					const nodeChanges = nodes.concat(node);
+					set({
+						nodes: nodeChanges,
+					});
+					set({
+						nodes: nodeChanges.concat(placeHolderNode),
+					});
+
+					const edges = get().edges;
+
+					const edge = {
+						id: `${nodeId}-${placeHolderId}`,
+						source: nodeId,
+						target: placeHolderId,
+						type: 'smoothstep',
+						animated: false,
+						style: {
+							strokeWidth: 2,
+							stroke: '#808080',
+							strokeDasharray: '5,5',
+						},
+						markerEnd: {
+							type: MarkerType.Arrow,
+							width: 20,
+							height: 20,
+							color: 'rgb(0,0,0,0)',
+						},
+					};
+					set({
+						edges: edges.concat(edge),
+					});
+					return;
+				} else if (type === NodeTypesEnum.chatExample && parentNode) {
+					node = {
+						id: `${type}-${nodeLength}`,
+						type,
+						position: {
+							x,
+							y,
+						},
+						parentNode,
+						data: {
+							role: 'user',
+							name: `test chat message ${nodeLength}`,
+							text: `This is a chat example message ${nodeLength}`,
+							inputs: new Inputs(),
+							response: `This is a chat example message ${nodeLength}`,
+							isLoading: false,
+							isBreakpoint: false,
+						},
+					};
 				}
 
 				if (node) {
@@ -216,7 +325,41 @@ const useStore = create<RFState>()(
 					});
 				}
 			},
+			onPlaceholderAdd: (placeholderId: string, type: NodeTypesEnum) => {
+				//get placeholder parentId and then remove it placeholderid
+				const nodes = get().nodes;
+				const placeholderNode = nodes.find((node) => node.id === placeholderId);
+				let parentNodeId: string | undefined = '';
+				if (!placeholderNode) {
+					return;
+				}
+				parentNodeId = placeholderNode.parentNode;
+				// remove
+				set({
+					nodes: nodes.filter((node) => node.id !== placeholderId),
+				});
+				get().onAdd(type, placeholderNode.position, parentNodeId);
 
+				if (!parentNodeId) {
+					return;
+				}
+
+				const edges = get().edges;
+				const newNodes = get().nodes;
+				const newNode = newNodes.find((node) => node.parentNode === parentNodeId);
+				if (!newNode) {
+					return;
+				}
+				const edge = {
+					id: `${parentNodeId}-${newNode.id}`,
+					source: parentNodeId,
+					target: newNode.id,
+				};
+				console.log('edgeszsds', edge);
+				set({
+					edges: edges.concat(edge),
+				});
+			},
 			getInputNodes: (inputs: Set<string>) => {
 				const nodes = get().nodes;
 				const inputNodes = nodes.filter((node) => inputs.has(node.id));
@@ -304,7 +447,10 @@ const useStore = create<RFState>()(
 					unlockGraph: false,
 				});
 				try {
-					if (sortedNodes[sortedNodeIndex]?.type === NodeTypesEnum.llmPrompt) {
+					if (
+						sortedNodes[sortedNodeIndex]?.type === NodeTypesEnum.llmPrompt ||
+						sortedNodes[sortedNodeIndex]?.type === NodeTypesEnum.chatPrompt
+					) {
 						sortedNodes[sortedNodeIndex].data = {
 							...sortedNodes[sortedNodeIndex].data,
 							isLoading: true,
@@ -313,6 +459,38 @@ const useStore = create<RFState>()(
 						set({
 							nodes: [...sortedNodes],
 						});
+					}
+					if (sortedNodes[sortedNodeIndex]?.type === NodeTypesEnum.llmPrompt) {
+						// get response from nodes with inputs
+						const inputs = sortedNodes[sortedNodeIndex].data.inputs;
+						if (inputs) {
+							const response = await getOpenAIResponse(
+								get().openAIApiKey,
+								sortedNodes[sortedNodeIndex].data as LLMPromptNodeDataType,
+								get().getInputNodes(inputs.inputs),
+							);
+							// const mockResponse = {
+							// 	data: {
+							// 		choices: [
+							// 			{
+							// 				text:
+							// 					Math.random().toString(36).substring(2, 15) +
+							// 					Math.random().toString(36).substring(2, 15),
+							// 			},
+							// 		],
+							// 	},
+							// };
+							// const completion = mockResponse.data.choices[0].text;
+							const completion = response.data.choices[0].text;
+							if (completion) {
+								sortedNodes[sortedNodeIndex].data = {
+									...sortedNodes[sortedNodeIndex].data,
+									response: completion,
+									isLoading: false,
+								};
+							}
+						}
+					} else if (sortedNodes[sortedNodeIndex]?.type === NodeTypesEnum.chatPrompt) {
 						// get response from nodes with inputs
 						const inputs = sortedNodes[sortedNodeIndex].data.inputs;
 						if (inputs) {

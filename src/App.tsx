@@ -9,11 +9,7 @@ import ReactFlow, {
 
 import 'reactflow/dist/base.css';
 
-import {
-	ChevronDoubleRightIcon,
-	ChevronDoubleLeftIcon,
-	TrashIcon,
-} from '@heroicons/react/20/solid';
+import { ChevronDoubleRightIcon, ChevronDoubleLeftIcon } from '@heroicons/react/20/solid';
 
 import { shallow } from 'zustand/shallow';
 
@@ -28,8 +24,22 @@ import Notification from './components/Notification';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { NodeTypesEnum } from './nodes/types/NodeTypes';
 import RunFromStart from './components/RunFromStart';
+import ChatPromptNode from './nodes/ChatPromptNode';
+import ChatExampleNode from './nodes/ChatExampleNode';
+import PlaceholderNode from './nodes/PlaceholderNode';
+import CustomEdge from './edges/CustomEdgeType';
 
-const nodeTypes = { llmPrompt: LLMPromptNode, textInput: TextInputNode };
+const nodeTypes = {
+	llmPrompt: LLMPromptNode,
+	textInput: TextInputNode,
+	chatPrompt: ChatPromptNode,
+	chatExample: ChatExampleNode,
+	placeholder: PlaceholderNode,
+};
+
+const edgeTypes = {
+	custom: CustomEdge,
+};
 
 export default function App() {
 	const {
@@ -99,17 +109,21 @@ export default function App() {
 				return;
 			}
 
+			const position = reactFlowInstance.project({
+				x: event.clientX - reactFlowBounds.left,
+				y: event.clientY - reactFlowBounds.top,
+			});
+
 			let nodeTypeEnum = NodeTypesEnum.llmPrompt;
 			if (type === 'llmPrompt') {
 				nodeTypeEnum = NodeTypesEnum.llmPrompt;
 			} else if (type === 'textInput') {
 				nodeTypeEnum = NodeTypesEnum.textInput;
+			} else if (type === 'chatPrompt') {
+				nodeTypeEnum = NodeTypesEnum.chatPrompt;
+			} else if (type === 'chatExample') {
+				nodeTypeEnum = NodeTypesEnum.chatExample;
 			}
-
-			const position = reactFlowInstance.project({
-				x: event.clientX - reactFlowBounds.left,
-				y: event.clientY - reactFlowBounds.top,
-			});
 
 			onAdd(nodeTypeEnum, position);
 		},
@@ -202,6 +216,7 @@ export default function App() {
 						onEdgesChange={onEdgesChange}
 						onConnect={onConnect}
 						nodeTypes={nodeTypes}
+						edgeTypes={edgeTypes}
 						connectionLineComponent={ConnectionLine}
 						onNodeDragStart={onNodeDragStop}
 						onNodeClick={onNodeDragStop}
@@ -221,7 +236,7 @@ export default function App() {
 							},
 						}}
 					>
-						<MiniMap />
+						<MiniMap pannable={true} />
 						<Background variant={BackgroundVariant.Lines} gap={12} size={1} />
 						<Panel position="top-center" aria-label="graph-runner">
 							<div className="flex gap-4">

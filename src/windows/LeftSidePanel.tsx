@@ -148,7 +148,7 @@ export default function LeftSidePanel({
 										}
 										aria-hidden="true"
 									/>
-									<span className="truncate">Chat Start</span>
+									<span className="truncate">Chat API</span>
 								</a>
 							</div>
 
@@ -158,16 +158,16 @@ export default function LeftSidePanel({
 								onDragStart={(e) => {
 									e.dataTransfer.setData(
 										'application/reactflow',
-										NodeTypesEnum.chatExample,
+										NodeTypesEnum.chatMessage,
 									);
 								}}
-								className="ml-4"
+								className=""
 							>
 								<a
 									className={
 										'flex items-center justify-center gap-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 group rounded-md py-2 text-sm font-medium cursor-pointer ring-2 ring-inset ring-indigo-300'
 									}
-									onClick={() => addNodeToCenter(NodeTypesEnum.chatExample)}
+									onClick={() => addNodeToCenter(NodeTypesEnum.chatMessage)}
 								>
 									<ChatBubbleLeftEllipsisIcon
 										className={
@@ -175,7 +175,7 @@ export default function LeftSidePanel({
 										}
 										aria-hidden="true"
 									/>
-									<span className="truncate">Message</span>
+									<span className="truncate">Chat Message</span>
 								</a>
 							</div>
 						</div>

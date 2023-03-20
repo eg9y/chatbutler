@@ -5,11 +5,11 @@ import { shallow } from 'zustand/shallow';
 import useStore, { selector } from '../store/useStore';
 import { NodeTypesEnum, PlaceholderDataType } from './types/NodeTypes';
 
-const PlaceholderNode: FC<NodeProps<PlaceholderDataType>> = ({ data, xPos, yPos, id }) => {
+const PlaceholderNode: FC<NodeProps<PlaceholderDataType>> = ({ data, id }) => {
 	const { onPlaceholderAdd } = useStore(selector, shallow);
 
 	const onPlaceholderClick = () => {
-		const type = data.typeToCreate ?? NodeTypesEnum.chatExample;
+		const type = data.typeToCreate ?? NodeTypesEnum.chatMessage;
 		onPlaceholderAdd(id, type);
 	};
 	return (
@@ -31,11 +31,17 @@ const PlaceholderNode: FC<NodeProps<PlaceholderDataType>> = ({ data, xPos, yPos,
 				aria-hidden="true"
 			/>
 			<Handle
-				type="target"
+				type="source"
 				position={Position.Left}
-				id="placeholder"
+				id="placeholder-source"
 				className="bg-transparent"
 			></Handle>
+			{/* <Handle
+				type="target"
+				position={Position.Left}
+				id="placeholder-target"
+				className="bg-transparent"
+			></Handle> */}
 		</div>
 	);
 };

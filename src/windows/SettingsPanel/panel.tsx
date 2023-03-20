@@ -25,8 +25,8 @@ export default function SettingsPanel() {
 			return 'Input Text';
 		} else if (selectedNode.type === NodeTypesEnum.chatPrompt) {
 			return 'Chat Prompt';
-		} else if (selectedNode.type === NodeTypesEnum.chatExample) {
-			return 'Chat Example';
+		} else if (selectedNode.type === NodeTypesEnum.chatMessage) {
+			return 'Chat Message';
 		}
 	}
 

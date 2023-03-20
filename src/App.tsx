@@ -25,7 +25,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { NodeTypesEnum } from './nodes/types/NodeTypes';
 import RunFromStart from './components/RunFromStart';
 import ChatPromptNode from './nodes/ChatPromptNode';
-import ChatExampleNode from './nodes/ChatExampleNode';
+import ChatMessageNode from './nodes/ChatMessageNode';
 import PlaceholderNode from './nodes/PlaceholderNode';
 import CustomEdge from './edges/CustomEdgeType';
 
@@ -33,7 +33,7 @@ const nodeTypes = {
 	llmPrompt: LLMPromptNode,
 	textInput: TextInputNode,
 	chatPrompt: ChatPromptNode,
-	chatExample: ChatExampleNode,
+	chatMessage: ChatMessageNode,
 	placeholder: PlaceholderNode,
 };
 
@@ -121,8 +121,8 @@ export default function App() {
 				nodeTypeEnum = NodeTypesEnum.textInput;
 			} else if (type === 'chatPrompt') {
 				nodeTypeEnum = NodeTypesEnum.chatPrompt;
-			} else if (type === 'chatExample') {
-				nodeTypeEnum = NodeTypesEnum.chatExample;
+			} else if (type === 'chatMessage') {
+				nodeTypeEnum = NodeTypesEnum.chatMessage;
 			}
 
 			onAdd(nodeTypeEnum, position);

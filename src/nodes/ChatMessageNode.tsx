@@ -4,12 +4,12 @@ import { shallow } from 'zustand/shallow';
 import useUndo from 'use-undo';
 
 import useStore, { selector } from '../store/useStore';
-import { ChatExampleNodeDataType } from './types/NodeTypes';
+import { ChatMessageNodeDataType } from './types/NodeTypes';
 import InputNodesList from './templates/InputNodesList';
 import ShowPromptSwitch from '../components/ShowPromptSwitch';
 import { handleChange } from '../utils/handleFormChange';
 
-const ChatExample: FC<NodeProps<ChatExampleNodeDataType>> = (props) => {
+const ChatMessage: FC<NodeProps<ChatMessageNodeDataType>> = (props) => {
 	const { data, selected, id } = props;
 	const [
 		textState,
@@ -43,7 +43,7 @@ const ChatExample: FC<NodeProps<ChatExampleNodeDataType>> = (props) => {
 				>
 					<div className="flex gap-2 items-center py-2">
 						<h1 className="text-start pl-4">
-							<span className="font-semibold">Message:</span> {data.name}
+							<span className="font-semibold">Chat:</span> {data.name}
 						</h1>
 						{data.isLoading && (
 							<svg
@@ -76,7 +76,7 @@ const ChatExample: FC<NodeProps<ChatExampleNodeDataType>> = (props) => {
 						<div className="h-full flex flex-col gap-1 p-4 text-slate-900">
 							<div className="font-medium leading-6  p-2 relative flex items-end">
 								<div
-									className="bg-purple-600 rounded-lg rounded-br-none p-2 text-xl cursor-pointer text-purple-100"
+									className="bg-purple-300 rounded-lg rounded-br-none p-2 text-xl cursor-pointer text-slate-700 font-bold"
 									onClick={() => {
 										if (data.role === 'user') {
 											updateNode(id, {
@@ -100,7 +100,7 @@ const ChatExample: FC<NodeProps<ChatExampleNodeDataType>> = (props) => {
 											width: '20px',
 											height: '20px',
 											background:
-												'linear-gradient(to bottom left, rgb(0,0,0,0) 0%, rgb(0,0,0,0) 50%, rgb(147 51 234) 50%, rgb(147 51 234) 100%)',
+												'linear-gradient(to bottom left, rgb(0,0,0,0) 0%, rgb(0,0,0,0) 50%, rgb(216 180 254) 50%, rgb(216 180 254) 100%)',
 											content: '',
 										}}
 									></div>
@@ -137,13 +137,13 @@ const ChatExample: FC<NodeProps<ChatExampleNodeDataType>> = (props) => {
 				<Handle
 					type="target"
 					position={Position.Left}
-					id="text-input"
+					id="chat-message-input"
 					className="w-4 h-4"
 				></Handle>
 				<Handle
 					type="source"
 					position={Position.Right}
-					id="text-output"
+					id="chat-message"
 					className="w-4 h-4"
 				/>
 			</div>
@@ -151,4 +151,4 @@ const ChatExample: FC<NodeProps<ChatExampleNodeDataType>> = (props) => {
 	);
 };
 
-export default memo(ChatExample);
+export default memo(ChatMessage);

@@ -12,10 +12,10 @@ export type DefaultNodeDataType = {
 };
 
 export type CustomNode = Node<
-	LLMPromptNodeDataType | TextInputNodeDataType | ChatPromptNodeDataType | ChatExampleNodeDataType
+	LLMPromptNodeDataType | TextInputNodeDataType | ChatPromptNodeDataType | ChatMessageNodeDataType
 >;
 export type InputNode = Node<
-	LLMPromptNodeDataType | TextInputNodeDataType | ChatPromptNodeDataType | ChatExampleNodeDataType
+	LLMPromptNodeDataType | TextInputNodeDataType | ChatPromptNodeDataType
 >;
 
 type OpenAIAPIRequest = {
@@ -32,8 +32,10 @@ type OpenAIAPIRequest = {
 
 export type LLMPromptNodeDataType = OpenAIAPIRequest & DefaultNodeDataType;
 export type ChatPromptNodeDataType = LLMPromptNodeDataType;
-export type ChatExampleNodeDataType = {
-	role: 'user' | 'assistant';
+export type ChatMessageNodeDataType = {
+	// to create a tree for getting paths to run
+	childrenChat: string[];
+	role: 'user' | 'assistant' | 'system';
 } & DefaultNodeDataType;
 
 export type TextInputNodeDataType = DefaultNodeDataType;
@@ -46,6 +48,6 @@ export enum NodeTypesEnum {
 	llmPrompt = 'llmPrompt',
 	textInput = 'textInput',
 	chatPrompt = 'chatPrompt',
-	chatExample = 'chatExample',
+	chatMessage = 'chatMessage',
 	placeholder = 'placeholder',
 }

@@ -9,7 +9,7 @@ import { conditionalClassNames } from '../../utils/classNames';
 
 export default function NodesPanel({ selectedNode }: { selectedNode: CustomNode | null }) {
 	const [showPromptInOutput, setShowPromptInOutput] = useState(false);
-	const { getInputNodes } = useStore(selector, shallow);
+	const { getInputNodes, clearGraph } = useStore(selector, shallow);
 
 	return (
 		<div className="p-3 flex flex-col justify-between h-full w-full">
@@ -17,7 +17,10 @@ export default function NodesPanel({ selectedNode }: { selectedNode: CustomNode 
 			<button
 				className="p-3 bg-red-500 hover:bg-red-600 text-white text-md font-semibold 
 					w-1/2
-				py-1 pr-2  rounded flex items-center "
+				py-1 pr-2  rounded flex items-center"
+				onClick={() => {
+					clearGraph();
+				}}
 			>
 				<TrashIcon
 					className={' group-hover:text-gray-500  mx-auto h-5 w-5'}

@@ -49,3 +49,41 @@ export async function getOpenAIResponse(
 	const response = await openAi.createCompletion(settings);
 	return response;
 }
+
+export async function getOpenAIChatResponse(
+	apiKey: string | null,
+	chatSequence: {
+		role: 'user' | 'assistant' | 'system';
+		content: string;
+	}[],
+) {
+	if (!apiKey) {
+		throw new Error(
+			'OpenAI API key is not set. Please set it in the settings at the bottom left panel.',
+		);
+	}
+	const settings = {
+		model: 'gpt-4',
+		messages: chatSequence,
+		// max_tokens: llmPrompt.max_tokens,
+		// temperature: llmPrompt.temperature,
+		// top_p: llmPrompt.top_p,
+		// presence_penalty: llmPrompt.presence_penalty,
+		// frequency_penalty: llmPrompt.frequency_penalty,
+		// best_of: llmPrompt.best_of,
+
+		// TODO: make these fields configurable
+		// n: llmPrompt.n,
+		// stream: llmPrompt.stream,
+		// stop: llmPrompt.stop,
+	};
+
+	const config = new Configuration({
+		apiKey,
+	});
+	const openAi = new OpenAIApi(config);
+	// TODO: Other openAI APIs especially Chat
+	const response = await openAi.createChatCompletion(settings);
+
+	return response;
+}

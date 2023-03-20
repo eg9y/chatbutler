@@ -36,12 +36,10 @@ export default function RunButton({
 					data,
 					getInputNodes(data.inputs.inputs),
 				);
-				console.log(JSON.stringify(response, null, 2));
 				const completion = response.data.choices[0].text;
 				if (completion) {
 					data.response = completion;
 				}
-				console.log(data.response);
 				updateNode(id, data);
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			} catch (error: any) {

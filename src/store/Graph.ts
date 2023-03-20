@@ -34,4 +34,29 @@ export class Graph {
 
 		return sorted;
 	}
+
+	getRootNodes(): string[] {
+		const childNodeIds = new Set<string>();
+
+		// Add all child node IDs to the set
+		for (const [parent, children] of this.adjacencyList) {
+			for (const childId of children) {
+				// get substring of childId between 0 and guaranteed occurance of '-':
+				if (
+					childId.substring(0, childId.indexOf('-')) === 'chatMessage' &&
+					parent.substring(0, childId.indexOf('-')) !== 'chatMessage'
+				) {
+					continue;
+				}
+				childNodeIds.add(childId);
+			}
+		}
+
+		// Find the root nodes by checking if their IDs are not in the child node IDs set
+		const rootNodes = Array.from(this.adjacencyList.keys()).filter(
+			(nodeId) => !childNodeIds.has(nodeId),
+		);
+
+		return rootNodes;
+	}
 }

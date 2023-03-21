@@ -5,7 +5,7 @@ import { RFState, UseStoreSetType } from './useStore';
 
 const onConnect = (get: () => RFState, set: UseStoreSetType, connection: Connection) => {
 	const nodes = get().nodes;
-	const edges = get().edges;
+	let edges = get().edges;
 	const targetNodeIndex = nodes.findIndex((n) => n.id === connection.target)!;
 	const sourceNodeIndex = nodes.findIndex((n) => n.id === connection.source)!;
 
@@ -101,6 +101,11 @@ const onConnect = (get: () => RFState, set: UseStoreSetType, connection: Connect
 		// remove placeholder node
 		const filteredNodes = nodes.filter((node) => {
 			return node.id !== placeholderToDelete?.target;
+		});
+
+		// remove placeholder edge
+		edges = edges.filter((edge) => {
+			return edge.id !== placeholderToDelete?.id;
 		});
 
 		set({

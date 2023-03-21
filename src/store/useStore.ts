@@ -173,6 +173,9 @@ const useStore = create<RFState>()(
 			},
 			getInputNodes: (inputs: Set<string>) => {
 				const nodes = get().nodes;
+				if (inputs.size === 0) {
+					return [];
+				}
 				const inputNodes = nodes.filter((node) => inputs.has(node.id));
 
 				return inputNodes as InputNode[];

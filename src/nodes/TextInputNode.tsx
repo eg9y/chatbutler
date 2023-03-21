@@ -4,25 +4,16 @@ import { shallow } from 'zustand/shallow';
 import useUndo from 'use-undo';
 
 import useStore, { selector } from '../store/useStore';
-import { CustomNode, TextInputNodeDataType } from './types/NodeTypes';
-import { conditionalClassNames } from '../utils/classNames';
+import { TextInputNodeDataType } from './types/NodeTypes';
 import TextAreaTemplate from './templates/TextAreaTemplate';
+import InputNodesList from './templates/InputNodesList';
 
 const TextInput: FC<NodeProps<TextInputNodeDataType>> = (props) => {
 	const { data, selected, id } = props;
-	const [
-		textState,
-		{
-			set: setText,
-			// reset: resetText,
-			// undo: undoText,
-			// redo: redoText,
-			// canUndo, canRedo
-		},
-	] = useUndo(data.text);
+	const [textState, { set: setText }] = useUndo(data.text);
 	const { present: presentText } = textState;
 
-	const { updateNode, getInputNodes } = useStore(selector, shallow);
+	const { updateNode } = useStore(selector, shallow);
 	const [showPrompt, setshowPrompt] = useState(true);
 
 	return (
@@ -48,58 +39,12 @@ const TextInput: FC<NodeProps<TextInputNodeDataType>> = (props) => {
 					setText={setText}
 				>
 					<div className="flex flex-col gap-2 text-md ">
-						<div className="flex gap-2 flex-wrap">
-							{getInputNodes(data.inputs.inputs).map((inputNode: CustomNode) => {
-								const colorClass = conditionalClassNames(
-									inputNode.type === 'textInput' &&
-										'bg-emerald-600 text-white hover:bg-emerald-700 border-l-8 border-emerald-400',
-									inputNode.type === 'llmPrompt' &&
-										'bg-emerald-600 text-white hover:bg-emerald-700  border-l-8 border-emerald-400',
-									`rounded py-1 px-2 font-semibold shadow-sm `,
-								);
-								return (
-									<div key={inputNode.id}>
-										<button
-											type="button"
-											// convert below to use color for both bg and text
-											className={colorClass}
-											onClick={() => {
-												// append {{inputNode.data.name}} to textarea
-												const text = document.getElementById(
-													`text-${id}`,
-												) as HTMLTextAreaElement;
-												// insert in the current text cursor position
-												const start = text.selectionStart;
-												const end = text.selectionEnd;
-												const textValue = text.value;
-												const before = textValue.substring(0, start);
-												const after = textValue.substring(
-													end,
-													textValue.length,
-												);
-												text.value = `${before}{{${inputNode.data.name}}}${after}`;
-
-												setText(text.value);
-												// focus on the text cursor position after the inserted text
-												text.focus();
-
-												text.selectionStart =
-													start + 4 + inputNode.data.name.length;
-												text.selectionEnd =
-													start + 4 + inputNode.data.name.length;
-
-												return updateNode(id, {
-													...data,
-													text: text.value,
-												});
-											}}
-										>
-											{inputNode.data.name}
-										</button>
-									</div>
-								);
-							})}
-						</div>
+						<InputNodesList
+							data={data}
+							id={id}
+							setText={setText}
+							updateNode={updateNode}
+						/>
 					</div>
 				</TextAreaTemplate>
 			</div>

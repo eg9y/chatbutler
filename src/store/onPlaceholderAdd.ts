@@ -1,3 +1,4 @@
+import { MarkerType } from 'reactflow';
 import { NodeTypesEnum } from '../nodes/types/NodeTypes';
 import { RFState, UseStoreSetType } from './useStore';
 
@@ -16,8 +17,11 @@ const onPlaceholderAdd = (
 	}
 	parentNodeId = placeholderNode.parentNode;
 	// remove
+
+	const updatedEdges = get().edges.filter((edge) => edge.target !== placeholderId);
 	set({
 		nodes: nodes.filter((node) => node.id !== placeholderId),
+		edges: updatedEdges,
 	});
 	get().onAdd(type, placeholderNode.position, parentNodeId);
 
@@ -25,7 +29,6 @@ const onPlaceholderAdd = (
 		return;
 	}
 
-	const edges = get().edges;
 	const newNodes = get().nodes;
 	const newNodeIndex = newNodes.findIndex((node) => node.parentNode === parentNodeId);
 	const parentNode = newNodes.find((node) => node.id === parentNodeId);
@@ -37,6 +40,19 @@ const onPlaceholderAdd = (
 		id: `${parentNodeId}-${newNodes[newNodeIndex].id}`,
 		source: parentNodeId,
 		target: newNodes[newNodeIndex].id,
+		sourceHandle: 'chat-message',
+		targetHandle: 'chat-prompt-messages',
+		style: {
+			strokeWidth: 5,
+			stroke: 'rgb(216 180 254)',
+			strokeDasharray: '5, 5',
+		},
+		markerEnd: {
+			type: MarkerType.ArrowClosed,
+			width: 10,
+			height: 10,
+			color: '#d8b4fe',
+		},
 	};
 	delete newNodes[newNodeIndex].parentNode;
 	newNodes[newNodeIndex].position = {
@@ -44,7 +60,8 @@ const onPlaceholderAdd = (
 		y: parentNode.position.y,
 	};
 	set({
-		edges: edges.concat(edge),
+		edges: updatedEdges.concat(edge),
+		nodes: newNodes,
 	});
 };
 

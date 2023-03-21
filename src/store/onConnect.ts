@@ -16,7 +16,7 @@ const onConnect = (get: () => RFState, set: UseStoreSetType, connection: Connect
 	}
 
 	const alreadyConnectedToChatMessage = edges.some((edge) => {
-		// if target does have another source that's of type chatMessage, do something
+		// if target does have another source that's of type chatMessage, do don't allow
 		if (
 			connection.targetHandle === 'chat-message-input' &&
 			connection.sourceHandle === 'chat-message' &&

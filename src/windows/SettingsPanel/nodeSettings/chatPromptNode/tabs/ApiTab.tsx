@@ -1,5 +1,5 @@
 import { Node } from 'reactflow';
-import { completionModels } from '../../../../../openai/models';
+import { chatModels } from '../../../../../openai/models';
 import ChipsInput from '../../../inputs/ChipsInput';
 
 import RangeInput from '../../../inputs/RangeInput';
@@ -45,7 +45,7 @@ export default function ApiPromptTab({
 								value={selectedNode.data.model}
 								onChange={handleChange}
 							>
-								{completionModels.map((model) => (
+								{chatModels.map((model) => (
 									<option key={model} value={model}>
 										{model}
 									</option>

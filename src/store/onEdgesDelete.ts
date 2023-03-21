@@ -23,7 +23,7 @@ const onEdgesDelete = (get: () => RFState, set: UseStoreSetType, edges: Edge[]) 
 				(edge) =>
 					edge.source === node.id &&
 					edge.sourceHandle === 'chatMessage' &&
-					edge.targetHandle === 'chatMessage',
+					(edge.targetHandle === 'chatMessage' || edge.targetHandle === 'chatPrompt'),
 			)
 			.map((edge) => {
 				return edge.target;

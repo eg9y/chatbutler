@@ -3,13 +3,13 @@ import { Node } from 'reactflow';
 import { PencilIcon } from '@heroicons/react/20/solid';
 
 import TabsNavigator from '../../TabsNavigator';
-import TextInputTab from './tabs/TextInputTab';
+import TextInputTab from './tabs/ChatMessageTab';
 import { TextInputNodeDataType } from '../../../../nodes/types/NodeTypes';
 import { handleChange } from '../../../../utils/handleFormChange';
 
-const tabs = [{ name: 'Text Input', icon: PencilIcon }];
+const tabs = [{ name: 'Chat Message', icon: PencilIcon }];
 
-export default function TextInputTabs({
+export default function ChatMessageTabs({
 	selectedNode,
 	updateNode,
 }: {
@@ -23,7 +23,8 @@ export default function TextInputTabs({
 			<div className="overflow-y-auto hide-scrollbar pb-40 pt-4">
 				<TabsNavigator tabs={tabs} selected={selected} setSelected={setSelected} />
 				<div className="pt-2">
-					{selected === 'Text Input' && (
+					{selected}
+					{selected === 'Chat Message' && (
 						<TextInputTab
 							selectedNode={selectedNode}
 							handleChange={(e) => {

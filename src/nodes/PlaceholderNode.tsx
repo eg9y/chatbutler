@@ -15,7 +15,7 @@ const PlaceholderNode: FC<NodeProps<PlaceholderDataType>> = ({ data, id }) => {
 	return (
 		<div
 			style={{
-				height: '20rem',
+				height: '40rem',
 				width: '35rem',
 				display: 'flex',
 				justifyContent: 'center',
@@ -23,7 +23,7 @@ const PlaceholderNode: FC<NodeProps<PlaceholderDataType>> = ({ data, id }) => {
 				cursor: 'pointer',
 				position: 'relative',
 			}}
-			className="nodrag border-4 border-dashed border-slate-300 bg-slate-100"
+			className="nodrag m-3 border-4 border-dashed border-slate-300 bg-slate-100/20"
 			onClick={onPlaceholderClick}
 		>
 			<PlusIcon
@@ -31,17 +31,11 @@ const PlaceholderNode: FC<NodeProps<PlaceholderDataType>> = ({ data, id }) => {
 				aria-hidden="true"
 			/>
 			<Handle
-				type="source"
-				position={Position.Left}
-				id="placeholder-source"
-				className="bg-transparent"
-			></Handle>
-			{/* <Handle
 				type="target"
 				position={Position.Left}
 				id="placeholder-target"
 				className="bg-transparent"
-			></Handle> */}
+			></Handle>
 		</div>
 	);
 };

@@ -90,13 +90,26 @@ const onConnect = (get: () => RFState, set: UseStoreSetType, connection: Connect
 
 	if (connection.source) {
 		nodes[targetNodeIndex].data.inputs.addInput(connection.source, nodes as InputNode[]);
+		// remove any edges with the same source and the targetHandle placeholder
+		const placeholderToDelete = edges.find((edge) => {
+			return (
+				edge.source === connection.source &&
+				edge.target.substring(0, edge.target.indexOf('-')) === 'placeholder'
+			);
+		});
+
+		// remove placeholder node
+		const filteredNodes = nodes.filter((node) => {
+			return node.id !== placeholderToDelete?.target;
+		});
+
 		set({
-			nodes: [...nodes],
+			nodes: [...filteredNodes],
 		});
 	}
 
 	set({
-		edges: addEdge(connectionEdge, get().edges),
+		edges: addEdge(connectionEdge, edges),
 	});
 };
 

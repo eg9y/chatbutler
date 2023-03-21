@@ -1,30 +1,17 @@
 import { memo, FC, useState } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
 import { shallow } from 'zustand/shallow';
-import useUndo from 'use-undo';
 
 import useStore, { selector } from '../store/useStore';
 import { ChatPromptNodeDataType } from './types/NodeTypes';
 import RunnableToolbarTemplate from './templates/RunnableToolbarTemplate';
-import TextAreaTemplate from './templates/TextAreaTemplate';
-import InputNodesList from './templates/InputNodesList';
 import { Disclosure } from '@headlessui/react';
 import { SignalIcon, ClipboardIcon } from '@heroicons/react/20/solid';
 import { conditionalClassNames } from '../utils/classNames';
+import ShowPromptSwitch from '../components/ShowPromptSwitch';
 
 const ChatPrompt: FC<NodeProps<ChatPromptNodeDataType>> = (props) => {
 	const { data, selected, id } = props;
-	const [
-		textState,
-		{
-			set: setText,
-			// reset: resetText,
-			// undo: undoText,
-			// redo: redoText,
-			// canUndo, canRedo
-		},
-	] = useUndo(data.text);
-	const { present: presentText } = textState;
 
 	const { updateNode, openAIApiKey } = useStore(selector, shallow);
 	const [showPrompt, setshowPrompt] = useState(true);
@@ -44,26 +31,38 @@ const ChatPrompt: FC<NodeProps<ChatPromptNodeDataType>> = (props) => {
 				{RunnableToolbarTemplate(data, selected, updateNode, id, openAIApiKey)}
 				{/* how to spread  */}
 
-				<TextAreaTemplate
-					{...props}
-					title="Chat Call"
-					fieldName="System message"
-					show={showPrompt}
-					setShow={setshowPrompt}
-					presentText={presentText}
-					setText={setText}
-					bgColor="bg-indigo-300"
+				<div
+					className={`py-1 flex justify-between items-center pr-4 border-b-1 border-slate-400 text-xl bg-indigo-300`}
 				>
-					<div className="flex flex-col gap-2 text-md ">
-						<InputNodesList
-							data={data}
-							id={id}
-							setText={setText}
-							updateNode={updateNode}
-						/>
+					<div className="flex gap-2 items-center py-2">
+						<h1 className="text-start pl-4">
+							<span className="font-semibold">Chat Call:</span> {data.name}
+						</h1>
+						{data.isLoading && (
+							<svg
+								className="animate-spin -ml-1 mr-3 h-7 w-7 text-black"
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+							>
+								<circle
+									className="opacity-25"
+									cx="12"
+									cy="12"
+									r="10"
+									stroke="currentColor"
+									strokeWidth="4"
+								></circle>
+								<path
+									className="opacity-75"
+									fill="currentColor"
+									d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+								></path>
+							</svg>
+						)}
 					</div>
-					<div>Input Chat Messages:</div>
-				</TextAreaTemplate>
+					{ShowPromptSwitch(showPrompt, setshowPrompt)}
+				</div>
 			</div>
 			<Disclosure
 				as="div"

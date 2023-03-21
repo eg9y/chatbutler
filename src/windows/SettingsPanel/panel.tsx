@@ -9,9 +9,14 @@ import useStore, { selector } from '../../store/useStore';
 
 import LLMPromptTabs from './nodeSettings/llmPromptNode/tabs';
 import TextInputTabs from './nodeSettings/textInputNode/tabs';
-import { LLMPromptNodeDataType, NodeTypesEnum } from '../../nodes/types/NodeTypes';
+import {
+	ChatPromptNodeDataType,
+	LLMPromptNodeDataType,
+	NodeTypesEnum,
+} from '../../nodes/types/NodeTypes';
 import NodesPanel from './NodesPanel';
 import ChatMessageTabs from './nodeSettings/chatMessage/tabs';
+import ChatPromptTabs from './nodeSettings/chatPromptNode/tabs';
 
 export default function SettingsPanel() {
 	const { selectedNode, updateNode } = useStore(selector, shallow);
@@ -28,6 +33,8 @@ export default function SettingsPanel() {
 			return 'Chat Prompt';
 		} else if (selectedNode.type === NodeTypesEnum.chatMessage) {
 			return 'Chat Message';
+		} else {
+			return 'TBD';
 		}
 	}
 
@@ -77,6 +84,12 @@ export default function SettingsPanel() {
 						)}
 						{selectedNode.type === NodeTypesEnum.chatMessage && (
 							<ChatMessageTabs selectedNode={selectedNode} updateNode={updateNode} />
+						)}
+						{selectedNode.type === NodeTypesEnum.chatPrompt && (
+							<ChatPromptTabs
+								selectedNode={selectedNode as Node<ChatPromptNodeDataType>}
+								updateNode={updateNode}
+							/>
 						)}
 					</div>
 				)}

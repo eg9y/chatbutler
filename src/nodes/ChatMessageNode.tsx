@@ -76,7 +76,7 @@ const ChatMessage: FC<NodeProps<ChatMessageNodeDataType>> = (props) => {
 						<div className="h-full flex flex-col gap-1 p-4 text-slate-900">
 							<div className="font-medium leading-6  p-2 relative flex items-end">
 								<div
-									className="bg-purple-300 rounded-lg rounded-br-none p-2 text-2xl cursor-pointer text-slate-700 font-semibold hover:font-bold"
+									className="bg-purple-300 rounded-lg rounded-br-none p-2 text-2xl cursor-pointer text-slate-700 font-semibold hover:font-bold hover:text-yellow-100"
 									onClick={() => {
 										if (data.role === 'user') {
 											updateNode(id, {

@@ -65,7 +65,14 @@ export default function LeftSidePanel({
 							like GPT-4, allowing you to create and link nodes to generate complex
 							outputs with ease.
 						</p>
-						<a className="text-xs text-blue-600 cursor-pointer">more info</a>
+						<a
+							className="text-xs text-blue-600 cursor-pointer"
+							href="https://github.com/eg9y/promptsandbox.io"
+							target="_blank"
+							rel="noreferrer"
+						>
+							more info
+						</a>
 					</div>
 					<div>
 						<div className="bg-slate-200 flex justify-between">

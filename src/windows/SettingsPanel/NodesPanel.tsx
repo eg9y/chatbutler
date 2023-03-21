@@ -15,15 +15,16 @@ export default function NodesPanel({ selectedNode }: { selectedNode: CustomNode 
 		<div className="p-3 flex flex-col justify-between h-full w-full">
 			{/* TODO: Clear graph logic */}
 			<button
-				className="p-3 bg-red-500 hover:bg-red-600 text-white text-md font-semibold 
-					w-1/2
-				py-1 pr-2  rounded flex items-center"
+				className="p-3 bg-red-500 hover:bg-red-600 text-white text-md font-semibold w-1/2 py-1 pr-2 rounded flex items-center"
 				onClick={() => {
-					clearGraph();
+					// Are you sure prompt
+					if (window.confirm('Are you sure you want to clear the graph?')) {
+						clearGraph();
+					}
 				}}
 			>
 				<TrashIcon
-					className={' group-hover:text-gray-500  mx-auto h-5 w-5'}
+					className={' group-hover:text-gray-500 mx-auto h-5 w-5'}
 					aria-hidden="true"
 				/>
 				<span>Clear graph</span>

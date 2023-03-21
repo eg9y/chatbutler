@@ -27,14 +27,21 @@ const onPlaceholderAdd = (
 
 	const edges = get().edges;
 	const newNodes = get().nodes;
-	const newNode = newNodes.find((node) => node.parentNode === parentNodeId);
-	if (!newNode) {
+	const newNodeIndex = newNodes.findIndex((node) => node.parentNode === parentNodeId);
+	const parentNode = newNodes.find((node) => node.id === parentNodeId);
+
+	if (newNodeIndex === -1 || !parentNode) {
 		return;
 	}
 	const edge = {
-		id: `${parentNodeId}-${newNode.id}`,
+		id: `${parentNodeId}-${newNodes[newNodeIndex].id}`,
 		source: parentNodeId,
-		target: newNode.id,
+		target: newNodes[newNodeIndex].id,
+	};
+	delete newNodes[newNodeIndex].parentNode;
+	newNodes[newNodeIndex].position = {
+		x: parentNode.position.x + 800,
+		y: parentNode.position.y,
 	};
 	set({
 		edges: edges.concat(edge),

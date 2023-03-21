@@ -11,6 +11,7 @@ import LLMPromptTabs from './nodeSettings/llmPromptNode/tabs';
 import TextInputTabs from './nodeSettings/textInputNode/tabs';
 import { LLMPromptNodeDataType, NodeTypesEnum } from '../../nodes/types/NodeTypes';
 import NodesPanel from './NodesPanel';
+import ChatMessageTabs from './nodeSettings/chatMessage/tabs';
 
 export default function SettingsPanel() {
 	const { selectedNode, updateNode } = useStore(selector, shallow);
@@ -73,6 +74,9 @@ export default function SettingsPanel() {
 						)}
 						{selectedNode.type === NodeTypesEnum.textInput && (
 							<TextInputTabs selectedNode={selectedNode} updateNode={updateNode} />
+						)}
+						{selectedNode.type === NodeTypesEnum.chatMessage && (
+							<ChatMessageTabs selectedNode={selectedNode} updateNode={updateNode} />
 						)}
 					</div>
 				)}

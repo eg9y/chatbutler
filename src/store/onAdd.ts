@@ -1,5 +1,6 @@
+import { addEdge, MarkerType, Node } from 'reactflow';
 import { Inputs } from '../nodes/types/Input';
-import { NodeTypesEnum, CustomNode } from '../nodes/types/NodeTypes';
+import { NodeTypesEnum, CustomNode, PlaceholderDataType } from '../nodes/types/NodeTypes';
 import { RFState, UseStoreSetType } from './useStore';
 
 const makeId = (length = 5) => {
@@ -105,58 +106,15 @@ const onAdd = (
 				stop: [],
 			},
 		};
-
-		// const placeHolderId = `placeholder-${nodeId}-${nodeLength}`;
-		// const placeHolderNode: Node<PlaceholderDataType> = {
-		// 	id: placeHolderId,
-		// 	type: NodeTypesEnum.placeholder,
-		// 	// parentNode: nodeId,
-		// 	position: {
-		// 		x: -600,
-		// 		y: 0,
-		// 	},
-		// 	data: {
-		// 		typeToCreate: NodeTypesEnum.chatMessage,
-		// 		name: `placeholder ${nodeId}`,
-		// 		text: `placeholder ${nodeId}`,
-		// 		inputs: new Inputs(),
-		// 		response: `placeholder ${nodeId}`,
-		// 		isLoading: false,
-		// 		isBreakpoint: false,
-		// 	},
-		// };
+		if (parentNode) {
+			node.parentNode = parentNode;
+		}
 
 		const nodeChanges = nodes.concat(node);
 		set({
 			nodes: nodeChanges,
 		});
-		// set({
-		// 	nodes: nodeChanges.concat(placeHolderNode),
-		// });
 
-		// const edges = get().edges;
-
-		// const edge = {
-		// 	id: `${nodeId}-${placeHolderId}`,
-		// 	source: placeHolderId,
-		// 	target: nodeId,
-		// 	type: 'smoothstep',
-		// 	animated: false,
-		// 	style: {
-		// 		strokeWidth: 2,
-		// 		stroke: '#808080',
-		// 		strokeDasharray: '5,5',
-		// 	},
-		// 	markerEnd: {
-		// 		type: MarkerType.Arrow,
-		// 		width: 20,
-		// 		height: 20,
-		// 		color: 'rgb(0,0,0,0)',
-		// 	},
-		// };
-		// set({
-		// 	edges: edges.concat(edge),
-		// });
 		return;
 	} else if (type === NodeTypesEnum.chatMessage) {
 		const nodeId = generateUniqueId(type);
@@ -171,7 +129,7 @@ const onAdd = (
 			data: {
 				childrenChat: [],
 				role: 'user',
-				name: nodeId,
+				name: `chat message ${nodeLength}`,
 				// name: `test chat message ${nodeLength}`,
 				text: `This is a chat message ${nodeLength}`,
 				inputs: new Inputs(),
@@ -180,6 +138,61 @@ const onAdd = (
 				isBreakpoint: false,
 			},
 		} as CustomNode;
+
+		const nodeChanges = nodes.concat(node);
+		set({
+			nodes: nodeChanges,
+		});
+
+		const placeHolderId = generateUniqueId(NodeTypesEnum.placeholder);
+		const placeHolderNode: Node<PlaceholderDataType> = {
+			id: placeHolderId,
+			type: NodeTypesEnum.placeholder,
+			parentNode: nodeId,
+			position: {
+				x: 800,
+				y: 0,
+			},
+			data: {
+				typeToCreate: NodeTypesEnum.chatPrompt,
+				name: `placeholder ${nodeId}`,
+				text: `placeholder ${nodeId}`,
+				inputs: new Inputs(),
+				response: `placeholder ${nodeId}`,
+				isLoading: false,
+				isBreakpoint: false,
+			},
+		};
+
+		set({
+			nodes: nodeChanges.concat(placeHolderNode),
+		});
+
+		const edges = get().edges;
+
+		const edge = {
+			id: `${nodeId}-${placeHolderId}`,
+			source: nodeId,
+			target: placeHolderId,
+			type: 'smoothstep',
+			animated: false,
+			style: {
+				strokeWidth: 2,
+				stroke: '#808080',
+				strokeDasharray: '5,5',
+			},
+			markerEnd: {
+				type: MarkerType.Arrow,
+				width: 20,
+				height: 20,
+				color: 'rgb(0,0,0,0)',
+			},
+		};
+
+		set({
+			edges: addEdge(edge, edges),
+		});
+		return;
 	}
 
 	if (node) {

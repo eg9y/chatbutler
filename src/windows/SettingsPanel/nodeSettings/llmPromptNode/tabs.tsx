@@ -7,7 +7,7 @@ import ApiTab from './tabs/ApiTab';
 import PromptTab from './tabs/PromptTab';
 import { handleChange } from '../../../../utils/handleFormChange';
 import TestTab from './tabs/TestTab';
-import { LLMPromptNodeDataType } from '../../../../nodes/types/NodeTypes';
+import { AllDataTypes, LLMPromptNodeDataType } from '../../../../nodes/types/NodeTypes';
 
 const tabs = [
 	{ name: 'API', icon: GlobeAltIcon },
@@ -20,7 +20,7 @@ export default function LLMPromptTabs({
 	updateNode,
 }: {
 	selectedNode: Node<LLMPromptNodeDataType>;
-	updateNode: (id: string, data: any) => void;
+	updateNode: (id: string, data: AllDataTypes) => void;
 }) {
 	const [selected, setSelected] = useState(tabs[0].name);
 

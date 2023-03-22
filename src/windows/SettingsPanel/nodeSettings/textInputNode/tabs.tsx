@@ -4,7 +4,7 @@ import { PencilIcon } from '@heroicons/react/20/solid';
 
 import TabsNavigator from '../../TabsNavigator';
 import TextInputTab from './tabs/TextInputTab';
-import { TextInputNodeDataType } from '../../../../nodes/types/NodeTypes';
+import { AllDataTypes, TextInputNodeDataType } from '../../../../nodes/types/NodeTypes';
 import { handleChange } from '../../../../utils/handleFormChange';
 
 const tabs = [{ name: 'Text Input', icon: PencilIcon }];
@@ -14,7 +14,7 @@ export default function TextInputTabs({
 	updateNode,
 }: {
 	selectedNode: Node<TextInputNodeDataType>;
-	updateNode: (id: string, data: any) => void;
+	updateNode: (id: string, data: AllDataTypes) => void;
 }) {
 	const [selected, setSelected] = useState(tabs[0].name);
 

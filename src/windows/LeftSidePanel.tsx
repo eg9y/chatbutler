@@ -10,6 +10,7 @@ import useStore, { selector } from '../store/useStore';
 import { NodeTypesEnum } from '../nodes/types/NodeTypes';
 import { FC, useState } from 'react';
 import { ReactFlowInstance } from 'reactflow';
+import { conditionalClassNames } from '../utils/classNames';
 
 export default function LeftSidePanel({
 	onAdd,
@@ -88,7 +89,6 @@ export default function LeftSidePanel({
 								handleDrag={handleDrag}
 								addNodeToCenter={addNodeToCenter}
 								Icon={ChatBubbleLeftRightIcon}
-								color="indigo"
 							/>
 							<div className="pl-4">
 								<NodeType
@@ -97,7 +97,6 @@ export default function LeftSidePanel({
 									handleDrag={handleDrag}
 									addNodeToCenter={addNodeToCenter}
 									Icon={ChatBubbleLeftEllipsisIcon}
-									color="indigo"
 								/>
 							</div>
 
@@ -107,7 +106,6 @@ export default function LeftSidePanel({
 								handleDrag={handleDrag}
 								addNodeToCenter={addNodeToCenter}
 								Icon={Bars3CenterLeftIcon}
-								color="emerald"
 							/>
 							<NodeType
 								name="Complete API"
@@ -115,7 +113,6 @@ export default function LeftSidePanel({
 								handleDrag={handleDrag}
 								addNodeToCenter={addNodeToCenter}
 								Icon={DocumentTextIcon}
-								color="amber"
 							/>
 						</div>
 					</div>
@@ -166,8 +163,14 @@ const NodeType: FC<{
 			titleId?: string | undefined;
 		}
 	>;
-	color: string;
-}> = ({ name, handleDrag, addNodeToCenter, nodeType, Icon, color }) => {
+}> = ({ name, handleDrag, addNodeToCenter, nodeType, Icon }) => {
+	const colorClassName = conditionalClassNames(
+		nodeType === NodeTypesEnum.chatMessage && `ring-indigo-300`,
+		nodeType === NodeTypesEnum.chatPrompt && `ring-indigo-300`,
+		nodeType === NodeTypesEnum.llmPrompt && `ring-amber-400`,
+		nodeType === NodeTypesEnum.textInput && `ring-emerald-400`,
+		`text-slate-600 hover:bg-slate-100 hover:text-slate-900 group flex items-center rounded-md px-3 py-2 text-sm font-medium cursor-pointer ring-2 ring-inset`,
+	);
 	return (
 		<div
 			draggable="true"
@@ -176,10 +179,7 @@ const NodeType: FC<{
 				e.dataTransfer.setData('application/reactflow', nodeType);
 			}}
 		>
-			<a
-				className={`text-slate-600 hover:bg-slate-100 hover:text-slate-900 group flex items-center rounded-md px-3 py-2 text-sm font-medium cursor-pointer ring-2 ring-inset ring-${color}-300`}
-				onClick={() => addNodeToCenter(NodeTypesEnum.chatPrompt)}
-			>
+			<a className={colorClassName} onClick={() => addNodeToCenter(NodeTypesEnum.chatPrompt)}>
 				<Icon
 					className={
 						'text-slate-400 group-hover:text-slate-500 -ml-1 mr-3 h-6 w-6 flex-shrink-0'

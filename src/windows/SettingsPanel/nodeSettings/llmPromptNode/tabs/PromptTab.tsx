@@ -1,6 +1,4 @@
 import { Node } from 'reactflow';
-import useStore, { selector } from '../../../../../store/useStore';
-import { shallow } from 'zustand/shallow';
 import { LLMPromptNodeDataType } from '../../../../../nodes/types/NodeTypes';
 
 export default function PromptTab({

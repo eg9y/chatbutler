@@ -1,6 +1,4 @@
-function classNames(...classes: any) {
-	return classes.filter(Boolean).join(' ');
-}
+import { conditionalClassNames } from '../../utils/classNames';
 
 interface TabsInterface {
 	name: string;
@@ -46,7 +44,7 @@ export default function TabsNavigator({
 						{tabs.map((tab) => (
 							<a
 								key={tab.name}
-								className={classNames(
+								className={conditionalClassNames(
 									tab.name === selected
 										? 'border-slate-500 text-slate-600'
 										: 'border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700',

@@ -4,7 +4,7 @@ import { GlobeAltIcon, PencilIcon } from '@heroicons/react/20/solid';
 
 import TabsNavigator from '../../TabsNavigator';
 import ChatPromptTab from './tabs/ChatPromptTab';
-import { ChatPromptNodeDataType } from '../../../../nodes/types/NodeTypes';
+import { AllDataTypes, ChatPromptNodeDataType } from '../../../../nodes/types/NodeTypes';
 import { handleChange } from '../../../../utils/handleFormChange';
 import ApiTab from './tabs/ApiTab';
 
@@ -18,7 +18,7 @@ export default function ChatPromptTabs({
 	updateNode,
 }: {
 	selectedNode: Node<ChatPromptNodeDataType>;
-	updateNode: (id: string, data: any) => void;
+	updateNode: (id: string, data: AllDataTypes) => void;
 }) {
 	const [selected, setSelected] = useState(tabs[0].name);
 

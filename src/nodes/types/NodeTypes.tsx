@@ -11,9 +11,13 @@ export type DefaultNodeDataType = {
 	isBreakpoint: boolean;
 };
 
-export type CustomNode = Node<
-	LLMPromptNodeDataType | TextInputNodeDataType | ChatPromptNodeDataType | ChatMessageNodeDataType
->;
+export type AllDataTypes =
+	| LLMPromptNodeDataType
+	| TextInputNodeDataType
+	| ChatPromptNodeDataType
+	| ChatMessageNodeDataType;
+
+export type CustomNode = Node<AllDataTypes>;
 export type InputNode = Node<
 	LLMPromptNodeDataType | TextInputNodeDataType | ChatPromptNodeDataType
 >;

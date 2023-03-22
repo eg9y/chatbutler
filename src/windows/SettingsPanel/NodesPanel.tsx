@@ -24,7 +24,7 @@ export default function NodesPanel({ selectedNode }: { selectedNode: CustomNode 
 				}}
 			>
 				<TrashIcon
-					className={' group-hover:text-gray-500 mx-auto h-5 w-5'}
+					className={' group-hover:text-slate-500 mx-auto h-5 w-5'}
 					aria-hidden="true"
 				/>
 				<span>Clear graph</span>

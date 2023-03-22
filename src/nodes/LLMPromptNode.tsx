@@ -73,7 +73,7 @@ const LLMPrompt: FC<NodeProps<LLMPromptNodeDataType>> = (props) => {
 						<Disclosure.Button
 							className={conditionalClassNames(
 								open ? 'border-b-slate-300' : '',
-								'flex justify-between border-1 border-slate-400 bg-slate-200 text-gray-900 group px-2 w-full items-center rounded-t-md py-2 pr-2 text-left text-md font-semibold',
+								'flex justify-between border-1 border-slate-400 bg-slate-200 text-slate-900 group px-2 w-full items-center rounded-t-md py-2 pr-2 text-left text-md font-semibold',
 							)}
 							disabled={data.response.length === 0}
 						>

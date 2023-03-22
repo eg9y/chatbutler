@@ -53,12 +53,12 @@ export default function SettingsPanel() {
 				<button className=" text-slate-900 font-semibold text-md px-2 py-1">
 					{topDivCollapsed ? (
 						<ChevronUpIcon
-							className={'text-slate-600 group-hover:text-gray-500 h-full mx-auto'}
+							className={'text-slate-600 group-hover:text-slate-500 h-full mx-auto'}
 							aria-hidden="true"
 						/>
 					) : (
 						<ChevronDownIcon
-							className={'text-slate-600 group-hover:text-gray-500 h-full mx-auto'}
+							className={'text-slate-600 group-hover:text-slate-500 h-full mx-auto'}
 							aria-hidden="true"
 						/>
 					)}
@@ -111,14 +111,14 @@ export default function SettingsPanel() {
 						{bottomDivCollapsed ? (
 							<ChevronDownIcon
 								className={
-									'text-slate-600 group-hover:text-gray-500 h-full mx-auto'
+									'text-slate-600 group-hover:text-slate-500 h-full mx-auto'
 								}
 								aria-hidden="true"
 							/>
 						) : (
 							<ChevronUpIcon
 								className={
-									'text-slate-600 group-hover:text-gray-500 h-full mx-auto'
+									'text-slate-600 group-hover:text-slate-500 h-full mx-auto'
 								}
 								aria-hidden="true"
 							/>

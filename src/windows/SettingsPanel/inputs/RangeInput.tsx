@@ -18,7 +18,7 @@ export default function RangeInput({
 	return (
 		<div className="pt-4 flex justify-between gap-2 items-center">
 			<div className="w-full flex flex-col items-star">
-				<label htmlFor={propertyName} className="block text-sm font-medium text-gray-900 ">
+				<label htmlFor={propertyName} className="block text-sm font-medium text-slate-900 ">
 					{propertyName}
 				</label>
 				<input
@@ -40,7 +40,7 @@ export default function RangeInput({
 				min={min}
 				max={max}
 				step={step}
-				className="block w-1/3 rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:py-1.5 sm:text-sm sm:leading-6"
+				className="block w-1/3 rounded-md border-0 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:py-1.5 sm:text-sm sm:leading-6"
 				value={numberValue}
 				onChange={handleChange}
 			/>

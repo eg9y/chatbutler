@@ -51,7 +51,7 @@ const ChipsInput = ({
 
 	return (
 		<div className="my-4 flex flex-col">
-			<label htmlFor={propertyName} className="block text-sm font-medium text-gray-900">
+			<label htmlFor={propertyName} className="block text-sm font-medium text-slate-900">
 				{propertyName}
 			</label>
 			<div className="bg-white rounded-md shadow-sm border px-1 w-full">

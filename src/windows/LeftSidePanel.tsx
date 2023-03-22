@@ -94,13 +94,13 @@ export default function LeftSidePanel({
 							>
 								<a
 									className={
-										'text-gray-600 hover:bg-gray-100 hover:text-gray-900 group flex items-center rounded-md px-3 py-2 text-sm font-medium cursor-pointer ring-2 ring-inset ring-emerald-300'
+										'text-slate-600 hover:bg-slate-100 hover:text-slate-900 group flex items-center rounded-md px-3 py-2 text-sm font-medium cursor-pointer ring-2 ring-inset ring-emerald-300'
 									}
 									onClick={() => addNodeToCenter(NodeTypesEnum.textInput)}
 								>
 									<Bars3CenterLeftIcon
 										className={
-											'text-gray-400 group-hover:text-gray-500 -ml-1 mr-3 h-6 w-6 flex-shrink-0'
+											'text-slate-400 group-hover:text-slate-500 -ml-1 mr-3 h-6 w-6 flex-shrink-0'
 										}
 										aria-hidden="true"
 									/>
@@ -119,17 +119,17 @@ export default function LeftSidePanel({
 							>
 								<a
 									className={
-										'text-gray-600 hover:bg-gray-100 hover:text-gray-900 group flex items-center rounded-md px-3 py-2 text-sm font-medium cursor-pointer ring-2 ring-inset ring-amber-300'
+										'text-slate-600 hover:bg-slate-100 hover:text-slate-900 group flex items-center rounded-md px-3 py-2 text-sm font-medium cursor-pointer ring-2 ring-inset ring-amber-300'
 									}
 									onClick={() => addNodeToCenter(NodeTypesEnum.llmPrompt)}
 								>
 									<DocumentTextIcon
 										className={
-											'text-gray-400 group-hover:text-gray-500 -ml-1 mr-3 h-6 w-6 flex-shrink-0'
+											'text-slate-400 group-hover:text-slate-500 -ml-1 mr-3 h-6 w-6 flex-shrink-0'
 										}
 										aria-hidden="true"
 									/>
-									<span className="truncate">LLM Prompt</span>
+									<span className="truncate">Complete API</span>
 								</a>
 							</div>
 
@@ -145,13 +145,13 @@ export default function LeftSidePanel({
 							>
 								<a
 									className={
-										'text-gray-600 hover:bg-gray-100 hover:text-gray-900 group flex items-center rounded-md px-3 py-2 text-sm font-medium cursor-pointer ring-2 ring-inset ring-indigo-300'
+										'text-slate-600 hover:bg-slate-100 hover:text-slate-900 group flex items-center rounded-md px-3 py-2 text-sm font-medium cursor-pointer ring-2 ring-inset ring-indigo-300'
 									}
 									onClick={() => addNodeToCenter(NodeTypesEnum.chatPrompt)}
 								>
 									<ChatBubbleLeftRightIcon
 										className={
-											'text-gray-400 group-hover:text-gray-500 -ml-1 mr-3 h-6 w-6 flex-shrink-0'
+											'text-slate-400 group-hover:text-slate-500 -ml-1 mr-3 h-6 w-6 flex-shrink-0'
 										}
 										aria-hidden="true"
 									/>
@@ -172,13 +172,13 @@ export default function LeftSidePanel({
 							>
 								<a
 									className={
-										'flex items-center justify-center gap-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 group rounded-md py-2 text-sm font-medium cursor-pointer ring-2 ring-inset ring-indigo-300'
+										'flex items-center justify-center gap-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900 group rounded-md py-2 text-sm font-medium cursor-pointer ring-2 ring-inset ring-indigo-300'
 									}
 									onClick={() => addNodeToCenter(NodeTypesEnum.chatMessage)}
 								>
 									<ChatBubbleLeftEllipsisIcon
 										className={
-											'text-gray-400 group-hover:text-gray-500  h-6 w-6 flex-shrink-0'
+											'text-slate-400 group-hover:text-slate-500  h-6 w-6 flex-shrink-0'
 										}
 										aria-hidden="true"
 									/>
@@ -191,7 +191,7 @@ export default function LeftSidePanel({
 				<div className="px-2 pb-4">
 					<div className="mt-1 space-y-1" aria-labelledby="projects-headline">
 						<a
-							className="group flex items-center rounded-md px-3 py-2 text-sm font-medium text-gray-600 bg-slate-100 hover:text-gray-900 cursor-pointer border-2 border-slate-400"
+							className="group flex items-center rounded-md px-3 py-2 text-sm font-medium text-slate-600 bg-slate-100 hover:text-slate-900 cursor-pointer border-2 border-slate-400"
 							onClick={async () => {
 								const currentKey = localStorage.getItem('openAIKey') || '';
 								const newOpenAIKey = window.prompt(
@@ -211,7 +211,7 @@ export default function LeftSidePanel({
 						>
 							<Cog6ToothIcon
 								className={
-									'text-gray-400 group-hover:text-gray-500 -ml-1 mr-3 h-6 w-6 flex-shrink-0'
+									'text-slate-400 group-hover:text-slate-500 -ml-1 mr-3 h-6 w-6 flex-shrink-0'
 								}
 								aria-hidden="true"
 							/>

@@ -31,7 +31,7 @@ export default function TabsNavigator({
 				<select
 					id="tabs"
 					name="tabs"
-					className="block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-slate-500 focus:outline-none focus:ring-slate-500 sm:text-sm"
+					className="block w-full rounded-md border-slate-300 py-2 pl-3 pr-10 text-base focus:border-slate-500 focus:outline-none focus:ring-slate-500 sm:text-sm"
 					defaultValue={tabs[0].name}
 					onChange={(e) => setSelected(e.target.value)}
 				>
@@ -41,7 +41,7 @@ export default function TabsNavigator({
 				</select>
 			</div>
 			<div className="hidden sm:block">
-				<div className="border-b border-gray-300">
+				<div className="border-b border-slate-300">
 					<nav className="-mb-px flex gap-2" aria-label="Tabs">
 						{tabs.map((tab) => (
 							<a
@@ -49,7 +49,7 @@ export default function TabsNavigator({
 								className={classNames(
 									tab.name === selected
 										? 'border-slate-500 text-slate-600'
-										: 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
+										: 'border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700',
 									'whitespace-nowrap border-b-2 pt-1 mb-2 px-1 text-sm font-medium cursor-pointer',
 								)}
 								onClick={() => setSelected(tab.name)}
@@ -60,7 +60,7 @@ export default function TabsNavigator({
 										{
 											<tab.icon
 												className={
-													'text-gray-400 group-hover:text-gray-500 -ml-1 mr-1 h-4 w-4 flex-shrink-0'
+													'text-slate-400 group-hover:text-slate-500 -ml-1 mr-1 h-4 w-4 flex-shrink-0'
 												}
 												aria-hidden="true"
 											/>

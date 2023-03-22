@@ -34,14 +34,14 @@ export default function ApiPromptTab({
 						<div className="">
 							<label
 								htmlFor="model"
-								className="block text-sm font-medium leading-6 text-gray-900"
+								className="block text-sm font-medium leading-6 text-slate-900"
 							>
 								Model
 							</label>
 							<select
 								id="model"
 								name="model"
-								className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+								className="block w-full rounded-md border-0 py-1.5 text-slate-900 ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
 								value={selectedNode.data.model}
 								onChange={handleChange}
 							>

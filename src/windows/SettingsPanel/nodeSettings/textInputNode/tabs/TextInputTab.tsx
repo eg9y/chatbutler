@@ -17,7 +17,7 @@ export default function PromptTab({
 	return (
 		<>
 			{selectedNode && (
-				<div className="text-sm font-medium leading-6 text-gray-900">
+				<div className="text-sm font-medium leading-6 text-slate-900">
 					{/* form div scrollable using tailwind */}
 					<form onSubmit={handleSubmit} className="flex flex-col">
 						<div className="">
@@ -29,7 +29,7 @@ export default function PromptTab({
 									type="text"
 									name="name"
 									id="name"
-									className="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:py-1.5 sm:text-sm sm:leading-6"
+									className="block w-full rounded-md border-0 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:py-1.5 sm:text-sm sm:leading-6"
 									value={selectedNode.data.name}
 									onChange={handleChange}
 								/>
@@ -43,7 +43,7 @@ export default function PromptTab({
 								type="text"
 								name="response"
 								id="response"
-								className="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:py-1.5 sm:text-sm sm:leading-6"
+								className="block w-full rounded-md border-0 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:py-1.5 sm:text-sm sm:leading-6"
 								value={selectedNode.data.response}
 								onChange={handleChange}
 							/>

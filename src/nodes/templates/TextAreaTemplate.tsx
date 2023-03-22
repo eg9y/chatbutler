@@ -81,7 +81,7 @@ const TextAreaTemplate: FC<
 							rows={4}
 							name="text"
 							id={`text-${id}`}
-							className="nowheel nodrag flex-grow w-full rounded-md border-0 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-1 focus:ring-inset focus:ring-slate-400 sm:leading-6"
+							className="nowheel nodrag text-xl flex-grow w-full rounded-md border-0 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-1 focus:ring-inset focus:ring-slate-400 sm:leading-6"
 							value={presentText}
 							onFocus={(e) => {
 								e.target.selectionStart = 0;

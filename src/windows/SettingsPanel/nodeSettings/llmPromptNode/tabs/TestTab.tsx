@@ -15,7 +15,7 @@ export default function TestTab({
 	return (
 		<>
 			{selectedNode && (
-				<div className="text-sm font-medium leading-6 text-gray-900">
+				<div className="text-sm font-medium leading-6 text-slate-900">
 					<div className="">
 						<p className="">Test inputs</p>
 						{selectedNode.data.inputs.inputExamples.map((inputExample, index) => {
@@ -35,7 +35,7 @@ export default function TestTab({
 														type="text"
 														name={inputId}
 														id={`${inputId}-${index}`}
-														className="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:py-1.5 sm:text-sm sm:leading-6"
+														className="block w-full rounded-md border-0 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:py-1.5 sm:text-sm sm:leading-6"
 														value={inputExample[inputId].value}
 														onChange={(e) => {
 															updateInputExample(

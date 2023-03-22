@@ -9,7 +9,7 @@ import InputNodesList from './templates/InputNodesList';
 import ShowPromptSwitch from '../components/ShowPromptSwitch';
 import { handleChange } from '../utils/handleFormChange';
 import { ArrowsPointingOutIcon } from '@heroicons/react/20/solid';
-import LargeTextArea from '../components/FullScreenEditor';
+import FullScreenEditor from '../components/FullScreenEditor';
 
 const ChatMessage: FC<NodeProps<ChatMessageNodeDataType>> = (props) => {
 	const { data, selected, id } = props;
@@ -86,7 +86,7 @@ const ChatMessage: FC<NodeProps<ChatMessageNodeDataType>> = (props) => {
 						/>
 					</div>
 				)}
-				<LargeTextArea
+				<FullScreenEditor
 					heading="Chat Message"
 					showFullScreen={showFullScreen}
 					setShowFullScreen={setShowFullScreen}
@@ -100,7 +100,7 @@ const ChatMessage: FC<NodeProps<ChatMessageNodeDataType>> = (props) => {
 						presentText={presentText}
 						setText={setText}
 					/>
-				</LargeTextArea>
+				</FullScreenEditor>
 				<Handle
 					type="target"
 					position={Position.Left}

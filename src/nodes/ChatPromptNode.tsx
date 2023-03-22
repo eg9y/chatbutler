@@ -8,7 +8,7 @@ import RunnableToolbarTemplate from './templates/RunnableToolbarTemplate';
 import { SignalIcon, ClipboardIcon, ArrowsPointingOutIcon } from '@heroicons/react/20/solid';
 import { conditionalClassNames } from '../utils/classNames';
 import ShowPromptSwitch from '../components/ShowPromptSwitch';
-import LargeTextArea from '../components/FullScreenEditor';
+import FullScreenEditor from '../components/FullScreenEditor';
 
 const ChatPrompt: FC<NodeProps<ChatPromptNodeDataType>> = (props) => {
 	const { data, selected, id } = props;
@@ -67,7 +67,7 @@ const ChatPrompt: FC<NodeProps<ChatPromptNodeDataType>> = (props) => {
 					{ShowPromptSwitch(showPrompt, setshowPrompt)}
 				</div>
 
-				<LargeTextArea
+				<FullScreenEditor
 					heading="Chat Prompt"
 					showFullScreen={showFullScreen}
 					setShowFullScreen={setShowFullScreen}
@@ -78,7 +78,7 @@ const ChatPrompt: FC<NodeProps<ChatPromptNodeDataType>> = (props) => {
 						showFullScreen={showFullScreen}
 						setShowFullScreen={setShowFullScreen}
 					/>
-				</LargeTextArea>
+				</FullScreenEditor>
 				{!showFullScreen && (
 					<Content
 						data={data}
@@ -140,7 +140,7 @@ const Content: FC<{
 					}}
 				/>
 			</div>
-			{showPrompt && (
+			{(showPrompt || showFullScreen) && (
 				<div
 					className="px-3 pb-3 bg-slate-50
 				 rounded-b-lg flex flex-col justify-between gap-4 items-end"

@@ -83,7 +83,7 @@ export default function LeftSidePanel({
 						<div className="flex flex-col gap-1 px-2 py-2">
 							{/* TODO: Refactor node blocks */}
 							<NodeType
-								name="Chat Prompt"
+								name="Chat API"
 								nodeType={NodeTypesEnum.chatPrompt}
 								handleDrag={handleDrag}
 								addNodeToCenter={addNodeToCenter}

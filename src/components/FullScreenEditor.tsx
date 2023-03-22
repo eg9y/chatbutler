@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 
-export default function LargeTextArea({
+export default function FullScreenEditor({
 	heading,
 	showFullScreen,
 	setShowFullScreen,

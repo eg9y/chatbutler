@@ -169,7 +169,7 @@ export default function App() {
 								height: '30px',
 								width: '20px',
 							}}
-							className={'text-slate-800 group-hover:text-gray-500 h-full mx-auto'}
+							className={'text-slate-800 group-hover:text-slate-500 h-full mx-auto'}
 							aria-hidden="true"
 						/>
 					) : (
@@ -178,7 +178,7 @@ export default function App() {
 								height: '30px',
 								width: '20px',
 							}}
-							className={'text-slate-800 group-hover:text-gray-500 h-full mx-auto'}
+							className={'text-slate-800 group-hover:text-slate-500 h-full mx-auto'}
 							aria-hidden="true"
 						/>
 					)}
@@ -260,7 +260,7 @@ export default function App() {
 										width: '20px',
 									}}
 									className={
-										'text-slate-800 group-hover:text-gray-500 h-full mx-auto'
+										'text-slate-800 group-hover:text-slate-500 h-full mx-auto'
 									}
 									aria-hidden="true"
 								/>
@@ -270,7 +270,7 @@ export default function App() {
 										height: '30px',
 										width: '20px',
 									}}
-									className={' group-hover:text-gray-500 h-full mx-auto'}
+									className={' group-hover:text-slate-500 h-full mx-auto'}
 									aria-hidden="true"
 								/>
 							)}

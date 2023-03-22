@@ -12,6 +12,7 @@
   "dependencies": {
     "@headlessui/react": "^1.7.13",
     "@heroicons/react": "^2.0.16",
+    "@reactflow/node-resizer": "^2.1.0",
     "@tailwindcss/forms": "^0.5.3",
     "@typescript-eslint/eslint-plugin": "^5.55.0",
     "openai": "^3.2.1",

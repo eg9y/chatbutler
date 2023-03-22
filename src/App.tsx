@@ -288,9 +288,9 @@ export default function App() {
 					>
 						<div
 							// animate on hover to show that it's resizable
-							className="absolute left-0 top-0 bottom-0 bg-blue-200 cursor-col-resize opacity-0 hover:opacity-80 transition-opacity duration-300"
+							className="absolute -left-2 top-0 bottom-0 bg-blue-200 cursor-col-resize opacity-0 hover:opacity-80 transition-opacity duration-300"
 							style={{
-								width: '4px',
+								width: '10px',
 							}}
 							onMouseDown={handleMouseDown}
 						/>

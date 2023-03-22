@@ -8,7 +8,7 @@ import {
 import { shallow } from 'zustand/shallow';
 import useStore, { selector } from '../store/useStore';
 import { NodeTypesEnum } from '../nodes/types/NodeTypes';
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { ReactFlowInstance } from 'reactflow';
 
 export default function LeftSidePanel({
@@ -82,109 +82,41 @@ export default function LeftSidePanel({
 						</div>
 						<div className="flex flex-col gap-1 px-2 py-2">
 							{/* TODO: Refactor node blocks */}
-							<div
-								draggable="true"
-								onDrag={handleDrag}
-								onDragStart={(e) => {
-									e.dataTransfer.setData(
-										'application/reactflow',
-										NodeTypesEnum.textInput,
-									);
-								}}
-							>
-								<a
-									className={
-										'text-slate-600 hover:bg-slate-100 hover:text-slate-900 group flex items-center rounded-md px-3 py-2 text-sm font-medium cursor-pointer ring-2 ring-inset ring-emerald-300'
-									}
-									onClick={() => addNodeToCenter(NodeTypesEnum.textInput)}
-								>
-									<Bars3CenterLeftIcon
-										className={
-											'text-slate-400 group-hover:text-slate-500 -ml-1 mr-3 h-6 w-6 flex-shrink-0'
-										}
-										aria-hidden="true"
-									/>
-									<span className="truncate">Text Input</span>
-								</a>
-							</div>
-							<div
-								draggable="true"
-								onDrag={handleDrag}
-								onDragStart={(e) => {
-									e.dataTransfer.setData(
-										'application/reactflow',
-										NodeTypesEnum.llmPrompt,
-									);
-								}}
-							>
-								<a
-									className={
-										'text-slate-600 hover:bg-slate-100 hover:text-slate-900 group flex items-center rounded-md px-3 py-2 text-sm font-medium cursor-pointer ring-2 ring-inset ring-amber-300'
-									}
-									onClick={() => addNodeToCenter(NodeTypesEnum.llmPrompt)}
-								>
-									<DocumentTextIcon
-										className={
-											'text-slate-400 group-hover:text-slate-500 -ml-1 mr-3 h-6 w-6 flex-shrink-0'
-										}
-										aria-hidden="true"
-									/>
-									<span className="truncate">Complete API</span>
-								</a>
+							<NodeType
+								name="Chat Prompt"
+								nodeType={NodeTypesEnum.chatPrompt}
+								handleDrag={handleDrag}
+								addNodeToCenter={addNodeToCenter}
+								Icon={ChatBubbleLeftRightIcon}
+								color="indigo"
+							/>
+							<div className="pl-4">
+								<NodeType
+									name="Chat Message"
+									nodeType={NodeTypesEnum.chatMessage}
+									handleDrag={handleDrag}
+									addNodeToCenter={addNodeToCenter}
+									Icon={ChatBubbleLeftEllipsisIcon}
+									color="indigo"
+								/>
 							</div>
 
-							<div
-								draggable="true"
-								onDrag={handleDrag}
-								onDragStart={(e) => {
-									e.dataTransfer.setData(
-										'application/reactflow',
-										NodeTypesEnum.chatPrompt,
-									);
-								}}
-							>
-								<a
-									className={
-										'text-slate-600 hover:bg-slate-100 hover:text-slate-900 group flex items-center rounded-md px-3 py-2 text-sm font-medium cursor-pointer ring-2 ring-inset ring-indigo-300'
-									}
-									onClick={() => addNodeToCenter(NodeTypesEnum.chatPrompt)}
-								>
-									<ChatBubbleLeftRightIcon
-										className={
-											'text-slate-400 group-hover:text-slate-500 -ml-1 mr-3 h-6 w-6 flex-shrink-0'
-										}
-										aria-hidden="true"
-									/>
-									<span className="truncate">Chat API</span>
-								</a>
-							</div>
-
-							<div
-								draggable="true"
-								onDrag={handleDrag}
-								onDragStart={(e) => {
-									e.dataTransfer.setData(
-										'application/reactflow',
-										NodeTypesEnum.chatMessage,
-									);
-								}}
-								className=""
-							>
-								<a
-									className={
-										'flex items-center justify-center gap-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900 group rounded-md py-2 text-sm font-medium cursor-pointer ring-2 ring-inset ring-indigo-300'
-									}
-									onClick={() => addNodeToCenter(NodeTypesEnum.chatMessage)}
-								>
-									<ChatBubbleLeftEllipsisIcon
-										className={
-											'text-slate-400 group-hover:text-slate-500  h-6 w-6 flex-shrink-0'
-										}
-										aria-hidden="true"
-									/>
-									<span className="truncate">Chat Message</span>
-								</a>
-							</div>
+							<NodeType
+								name="Text"
+								nodeType={NodeTypesEnum.textInput}
+								handleDrag={handleDrag}
+								addNodeToCenter={addNodeToCenter}
+								Icon={Bars3CenterLeftIcon}
+								color="emerald"
+							/>
+							<NodeType
+								name="Complete API"
+								nodeType={NodeTypesEnum.llmPrompt}
+								handleDrag={handleDrag}
+								addNodeToCenter={addNodeToCenter}
+								Icon={DocumentTextIcon}
+								color="amber"
+							/>
 						</div>
 					</div>
 				</div>
@@ -223,3 +155,39 @@ export default function LeftSidePanel({
 		</aside>
 	);
 }
+const NodeType: FC<{
+	name: string;
+	nodeType: NodeTypesEnum;
+	handleDrag: (e: React.DragEvent<HTMLDivElement>) => void;
+	addNodeToCenter: (type: NodeTypesEnum) => void;
+	Icon: React.ForwardRefExoticComponent<
+		React.SVGProps<SVGSVGElement> & {
+			title?: string | undefined;
+			titleId?: string | undefined;
+		}
+	>;
+	color: string;
+}> = ({ name, handleDrag, addNodeToCenter, nodeType, Icon, color }) => {
+	return (
+		<div
+			draggable="true"
+			onDrag={handleDrag}
+			onDragStart={(e) => {
+				e.dataTransfer.setData('application/reactflow', nodeType);
+			}}
+		>
+			<a
+				className={`text-slate-600 hover:bg-slate-100 hover:text-slate-900 group flex items-center rounded-md px-3 py-2 text-sm font-medium cursor-pointer ring-2 ring-inset ring-${color}-300`}
+				onClick={() => addNodeToCenter(NodeTypesEnum.chatPrompt)}
+			>
+				<Icon
+					className={
+						'text-slate-400 group-hover:text-slate-500 -ml-1 mr-3 h-6 w-6 flex-shrink-0'
+					}
+					aria-hidden="true"
+				/>
+				<span className="truncate">{name}</span>
+			</a>
+		</div>
+	);
+};

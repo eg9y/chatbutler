@@ -5,7 +5,6 @@ import { shallow } from 'zustand/shallow';
 import useStore, { selector } from '../store/useStore';
 import { ChatPromptNodeDataType } from './types/NodeTypes';
 import RunnableToolbarTemplate from './templates/RunnableToolbarTemplate';
-import { Disclosure } from '@headlessui/react';
 import { SignalIcon, ClipboardIcon, ArrowsPointingOutIcon } from '@heroicons/react/20/solid';
 import { conditionalClassNames } from '../utils/classNames';
 import ShowPromptSwitch from '../components/ShowPromptSwitch';

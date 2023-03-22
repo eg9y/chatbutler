@@ -6,6 +6,8 @@ import useStore, { selector } from '../../store/useStore';
 import { handleChange } from '../../utils/handleFormChange';
 import { DefaultNodeDataType } from '../types/NodeTypes';
 import ShowPromptSwitch from '../../components/ShowPromptSwitch';
+import { ArrowsPointingOutIcon } from '@heroicons/react/20/solid';
+import FullScreenEditor from '../../components/FullScreenEditor';
 
 interface TextAreaTemplateInterface {
 	title: string;
@@ -13,14 +15,17 @@ interface TextAreaTemplateInterface {
 	show: boolean;
 	bgColor?: string;
 	setShow: (show: boolean) => void;
+	LabelComponent?: React.ElementType;
 }
 
 const TextAreaTemplate: FC<
 	NodeProps<DefaultNodeDataType> &
 		TextAreaTemplateInterface & {
-			children: React.ReactNode;
 			presentText: string;
 			setText: (text: string) => void;
+			showFullScreen: boolean;
+			setShowFullScreen: (show: boolean) => void;
+			children: (updateNode: any) => React.ReactNode;
 		}
 > = ({
 	data,
@@ -29,20 +34,23 @@ const TextAreaTemplate: FC<
 	fieldName,
 	show,
 	setShow,
-	children,
 	presentText,
 	setText,
 	bgColor = 'bg-yellow-200',
+	showFullScreen,
+	setShowFullScreen,
+	LabelComponent,
+	children,
 }) => {
 	const { updateNode } = useStore(selector, shallow);
 	// TODO: Fullscreen button to edit prompts with a larger display
 	return (
 		<>
 			<div
-				className={`py-1 flex justify-between items-center pr-4 border-b-1 border-slate-400 text-xl ${bgColor}`}
+				className={`p-4 flex justify-between items-center border-b-1 border-slate-400 text-2xl ${bgColor}`}
 			>
-				<div className="flex gap-2 items-center py-2">
-					<h1 className="text-start pl-4">
+				<div className="flex gap-2 items-center">
+					<h1 className="text-start">
 						<span className="font-semibold">{title}:</span> {data.name}
 					</h1>
 					{data.isLoading && (
@@ -70,33 +78,99 @@ const TextAreaTemplate: FC<
 				</div>
 				{ShowPromptSwitch(show, setShow)}
 			</div>
-			{show && (
-				<div className="h-full text-xl ">
-					{/* list of data.inputs string Set */}
-					<div className="h-full flex flex-col gap-1 p-4 text-slate-900">
-						<label htmlFor="text" className="block font-medium leading-6 ">
+			<div className="px-4 gap-1 w-full flex justify-between items-center h-14">
+				{LabelComponent ? (
+					<LabelComponent />
+				) : (
+					<>
+						<label htmlFor="text" className="block font-medium leading-6 text-2xl">
 							{fieldName}:
 						</label>
-						<textarea
-							rows={4}
-							name="text"
-							id={`text-${id}`}
-							className="nowheel nodrag text-xl flex-grow w-full rounded-md border-0 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-1 focus:ring-inset focus:ring-slate-400 sm:leading-6"
-							value={presentText}
-							onFocus={(e) => {
-								e.target.selectionStart = 0;
-								e.target.selectionEnd = 0;
-							}}
-							onChange={(e) => {
-								setText(e.target.value);
-								handleChange(e, id, data, updateNode);
-							}}
-						/>
-						{children}
-					</div>
-				</div>
-			)}
+						<p className="truncate text-start flex-grow">{!show && presentText}</p>
+					</>
+				)}
+				<ArrowsPointingOutIcon
+					className={'text-slate-500 hover:text-slate-800  h-8 w-8 flex-shrink-0'}
+					aria-hidden="true"
+					onClick={() => {
+						setShowFullScreen(!showFullScreen);
+					}}
+				/>
+			</div>
+			<div
+				style={{
+					height: show ? '40rem' : '0rem',
+				}}
+			>
+				{show && (
+					<Content
+						showPrompt={show}
+						setshowPrompt={setShow}
+						presentText={presentText}
+						setText={setText}
+						data={data}
+						id={id}
+						updateNode={updateNode}
+					>
+						{children(updateNode)}
+					</Content>
+				)}
+				{showFullScreen && (
+					<FullScreenEditor
+						heading={fieldName}
+						showFullScreen={showFullScreen}
+						setShowFullScreen={setShowFullScreen}
+					>
+						<Content
+							showPrompt={show}
+							setshowPrompt={setShow}
+							presentText={presentText}
+							setText={setText}
+							data={data}
+							id={id}
+							updateNode={updateNode}
+						>
+							{children(updateNode)}
+						</Content>
+					</FullScreenEditor>
+				)}
+			</div>
 		</>
+	);
+};
+
+const Content: FC<{
+	showPrompt: boolean;
+	setshowPrompt: (show: boolean) => void;
+	presentText: string;
+	setText: (newPresent: string, checkpoint?: boolean | undefined) => void;
+	data: DefaultNodeDataType;
+	id: string;
+	updateNode: any;
+	children: React.ReactNode;
+}> = ({ presentText, setText, data, id, updateNode, children }) => {
+	return (
+		<div className="h-full text-xl">
+			{/* list of data.inputs string Set */}
+			<div className="h-full flex flex-col gap-1 px-4 pb-4 text-slate-900">
+				<textarea
+					rows={4}
+					name="text"
+					id={`text-${id}`}
+					className="nowheel nodrag text-xl flex-grow w-full rounded-md border-0 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-1 focus:ring-inset focus:ring-slate-400 sm:leading-6"
+					value={presentText}
+					onFocus={(e) => {
+						e.target.selectionStart = 0;
+						e.target.selectionEnd = 0;
+					}}
+					onChange={(e) => {
+						setText(e.target.value);
+						handleChange(e, id, data, updateNode);
+					}}
+				/>
+				{children}
+			</div>
+		</div>
 	);
 };
 

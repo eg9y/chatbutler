@@ -35,7 +35,7 @@ const ChatPrompt: FC<NodeProps<ChatPromptNodeDataType>> = (props) => {
 				{/* how to spread  */}
 
 				<div
-					className={`py-1 flex justify-between items-center pr-4 border-b-1 border-slate-400 text-xl bg-indigo-300`}
+					className={`py-1 flex justify-between items-center pr-4 border-b-1 border-slate-400 text-2xl bg-indigo-300`}
 				>
 					<div className="flex gap-2 items-center py-2">
 						<h1 className="text-start pl-4">

@@ -4,7 +4,7 @@ import { shallow } from 'zustand/shallow';
 import useUndo from 'use-undo';
 
 import useStore, { selector } from '../store/useStore';
-import { LLMPromptNodeDataType, CustomNode } from './types/NodeTypes';
+import { LLMPromptNodeDataType } from './types/NodeTypes';
 import { conditionalClassNames } from '../utils/classNames';
 import { Disclosure } from '@headlessui/react';
 import { SignalIcon } from '@heroicons/react/20/solid';
@@ -27,15 +27,15 @@ const LLMPrompt: FC<NodeProps<LLMPromptNodeDataType>> = (props) => {
 	] = useUndo(data.text);
 	const { present: presentText } = textState;
 
-	const { updateNode, openAIApiKey, getInputNodes } = useStore(selector, shallow);
+	const { updateNode, openAIApiKey } = useStore(selector, shallow);
 	const [showPrompt, setshowPrompt] = useState(true);
+	const [showFullScreen, setShowFullScreen] = useState(false);
 
 	// TODO: Fullscreen button to edit prompts with a larger display
 	return (
 		<div className="">
 			<div
 				style={{
-					height: showPrompt ? '40rem' : '5rem',
 					width: '35rem',
 				}}
 				className={`m-3 bg-slate-100 shadow-lg border-2  ${
@@ -50,17 +50,21 @@ const LLMPrompt: FC<NodeProps<LLMPromptNodeDataType>> = (props) => {
 					fieldName="Prompt"
 					show={showPrompt}
 					setShow={setshowPrompt}
+					showFullScreen={showFullScreen}
+					setShowFullScreen={setShowFullScreen}
 					presentText={presentText}
 					setText={setText}
 				>
-					<div className="flex flex-col gap-2 text-md ">
-						<InputNodesList
-							data={data}
-							id={id}
-							setText={setText}
-							updateNode={updateNode}
-						/>
-					</div>
+					{(updateNode: (id: string, data: LLMPromptNodeDataType) => void) => (
+						<div className="flex flex-col gap-2 text-md ">
+							<InputNodesList
+								data={data}
+								id={id}
+								setText={setText}
+								updateNode={updateNode}
+							/>
+						</div>
+					)}
 				</TextAreaTemplate>
 			</div>
 			<Disclosure

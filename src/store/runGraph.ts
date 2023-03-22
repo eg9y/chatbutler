@@ -3,6 +3,7 @@ import {
 	NodeTypesEnum,
 	LLMPromptNodeDataType,
 	ChatMessageNodeDataType,
+	ChatPromptNodeDataType,
 } from '../nodes/types/NodeTypes';
 import { getOpenAIChatResponse, getOpenAIResponse, parsePromptInputs } from '../openai/openai';
 import { RFState, UseStoreSetType } from './useStore';
@@ -73,7 +74,11 @@ const runGraph = async (
 				};
 			});
 			try {
-				const response = await getOpenAIChatResponse(get().openAIApiKey, chatSequence);
+				const response = await getOpenAIChatResponse(
+					get().openAIApiKey,
+					sortedNodes[sortedNodeIndex].data as ChatPromptNodeDataType,
+					chatSequence,
+				);
 				const completion = response.data.choices[0].message?.content;
 				if (completion) {
 					sortedNodes[sortedNodeIndex].data = {
@@ -110,8 +115,6 @@ const runGraph = async (
 			return;
 		}
 		// if current node is not of type chatMessage and has a parentNode
-	} catch (error: any) {
-		throw new Error(error);
 	} finally {
 		sortedNodes[sortedNodeIndex].data.isLoading = false;
 		set({

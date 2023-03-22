@@ -8,11 +8,13 @@ const InputNodesList = ({
 	data,
 	updateNode,
 	setText,
+	type,
 }: {
 	id: string;
 	updateNode: (id: string, data: any) => void;
 	data: DefaultNodeDataType;
 	setText: (text: string) => void;
+	type: string;
 }) => {
 	const { getInputNodes } = useStore(selector, shallow);
 	const inputNodes = getInputNodes(data.inputs.inputs);
@@ -20,7 +22,11 @@ const InputNodesList = ({
 		<div className="flex gap-2 flex-wrap">
 			{inputNodes
 				.filter((inputNode) => {
-					if (inputNode.type === 'chatMessage' || inputNode.type === 'chatPrompt') {
+					if (
+						type === 'chatMessage' ||
+						(type === 'chatPrompt' &&
+							(inputNode.type === 'chatMessage' || inputNode.type === 'chatPrompt'))
+					) {
 						return false;
 					}
 					return true;

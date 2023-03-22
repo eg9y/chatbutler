@@ -1,6 +1,5 @@
 import { memo, FC, useState } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
-import { shallow } from 'zustand/shallow';
 import useUndo from 'use-undo';
 
 import { TextInputNodeDataType } from './types/NodeTypes';
@@ -8,7 +7,7 @@ import TextAreaTemplate from './templates/TextAreaTemplate';
 import InputNodesList from './templates/InputNodesList';
 
 const TextInput: FC<NodeProps<TextInputNodeDataType>> = (props) => {
-	const { data, selected, id } = props;
+	const { data, selected, id, type } = props;
 	const [textState, { set: setText }] = useUndo(data.text);
 	const { present: presentText } = textState;
 
@@ -44,6 +43,7 @@ const TextInput: FC<NodeProps<TextInputNodeDataType>> = (props) => {
 								id={id}
 								setText={setText}
 								updateNode={updateNode}
+								type={type}
 							/>
 						</div>
 					)}

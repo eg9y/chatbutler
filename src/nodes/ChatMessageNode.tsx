@@ -1,15 +1,13 @@
 import { memo, FC, useState } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
-import { shallow } from 'zustand/shallow';
 import useUndo from 'use-undo';
 
-import useStore, { selector } from '../store/useStore';
 import { ChatMessageNodeDataType } from './types/NodeTypes';
 import InputNodesList from './templates/InputNodesList';
 import TextAreaTemplate from './templates/TextAreaTemplate';
 
 const ChatMessage: FC<NodeProps<ChatMessageNodeDataType>> = (props) => {
-	const { data, selected, id } = props;
+	const { data, selected, id, type } = props;
 	const [
 		textState,
 		{
@@ -96,6 +94,7 @@ const ChatMessage: FC<NodeProps<ChatMessageNodeDataType>> = (props) => {
 								id={id}
 								setText={setText}
 								updateNode={updateNode}
+								type={type}
 							/>
 						</div>
 					)}

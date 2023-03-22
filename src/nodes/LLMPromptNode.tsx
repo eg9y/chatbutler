@@ -14,7 +14,7 @@ import { ClipboardIcon } from '@heroicons/react/24/outline';
 import InputNodesList from './templates/InputNodesList';
 
 const LLMPrompt: FC<NodeProps<LLMPromptNodeDataType>> = (props) => {
-	const { data, selected, id } = props;
+	const { data, selected, id, type } = props;
 	const [
 		textState,
 		{
@@ -62,6 +62,7 @@ const LLMPrompt: FC<NodeProps<LLMPromptNodeDataType>> = (props) => {
 								id={id}
 								setText={setText}
 								updateNode={updateNode}
+								type={type}
 							/>
 						</div>
 					)}

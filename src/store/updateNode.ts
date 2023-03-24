@@ -8,6 +8,11 @@ const updateNode = (
 	set: UseStoreSetType,
 	nodeId: string,
 	data: LLMPromptNodeDataType & TextInputNodeDataType,
+	position?: {
+		mode: 'add' | 'set';
+		x: number;
+		y: number;
+	},
 ) => {
 	let selectedNode: Node | null = null;
 	const nodes = get().nodes.map((node) => {
@@ -15,6 +20,15 @@ const updateNode = (
 			// it's important to create a new object here, to inform React Flow about the changes
 			node.data = { ...data };
 			selectedNode = node;
+
+			if (position) {
+				if (position.mode === 'add') {
+					node.position.x += position.x;
+					node.position.y += position.y;
+				} else {
+					node.position = position;
+				}
+			}
 		}
 
 		return node;

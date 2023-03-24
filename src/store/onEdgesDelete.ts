@@ -10,7 +10,6 @@ const onEdgesDelete = (get: () => RFState, set: UseStoreSetType, edges: Edge[]) 
 		const edgesToDelete = edges
 			.filter((edge) => edge.target === node.id)
 			.map((edge) => edge.source);
-
 		if (node.data.inputs && edgesToDelete) {
 			node.data.inputs.deleteInputs(edgesToDelete);
 			if (node.id === get().selectedNode?.id) {
@@ -29,9 +28,9 @@ const onEdgesDelete = (get: () => RFState, set: UseStoreSetType, edges: Edge[]) 
 				return edge.target;
 			});
 		chatChildrenToRemove.forEach((target) => {
-			(node.data as ChatMessageNodeDataType).childrenChat = (
+			(node.data as ChatMessageNodeDataType).children = (
 				node.data as ChatMessageNodeDataType
-			).childrenChat.filter((child) => child !== target);
+			).children.filter((child) => child !== target);
 		});
 
 		return node;

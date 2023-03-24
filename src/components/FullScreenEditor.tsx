@@ -39,7 +39,8 @@ export default function FullScreenEditor({
 							leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
 						>
 							<Dialog.Panel
-								className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 
+								className="h-full relative transform overflow-hidden rounded-lg 
+								bg-white px-4 pt-5 pb-4 
                             text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-3xl sm:p-6
                             "
 							>
@@ -48,7 +49,7 @@ export default function FullScreenEditor({
 										style={{
 											height: '80vh',
 										}}
-										className="mt-3 text-center sm:mt-5"
+										className="mt-3 text-center sm:mt-5 flex flex-col"
 									>
 										<Dialog.Title
 											as="h3"
@@ -56,7 +57,7 @@ export default function FullScreenEditor({
 										>
 											{heading}
 										</Dialog.Title>
-										<div className="mt-2 h-full">{children}</div>
+										{children}
 									</div>
 								</div>
 							</Dialog.Panel>

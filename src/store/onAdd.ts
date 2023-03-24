@@ -1,22 +1,16 @@
 import { addEdge, MarkerType, Node } from 'reactflow';
+import { nanoid } from 'nanoid';
 import { Inputs } from '../nodes/types/Input';
-import { NodeTypesEnum, CustomNode, PlaceholderDataType } from '../nodes/types/NodeTypes';
+import {
+	NodeTypesEnum,
+	CustomNode,
+	PlaceholderDataType,
+	ClassifyNodeCategoriesDataType,
+} from '../nodes/types/NodeTypes';
 import { RFState, UseStoreSetType } from './useStore';
 
-const makeId = (length = 5) => {
-	let result = '';
-	const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-	const charactersLength = characters.length;
-	let counter = 0;
-	while (counter < length) {
-		result += characters.charAt(Math.floor(Math.random() * charactersLength));
-		counter += 1;
-	}
-	return result;
-};
-
-const generateUniqueId = (type: NodeTypesEnum) => {
-	return `${type}-${makeId()}`;
+export const generateUniqueId = (type: NodeTypesEnum) => {
+	return `${type}-${nanoid()}`;
 };
 
 const onAdd = (
@@ -49,6 +43,7 @@ const onAdd = (
 			data: {
 				name: `test prompt ${nodeLength}`,
 				text: `This is a test prompt ${nodeLength}`,
+				children: [],
 				isLoading: false,
 				model: 'text-davinci-003',
 				temperature: 0.7,
@@ -63,6 +58,90 @@ const onAdd = (
 				stop: [],
 			},
 		};
+	} else if (type === NodeTypesEnum.classify) {
+		const nodeId = generateUniqueId(type);
+		const classifyCategoriesId = generateUniqueId(NodeTypesEnum.classifyCategories);
+		node = {
+			id: nodeId,
+			type,
+			position: {
+				x,
+				y,
+			},
+			data: {
+				name: `classifier ${nodeLength}`,
+				text: `lorem ipsum`,
+				textType: '',
+				children: [classifyCategoriesId],
+				isLoading: false,
+				// TODO: model set
+				model: 'gpt-4',
+				temperature: 0.7,
+				max_tokens: 256,
+				top_p: 1,
+				frequency_penalty: 0.0,
+				presence_penalty: 0.0,
+				best_of: 1,
+				inputs: new Inputs(),
+				response: '',
+				isBreakpoint: false,
+				stop: [],
+			},
+		};
+
+		const nodeChanges = nodes.concat(node);
+		set({
+			nodes: nodeChanges,
+		});
+
+		const classifyCategoriesNode: Node<ClassifyNodeCategoriesDataType> = {
+			id: classifyCategoriesId,
+			type: NodeTypesEnum.classifyCategories,
+			parentNode: nodeId,
+			position: {
+				x: 700,
+				y: 260,
+			},
+			data: {
+				classifications: [],
+				children: [],
+				name: `category`,
+				text: ``,
+				inputs: new Inputs([nodeId]),
+				response: ``,
+				isLoading: false,
+				isBreakpoint: false,
+			},
+		};
+
+		set({
+			nodes: nodeChanges.concat(classifyCategoriesNode),
+		});
+
+		const edges = get().edges;
+
+		const edge = {
+			id: `${nodeId}-${classifyCategoriesId}`,
+			source: nodeId,
+			target: classifyCategoriesId,
+			type: 'smoothstep',
+			animated: false,
+			style: {
+				strokeWidth: 8,
+				stroke: '#fb7185',
+			},
+			markerEnd: {
+				type: MarkerType.ArrowClosed,
+				width: 10,
+				height: 10,
+				color: '#fb7185',
+			},
+		};
+
+		set({
+			edges: addEdge(edge, edges),
+		});
+		return;
 	} else if (type === NodeTypesEnum.textInput) {
 		node = {
 			id: generateUniqueId(type),
@@ -74,6 +153,7 @@ const onAdd = (
 			data: {
 				name: `test input ${nodeLength}`,
 				text: `This is a test input ${nodeLength}`,
+				children: [],
 				inputs: new Inputs(),
 				response: `This is a test input ${nodeLength}`,
 				isLoading: false,
@@ -100,6 +180,7 @@ const onAdd = (
 				frequency_penalty: 0.0,
 				presence_penalty: 0.0,
 				best_of: 1,
+				children: [],
 				inputs: new Inputs(),
 				response: '',
 				isBreakpoint: false,
@@ -127,7 +208,7 @@ const onAdd = (
 			},
 			parentNode,
 			data: {
-				childrenChat: [],
+				children: [],
 				role: 'user',
 				name: `chat message ${nodeLength}`,
 				// name: `test chat message ${nodeLength}`,
@@ -155,6 +236,7 @@ const onAdd = (
 			},
 			data: {
 				typeToCreate: NodeTypesEnum.chatPrompt,
+				children: [],
 				name: `placeholder ${nodeId}`,
 				text: `placeholder ${nodeId}`,
 				inputs: new Inputs(),

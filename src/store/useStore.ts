@@ -19,8 +19,6 @@ import {
 import initialNodes from './initialNodes';
 import initialEdges from './initialEdges';
 import {
-	ChatMessageNodeDataType,
-	ChatPromptNodeDataType,
 	CustomNode,
 	InputNode,
 	LLMPromptNodeDataType,
@@ -28,14 +26,12 @@ import {
 	TextInputNodeDataType,
 } from '../nodes/types/NodeTypes';
 import storage from './storage';
-import { Graph } from './Graph';
-import runGraph from './runGraph';
 import onAdd from './onAdd';
 import onConnect from './onConnect';
 import onEdgesDelete from './onEdgesDelete';
 import onPlaceholderAdd from './onPlaceholderAdd';
 import updateNode from './updateNode';
-import getChatPaths from './getChatPaths';
+import { runNode, traverseTree } from '../utils/Tree';
 
 export type UseStoreSetType = (
 	partial: RFState | Partial<RFState> | ((state: RFState) => RFState | Partial<RFState>),
@@ -43,7 +39,6 @@ export type UseStoreSetType = (
 ) => void;
 
 export interface RFState {
-	getChatPaths: (rootNode: Node<ChatMessageNodeDataType | ChatPromptNodeDataType>) => string[][];
 	uiErrorMessage: string | null;
 	unlockGraph: boolean;
 	clearGraph: () => void;
@@ -55,6 +50,7 @@ export interface RFState {
 	selectedNode: CustomNode | null;
 	onNodesChange: OnNodesChange;
 	onEdgesChange: OnEdgesChange;
+	deleteEdges: (sourceHandle: string) => void;
 	onEdgesDelete: OnEdgesDelete;
 	onNodeDragStop: NodeMouseHandler;
 	onConnect: OnConnect;
@@ -67,23 +63,13 @@ export interface RFState {
 		parentNode?: string,
 	) => void;
 	onPlaceholderAdd: (placeholderId: string, type: NodeTypesEnum) => void;
-	getInputNodes: (inputs: Set<string>) => InputNode[];
+	getNodes: (inputs: string[]) => CustomNode[];
 
 	// TODO: type this
 	updateNode: any;
 	updateInputExample: any;
-
-	getSortedNodesAndRootNodes: () => {
-		sortedNodes: CustomNode[];
-		rootNodes: CustomNode[];
-	};
-	runGraph: (
-		sortedNodes: CustomNode[],
-		sortedNodeIndex: number,
-		chatPromptSequence: {
-			[chatPrompt: string]: string[];
-		},
-	) => void;
+	traverseTree: () => void;
+	runNode: (node: CustomNode) => void;
 	clearAllNodeResponses: () => void;
 }
 
@@ -106,9 +92,6 @@ const useStore = create<RFState>()(
 			nodes: initialNodes,
 			edges: initialEdges,
 			selectedNode: null,
-			getChatPaths: (rootNode: Node<ChatMessageNodeDataType | ChatPromptNodeDataType>) => {
-				return getChatPaths(get, rootNode);
-			},
 			setUiErrorMessage: (message: string | null) => {
 				set({
 					uiErrorMessage: message,
@@ -138,7 +121,6 @@ const useStore = create<RFState>()(
 				const isSelectedNodeDeleted = changes.some(
 					(change) => change.type === 'remove' && change.id === selectedNode?.id,
 				);
-
 				const update: any = {
 					nodes: applyNodeChanges(changes, nodes),
 				};
@@ -150,6 +132,13 @@ const useStore = create<RFState>()(
 			onEdgesChange: (changes: EdgeChange[]) => {
 				set({
 					edges: applyEdgeChanges(changes, get().edges),
+				});
+			},
+			deleteEdges: (sourceHandle: string) => {
+				const edges = get().edges;
+				const newEdges = edges.filter((edge) => edge.sourceHandle !== sourceHandle);
+				set({
+					edges: newEdges,
 				});
 			},
 			onConnect: (connection: Connection) => {
@@ -171,18 +160,22 @@ const useStore = create<RFState>()(
 			onPlaceholderAdd: (placeholderId: string, type: NodeTypesEnum) => {
 				return onPlaceholderAdd(get, set, placeholderId, type);
 			},
-			getInputNodes: (inputs: Set<string>) => {
+			getNodes: (nodeIds: string[]) => {
 				const nodes = get().nodes;
-				if (inputs.size === 0) {
+				if (nodeIds.length === 0) {
 					return [];
 				}
-				const inputNodes = nodes.filter((node) => inputs.has(node.id));
+
+				const inputNodes = nodes.filter((node) => nodeIds.includes(node.id));
 
 				return inputNodes as InputNode[];
 			},
-
-			updateNode: (nodeId: string, data: LLMPromptNodeDataType & TextInputNodeDataType) => {
-				return updateNode(get, set, nodeId, data);
+			updateNode: (
+				nodeId: string,
+				data: LLMPromptNodeDataType & TextInputNodeDataType,
+				newPosition?: { mode: 'add' | 'set'; x: number; y: number },
+			) => {
+				return updateNode(get, set, nodeId, data, newPosition);
 			},
 			updateInputExample: (nodeId: string, inputId: string, value: string, index: number) => {
 				let selectedNode: Node | null = null;
@@ -200,51 +193,21 @@ const useStore = create<RFState>()(
 					selectedNode,
 				});
 			},
-
-			getSortedNodesAndRootNodes: () => {
-				const nodes = get().nodes;
-				const edges = get().edges;
-
-				const graph = new Graph();
-				edges.forEach((edge) => {
-					graph.addEdge(edge.source, edge.target);
-				});
-
-				const sorted = graph.topologicalSort();
-				const roots = graph.getRootNodes();
-
-				// get nodes in the order of the sorted array
-				const sortedNodes = sorted.map((id) =>
-					nodes.find((n) => n.id === id),
-				) as CustomNode[];
-				const rootNodes = roots.map((id) => nodes.find((n) => n.id === id)) as CustomNode[];
-
-				return {
-					sortedNodes,
-					rootNodes,
-				};
+			traverseTree: () => {
+				traverseTree(get, set);
 			},
-
+			runNode: (node: CustomNode) => {
+				runNode(node, get, set);
+			},
 			clearAllNodeResponses: () => {
 				const nodes = get().nodes;
 				const updatedNodes = nodes.map((node) => {
-					if (node.type === NodeTypesEnum.llmPrompt) {
-						node.data.response = '';
-					}
+					node.data.response = '';
 					return node;
 				});
 				set({
 					nodes: updatedNodes,
 				});
-			},
-			runGraph: (
-				sortedNodes: CustomNode[],
-				sortedNodeIndex: number,
-				chatPromptSequence: {
-					[chatPrompt: string]: string[];
-				},
-			) => {
-				return runGraph(get, set, sortedNodes, sortedNodeIndex, chatPromptSequence);
 			},
 		}),
 		{

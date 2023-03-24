@@ -45,7 +45,7 @@ const TextAreaTemplate: FC<
 	const { updateNode } = useStore(selector, shallow);
 	// TODO: Fullscreen button to edit prompts with a larger display
 	return (
-		<>
+		<div className="flex flex-col h-full">
 			<div
 				className={`p-4 flex justify-between items-center border-b-1 border-slate-400 text-2xl ${bgColor}`}
 			>
@@ -97,15 +97,10 @@ const TextAreaTemplate: FC<
 					}}
 				/>
 			</div>
-			<div
-				style={{
-					height: show ? '40rem' : '0rem',
-				}}
-			>
+			<div>
 				{show && (
 					<Content
 						showPrompt={show}
-						setshowPrompt={setShow}
 						presentText={presentText}
 						setText={setText}
 						data={data}
@@ -115,42 +110,43 @@ const TextAreaTemplate: FC<
 						{children(updateNode)}
 					</Content>
 				)}
-				{showFullScreen && (
-					<FullScreenEditor
-						heading={fieldName}
-						showFullScreen={showFullScreen}
-						setShowFullScreen={setShowFullScreen}
+				<FullScreenEditor
+					heading={fieldName}
+					showFullScreen={showFullScreen}
+					setShowFullScreen={setShowFullScreen}
+				>
+					<Content
+						showPrompt={show}
+						presentText={presentText}
+						setText={setText}
+						data={data}
+						id={id}
+						updateNode={updateNode}
 					>
-						<Content
-							showPrompt={show}
-							setshowPrompt={setShow}
-							presentText={presentText}
-							setText={setText}
-							data={data}
-							id={id}
-							updateNode={updateNode}
-						>
-							{children(updateNode)}
-						</Content>
-					</FullScreenEditor>
-				)}
+						{children(updateNode)}
+					</Content>
+				</FullScreenEditor>
 			</div>
-		</>
+		</div>
 	);
 };
 
 const Content: FC<{
 	showPrompt: boolean;
-	setshowPrompt: (show: boolean) => void;
 	presentText: string;
 	setText: (newPresent: string, checkpoint?: boolean | undefined) => void;
 	data: DefaultNodeDataType;
 	id: string;
 	updateNode: any;
 	children: React.ReactNode;
-}> = ({ presentText, setText, data, id, updateNode, children }) => {
+}> = ({ presentText, setText, data, id, updateNode, showPrompt, children }) => {
 	return (
-		<div className="h-full text-xl">
+		<div
+			style={{
+				height: showPrompt ? '35rem' : '0rem',
+			}}
+			className="h-full text-xl"
+		>
 			{/* list of data.inputs string Set */}
 			<div className="h-full flex flex-col gap-1 px-4 pb-4 text-slate-900">
 				<textarea

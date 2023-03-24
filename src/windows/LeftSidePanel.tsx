@@ -4,6 +4,7 @@ import {
 	ChatBubbleLeftEllipsisIcon,
 	DocumentTextIcon,
 	ChatBubbleLeftRightIcon,
+	ShareIcon,
 } from '@heroicons/react/20/solid';
 import { shallow } from 'zustand/shallow';
 import useStore, { selector } from '../store/useStore';
@@ -114,6 +115,13 @@ export default function LeftSidePanel({
 								addNodeToCenter={addNodeToCenter}
 								Icon={DocumentTextIcon}
 							/>
+							<NodeType
+								name="Classify"
+								nodeType={NodeTypesEnum.classify}
+								handleDrag={handleDrag}
+								addNodeToCenter={addNodeToCenter}
+								Icon={ShareIcon}
+							/>
 						</div>
 					</div>
 				</div>
@@ -168,6 +176,7 @@ const NodeType: FC<{
 		nodeType === NodeTypesEnum.chatMessage && `ring-indigo-300`,
 		nodeType === NodeTypesEnum.chatPrompt && `ring-indigo-300`,
 		nodeType === NodeTypesEnum.llmPrompt && `ring-amber-400`,
+		nodeType === NodeTypesEnum.classify && `ring-rose-300`,
 		nodeType === NodeTypesEnum.textInput && `ring-emerald-400`,
 		`text-slate-600 hover:bg-slate-100 hover:text-slate-900 group flex items-center rounded-md px-3 py-2 text-sm font-medium cursor-pointer ring-2 ring-inset`,
 	);

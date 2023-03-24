@@ -7,16 +7,17 @@ type InputExample = {
 	};
 };
 export class Inputs {
-	inputs: Set<string>;
-	inputExamples: InputExample[];
+	inputs: string[] = [];
+	inputExamples: InputExample[] = [];
 
-	constructor(inputs: Set<string> = new Set([]), inputExamples: InputExample[] = [{}]) {
+	constructor(inputs: string[] = [], inputExamples: InputExample[] = []) {
 		this.inputs = inputs;
 		this.inputExamples = [...inputExamples];
+		return this;
 	}
 
 	addInput(input: string, nodes: InputNode[]) {
-		this.inputs.add(input);
+		this.inputs.push(input);
 		const inputNode = nodes.find((node) => node.id === input);
 		if (inputNode) {
 			this.inputExamples = this.inputExamples.map((example) => {
@@ -48,7 +49,7 @@ export class Inputs {
 
 	deleteInputs(edgesToDelete: string[]) {
 		edgesToDelete.forEach((edge) => {
-			this.inputs.delete(edge);
+			this.inputs = this.inputs.filter((input) => input !== edge);
 			this.inputExamples = this.inputExamples.map((example) => {
 				const { [edge]: _, ...rest } = example;
 				return rest;

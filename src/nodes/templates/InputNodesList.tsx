@@ -1,7 +1,7 @@
 import { shallow } from 'zustand/shallow';
 import useStore, { selector } from '../../store/useStore';
 import { conditionalClassNames } from '../../utils/classNames';
-import { CustomNode, DefaultNodeDataType } from '../types/NodeTypes';
+import { DefaultNodeDataType, InputNode, NodeTypesEnum } from '../types/NodeTypes';
 
 const InputNodesList = ({
 	id,
@@ -16,33 +16,35 @@ const InputNodesList = ({
 	setText: (text: string) => void;
 	type: string;
 }) => {
-	const { getInputNodes } = useStore(selector, shallow);
-	const inputNodes = getInputNodes(data.inputs.inputs);
+	const { getNodes } = useStore(selector, shallow);
+	const inputNodes = getNodes(data.inputs.inputs);
 	return (
 		<div className="flex gap-2 flex-wrap">
 			{inputNodes
 				.filter((inputNode) => {
 					if (
-						type === 'chatMessage' ||
-						(type === 'chatPrompt' &&
-							(inputNode.type === 'chatMessage' || inputNode.type === 'chatPrompt'))
+						(type === 'chatPrompt' && inputNode.type === 'chatMessage') ||
+						(type === 'chatMessage' && inputNode.type === 'chatMessage')
 					) {
 						return false;
 					}
 					return true;
 				})
-				.map((inputNode: CustomNode) => {
+				.map((inputNode: InputNode) => {
 					const colorClass = conditionalClassNames(
-						inputNode.type === 'textInput' &&
+						inputNode.type === NodeTypesEnum.textInput &&
 							'bg-emerald-600 text-white hover:bg-emerald-700 border-l-8 border-emerald-400',
-						inputNode.type === 'llmPrompt' &&
+						inputNode.type === NodeTypesEnum.llmPrompt &&
 							'bg-amber-600 text-white hover:bg-amber-700  border-l-8 border-amber-400',
 						`rounded py-1 px-2 font-semibold shadow-sm `,
-						inputNode.type === 'chatPrompt' &&
+						inputNode.type === NodeTypesEnum.chatPrompt &&
 							'bg-indigo-600 text-white hover:bg-indigo-700  border-l-8 border-indigo-400',
 						`rounded py-1 px-2 font-semibold shadow-sm `,
-						inputNode.type === 'chatMessage' &&
+						inputNode.type === NodeTypesEnum.chatMessage &&
 							'bg-indigo-200 text-slate-500 hover:bg-indigo-400  border-l-8 border-indigo-300',
+						`rounded py-1 px-2 font-semibold shadow-sm `,
+						inputNode.type === NodeTypesEnum.classifyCategories &&
+							'bg-rose-200 text-slate-500 hover:bg-rose-400  border-l-8 border-rose-300',
 						`rounded py-1 px-2 font-semibold shadow-sm `,
 					);
 					return (

@@ -1,3 +1,4 @@
+import ClassifyNode from './nodes/ClassifyNode';
 import ReactFlow, {
 	MiniMap,
 	Background,
@@ -5,6 +6,7 @@ import ReactFlow, {
 	Panel,
 	MarkerType,
 	ReactFlowInstance,
+	Controls,
 } from 'reactflow';
 
 import 'reactflow/dist/base.css';
@@ -28,8 +30,11 @@ import ChatPromptNode from './nodes/ChatPromptNode';
 import ChatMessageNode from './nodes/ChatMessageNode';
 import PlaceholderNode from './nodes/PlaceholderNode';
 import CustomEdge from './edges/CustomEdgeType';
+import ClassifyCategoriesNode from './nodes/ClassifyCategoriesNode';
 
 const nodeTypes = {
+	classify: ClassifyNode,
+	classifyCategories: ClassifyCategoriesNode,
 	llmPrompt: LLMPromptNode,
 	textInput: TextInputNode,
 	chatPrompt: ChatPromptNode,
@@ -123,6 +128,8 @@ export default function App() {
 				nodeTypeEnum = NodeTypesEnum.chatPrompt;
 			} else if (type === 'chatMessage') {
 				nodeTypeEnum = NodeTypesEnum.chatMessage;
+			} else if (type === 'classify') {
+				nodeTypeEnum = NodeTypesEnum.classify;
 			}
 
 			onAdd(nodeTypeEnum, position);
@@ -141,7 +148,7 @@ export default function App() {
 			<div
 				style={{
 					height: '100vh',
-					width: '15vw',
+					width: nodeView ? '15vw' : 0,
 					maxWidth: '200px',
 				}}
 				className="absolute z-10 flex max-w-sm"
@@ -210,8 +217,9 @@ export default function App() {
 						defaultViewport={{
 							x: 0,
 							y: 0,
-							zoom: 0,
+							zoom: 0.3,
 						}}
+						minZoom={0.3}
 						onNodesChange={onNodesChange}
 						onEdgesChange={onEdgesChange}
 						onConnect={onConnect}
@@ -236,6 +244,7 @@ export default function App() {
 							},
 						}}
 					>
+						<Controls className="ml-52" />
 						<MiniMap pannable={true} />
 						<Background variant={BackgroundVariant.Lines} gap={12} size={1} />
 						<Panel position="top-center" aria-label="graph-runner">

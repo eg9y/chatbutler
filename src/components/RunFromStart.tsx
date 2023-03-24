@@ -1,18 +1,10 @@
-import { Node } from 'reactflow';
 import { ChevronDoubleRightIcon } from '@heroicons/react/20/solid';
 import useStore, { selector } from '../store/useStore';
 import { shallow } from 'zustand/shallow';
 import { useState } from 'react';
-import { ChatMessageNodeDataType, ChatPromptNodeDataType } from '../nodes/types/NodeTypes';
 
 export default function RunFromStart() {
-	const {
-		setUiErrorMessage,
-		getSortedNodesAndRootNodes,
-		runGraph,
-		getChatPaths,
-		clearAllNodeResponses,
-	} = useStore(selector, shallow);
+	const { setUiErrorMessage, traverseTree, clearAllNodeResponses } = useStore(selector, shallow);
 
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -20,35 +12,7 @@ export default function RunFromStart() {
 		setIsLoading(true);
 		try {
 			clearAllNodeResponses();
-			const { sortedNodes, rootNodes } = getSortedNodesAndRootNodes();
-
-			const rootNodePaths = rootNodes
-				.filter((rootNode) => rootNode.type == 'chatMessage')
-				.map((rootNode) => {
-					const chatPaths = getChatPaths(
-						rootNode as Node<ChatMessageNodeDataType | ChatPromptNodeDataType>,
-					);
-					return chatPaths
-						.filter((path) => {
-							const lastNode = path[path.length - 1];
-							return lastNode.substring(0, lastNode.indexOf('-')) === 'chatPrompt';
-						})
-						.reduce((obj: { [chatPrompt: string]: string[] }, path) => {
-							obj[path[path.length - 1]] = path.slice(0, path.length - 1);
-							return obj;
-						}, {});
-				})
-				.reduce((obj: { [chatPrompt: string]: string[] }, curr) => {
-					return { ...obj, ...curr };
-				}, {});
-
-			for (let i = 0; i < sortedNodes.length; i++) {
-				await runGraph(sortedNodes, i, rootNodePaths);
-				if (sortedNodes[i].data.isBreakpoint) {
-					// TODO: breakpoint notification and step through
-					break;
-				}
-			}
+			await traverseTree();
 
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} catch (error: any) {

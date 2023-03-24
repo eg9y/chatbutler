@@ -1,5 +1,15 @@
 import { Configuration, OpenAIApi } from 'openai';
-import { ChatPromptNodeDataType, InputNode, LLMPromptNodeDataType } from '../nodes/types/NodeTypes';
+import {
+	ChatPromptNodeDataType,
+	ClassifyNodeDataType,
+	InputNode,
+	LLMPromptNodeDataType,
+} from '../nodes/types/NodeTypes';
+
+export type ChatSequence = {
+	role: 'user' | 'assistant' | 'system';
+	content: string;
+}[];
 
 export function parsePromptInputs(prompt: string, inputNodes: InputNode[]): string {
 	let parsedPrompt = prompt;
@@ -68,54 +78,55 @@ export async function getOpenAIResponse(
 
 export async function getOpenAIChatResponse(
 	apiKey: string | null,
-	chatPrompt: ChatPromptNodeDataType,
+	chatPrompt: ChatPromptNodeDataType | ClassifyNodeDataType,
 	chatSequence: {
 		role: 'user' | 'assistant' | 'system';
 		content: string;
 	}[],
 ) {
-	if (!apiKey) {
-		throw new Error(
-			'OpenAI API key is not set. Please set it in the settings at the bottom left panel.',
-		);
+	try {
+		if (!apiKey) {
+			throw new Error(
+				'OpenAI API key is not set. Please set it in the settings at the bottom left panel.',
+			);
+		}
+		const settings: {
+			messages: {
+				role: 'user' | 'assistant' | 'system';
+				content: string;
+			}[];
+			model: string;
+			max_tokens: number;
+			temperature: number;
+			top_p: number;
+			presence_penalty: number;
+			frequency_penalty: number;
+			stop?: string[];
+		} = {
+			messages: chatSequence,
+			model: chatPrompt.model,
+			max_tokens: Math.floor(chatPrompt.max_tokens),
+			temperature: chatPrompt.temperature,
+			top_p: chatPrompt.top_p,
+			presence_penalty: chatPrompt.presence_penalty,
+			frequency_penalty: chatPrompt.frequency_penalty,
+
+			// TODO: make these fields configurable
+		};
+
+		if (chatPrompt.stop.length) {
+			settings.stop = chatPrompt.stop;
+		}
+
+		const config = new Configuration({
+			apiKey,
+		});
+		const openAi = new OpenAIApi(config);
+		// TODO: Other openAI APIs especially Chat
+		const response = await openAi.createChatCompletion(settings);
+
+		return response;
+	} catch (error: any) {
+		throw new Error(error.message);
 	}
-	const settings: {
-		messages: {
-			role: 'user' | 'assistant' | 'system';
-			content: string;
-		}[];
-		model: string;
-		max_tokens: number;
-		temperature: number;
-		top_p: number;
-		presence_penalty: number;
-		frequency_penalty: number;
-		best_of: number;
-		stop?: string[];
-	} = {
-		messages: chatSequence,
-		model: chatPrompt.model,
-		max_tokens: Math.floor(chatPrompt.max_tokens),
-		temperature: chatPrompt.temperature,
-		top_p: chatPrompt.top_p,
-		presence_penalty: chatPrompt.presence_penalty,
-		frequency_penalty: chatPrompt.frequency_penalty,
-		best_of: Math.floor(chatPrompt.best_of),
-
-		// TODO: make these fields configurable
-		stop: chatPrompt.stop,
-	};
-
-	if (chatPrompt.stop.length) {
-		settings.stop = chatPrompt.stop;
-	}
-
-	const config = new Configuration({
-		apiKey,
-	});
-	const openAi = new OpenAIApi(config);
-	// TODO: Other openAI APIs especially Chat
-	const response = await openAi.createChatCompletion(settings);
-
-	return response;
 }

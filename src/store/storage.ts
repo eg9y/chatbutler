@@ -10,13 +10,17 @@ const storage: PersistStorage<RFState> = {
 
 		// convert nodes.data.inputs
 		const nodes: CustomNode[] = obj.state.nodes.map((node: CustomNode) => {
-			const inputSet = new Set(node.data.inputs.inputs);
+			if ('inputs' in node.data) {
+				return {
+					...node,
+					data: {
+						...node.data,
+						inputs: new Inputs(node.data.inputs.inputs, node.data.inputs.inputExamples),
+					},
+				};
+			}
 			return {
 				...node,
-				data: {
-					...node.data,
-					inputs: new Inputs(inputSet, node.data.inputs.inputExamples),
-				},
 			};
 		});
 
@@ -31,18 +35,7 @@ const storage: PersistStorage<RFState> = {
 		const str = JSON.stringify({
 			state: {
 				...newValue.state,
-				nodes: newValue.state.nodes.map((node: CustomNode) => {
-					return {
-						...node,
-						data: {
-							...node.data,
-							inputs: {
-								...node.data.inputs,
-								inputs: [...node.data.inputs.inputs],
-							},
-						},
-					};
-				}),
+				nodes: [...newValue.state.nodes],
 			},
 		});
 		localStorage.setItem(name, str);

@@ -1,8 +1,6 @@
 import { PlayIcon } from '@heroicons/react/20/solid';
 import useStore, { selector } from '../store/useStore';
 import { shallow } from 'zustand/shallow';
-import { LLMPromptNodeDataType, TextInputNodeDataType } from '../nodes/types/NodeTypes';
-import { getOpenAIResponse } from '../openai/openai';
 import { useState } from 'react';
 
 export default function RunButton({
@@ -11,18 +9,12 @@ export default function RunButton({
 		<PlayIcon className={'text-blue-300 -ml-1 mr-1 h-5 w-5 flex-shrink-0'} aria-hidden="true" />
 	),
 	id,
-	data,
-	apiKey,
-	updateNode,
 }: {
 	text?: string;
 	Icon?: JSX.Element;
 	id: string;
-	data: LLMPromptNodeDataType;
-	apiKey: string | null;
-	updateNode: (id: string, data: LLMPromptNodeDataType | TextInputNodeDataType) => void;
 }) {
-	const { setUiErrorMessage, getInputNodes } = useStore(selector, shallow);
+	const { setUiErrorMessage, getNodes, runNode } = useStore(selector, shallow);
 
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -31,16 +23,10 @@ export default function RunButton({
 		return async () => {
 			setIsLoading(true);
 			try {
-				const response = await getOpenAIResponse(
-					apiKey,
-					data,
-					getInputNodes(data.inputs.inputs),
-				);
-				const completion = response.data.choices[0].text;
-				if (completion) {
-					data.response = completion;
-				}
-				updateNode(id, data);
+				// get current node
+				const currentNode = getNodes([id])[0];
+				await runNode(currentNode);
+
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			} catch (error: any) {
 				setUiErrorMessage(error.message);

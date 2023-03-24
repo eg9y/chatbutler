@@ -15,19 +15,10 @@ import InputNodesList from './templates/InputNodesList';
 
 const LLMPrompt: FC<NodeProps<LLMPromptNodeDataType>> = (props) => {
 	const { data, selected, id, type } = props;
-	const [
-		textState,
-		{
-			set: setText,
-			// reset: resetText,
-			// undo: undoText,
-			// redo: redoText,
-			// canUndo, canRedo
-		},
-	] = useUndo(data.text);
+	const [textState, { set: setText }] = useUndo(data.text);
 	const { present: presentText } = textState;
 
-	const { updateNode, openAIApiKey } = useStore(selector, shallow);
+	const { updateNode } = useStore(selector, shallow);
 	const [showPrompt, setshowPrompt] = useState(true);
 	const [showFullScreen, setShowFullScreen] = useState(false);
 
@@ -42,7 +33,7 @@ const LLMPrompt: FC<NodeProps<LLMPromptNodeDataType>> = (props) => {
 					selected ? 'border-amber-600' : 'border-slate-300'
 				} flex flex-col `}
 			>
-				{RunnableToolbarTemplate(data, selected, updateNode, id, openAIApiKey)}
+				{RunnableToolbarTemplate(data, selected, updateNode, id)}
 				{/* how to spread  */}
 				<TextAreaTemplate
 					{...props}

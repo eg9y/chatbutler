@@ -1,5 +1,5 @@
 import { MarkerType } from 'reactflow';
-import { NodeTypesEnum } from '../nodes/types/NodeTypes';
+import { ChatMessageNodeDataType, NodeTypesEnum } from '../nodes/types/NodeTypes';
 import { RFState, UseStoreSetType } from './useStore';
 
 const onPlaceholderAdd = (
@@ -31,9 +31,9 @@ const onPlaceholderAdd = (
 
 	const newNodes = get().nodes;
 	const newNodeIndex = newNodes.findIndex((node) => node.parentNode === parentNodeId);
-	const parentNode = newNodes.find((node) => node.id === parentNodeId);
+	const parentNodeIndex = newNodes.findIndex((node) => node.id === parentNodeId);
 
-	if (newNodeIndex === -1 || !parentNode) {
+	if (newNodeIndex === -1 || parentNodeIndex === -1) {
 		return;
 	}
 	const edge = {
@@ -56,9 +56,13 @@ const onPlaceholderAdd = (
 	};
 	delete newNodes[newNodeIndex].parentNode;
 	newNodes[newNodeIndex].position = {
-		x: parentNode.position.x + 800,
-		y: parentNode.position.y,
+		x: newNodes[parentNodeIndex].position.x + 800,
+		y: newNodes[parentNodeIndex].position.y,
 	};
+	(newNodes[parentNodeIndex].data as ChatMessageNodeDataType).children.push(
+		newNodes[newNodeIndex].id,
+	);
+	newNodes[newNodeIndex].data.inputs.addInput(parentNodeId, newNodes);
 	set({
 		edges: updatedEdges.concat(edge),
 		nodes: newNodes,

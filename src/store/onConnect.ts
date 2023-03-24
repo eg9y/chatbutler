@@ -4,14 +4,18 @@ import { ChatMessageNodeDataType, InputNode } from '../nodes/types/NodeTypes';
 import { RFState, UseStoreSetType } from './useStore';
 
 const onConnect = (get: () => RFState, set: UseStoreSetType, connection: Connection) => {
-	const nodes = get().nodes;
+	let nodes = get().nodes;
 	let edges = get().edges;
 	const targetNodeIndex = nodes.findIndex((n) => n.id === connection.target)!;
 	const sourceNodeIndex = nodes.findIndex((n) => n.id === connection.source)!;
 
 	let connectionEdge: Connection | Edge = connection;
 
-	if (connection.targetHandle === 'placeholder') {
+	if (connection.targetHandle === 'placeholder-target') {
+		return false;
+	}
+
+	if (connection.targetHandle === 'classify-categories-target') {
 		return false;
 	}
 
@@ -65,11 +69,6 @@ const onConnect = (get: () => RFState, set: UseStoreSetType, connection: Connect
 			},
 		};
 
-		// get source node
-		const sourceNode = nodes[sourceNodeIndex];
-		// get target node
-		const targetNode = nodes[targetNodeIndex];
-		(sourceNode.data as ChatMessageNodeDataType).childrenChat.push(targetNode.id);
 		set({
 			nodes: [...nodes],
 		});
@@ -89,7 +88,12 @@ const onConnect = (get: () => RFState, set: UseStoreSetType, connection: Connect
 	}
 
 	if (connection.source) {
-		nodes[targetNodeIndex].data.inputs.addInput(connection.source, nodes as InputNode[]);
+		if ('inputs' in nodes[targetNodeIndex].data) {
+			(nodes[targetNodeIndex] as InputNode).data.inputs.addInput(
+				connection.source,
+				nodes as InputNode[],
+			);
+		}
 		// remove any edges with the same source and the targetHandle placeholder
 		const placeholderToDelete = edges.find((edge) => {
 			return (
@@ -99,7 +103,7 @@ const onConnect = (get: () => RFState, set: UseStoreSetType, connection: Connect
 		});
 
 		// remove placeholder node
-		const filteredNodes = nodes.filter((node) => {
+		nodes = nodes.filter((node) => {
 			return node.id !== placeholderToDelete?.target;
 		});
 
@@ -107,14 +111,40 @@ const onConnect = (get: () => RFState, set: UseStoreSetType, connection: Connect
 		edges = edges.filter((edge) => {
 			return edge.id !== placeholderToDelete?.id;
 		});
-
-		set({
-			nodes: [...filteredNodes],
-		});
 	}
+
+	if (
+		connection.sourceHandle?.substring(0, connection.sourceHandle.indexOf('::')) ===
+		'classifyCategories'
+	) {
+		connectionEdge = {
+			id: `${nodes[sourceNodeIndex].id}-${nodes[targetNodeIndex].id}`,
+			source: connection.source,
+			target: connection.target,
+			sourceHandle: connection.sourceHandle,
+			targetHandle: connection.targetHandle,
+			style: {
+				strokeWidth: 8,
+				stroke: '#fb7185',
+			},
+			markerEnd: {
+				type: MarkerType.ArrowClosed,
+				width: 10,
+				height: 10,
+				color: '#fb7185',
+			},
+		};
+	}
+
+	// get source node
+	const sourceNode = nodes[sourceNodeIndex];
+	// get target node
+	const targetNode = nodes[targetNodeIndex];
+	(sourceNode.data as ChatMessageNodeDataType).children.push(targetNode.id);
 
 	set({
 		edges: addEdge(connectionEdge, edges),
+		nodes: [...nodes],
 	});
 };
 

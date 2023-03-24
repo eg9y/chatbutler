@@ -19,15 +19,13 @@ const ChatPrompt: FC<NodeProps<ChatPromptNodeDataType>> = (props) => {
 
 	// TODO: Fullscreen button to edit prompts with a larger display
 	return (
-		<div
-			style={{
-				// height: showPrompt ? '20rem' : '5rem',
-				width: '35rem',
-			}}
-			className=""
-		>
+		<>
 			<div
-				className={`h-full bg-slate-100 shadow-lg border-2  ${
+				style={{
+					maxHeight: '50rem',
+					width: '35rem',
+				}}
+				className={` bg-slate-100 shadow-lg border-2  ${
 					selected ? 'border-indigo-600' : 'border-slate-300'
 				} flex flex-col `}
 			>
@@ -85,6 +83,7 @@ const ChatPrompt: FC<NodeProps<ChatPromptNodeDataType>> = (props) => {
 						showPrompt={showPrompt}
 						showFullScreen={showFullScreen}
 						setShowFullScreen={setShowFullScreen}
+						isTruncate={true}
 					/>
 				)}
 			</div>
@@ -102,7 +101,7 @@ const ChatPrompt: FC<NodeProps<ChatPromptNodeDataType>> = (props) => {
 			</Handle>
 
 			<Handle type="source" position={Position.Right} id="chat-prompt" className="w-4 h-4" />
-		</div>
+		</>
 	);
 };
 
@@ -111,7 +110,8 @@ const Content: FC<{
 	showPrompt: boolean;
 	showFullScreen: boolean;
 	setShowFullScreen: (show: boolean) => void;
-}> = ({ data, showPrompt, showFullScreen, setShowFullScreen }) => {
+	isTruncate?: boolean;
+}> = ({ data, showPrompt, showFullScreen, setShowFullScreen, isTruncate = false }) => {
 	return (
 		<>
 			<div className="h-14 flex justify-between items-center px-4">
@@ -142,10 +142,27 @@ const Content: FC<{
 			</div>
 			{(showPrompt || showFullScreen) && (
 				<div
-					className="px-3 pb-3 bg-slate-50
-				 rounded-b-lg flex flex-col justify-between gap-4 items-end"
+					className={conditionalClassNames(
+						!isTruncate && 'overflow-y-scroll',
+						`nodrag px-3 pb-3 bg-slate-50 rounded-b-lg
+						flex flex-col justify-between gap-4 items-end text-xl`,
+					)}
 				>
-					<p>{data.response}</p>
+					{isTruncate ? (
+						<p
+							style={{
+								display: '-webkit-box',
+								WebkitLineClamp: 10, // Set the desired number of lines before truncating
+								WebkitBoxOrient: 'vertical',
+								overflow: 'hidden',
+							}}
+							className=""
+						>
+							{data.response}
+						</p>
+					) : (
+						<p>{data.response}</p>
+					)}
 					<ClipboardIcon
 						className={conditionalClassNames(
 							' -ml-1 mr-1 h-7 w-7 flex-shrink-0 cursor-pointer text-slate-500 hover:text-slate-900 active:scale-50',

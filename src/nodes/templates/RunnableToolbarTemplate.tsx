@@ -8,7 +8,6 @@ export default function RunnableToolbarTemplate(
 	selected: boolean,
 	updateNode: any,
 	id: string,
-	openAIApiKey: string | null,
 ) {
 	return (
 		<NodeToolbar offset={0} isVisible={data.isBreakpoint || selected}>
@@ -35,13 +34,7 @@ export default function RunnableToolbarTemplate(
 					/>
 					<span>{!data.isBreakpoint && 'Set'} Breakpoint</span>
 				</button>
-				<RunButton
-					text="Run Node"
-					apiKey={openAIApiKey}
-					id={id}
-					data={data}
-					updateNode={updateNode}
-				/>
+				<RunButton text="Run Node" id={id} />
 			</div>
 		</NodeToolbar>
 	);

@@ -1,5 +1,5 @@
 import { Inputs } from '../nodes/types/Input';
-import { InputNode, CustomNode, NodeTypesEnum } from '../nodes/types/NodeTypes';
+import { CustomNode, NodeTypesEnum } from '../nodes/types/NodeTypes';
 
 const textInputNode = {
 	id: 'text-input',
@@ -8,8 +8,11 @@ const textInputNode = {
 	data: {
 		name: 'language',
 		text: 'Bahasa Indonesia',
+		children: ['llm-prompt-1'],
 		response: 'Bahasa Indonesia',
 		inputs: new Inputs(),
+		isLoading: false,
+		isBreakpoint: false,
 	},
 };
 
@@ -29,9 +32,22 @@ export default [
 			frequency_penalty: 0.0,
 			presence_penalty: 0.0,
 			best_of: 1,
-			inputs: new Inputs().addInput('text-input', [textInputNode as InputNode]),
+			children: [],
+			inputs: new Inputs(
+				['text-input'],
+				[
+					{
+						'text-input': {
+							name: 'text',
+							value: 'Bahasa Indonesia',
+						},
+					},
+				],
+			),
 			response: '',
 			stop: [],
+			isLoading: false,
+			isBreakpoint: false,
 		},
 	},
 ] as CustomNode[];

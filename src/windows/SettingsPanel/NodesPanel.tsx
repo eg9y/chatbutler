@@ -1,14 +1,12 @@
-import { Switch } from '@headlessui/react';
 import { TrashIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
 import { shallow } from 'zustand/shallow';
 import { CustomNode } from '../../nodes/types/NodeTypes';
 import useStore, { selector } from '../../store/useStore';
-import { conditionalClassNames } from '../../utils/classNames';
 
 export default function NodesPanel({ selectedNode }: { selectedNode: CustomNode | null }) {
 	const [showPromptInOutput, setShowPromptInOutput] = useState(false);
-	const { getInputNodes, clearGraph } = useStore(selector, shallow);
+	const { getNodes, clearGraph } = useStore(selector, shallow);
 
 	return (
 		<div className="p-3 flex flex-col justify-between h-full w-full">

@@ -11,10 +11,10 @@ import { ClassifyNodeCategoriesDataType, NodeTypesEnum } from './types/NodeTypes
 const TextInput: FC<NodeProps<ClassifyNodeCategoriesDataType>> = (props) => {
 	const { data, id } = props;
 	const { updateNode, deleteEdges, getNodes } = useStore(selector, shallow);
-	const [classifications, setClassifications] = useState(data.classifications);
+	const [classifications, setClassifications] = useState(data ? data.classifications : []);
 
 	useEffect(() => {
-		if (classifications) {
+		if (classifications && data) {
 			updateNode(
 				id,
 				{
@@ -31,7 +31,7 @@ const TextInput: FC<NodeProps<ClassifyNodeCategoriesDataType>> = (props) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [classifications]);
 
-	const inputNode = getNodes(data.inputs.inputs)[0];
+	const inputNode = data ? getNodes(data.inputs.inputs)[0] : null;
 
 	return (
 		<div className="nodrag">
@@ -108,7 +108,7 @@ const TextInput: FC<NodeProps<ClassifyNodeCategoriesDataType>> = (props) => {
 														});
 													}}
 												/>
-												{inputNode.data.response ===
+												{inputNode?.data.response ===
 													classification.value && (
 													<CheckCircleIcon
 														className={
@@ -163,7 +163,7 @@ const TextInput: FC<NodeProps<ClassifyNodeCategoriesDataType>> = (props) => {
 			<Handle
 				type="target"
 				position={Position.Left}
-				id="classify-categories-target"
+				id="classifyCategories-target"
 				className="bg-transparent"
 			></Handle>
 		</div>

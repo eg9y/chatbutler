@@ -1,5 +1,4 @@
 import { Edge } from 'reactflow';
-import { ChatMessageNodeDataType } from '../nodes/types/NodeTypes';
 import { UseStoreSetType, RFState } from './useStore';
 
 const onEdgesDelete = (get: () => RFState, set: UseStoreSetType, edges: Edge[]) => {
@@ -17,20 +16,13 @@ const onEdgesDelete = (get: () => RFState, set: UseStoreSetType, edges: Edge[]) 
 			}
 		}
 
-		const chatChildrenToRemove = edges
-			.filter(
-				(edge) =>
-					edge.source === node.id &&
-					edge.sourceHandle === 'chatMessage' &&
-					(edge.targetHandle === 'chatMessage' || edge.targetHandle === 'chatPrompt'),
-			)
-			.map((edge) => {
-				return edge.target;
-			});
-		chatChildrenToRemove.forEach((target) => {
-			(node.data as ChatMessageNodeDataType).children = (
-				node.data as ChatMessageNodeDataType
-			).children.filter((child) => child !== target);
+		const childrenToRemove = edges
+			.filter((edge) => {
+				return edge.source === node.id;
+			})
+			.map((edge) => edge.target);
+		childrenToRemove.forEach((target) => {
+			node.data.children = node.data.children.filter((child) => child !== target);
 		});
 
 		return node;

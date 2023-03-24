@@ -212,7 +212,7 @@ const Classify: FC<NodeProps<ClassifyNodeDataType>> = (props) => {
 			<Handle
 				type="source"
 				position={Position.Right}
-				id="text-output"
+				id="classify"
 				className="bg-transparent"
 			/>
 		</div>

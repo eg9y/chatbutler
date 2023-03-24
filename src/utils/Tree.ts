@@ -88,7 +88,7 @@ export async function traverseTree(
 				getSkippedExclusiveChildren,
 			);
 			await runNode(node, get, set);
-		} catch (error) {
+		} catch (error: any) {
 			throw new Error('Error running node', error);
 		}
 

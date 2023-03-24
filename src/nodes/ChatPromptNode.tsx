@@ -29,7 +29,7 @@ const ChatPrompt: FC<NodeProps<ChatPromptNodeDataType>> = (props) => {
 					selected ? 'border-indigo-600' : 'border-slate-300'
 				} flex flex-col `}
 			>
-				{RunnableToolbarTemplate(data, selected, updateNode, id, openAIApiKey)}
+				{RunnableToolbarTemplate(data, selected, updateNode, id)}
 				{/* how to spread  */}
 
 				<div

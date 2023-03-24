@@ -188,7 +188,7 @@ const NodeType: FC<{
 				e.dataTransfer.setData('application/reactflow', nodeType);
 			}}
 		>
-			<a className={colorClassName} onClick={() => addNodeToCenter(NodeTypesEnum.chatPrompt)}>
+			<a className={colorClassName} onClick={() => addNodeToCenter(nodeType)}>
 				<Icon
 					className={
 						'text-slate-400 group-hover:text-slate-500 -ml-1 mr-3 h-6 w-6 flex-shrink-0'

@@ -137,6 +137,11 @@ export default function App() {
 		[onAdd, reactFlowInstance],
 	);
 
+	const onInit = (reactFlowInstance: ReactFlowInstance) => {
+		reactFlowInstance.fitView();
+		setReactFlowInstance(reactFlowInstance);
+	};
+
 	return (
 		<div
 			style={{
@@ -202,15 +207,14 @@ export default function App() {
 			>
 				<div style={{}} ref={reactFlowWrapper}>
 					<ReactFlow
+						multiSelectionKeyCode="Shift"
 						onDrop={handleDrop}
 						nodesDraggable={unlockGraph}
 						nodesConnectable={unlockGraph}
 						nodesFocusable={unlockGraph}
 						edgesFocusable={unlockGraph}
 						elementsSelectable={unlockGraph}
-						onInit={(reactFlowInstance: ReactFlowInstance) =>
-							setReactFlowInstance(reactFlowInstance)
-						}
+						onInit={(reactFlowInstance: ReactFlowInstance) => onInit(reactFlowInstance)}
 						onDragOver={(e) => e.preventDefault()}
 						nodes={nodes}
 						edges={edges}

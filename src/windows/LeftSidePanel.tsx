@@ -114,7 +114,7 @@ export default function LeftSidePanel({
 			<div className="flex flex-col justify-between h-full py-1 border-1">
 				<div className="space-y-1 flex flex-col gap-4">
 					<div className="flex flex-col justify-between px-2">
-						<div className="flex flex-col">
+						<div className="flex flex-col border-b-1 pb-2 border-slate-300">
 							<h1 className="font-bold text-lg">PromptSandbox.io</h1>
 							<ul className="list-disc list-inside">
 								<a
@@ -142,11 +142,11 @@ export default function LeftSidePanel({
 								setWorkflows={setWorkflows}
 							/>
 						) : (
-							<div className="pb-4 px-2">
+							<div className="pb-1 px-2 py-1">
 								<p className="text-xs text-slate-700">
-									Free visual programming tool that makes it easy to work with
-									OpenAI APIs like GPT-4, allowing you to create and link nodes to
-									generate complex outputs with ease.
+									Welcome to promptsandbox.io a free visual programming tool that
+									makes it easy to work with OpenAI APIs like GPT-4, allowing you
+									to create and link nodes to generate complex outputs with ease.
 								</p>
 							</div>
 						)}

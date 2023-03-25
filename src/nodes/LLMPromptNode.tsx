@@ -30,7 +30,7 @@ const LLMPrompt: FC<NodeProps<LLMPromptNodeDataType>> = (props) => {
 					width: '35rem',
 				}}
 				className={`m-3 bg-slate-100 shadow-lg border-2  ${
-					selected ? 'border-amber-600' : 'border-slate-300'
+					selected ? 'border-amber-600' : 'border-slate-400'
 				} flex flex-col `}
 			>
 				{RunnableToolbarTemplate(data, selected, updateNode, id)}

@@ -30,8 +30,8 @@ const ChatMessage: FC<NodeProps<ChatMessageNodeDataType>> = (props) => {
 					width: '35rem',
 				}}
 				className={`m-3 bg-slate-100 shadow-lg border-2  ${
-					selected ? 'border-purpose-600' : 'border-slate-300'
-				} flex flex-col relative`}
+					selected ? 'border-purple-600' : 'border-slate-400'
+				} flex flex-col relative shadow-lg `}
 			>
 				{/* how to spread  */}
 				<TextAreaTemplate

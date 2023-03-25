@@ -21,7 +21,7 @@ const TextInput: FC<NodeProps<TextInputNodeDataType>> = (props) => {
 					width: '35rem',
 				}}
 				className={`m-3 bg-slate-100 shadow-lg border-2  ${
-					selected ? 'border-emerald-600' : 'border-slate-300'
+					selected ? 'border-emerald-600' : 'border-slate-400'
 				} flex flex-col `}
 			>
 				<TextAreaTemplate

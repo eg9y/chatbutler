@@ -266,7 +266,12 @@ export default function MainApp() {
 					>
 						<Controls className="ml-52" />
 						<MiniMap pannable={true} />
-						<Background variant={BackgroundVariant.Lines} gap={12} size={1} />
+						<Background
+							variant={BackgroundVariant.Dots}
+							gap={14}
+							size={2}
+							color={'#8E8E8E'}
+						/>
 						<Panel position="top-center" aria-label="graph-runner">
 							<div className="flex gap-4">
 								<RunFromStart />

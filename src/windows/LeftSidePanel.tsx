@@ -8,19 +8,19 @@ import {
 	ChatBubbleLeftRightIcon,
 	ShareIcon,
 	UserCircleIcon,
-	PlusIcon,
 } from '@heroicons/react/20/solid';
 import { shallow } from 'zustand/shallow';
 
 import { useLocation } from 'wouter';
 
+const rightAngleSvg = new URL('../assets/right-angle.svg', import.meta.url).href;
 import useStore, { selector } from '../store/useStore';
 import { NodeTypesEnum } from '../nodes/types/NodeTypes';
 import { conditionalClassNames } from '../utils/classNames';
 import supabase from '../auth/supabaseClient';
-import { Database } from '../schema';
-
-type WorkflowSchema = Database['public']['Tables']['workflows']['Row'];
+import { nanoid } from 'nanoid';
+import UserWorkflows from './UserWorkflows';
+import EditableText from '../components/EditableText';
 
 export default function LeftSidePanel({
 	onAdd,
@@ -37,12 +37,30 @@ export default function LeftSidePanel({
 	reactFlowWrapper: React.MutableRefObject<HTMLDivElement | null>;
 	reactFlowInstance: ReactFlowInstance<any, any> | null;
 }) {
-	const { setOpenAiKey, setUiErrorMessage } = useStore(selector, shallow);
-	const [workflows, setWorkflows] = useState<WorkflowSchema[]>([]);
-
+	const {
+		setOpenAiKey,
+		setUiErrorMessage,
+		clearGraph,
+		setWorkflowId,
+		setWorkflows,
+		workflowName,
+		setWorkflowName,
+	} = useStore(selector, shallow);
 	const [dragging, setDragging] = useState(false);
+	const [openWorkflows, setOpenWorkflows] = useState(false);
 
 	const [, setLocation] = useLocation();
+
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+	useEffect(() => {
+		(async () => {
+			const session = await supabase.auth.getSession();
+			if (session.data.session) {
+				setIsLoggedIn(true);
+			}
+		})();
+	}, []);
 
 	const goToLogin = () => {
 		setLocation('/auth');
@@ -67,31 +85,6 @@ export default function LeftSidePanel({
 		onAdd(type, position);
 	};
 
-	const [loggedIn, setLoggedIn] = useState(false);
-
-	useEffect(() => {
-		checkLoggedIn();
-		const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
-			if (event === 'SIGNED_IN') {
-				setLoggedIn(true);
-			} else if (event === 'INITIAL_SESSION') {
-				setLoggedIn(!!session);
-			} else {
-				setLoggedIn(false);
-			}
-		});
-
-		// Clean up the listener when the component is unmounted
-		return () => {
-			authListener.subscription.unsubscribe();
-		};
-	}, []);
-
-	const checkLoggedIn = async () => {
-		const user = supabase.auth.getUser();
-		setLoggedIn(!!user);
-	};
-
 	useEffect(() => {
 		(async () => {
 			const { data, error } = await supabase.from('workflows').select();
@@ -104,6 +97,13 @@ export default function LeftSidePanel({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	useEffect(() => {
+		if (!openWorkflows && reactFlowInstance && 'fitView' in reactFlowInstance) {
+			reactFlowInstance.fitView();
+			reactFlowInstance.zoomOut();
+		}
+	}, [openWorkflows, reactFlowInstance]);
+
 	return (
 		<aside
 			style={{
@@ -113,22 +113,45 @@ export default function LeftSidePanel({
 		>
 			<div className="flex flex-col justify-between h-full py-1 border-1">
 				<div className="space-y-1 flex flex-col gap-4">
-					<div className="pb-4 px-2">
-						<h1 className="font-bold text-lg">PromptSandbox.io</h1>
-						<p className="text-xs text-slate-700">
-							Free visual programming tool that makes it easy to work with OpenAI APIs
-							like GPT-4, allowing you to create and link nodes to generate complex
-							outputs with ease.
-						</p>
-						<a
-							className="text-xs text-blue-600 cursor-pointer"
-							href="https://github.com/eg9y/promptsandbox.io"
-							target="_blank"
-							rel="noreferrer"
-						>
-							more info
-						</a>
+					<div className="flex flex-col justify-between px-2">
+						<div className="flex flex-col">
+							<h1 className="font-bold text-lg">PromptSandbox.io</h1>
+							<ul className="list-disc list-inside">
+								<a
+									className="list-item text-xs text-slate-600 underline hover:font-semibold cursor-pointer"
+									href="https://github.com/eg9y/promptsandbox.io"
+									target="_blank"
+									rel="noreferrer"
+								>
+									more info
+								</a>
+								<a
+									className="list-item text-xs text-slate-600 underline hover:font-semibold cursor-pointer"
+									href="https://github.com/eg9y/promptsandbox.io"
+									target="_blank"
+									rel="noreferrer"
+								>
+									tutorial
+								</a>
+							</ul>
+						</div>
+						{isLoggedIn ? (
+							<EditableText
+								text={workflowName}
+								setText={setWorkflowName}
+								setWorkflows={setWorkflows}
+							/>
+						) : (
+							<div className="pb-4 px-2">
+								<p className="text-xs text-slate-700">
+									Free visual programming tool that makes it easy to work with
+									OpenAI APIs like GPT-4, allowing you to create and link nodes to
+									generate complex outputs with ease.
+								</p>
+							</div>
+						)}
 					</div>
+
 					<div>
 						<div className="bg-slate-200 flex justify-between">
 							<p className="text-start text-slate-900 font-semibold text-md pr-2 pl-4 py-1">
@@ -170,15 +193,20 @@ export default function LeftSidePanel({
 								className="group flex items-center rounded-md px-3 py-2 text-sm font-medium text-slate-700 
 								bg-slate-300 hover:text-slate-900 hover:font-bold cursor-pointer "
 								onClick={() => {
-									if (loggedIn) {
+									if (isLoggedIn) {
 										supabase.auth.signOut();
+										setIsLoggedIn(false);
 										setWorkflows([]);
+										// clear graph;
+										clearGraph();
+										// set new workflowId;
+										setWorkflowId(nanoid());
 									} else {
 										goToLogin();
 									}
 								}}
 							>
-								{loggedIn ? (
+								{isLoggedIn ? (
 									<>
 										<UserCircleIcon
 											className={
@@ -210,49 +238,26 @@ export default function LeftSidePanel({
 						</div>
 						<div className="flex flex-col justify-between gap-4  px-2 py-2 ">
 							<div className="flex flex-col gap-2">
-								{workflows.map((workflow) => {
-									return (
-										<div key={workflow.id}>
-											<a
-												className={`text-slate-600 hover:bg-slate-100 hover:text-slate-900 group flex items-center rounded-md px-3 py-2 text-sm font-medium cursor-pointer ring-2 ring-inset`}
-												onClick={() => {
-													console.log('placeholder');
-												}}
-											>
-												<span className="truncate">{workflow.name}</span>
-											</a>
-										</div>
-									);
-								})}
-								{workflows.length === 0 && <p>No workflows yet</p>}
-							</div>
-							<a
-								className="group p-2 flex items-center rounded-md text-sm font-medium text-slate-700 
+								<a
+									className="group p-2 flex items-center rounded-md text-sm font-medium text-slate-700 
 									bg-slate-300 hover:text-slate-900 hover:font-bold cursor-pointer "
-								onClick={async () => {
-									const { data, error } = await supabase
-										.from('workflows')
-										.insert({
-											name: 'New Workflow',
-											nodes: [],
-											edges: [],
-										})
-										.returns<WorkflowSchema>();
-									if (data) {
-										setWorkflows((prev) => [...prev, data]);
-									} else if (error) {
-										setUiErrorMessage(error.message);
-									}
-								}}
-							>
-								<PlusIcon
-									className={
-										'text-slate-500  group-hover:text-slate-900 -ml-1 mr-3 h-6 w-6 flex-shrink-0'
-									}
-									aria-hidden="true"
+									onClick={async () => {
+										if (isLoggedIn) {
+											setOpenWorkflows(true);
+										} else if (!isLoggedIn) {
+											setUiErrorMessage('Please login to save workflows');
+										}
+									}}
+								>
+									<span className="truncate">Your Workflows</span>
+								</a>
+								<UserWorkflows
+									setWorkflowId={setWorkflowId}
+									setWorkflows={setWorkflows}
+									open={openWorkflows}
+									setOpen={setOpenWorkflows}
 								/>
-								<span className="truncate">Add workflow</span>
-							</a>
+							</div>
 						</div>
 					</div>
 					<div>
@@ -270,14 +275,17 @@ export default function LeftSidePanel({
 								addNodeToCenter={addNodeToCenter}
 								Icon={ChatBubbleLeftRightIcon}
 							/>
-							<div className="pl-4">
-								<NodeType
-									name="Chat Message"
-									nodeType={NodeTypesEnum.chatMessage}
-									handleDrag={handleDrag}
-									addNodeToCenter={addNodeToCenter}
-									Icon={ChatBubbleLeftEllipsisIcon}
-								/>
+							<div className="px-1 mr-1 flex">
+								<img src={rightAngleSvg} alt="SVG as an image" />
+								<div>
+									<NodeType
+										name="Chat Message"
+										nodeType={NodeTypesEnum.chatMessage}
+										handleDrag={handleDrag}
+										addNodeToCenter={addNodeToCenter}
+										Icon={ChatBubbleLeftEllipsisIcon}
+									/>
+								</div>
 							</div>
 
 							<NodeType

@@ -57,6 +57,8 @@ export default function MainApp() {
 		onNodeDragStop,
 		onEdgesDelete,
 		unlockGraph,
+		reactFlowInstance,
+		setReactFlowInstance,
 	} = useStore(selector, shallow);
 
 	const [settingsView, setSettingsView] = useState(true);
@@ -97,12 +99,18 @@ export default function MainApp() {
 	}, [isResizing]);
 
 	const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
-	const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
 
 	const handleDrop = useCallback(
 		(event: React.DragEvent<HTMLDivElement>) => {
 			event.preventDefault();
-			if (!(reactFlowWrapper && reactFlowWrapper.current && reactFlowInstance)) {
+			if (
+				!(
+					reactFlowWrapper &&
+					reactFlowWrapper.current &&
+					reactFlowInstance &&
+					'project' in reactFlowInstance
+				)
+			) {
 				return;
 			}
 
@@ -170,30 +178,38 @@ export default function MainApp() {
 						height: '30px',
 						width: '20px',
 					}}
-					className="m-0 cursor-pointer shadow-lg bg-slate-200 border-b-1 border-r-1 border-slate-300"
-					onClick={() => {
-						setNodeView(!nodeView);
-					}}
+					className="m-0 cursor-pointer shadow-lg bg-slate-200 border-b-1 border-r-1 border-slate-300 flex gap-10 item-center"
 				>
-					{nodeView ? (
-						<ChevronDoubleRightIcon
-							style={{
-								height: '30px',
-								width: '20px',
-							}}
-							className={'text-slate-800 group-hover:text-slate-500 h-full mx-auto'}
-							aria-hidden="true"
-						/>
-					) : (
-						<ChevronDoubleLeftIcon
-							style={{
-								height: '30px',
-								width: '20px',
-							}}
-							className={'text-slate-800 group-hover:text-slate-500 h-full mx-auto'}
-							aria-hidden="true"
-						/>
-					)}
+					<div
+						className="grow"
+						onClick={() => {
+							setNodeView(!nodeView);
+						}}
+					>
+						{nodeView ? (
+							<ChevronDoubleRightIcon
+								style={{
+									height: '30px',
+									width: '20px',
+								}}
+								className={
+									'text-slate-800 group-hover:text-slate-500 h-full mx-auto'
+								}
+								aria-hidden="true"
+							/>
+						) : (
+							<ChevronDoubleLeftIcon
+								style={{
+									height: '30px',
+									width: '20px',
+								}}
+								className={
+									'text-slate-800 group-hover:text-slate-500 h-full mx-auto'
+								}
+								aria-hidden="true"
+							/>
+						)}
+					</div>
 				</div>
 			</div>
 

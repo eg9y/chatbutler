@@ -6,27 +6,31 @@ import { RFState } from './useStore';
 const storage: PersistStorage<RFState> = {
 	getItem: (name) => {
 		const str = localStorage.getItem(name);
-		const obj = str ? JSON.parse(str) : null;
-
-		// convert nodes.data.inputs
-		const nodes: CustomNode[] = obj.state.nodes.map((node: CustomNode) => {
-			if ('inputs' in node.data) {
+		const stateObj = str ? JSON.parse(str) : null;
+		let nodes: CustomNode[] = [];
+		if (stateObj) {
+			nodes = stateObj.state.nodes.map((node: CustomNode) => {
+				if ('inputs' in node.data) {
+					return {
+						...node,
+						data: {
+							...node.data,
+							inputs: new Inputs(
+								node.data.inputs.inputs,
+								node.data.inputs.inputExamples,
+							),
+						},
+					};
+				}
 				return {
 					...node,
-					data: {
-						...node.data,
-						inputs: new Inputs(node.data.inputs.inputs, node.data.inputs.inputExamples),
-					},
 				};
-			}
-			return {
-				...node,
-			};
-		});
+			});
+		}
 
 		return {
 			state: {
-				...(obj ? obj.state : {}),
+				...(stateObj ? stateObj.state : {}),
 				nodes,
 			},
 		};
@@ -35,7 +39,6 @@ const storage: PersistStorage<RFState> = {
 		const str = JSON.stringify({
 			state: {
 				...newValue.state,
-				nodes: [...newValue.state.nodes],
 			},
 		});
 		localStorage.setItem(name, str);

@@ -14,6 +14,7 @@ import {
 	applyEdgeChanges,
 	OnEdgesDelete,
 	NodeMouseHandler,
+	ReactFlowInstance,
 } from 'reactflow';
 
 import initialNodes from './initialNodes';
@@ -32,6 +33,7 @@ import onEdgesDelete from './onEdgesDelete';
 import onPlaceholderAdd from './onPlaceholderAdd';
 import updateNode from './updateNode';
 import { runNode, traverseTree } from '../utils/Tree';
+import { nanoid } from 'nanoid';
 
 export type UseStoreSetType = (
 	partial: RFState | Partial<RFState> | ((state: RFState) => RFState | Partial<RFState>),
@@ -39,6 +41,17 @@ export type UseStoreSetType = (
 ) => void;
 
 export interface RFState {
+	workflows: {
+		id: string;
+		name: string;
+	}[];
+	setWorkflows: (workflows: { id: string; name: string }[]) => void;
+	reactFlowInstance: ReactFlowInstance | null;
+	setReactFlowInstance: (instance: ReactFlowInstance | null) => void;
+	workflowName: string;
+	workflowId: string;
+	setWorkflowName: (name: string) => void;
+	setWorkflowId: (id: string) => void;
 	uiErrorMessage: string | null;
 	unlockGraph: boolean;
 	clearGraph: () => void;
@@ -47,6 +60,8 @@ export interface RFState {
 	setOpenAiKey: (key: string | null) => void;
 	nodes: CustomNode[];
 	edges: Edge[];
+	setNodes: (nodes: CustomNode[]) => void;
+	setEdges: (edges: Edge[]) => void;
 	selectedNode: CustomNode | null;
 	onNodesChange: OnNodesChange;
 	onEdgesChange: OnEdgesChange;
@@ -77,6 +92,31 @@ export interface RFState {
 const useStore = create<RFState>()(
 	persist(
 		(set, get) => ({
+			reactFlowInstance: null,
+			setReactFlowInstance: (instance: ReactFlowInstance | null) => {
+				set({
+					reactFlowInstance: instance,
+				});
+			},
+			workflows: [],
+			setWorkflows: (workflows: { id: string; name: string }[]) => {
+				set({
+					workflows,
+				});
+			},
+			workflowName: 'Untitled Workflow',
+			setWorkflowName: (name: string) => {
+				set({
+					workflowName: name,
+				});
+			},
+			workflowId: nanoid(),
+			setWorkflowId: (id: string) => {
+				set({
+					workflowId: id,
+				});
+			},
+			uiErrorMessage: null,
 			clearGraph: () => {
 				set({
 					nodes: [],
@@ -86,11 +126,20 @@ const useStore = create<RFState>()(
 			},
 			chatSessions: {},
 			unlockGraph: true,
-			uiErrorMessage: null,
 			openAIApiKey: null,
 			// get nodes from local storage or use initial nodes
 			nodes: initialNodes,
 			edges: initialEdges,
+			setNodes: (nodes: CustomNode[]) => {
+				set({
+					nodes,
+				});
+			},
+			setEdges: (edges: Edge[]) => {
+				set({
+					edges,
+				});
+			},
 			selectedNode: null,
 			setUiErrorMessage: (message: string | null) => {
 				set({

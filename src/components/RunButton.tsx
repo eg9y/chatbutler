@@ -1,7 +1,8 @@
 import { PlayIcon } from '@heroicons/react/20/solid';
-import useStore, { selector } from '../store/useStore';
-import { shallow } from 'zustand/shallow';
 import { useState } from 'react';
+import { shallow } from 'zustand/shallow';
+
+import useStore, { selector } from '../store/useStore';
 
 export default function RunButton({
 	text = 'Run',

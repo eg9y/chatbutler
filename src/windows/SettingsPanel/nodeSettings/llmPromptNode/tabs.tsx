@@ -1,13 +1,13 @@
+import { PencilIcon, GlobeAltIcon, BeakerIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
 import { Node } from 'reactflow';
-import { PencilIcon, GlobeAltIcon, BeakerIcon } from '@heroicons/react/20/solid';
 
-import TabsNavigator from '../../TabsNavigator';
 import ApiTab from './tabs/ApiTab';
 import PromptTab from './tabs/PromptTab';
-import { handleChange } from '../../../../utils/handleFormChange';
 import TestTab from './tabs/TestTab';
 import { AllDataTypes, LLMPromptNodeDataType } from '../../../../nodes/types/NodeTypes';
+import { handleChange } from '../../../../utils/handleFormChange';
+import TabsNavigator from '../../TabsNavigator';
 
 const tabs = [
 	{ name: 'API', icon: GlobeAltIcon },

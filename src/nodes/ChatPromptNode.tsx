@@ -1,14 +1,14 @@
+import { SignalIcon, ClipboardIcon, ArrowsPointingOutIcon } from '@heroicons/react/20/solid';
 import { memo, FC, useState } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
 import { shallow } from 'zustand/shallow';
 
-import useStore, { selector } from '../store/useStore';
-import { ChatPromptNodeDataType } from './types/NodeTypes';
 import RunnableToolbarTemplate from './templates/RunnableToolbarTemplate';
-import { SignalIcon, ClipboardIcon, ArrowsPointingOutIcon } from '@heroicons/react/20/solid';
-import { conditionalClassNames } from '../utils/classNames';
-import ShowPromptSwitch from '../components/ShowPromptSwitch';
+import { ChatPromptNodeDataType } from './types/NodeTypes';
 import FullScreenEditor from '../components/FullScreenEditor';
+import ShowPromptSwitch from '../components/ShowPromptSwitch';
+import useStore, { selector } from '../store/useStore';
+import { conditionalClassNames } from '../utils/classNames';
 
 const ChatPrompt: FC<NodeProps<ChatPromptNodeDataType>> = (props) => {
 	const { data, selected, id } = props;

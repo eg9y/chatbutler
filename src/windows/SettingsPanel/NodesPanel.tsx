@@ -1,6 +1,7 @@
 import { TrashIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
 import { shallow } from 'zustand/shallow';
+
 import { CustomNode } from '../../nodes/types/NodeTypes';
 import useStore, { selector } from '../../store/useStore';
 

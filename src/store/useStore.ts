@@ -1,6 +1,4 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-
+import { nanoid } from 'nanoid';
 import {
 	Connection,
 	Edge,
@@ -16,9 +14,17 @@ import {
 	NodeMouseHandler,
 	ReactFlowInstance,
 } from 'reactflow';
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
-import initialNodes from './initialNodes';
 import initialEdges from './initialEdges';
+import initialNodes from './initialNodes';
+import onAdd from './onAdd';
+import onConnect from './onConnect';
+import onEdgesDelete from './onEdgesDelete';
+import onPlaceholderAdd from './onPlaceholderAdd';
+import storage from './storage';
+import updateNode from './updateNode';
 import {
 	CustomNode,
 	InputNode,
@@ -26,14 +32,7 @@ import {
 	NodeTypesEnum,
 	TextInputNodeDataType,
 } from '../nodes/types/NodeTypes';
-import storage from './storage';
-import onAdd from './onAdd';
-import onConnect from './onConnect';
-import onEdgesDelete from './onEdgesDelete';
-import onPlaceholderAdd from './onPlaceholderAdd';
-import updateNode from './updateNode';
 import { runNode, traverseTree } from '../utils/Tree';
-import { nanoid } from 'nanoid';
 
 export type UseStoreSetType = (
 	partial: RFState | Partial<RFState> | ((state: RFState) => RFState | Partial<RFState>),

@@ -1,4 +1,5 @@
 import { Node } from 'reactflow';
+
 import { ClassifyNodeDataType } from '../../../../../nodes/types/NodeTypes';
 
 export default function ClassifyTab({

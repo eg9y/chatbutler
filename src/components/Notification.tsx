@@ -1,13 +1,13 @@
-import { Fragment } from 'react';
-import useStore, { selector } from '../store/useStore';
-import { shallow } from 'zustand/shallow';
-
 import { Transition } from '@headlessui/react';
+import { XMarkIcon } from '@heroicons/react/20/solid';
 import {
 	// CheckCircleIcon,
 	ExclamationCircleIcon,
 } from '@heroicons/react/24/outline';
-import { XMarkIcon } from '@heroicons/react/20/solid';
+import { Fragment } from 'react';
+import { shallow } from 'zustand/shallow';
+
+import useStore, { selector } from '../store/useStore';
 
 export default function Notification() {
 	const { uiErrorMessage, setUiErrorMessage } = useStore(selector, shallow);

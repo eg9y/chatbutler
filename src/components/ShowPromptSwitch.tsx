@@ -1,4 +1,5 @@
 import { Switch } from '@headlessui/react';
+
 import { conditionalClassNames } from '../utils/classNames';
 
 export default function ShowPromptSwitch(

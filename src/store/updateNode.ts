@@ -1,7 +1,7 @@
 import { Node } from 'reactflow';
 
-import { InputNode, LLMPromptNodeDataType, TextInputNodeDataType } from '../nodes/types/NodeTypes';
 import { RFState, UseStoreSetType } from './useStore';
+import { InputNode, LLMPromptNodeDataType, TextInputNodeDataType } from '../nodes/types/NodeTypes';
 
 const updateNode = (
 	get: () => RFState,

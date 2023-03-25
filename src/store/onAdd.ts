@@ -1,5 +1,7 @@
-import { addEdge, MarkerType, Node } from 'reactflow';
 import { nanoid } from 'nanoid';
+import { addEdge, MarkerType, Node } from 'reactflow';
+
+import { RFState, UseStoreSetType } from './useStore';
 import { Inputs } from '../nodes/types/Input';
 import {
 	NodeTypesEnum,
@@ -7,7 +9,6 @@ import {
 	PlaceholderDataType,
 	ClassifyNodeCategoriesDataType,
 } from '../nodes/types/NodeTypes';
-import { RFState, UseStoreSetType } from './useStore';
 
 export const generateUniqueId = (type: NodeTypesEnum) => {
 	return `${type}-${nanoid()}`;

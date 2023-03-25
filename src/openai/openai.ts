@@ -1,4 +1,5 @@
 import { Configuration, OpenAIApi } from 'openai';
+
 import {
 	ChatPromptNodeDataType,
 	ClassifyNodeDataType,

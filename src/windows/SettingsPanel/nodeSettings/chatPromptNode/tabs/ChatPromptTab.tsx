@@ -1,4 +1,5 @@
 import { Node } from 'reactflow';
+
 import { ChatPromptNodeDataType } from '../../../../../nodes/types/NodeTypes';
 
 export default function ChatPromptTab({

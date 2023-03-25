@@ -1,4 +1,5 @@
 import { Node } from 'reactflow';
+
 import { TextInputNodeDataType } from '../../../../../nodes/types/NodeTypes';
 
 export default function PromptTab({

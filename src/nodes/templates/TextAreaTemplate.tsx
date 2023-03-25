@@ -1,13 +1,13 @@
+import { ArrowsPointingOutIcon } from '@heroicons/react/20/solid';
 import { memo, FC } from 'react';
 import { NodeProps } from 'reactflow';
 import { shallow } from 'zustand/shallow';
 
+import FullScreenEditor from '../../components/FullScreenEditor';
+import ShowPromptSwitch from '../../components/ShowPromptSwitch';
 import useStore, { selector } from '../../store/useStore';
 import { handleChange } from '../../utils/handleFormChange';
 import { DefaultNodeDataType } from '../types/NodeTypes';
-import ShowPromptSwitch from '../../components/ShowPromptSwitch';
-import { ArrowsPointingOutIcon } from '@heroicons/react/20/solid';
-import FullScreenEditor from '../../components/FullScreenEditor';
 
 interface TextAreaTemplateInterface {
 	title: string;

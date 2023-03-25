@@ -2,6 +2,7 @@ import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
 import { useEffect } from 'react';
 import { useLocation } from 'wouter';
+
 import supabase from '../auth/supabaseClient';
 
 export default function AuthPage() {

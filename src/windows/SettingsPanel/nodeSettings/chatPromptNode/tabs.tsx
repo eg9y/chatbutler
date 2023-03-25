@@ -1,12 +1,12 @@
+import { GlobeAltIcon, PencilIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
 import { Node } from 'reactflow';
-import { GlobeAltIcon, PencilIcon } from '@heroicons/react/20/solid';
 
-import TabsNavigator from '../../TabsNavigator';
+import ApiTab from './tabs/ApiTab';
 import ChatPromptTab from './tabs/ChatPromptTab';
 import { AllDataTypes, ChatPromptNodeDataType } from '../../../../nodes/types/NodeTypes';
 import { handleChange } from '../../../../utils/handleFormChange';
-import ApiTab from './tabs/ApiTab';
+import TabsNavigator from '../../TabsNavigator';
 
 const tabs = [
 	{ name: 'API', icon: GlobeAltIcon },

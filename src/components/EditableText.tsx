@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import useStore, { selector } from '../store/useStore';
 import { shallow } from 'zustand/shallow';
+
+import useStore, { selector } from '../store/useStore';
 
 const EditableText = ({
 	text,

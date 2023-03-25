@@ -2,11 +2,11 @@ import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/20/solid';
 import { Fragment, memo, FC, useState, useEffect } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
 import { shallow } from 'zustand/shallow';
+
+import { ClassifyNodeCategoriesDataType, NodeTypesEnum } from './types/NodeTypes';
 import { generateUniqueId } from '../store/onAdd';
 import useStore, { selector } from '../store/useStore';
 import { conditionalClassNames } from '../utils/classNames';
-
-import { ClassifyNodeCategoriesDataType, NodeTypesEnum } from './types/NodeTypes';
 
 const TextInput: FC<NodeProps<ClassifyNodeCategoriesDataType>> = (props) => {
 	const { data, id } = props;
@@ -39,7 +39,7 @@ const TextInput: FC<NodeProps<ClassifyNodeCategoriesDataType>> = (props) => {
 				style={{
 					width: '25rem',
 				}}
-				className={`my-3 bg-rose-50 shadow-lg border-2 flex flex-col `}
+				className={`my-3 bg-rose-50 shadow-lg border-2 border-slate-400 flex flex-col `}
 			>
 				<div className="h-full p-4 flex flex-col gap-2">
 					<p className="text-2xl font-semibold">Categories</p>

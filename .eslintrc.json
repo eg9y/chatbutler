@@ -20,7 +20,7 @@
     "sourceType": "module"
   },
   // disalbe reac
-"plugins": ["react", "@typescript-eslint", "eslint-plugin-react-hooks"],
+"plugins": ["react", "@typescript-eslint", "eslint-plugin-react-hooks", "import"],
   "root": true,
   "rules": {
     "react-hooks/exhaustive-deps": "error",
@@ -30,7 +30,30 @@
     "space-before-blocks": "error",
     "import/prefer-default-export": "off",
     "prettier/prettier": ["error", { "endOfLine": "auto" }],
-    "@typescript-eslint/ban-ts-comment": "warn"
+    "@typescript-eslint/ban-ts-comment": "warn",
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          ["builtin", "external"],
+          "internal",
+          ["parent", "sibling", "index"]
+        ],
+        "pathGroups": [
+          {
+            "pattern": "~/**",
+            "group": "internal"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": ["builtin"],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
+      }
+    ]
+    
   },
   "settings": {
     "react": {

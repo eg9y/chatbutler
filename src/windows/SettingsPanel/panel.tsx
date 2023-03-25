@@ -1,24 +1,21 @@
-import { useState } from 'react';
-
-import { shallow } from 'zustand/shallow';
-import { Node } from 'reactflow';
-
 import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/20/solid';
+import { useState } from 'react';
+import { Node } from 'reactflow';
+import { shallow } from 'zustand/shallow';
 
-import useStore, { selector } from '../../store/useStore';
-
+import ChatMessageTabs from './nodeSettings/chatMessage/tabs';
+import ChatPromptTabs from './nodeSettings/chatPromptNode/tabs';
+import ClassifyTabs from './nodeSettings/classifyNode/tabs';
 import LLMPromptTabs from './nodeSettings/llmPromptNode/tabs';
 import TextInputTabs from './nodeSettings/textInputNode/tabs';
+import NodesPanel from './NodesPanel';
 import {
 	ChatPromptNodeDataType,
 	ClassifyNodeDataType,
 	LLMPromptNodeDataType,
 	NodeTypesEnum,
 } from '../../nodes/types/NodeTypes';
-import NodesPanel from './NodesPanel';
-import ChatMessageTabs from './nodeSettings/chatMessage/tabs';
-import ChatPromptTabs from './nodeSettings/chatPromptNode/tabs';
-import ClassifyTabs from './nodeSettings/classifyNode/tabs';
+import useStore, { selector } from '../../store/useStore';
 
 export default function SettingsPanel() {
 	const { selectedNode, updateNode } = useStore(selector, shallow);

@@ -2,9 +2,9 @@ import { memo, FC, useState } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
 import useUndo from 'use-undo';
 
-import { TextInputNodeDataType } from './types/NodeTypes';
-import TextAreaTemplate from './templates/TextAreaTemplate';
 import InputNodesList from './templates/InputNodesList';
+import TextAreaTemplate from './templates/TextAreaTemplate';
+import { TextInputNodeDataType } from './types/NodeTypes';
 
 const TextInput: FC<NodeProps<TextInputNodeDataType>> = (props) => {
 	const { data, selected, id, type } = props;

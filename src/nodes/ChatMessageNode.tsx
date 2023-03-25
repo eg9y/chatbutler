@@ -2,9 +2,9 @@ import { memo, FC, useState } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
 import useUndo from 'use-undo';
 
-import { ChatMessageNodeDataType } from './types/NodeTypes';
 import InputNodesList from './templates/InputNodesList';
 import TextAreaTemplate from './templates/TextAreaTemplate';
+import { ChatMessageNodeDataType } from './types/NodeTypes';
 
 const ChatMessage: FC<NodeProps<ChatMessageNodeDataType>> = (props) => {
 	const { data, selected, id, type } = props;

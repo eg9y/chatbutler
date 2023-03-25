@@ -1,18 +1,18 @@
-import { memo, FC, useState } from 'react';
-import { Handle, Position, NodeProps } from 'reactflow';
-import { shallow } from 'zustand/shallow';
-import useUndo from 'use-undo';
-
-import useStore, { selector } from '../store/useStore';
-import { ClassifyNodeDataType, NodeTypesEnum } from './types/NodeTypes';
-import { conditionalClassNames } from '../utils/classNames';
 import { Disclosure } from '@headlessui/react';
 import { ArrowsPointingOutIcon, SignalIcon } from '@heroicons/react/20/solid';
-import RunnableToolbarTemplate from './templates/RunnableToolbarTemplate';
 import { ClipboardIcon } from '@heroicons/react/24/outline';
+import { memo, FC, useState } from 'react';
+import { Handle, Position, NodeProps } from 'reactflow';
+import useUndo from 'use-undo';
+import { shallow } from 'zustand/shallow';
+
 import InputNodesList from './templates/InputNodesList';
-import ShowPromptSwitch from '../components/ShowPromptSwitch';
+import RunnableToolbarTemplate from './templates/RunnableToolbarTemplate';
+import { ClassifyNodeDataType, NodeTypesEnum } from './types/NodeTypes';
 import FullScreenEditor from '../components/FullScreenEditor';
+import ShowPromptSwitch from '../components/ShowPromptSwitch';
+import useStore, { selector } from '../store/useStore';
+import { conditionalClassNames } from '../utils/classNames';
 import { handleChange } from '../utils/handleFormChange';
 
 const Classify: FC<NodeProps<ClassifyNodeDataType>> = (props) => {

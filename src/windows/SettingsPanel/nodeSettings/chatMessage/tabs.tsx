@@ -1,11 +1,11 @@
+import { PencilIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
 import { Node } from 'reactflow';
-import { PencilIcon } from '@heroicons/react/20/solid';
 
-import TabsNavigator from '../../TabsNavigator';
 import TextInputTab from './tabs/ChatMessageTab';
 import { AllDataTypes, TextInputNodeDataType } from '../../../../nodes/types/NodeTypes';
 import { handleChange } from '../../../../utils/handleFormChange';
+import TabsNavigator from '../../TabsNavigator';
 
 const tabs = [{ name: 'Chat Message', icon: PencilIcon }];
 

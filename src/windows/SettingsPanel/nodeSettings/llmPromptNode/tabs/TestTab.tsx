@@ -1,8 +1,9 @@
-import { Node } from 'reactflow';
-import useStore, { selector } from '../../../../../store/useStore';
-import { shallow } from 'zustand/shallow';
 import { PlayIcon } from '@heroicons/react/20/solid';
+import { Node } from 'reactflow';
+import { shallow } from 'zustand/shallow';
+
 import { LLMPromptNodeDataType, TextInputNodeDataType } from '../../../../../nodes/types/NodeTypes';
+import useStore, { selector } from '../../../../../store/useStore';
 
 export default function TestTab({
 	selectedNode,

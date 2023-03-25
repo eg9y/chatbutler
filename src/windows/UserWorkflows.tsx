@@ -1,12 +1,13 @@
-import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { PlusIcon } from '@heroicons/react/24/outline';
-import { Edge } from 'reactflow';
-import { CustomNode } from '../nodes/types/NodeTypes';
-import supabase from '../auth/supabaseClient';
-import { shallow } from 'zustand/shallow';
-import useStore, { selector } from '../store/useStore';
 import { nanoid } from 'nanoid';
+import { Fragment } from 'react';
+import { Edge } from 'reactflow';
+import { shallow } from 'zustand/shallow';
+
+import supabase from '../auth/supabaseClient';
+import { CustomNode } from '../nodes/types/NodeTypes';
+import useStore, { selector } from '../store/useStore';
 
 export default function UserWorkflows({
 	setWorkflows,

@@ -1,4 +1,5 @@
 import { shallow } from 'zustand/shallow';
+
 import useStore, { selector } from '../../store/useStore';
 import { conditionalClassNames } from '../../utils/classNames';
 import { DefaultNodeDataType, InputNode, NodeTypesEnum } from '../types/NodeTypes';

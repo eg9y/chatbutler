@@ -1,17 +1,17 @@
-import { memo, FC, useState } from 'react';
-import { Handle, Position, NodeProps } from 'reactflow';
-import { shallow } from 'zustand/shallow';
-import useUndo from 'use-undo';
-
-import useStore, { selector } from '../store/useStore';
-import { LLMPromptNodeDataType } from './types/NodeTypes';
-import { conditionalClassNames } from '../utils/classNames';
 import { Disclosure } from '@headlessui/react';
 import { SignalIcon } from '@heroicons/react/20/solid';
+import { ClipboardIcon } from '@heroicons/react/24/outline';
+import { memo, FC, useState } from 'react';
+import { Handle, Position, NodeProps } from 'reactflow';
+import useUndo from 'use-undo';
+import { shallow } from 'zustand/shallow';
+
+import InputNodesList from './templates/InputNodesList';
 import RunnableToolbarTemplate from './templates/RunnableToolbarTemplate';
 import TextAreaTemplate from './templates/TextAreaTemplate';
-import { ClipboardIcon } from '@heroicons/react/24/outline';
-import InputNodesList from './templates/InputNodesList';
+import { LLMPromptNodeDataType } from './types/NodeTypes';
+import useStore, { selector } from '../store/useStore';
+import { conditionalClassNames } from '../utils/classNames';
 
 const LLMPrompt: FC<NodeProps<LLMPromptNodeDataType>> = (props) => {
 	const { data, selected, id, type } = props;

@@ -1,4 +1,5 @@
-import ClassifyNode from '../nodes/ClassifyNode';
+import { ChevronDoubleRightIcon, ChevronDoubleLeftIcon } from '@heroicons/react/20/solid';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import ReactFlow, {
 	MiniMap,
 	Background,
@@ -7,30 +8,30 @@ import ReactFlow, {
 	MarkerType,
 	ReactFlowInstance,
 	Controls,
+	Edge,
 } from 'reactflow';
-
-import 'reactflow/dist/base.css';
-
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { ChevronDoubleRightIcon, ChevronDoubleLeftIcon } from '@heroicons/react/20/solid';
-
 import { shallow } from 'zustand/shallow';
 
+import supabase from '../auth/supabaseClient';
+import Notification from '../components/Notification';
+import RunFromStart from '../components/RunFromStart';
+import ConnectionLine from '../connection/ConnectionLine';
+import syncDataToSupabase from '../db/syncToSupabase';
+import CustomEdge from '../edges/CustomEdgeType';
+import ChatMessageNode from '../nodes/ChatMessageNode';
+import ChatPromptNode from '../nodes/ChatPromptNode';
+import ClassifyCategoriesNode from '../nodes/ClassifyCategoriesNode';
+import ClassifyNode from '../nodes/ClassifyNode';
+import LLMPromptNode from '../nodes/LLMPromptNode';
+import PlaceholderNode from '../nodes/PlaceholderNode';
+import TextInputNode from '../nodes/TextInputNode';
+import { Inputs } from '../nodes/types/Input';
+import { CustomNode, NodeTypesEnum } from '../nodes/types/NodeTypes';
 import useStore, { selector } from '../store/useStore';
-
+import { useDebouncedEffect } from '../utils/useDebouncedEffect';
 import LeftSidePanel from '../windows/LeftSidePanel';
 import SettingsPanel from '../windows/SettingsPanel/panel';
-import LLMPromptNode from '../nodes/LLMPromptNode';
-import TextInputNode from '../nodes/TextInputNode';
-import ConnectionLine from '../connection/ConnectionLine';
-import Notification from '../components/Notification';
-import { NodeTypesEnum } from '../nodes/types/NodeTypes';
-import RunFromStart from '../components/RunFromStart';
-import ChatPromptNode from '../nodes/ChatPromptNode';
-import ChatMessageNode from '../nodes/ChatMessageNode';
-import PlaceholderNode from '../nodes/PlaceholderNode';
-import CustomEdge from '../edges/CustomEdgeType';
-import ClassifyCategoriesNode from '../nodes/ClassifyCategoriesNode';
+import 'reactflow/dist/base.css';
 
 const nodeTypes = {
 	classify: ClassifyNode,
@@ -59,6 +60,15 @@ export default function MainApp() {
 		unlockGraph,
 		reactFlowInstance,
 		setReactFlowInstance,
+		workflowId,
+		setWorkflowId,
+		workflowName,
+		setWorkflowName,
+		setNodes,
+		setEdges,
+		workflows,
+		setWorkflows,
+		setUiErrorMessage,
 	} = useStore(selector, shallow);
 
 	const [settingsView, setSettingsView] = useState(true);
@@ -67,6 +77,111 @@ export default function MainApp() {
 	const [settingsPanelWidth, setSettingsPanelWidth] = useState(300); // Initial width
 
 	const [isResizing, setIsResizing] = useState(false);
+
+	useEffect(() => {
+		(async () => {
+			const { data, error } = await supabase.from('workflows').select();
+			if (data) {
+				setWorkflows(data);
+			} else if (error) {
+				setUiErrorMessage(error.message);
+			}
+		})();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	useDebouncedEffect(
+		() => {
+			(async () => {
+				const isLoggedIn = await supabase.auth.getSession();
+				if (!isLoggedIn.data.session) {
+					return;
+				}
+				await syncDataToSupabase(
+					nodes,
+					edges,
+					setWorkflowName,
+					workflowName,
+					setWorkflows,
+					workflowId,
+					setWorkflowId,
+				);
+			})();
+		},
+		[nodes, edges, workflowId, workflowName, workflows],
+		3000,
+	);
+
+	useEffect(() => {
+		(async () => {
+			const isLoggedIn = await supabase.auth.getSession();
+			if (!isLoggedIn.data.session) {
+				return;
+			}
+			const user = await supabase.auth.getUser();
+			if (user) {
+				if (user.error) {
+					console.error('Error fetching user from Supabase:', user.error);
+					return;
+				}
+				const { data: workflowEntry, error: workflowError } = await supabase
+					.from('workflows')
+					.select('id')
+					.order('created_at', { ascending: false });
+
+				if (workflowError) {
+					console.error('Error fetching workflows from Supabase:', workflowError);
+					return;
+				}
+
+				// user just signs up and has a workflow in the db, fetch the latest one
+				if (workflowEntry.length) {
+					const { data: latestWorkflow, error: latestWorkflowError } = await supabase
+						.from('workflows')
+						.select('name, nodes, edges, id')
+						.eq('id', workflowEntry[0].id)
+						.order('created_at', { ascending: false })
+						.single();
+					if (latestWorkflowError) {
+						console.error(
+							'Error fetching latest workflow from Supabase:',
+							latestWorkflowError,
+						);
+						return;
+					}
+					if (latestWorkflow) {
+						const name = latestWorkflow.name;
+						let nodes: any = latestWorkflow.nodes;
+						const edges: Edge<any>[] = latestWorkflow.edges as any;
+
+						if (nodes && edges) {
+							nodes = nodes.map((node: CustomNode) => {
+								if ('inputs' in node.data) {
+									return {
+										...node,
+										data: {
+											...node.data,
+											inputs: new Inputs(
+												node.data.inputs.inputs,
+												node.data.inputs.inputExamples,
+											),
+										},
+									};
+								}
+								return {
+									...node,
+								};
+							});
+							setNodes(nodes);
+							setEdges(edges);
+							setWorkflowId(latestWorkflow.id);
+							setWorkflowName(name);
+						}
+					}
+				}
+			}
+		})();
+	}, [setEdges, setNodes, setWorkflowId, setWorkflowName]);
 
 	const handleMouseDown = (e: any) => {
 		e.preventDefault();

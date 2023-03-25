@@ -1,6 +1,7 @@
 import { MarkerType } from 'reactflow';
-import { ChatMessageNodeDataType, NodeTypesEnum } from '../nodes/types/NodeTypes';
+
 import { RFState, UseStoreSetType } from './useStore';
+import { ChatMessageNodeDataType, NodeTypesEnum } from '../nodes/types/NodeTypes';
 
 const onPlaceholderAdd = (
 	get: () => RFState,

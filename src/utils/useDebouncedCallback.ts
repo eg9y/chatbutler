@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { DependencyList, useMemo, useRef } from 'react';
+
 import { useUnmountEffect } from './useUnmountEffect';
 
 export interface DebouncedFunction<Fn extends (...args: any[]) => any> {

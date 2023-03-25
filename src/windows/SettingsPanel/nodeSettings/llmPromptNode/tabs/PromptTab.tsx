@@ -1,4 +1,5 @@
 import { Node } from 'reactflow';
+
 import { LLMPromptNodeDataType } from '../../../../../nodes/types/NodeTypes';
 
 export default function PromptTab({

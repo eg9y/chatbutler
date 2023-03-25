@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Connection, addEdge, MarkerType, Edge } from 'reactflow';
-import { ChatMessageNodeDataType, InputNode } from '../nodes/types/NodeTypes';
+
 import { RFState, UseStoreSetType } from './useStore';
+import { ChatMessageNodeDataType, InputNode } from '../nodes/types/NodeTypes';
 
 const onConnect = (get: () => RFState, set: UseStoreSetType, connection: Connection) => {
 	let nodes = get().nodes;

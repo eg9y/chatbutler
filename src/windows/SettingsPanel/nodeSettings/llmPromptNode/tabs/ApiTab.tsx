@@ -1,7 +1,7 @@
 import { Node } from 'reactflow';
+
 import { completionModels } from '../../../../../openai/models';
 import ChipsInput from '../../../inputs/ChipsInput';
-
 import RangeInput from '../../../inputs/RangeInput';
 
 export default function ApiPromptTab({

@@ -1,5 +1,3 @@
-import { FC, useEffect, useState } from 'react';
-import { ReactFlowInstance } from 'reactflow';
 import {
 	Cog6ToothIcon,
 	Bars3CenterLeftIcon,
@@ -8,19 +6,22 @@ import {
 	ChatBubbleLeftRightIcon,
 	ShareIcon,
 	UserCircleIcon,
+	PhotoIcon,
+	BeakerIcon,
 } from '@heroicons/react/20/solid';
+import { nanoid } from 'nanoid';
+import { FC, useEffect, useState } from 'react';
+import { ReactFlowInstance } from 'reactflow';
+import { useLocation } from 'wouter';
 import { shallow } from 'zustand/shallow';
 
-import { useLocation } from 'wouter';
-
 const rightAngleSvg = new URL('../assets/right-angle.svg', import.meta.url).href;
-import useStore, { selector } from '../store/useStore';
-import { NodeTypesEnum } from '../nodes/types/NodeTypes';
-import { conditionalClassNames } from '../utils/classNames';
-import supabase from '../auth/supabaseClient';
-import { nanoid } from 'nanoid';
 import UserWorkflows from './UserWorkflows';
+import supabase from '../auth/supabaseClient';
 import EditableText from '../components/EditableText';
+import { NodeTypesEnum } from '../nodes/types/NodeTypes';
+import useStore, { selector } from '../store/useStore';
+import { conditionalClassNames } from '../utils/classNames';
 
 export default function LeftSidePanel({
 	onAdd,
@@ -47,7 +48,7 @@ export default function LeftSidePanel({
 		setWorkflowName,
 	} = useStore(selector, shallow);
 	const [dragging, setDragging] = useState(false);
-	const [openWorkflows, setOpenWorkflows] = useState(false);
+	const [openWorkflows, setOpenWorkflows] = useState(true);
 
 	const [, setLocation] = useLocation();
 
@@ -64,6 +65,10 @@ export default function LeftSidePanel({
 
 	const goToLogin = () => {
 		setLocation('/auth');
+	};
+
+	const goToGallery = () => {
+		setLocation('/gallery');
 	};
 
 	const handleDrag = (e: React.DragEvent<HTMLDivElement>) => {
@@ -84,18 +89,6 @@ export default function LeftSidePanel({
 
 		onAdd(type, position);
 	};
-
-	useEffect(() => {
-		(async () => {
-			const { data, error } = await supabase.from('workflows').select();
-			if (data) {
-				setWorkflows(data);
-			} else if (error) {
-				setUiErrorMessage(error.message);
-			}
-		})();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
 
 	useEffect(() => {
 		if (!openWorkflows && reactFlowInstance && 'fitView' in reactFlowInstance) {
@@ -249,17 +242,38 @@ export default function LeftSidePanel({
 										}
 									}}
 								>
+									<BeakerIcon
+										className={
+											'text-slate-500 group-hover:text-slate-600 -ml-1 mr-3 h-6 w-6 flex-shrink-0'
+										}
+										aria-hidden="true"
+									/>
 									<span className="truncate">Your Workflows</span>
 								</a>
-								<UserWorkflows
-									setWorkflowId={setWorkflowId}
-									setWorkflows={setWorkflows}
-									open={openWorkflows}
-									setOpen={setOpenWorkflows}
-								/>
+								<a
+									className="group p-2 flex items-center rounded-md text-sm font-medium text-slate-700 
+									bg-slate-300 hover:text-slate-900 hover:font-bold cursor-pointer "
+									onClick={async () => {
+										goToGallery();
+									}}
+								>
+									<PhotoIcon
+										className={
+											'text-slate-500 group-hover:text-slate-600 -ml-1 mr-3 h-6 w-6 flex-shrink-0'
+										}
+										aria-hidden="true"
+									/>
+									<span>Gallery</span>
+								</a>
 							</div>
 						</div>
 					</div>
+					<UserWorkflows
+						setWorkflowId={setWorkflowId}
+						setWorkflows={setWorkflows}
+						open={openWorkflows}
+						setOpen={setOpenWorkflows}
+					/>
 					<div>
 						<div className="bg-slate-200 flex justify-between">
 							<p className="text-start text-slate-900 font-semibold text-md pr-2 pl-4 py-1">

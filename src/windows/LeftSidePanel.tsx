@@ -109,7 +109,7 @@ export default function LeftSidePanel({
 			style={{
 				height: '100vh',
 			}}
-			className="bg-slate-50 w-full shadow-lg"
+			className="bg-slate-50 w-full shadow-lg border-r-1 border-slate-400"
 		>
 			<div className="flex flex-col justify-between h-full py-1 border-1">
 				<div className="space-y-1 flex flex-col gap-4">
@@ -142,9 +142,9 @@ export default function LeftSidePanel({
 								setWorkflows={setWorkflows}
 							/>
 						) : (
-							<div className="pb-1 px-2 py-1">
+							<div className="pb-1  py-1">
 								<p className="text-xs text-slate-700">
-									Welcome to promptsandbox.io a free visual programming tool that
+									Welcome to promptsandbox.io, a free visual programming tool that
 									makes it easy to work with OpenAI APIs like GPT-4, allowing you
 									to create and link nodes to generate complex outputs with ease.
 								</p>

@@ -5,20 +5,15 @@ import {
 	DocumentTextIcon,
 	ChatBubbleLeftRightIcon,
 	ShareIcon,
-	UserCircleIcon,
-	PhotoIcon,
 	BeakerIcon,
 } from '@heroicons/react/20/solid';
-import { nanoid } from 'nanoid';
 import { FC, useEffect, useState } from 'react';
 import { ReactFlowInstance } from 'reactflow';
-import { useLocation, useRoute } from 'wouter';
 import { shallow } from 'zustand/shallow';
 
 const rightAngleSvg = new URL('../assets/right-angle.svg', import.meta.url).href;
 import UserWorkflows from './UserWorkflows';
 import supabase from '../auth/supabaseClient';
-import EditableText from '../components/EditableText';
 import { NodeTypesEnum } from '../nodes/types/NodeTypes';
 import useStore, { selector } from '../store/useStore';
 import { conditionalClassNames } from '../utils/classNames';
@@ -38,19 +33,11 @@ export default function LeftSidePanel({
 	reactFlowWrapper: React.MutableRefObject<HTMLDivElement | null>;
 	reactFlowInstance: ReactFlowInstance<any, any> | null;
 }) {
-	const {
-		setOpenAiKey,
-		setUiErrorMessage,
-		clearGraph,
-		setWorkflows,
-		currentWorkflow,
-		setCurrentWorkflow,
-	} = useStore(selector, shallow);
+	const { setOpenAiKey, setUiErrorMessage, setWorkflows, currentWorkflow, setCurrentWorkflow } =
+		useStore(selector, shallow);
 	const [dragging, setDragging] = useState(false);
 
 	const [openWorkflows, setOpenWorkflows] = useState(!currentWorkflow);
-
-	const [, setLocation] = useLocation();
 
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -62,14 +49,6 @@ export default function LeftSidePanel({
 			}
 		})();
 	}, []);
-
-	const goToLogin = () => {
-		setLocation('/auth');
-	};
-
-	const goToGallery = () => {
-		setLocation('/gallery');
-	};
 
 	const handleDrag = (e: React.DragEvent<HTMLDivElement>) => {
 		e.preventDefault();
@@ -115,7 +94,6 @@ export default function LeftSidePanel({
 				<div className="space-y-1 flex flex-col gap-4">
 					<div className="flex flex-col justify-between px-2">
 						<div className="flex flex-col border-b-1 pb-2 border-slate-300">
-							<h1 className="font-bold text-lg">PromptSandbox.io</h1>
 							<ul className="list-disc list-inside">
 								<a
 									className="list-item text-xs text-slate-600 underline hover:font-semibold cursor-pointer"
@@ -135,14 +113,6 @@ export default function LeftSidePanel({
 								</a>
 							</ul>
 						</div>
-						{isLoggedIn && currentWorkflow && (
-							<EditableText
-								text={currentWorkflow.name}
-								currentWorkflow={currentWorkflow}
-								setCurrentWorkflow={setCurrentWorkflow}
-								setWorkflows={setWorkflows}
-							/>
-						)}
 					</div>
 
 					<div>
@@ -181,7 +151,7 @@ export default function LeftSidePanel({
 								<span className="truncate">OpenAI Key</span>
 							</a>
 						</div>
-						<div className="mt-1 px-2 space-y-1" aria-labelledby="projects-headline">
+						{/* <div className="mt-1 px-2 space-y-1" aria-labelledby="projects-headline">
 							<a
 								className="group flex items-center rounded-md px-3 py-2 text-sm font-medium text-slate-700 
 								bg-slate-300 hover:text-slate-900 hover:font-bold cursor-pointer "
@@ -224,7 +194,7 @@ export default function LeftSidePanel({
 									</>
 								)}
 							</a>
-						</div>
+						</div> */}
 					</div>
 					<div className="flex flex-col gap-1">
 						<div className="bg-slate-200 flex justify-between ">
@@ -252,20 +222,6 @@ export default function LeftSidePanel({
 										aria-hidden="true"
 									/>
 									<span className="truncate">Your Workflows</span>
-								</a>
-								<a
-									className="group p-2 flex items-center rounded-md text-sm font-medium text-slate-700 
-									bg-slate-300 hover:text-slate-900 hover:font-bold cursor-pointer "
-									target="_blank"
-									href="/gallery"
-								>
-									<PhotoIcon
-										className={
-											'text-slate-500 group-hover:text-slate-600 -ml-1 mr-3 h-6 w-6 flex-shrink-0'
-										}
-										aria-hidden="true"
-									/>
-									<span>Gallery</span>
 								</a>
 							</div>
 						</div>

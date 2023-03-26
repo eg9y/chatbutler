@@ -94,6 +94,13 @@ export default function MainApp({ params }: { params: DefaultParams | null }) {
 
 	useEffect(() => {
 		(async () => {
+			const isLoggedIn = await supabase.auth.getSession();
+			if (!isLoggedIn.data.session) {
+				setTimeout(() => {
+					setIsLoading(false);
+				}, 500);
+				return;
+			}
 			setIsLoading(true);
 			await getInitialState(
 				params,
@@ -105,8 +112,8 @@ export default function MainApp({ params }: { params: DefaultParams | null }) {
 				currentWorkflow,
 				setNodes,
 				setEdges,
+				isLoggedIn.data.session,
 			);
-			console.log('rot');
 			setIsLoading(false);
 		})();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -197,15 +204,20 @@ export default function MainApp({ params }: { params: DefaultParams | null }) {
 	return (
 		<div
 			style={{
-				height: '100vh',
+				height: '95vh',
 				width: '100vw',
 			}}
 			className="flex"
 		>
 			<LoadingOverlay open={isLoading} />
+			<div className="absolute p-4 flex w-full justify-center">
+				<div className="flex gap-4 items-center">
+					<RunFromStart />
+				</div>
+			</div>
 			<div
 				style={{
-					height: '100vh',
+					height: '95vh',
 					width: nodeView ? '15vw' : 0,
 					maxWidth: '200px',
 					minWidth: '180px',
@@ -263,7 +275,7 @@ export default function MainApp({ params }: { params: DefaultParams | null }) {
 				className="grid grid-cols-2"
 				style={{
 					gridTemplateColumns: '1fr auto',
-					height: '100vh',
+					height: '95vh',
 					width: '100vw',
 				}}
 			>
@@ -318,11 +330,6 @@ export default function MainApp({ params }: { params: DefaultParams | null }) {
 							size={2}
 							color={'#8E8E8E'}
 						/>
-						<Panel position="top-center" aria-label="graph-runner">
-							<div className="flex gap-4">
-								<RunFromStart />
-							</div>
-						</Panel>
 						<Panel position="top-center">
 							<Notification />
 						</Panel>
@@ -382,7 +389,7 @@ export default function MainApp({ params }: { params: DefaultParams | null }) {
 						className="bg-slate-200 shadow-xl border-1 border-slate-300"
 						style={{
 							width: '10px',
-							height: '100vh',
+							height: '95vh',
 						}}
 						onMouseDown={handleMouseDown}
 					/>

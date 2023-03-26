@@ -1,3 +1,4 @@
+import { Session } from '@supabase/supabase-js';
 import { Edge } from 'reactflow';
 import { DefaultParams } from 'wouter';
 
@@ -15,8 +16,12 @@ const getInitialState = async (
 	currentWorkflow: { id: string; name: string } | null,
 	setNodes: (nodes: CustomNode[]) => void,
 	setEdges: (edges: Edge<any>[]) => void,
+	session: Session,
 ) => {
-	const { data, error } = await supabase.from('workflows').select();
+	const { data, error } = await supabase
+		.from('workflows')
+		.select()
+		.eq('user_id', session.user.id);
 	if (data) {
 		setWorkflows(data);
 	} else if (error) {

@@ -72,7 +72,7 @@ export default function UserWorkflows({
 											setIsLoading(false);
 										}}
 									>
-										<span className="truncate">Select</span>
+										<span className="truncate">Open</span>
 									</a>
 								</div>
 								<div className="-ml-px flex w-0 flex-1">

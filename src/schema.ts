@@ -25,6 +25,7 @@ export interface Database {
 					created_at: string | null;
 					edges: Json | null;
 					id: string;
+					is_public: boolean;
 					name: string;
 					nodes: Json | null;
 					user_id: string | null;
@@ -32,7 +33,8 @@ export interface Database {
 				Insert: {
 					created_at?: string | null;
 					edges?: Json | null;
-					id?: string;
+					id: string;
+					is_public?: boolean;
 					name: string;
 					nodes?: Json | null;
 					user_id?: string | null;
@@ -41,6 +43,7 @@ export interface Database {
 					created_at?: string | null;
 					edges?: Json | null;
 					id?: string;
+					is_public?: boolean;
 					name?: string;
 					nodes?: Json | null;
 					user_id?: string | null;

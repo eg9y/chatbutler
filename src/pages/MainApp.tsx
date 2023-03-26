@@ -50,6 +50,7 @@ const edgeTypes = {
 
 export default function MainApp({ params }: { params: DefaultParams | null }) {
 	const {
+		session,
 		nodes,
 		edges,
 		onNodesChange,
@@ -81,21 +82,19 @@ export default function MainApp({ params }: { params: DefaultParams | null }) {
 	useDebouncedEffect(
 		() => {
 			(async () => {
-				const isLoggedIn = await supabase.auth.getSession();
-				if (!isLoggedIn.data.session) {
+				if (!session) {
 					return;
 				}
 				await syncDataToSupabase(nodes, edges, currentWorkflow);
 			})();
 		},
-		[],
+		[session, nodes, edges],
 		3000,
 	);
 
 	useEffect(() => {
 		(async () => {
-			const isLoggedIn = await supabase.auth.getSession();
-			if (!isLoggedIn.data.session) {
+			if (!session) {
 				setTimeout(() => {
 					setIsLoading(false);
 				}, 500);
@@ -112,7 +111,7 @@ export default function MainApp({ params }: { params: DefaultParams | null }) {
 				currentWorkflow,
 				setNodes,
 				setEdges,
-				isLoggedIn.data.session,
+				session,
 			);
 			setIsLoading(false);
 		})();

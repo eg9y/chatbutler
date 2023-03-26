@@ -1,6 +1,7 @@
 import { Dialog } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/20/solid';
-import { useEffect, useState } from 'react';
+import { nanoid } from 'nanoid';
+import { useState } from 'react';
 import { useLocation } from 'wouter';
 import { shallow } from 'zustand/shallow';
 
@@ -11,25 +12,15 @@ import { conditionalClassNames } from '../utils/classNames';
 
 const NavBar = () => {
 	const navigation = [
-		{ name: 'Workflow Builder', href: '/' },
+		{ name: 'Builder', href: '/' },
 		{ name: 'Gallery', href: '/gallery' },
 	];
 	const [location, setLocation] = useLocation();
 
-	const { currentWorkflow, setCurrentWorkflow, setWorkflows } = useStore(selector, shallow);
+	const { session, setSession, currentWorkflow, setCurrentWorkflow, setWorkflows, clearGraph } =
+		useStore(selector, shallow);
 
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-	useEffect(() => {
-		(async () => {
-			const session = await supabase.auth.getSession();
-			if (session.data.session) {
-				setIsLoggedIn(true);
-			}
-		})();
-	}, []);
 
 	return (
 		<header
@@ -42,7 +33,7 @@ const NavBar = () => {
 				className="mx-auto flex  items-center justify-between p-2 lg:px-2"
 				aria-label="Global"
 			>
-				<div className="-m-1.5 p-1.5 flex-1 flex gap-4 items-center">
+				<div className="-m-1.5 p-1.5 flex-1 flex gap-10 items-center">
 					<div className="text-xl font-bold">PromptSandbox.io</div>
 					<div className="flex">
 						<div className="hidden lg:flex lg:gap-x-4">
@@ -51,7 +42,7 @@ const NavBar = () => {
 									key={item.name}
 									className={conditionalClassNames(
 										location === item.href && 'underline underline-offset-4',
-										`text-sm font-semibold leading-6 text-gray-900 cursor-pointer`,
+										`text-sm font-semibold leading-6 text-blue-900 cursor-pointer`,
 									)}
 									onClick={() => {
 										setLocation(item.href);
@@ -76,15 +67,13 @@ const NavBar = () => {
 				<div>
 					{(location.startsWith('/app') || location === '/') && (
 						<span className="text-slate-800">
-							{isLoggedIn && currentWorkflow ? (
-								<>
-									<EditableText
-										text={currentWorkflow.name}
-										currentWorkflow={currentWorkflow}
-										setCurrentWorkflow={setCurrentWorkflow}
-										setWorkflows={setWorkflows}
-									/>
-								</>
+							{session && currentWorkflow ? (
+								<EditableText
+									text={currentWorkflow.name}
+									currentWorkflow={currentWorkflow}
+									setCurrentWorkflow={setCurrentWorkflow}
+									setWorkflows={setWorkflows}
+								/>
 							) : (
 								'Untitled Workflow'
 							)}
@@ -97,10 +86,31 @@ const NavBar = () => {
 						href="#"
 						className="text-sm font-semibold leading-6 text-gray-900"
 						onClick={() => {
-							setLocation('/auth');
+							if (session) {
+								supabase.auth.signOut();
+								setSession(null);
+								setWorkflows([]);
+								// clear graph;
+								clearGraph();
+								// set new workflowId;
+								setCurrentWorkflow(
+									nanoid(),
+									`Untitled Workflow ${new Date().toLocaleString()}`,
+								);
+							} else {
+								setLocation('/auth');
+							}
 						}}
 					>
-						Log in <span aria-hidden="true">&rarr;</span>
+						{session ? (
+							<p>
+								Log out <span aria-hidden="true">&larr;</span>
+							</p>
+						) : (
+							<p>
+								Log in <span aria-hidden="true">&rarr;</span>
+							</p>
+						)}
 					</a>
 				</div>
 			</nav>

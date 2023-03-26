@@ -1,6 +1,52 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'wouter';
 
+export default function Gallery() {
+	const [publicWorkflows, setPublicWorkflows] = useState<
+		{
+			id: string;
+			name: string;
+			description?: string;
+			image?: string;
+		}[]
+	>([]);
+	const [isLoading, setIsLoading] = useState(false);
+
+	useEffect(() => {
+		(async () => {
+			setIsLoading(true);
+			const data = await fetch('http://localhost:3000/api/getWorkflows')
+				.then((res) => {
+					return res.json();
+				})
+				.catch((err) => console.error(err));
+			setPublicWorkflows(data.data);
+
+			// const mock = [
+			// 	{
+			// 		id: 'ytJrgJM3K-XrJHIo1Wfok',
+			// 		name: 'customer support workflow',
+			// 	},
+			// 	{
+			// 		id: 'l_vZ-onDE9kqbmv3uX-IP',
+			// 		name: 'prompterinod',
+			// 	},
+			// ];
+			// setPublicWorkflows(mock);
+
+			setIsLoading(false);
+		})();
+	}, []);
+	return (
+		<div className="bg-white">
+			<div className="mx-auto max-w-2xl py-10 px-4 sm:py-4 sm:px-6 lg:max-w-7xl lg:px-8">
+				<h1 className="text-2xl font-bold mb-6">Workflow Gallery</h1>
+				{isLoading ? <div>Loading...</div> : <Card items={publicWorkflows} />}
+			</div>
+		</div>
+	);
+}
+
 const Card = ({
 	items,
 }: {
@@ -74,49 +120,3 @@ const Card = ({
 		</div>
 	);
 };
-
-export default function Gallery() {
-	const [publicWorkflows, setPublicWorkflows] = useState<
-		{
-			id: string;
-			name: string;
-			description?: string;
-			image?: string;
-		}[]
-	>([]);
-	const [isLoading, setIsLoading] = useState(false);
-
-	useEffect(() => {
-		(async () => {
-			setIsLoading(true);
-			const data = await fetch('http://localhost:3000/api/getWorkflows')
-				.then((res) => {
-					return res.json();
-				})
-				.catch((err) => console.error(err));
-			setPublicWorkflows(data.data);
-
-			// const mock = [
-			// 	{
-			// 		id: 'ytJrgJM3K-XrJHIo1Wfok',
-			// 		name: 'customer support workflow',
-			// 	},
-			// 	{
-			// 		id: 'l_vZ-onDE9kqbmv3uX-IP',
-			// 		name: 'prompterinod',
-			// 	},
-			// ];
-			// setPublicWorkflows(mock);
-
-			setIsLoading(false);
-		})();
-	}, []);
-	return (
-		<div className="bg-white">
-			<div className="mx-auto max-w-2xl py-10 px-4 sm:py-4 sm:px-6 lg:max-w-7xl lg:px-8">
-				<h1 className="text-2xl font-bold mb-6">Workflow Gallery</h1>
-				{isLoading ? <div>Loading...</div> : <Card items={publicWorkflows} />}
-			</div>
-		</div>
-	);
-}

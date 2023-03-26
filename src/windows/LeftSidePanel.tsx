@@ -33,22 +33,17 @@ export default function LeftSidePanel({
 	reactFlowWrapper: React.MutableRefObject<HTMLDivElement | null>;
 	reactFlowInstance: ReactFlowInstance<any, any> | null;
 }) {
-	const { setOpenAiKey, setUiErrorMessage, setWorkflows, currentWorkflow, setCurrentWorkflow } =
-		useStore(selector, shallow);
+	const {
+		session,
+		setOpenAiKey,
+		setUiErrorMessage,
+		setWorkflows,
+		currentWorkflow,
+		setCurrentWorkflow,
+	} = useStore(selector, shallow);
 	const [dragging, setDragging] = useState(false);
 
 	const [openWorkflows, setOpenWorkflows] = useState(!currentWorkflow);
-
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-	useEffect(() => {
-		(async () => {
-			const session = await supabase.auth.getSession();
-			if (session.data.session) {
-				setIsLoggedIn(true);
-			}
-		})();
-	}, []);
 
 	const handleDrag = (e: React.DragEvent<HTMLDivElement>) => {
 		e.preventDefault();
@@ -208,9 +203,9 @@ export default function LeftSidePanel({
 									className="group p-2 flex items-center rounded-md text-sm font-medium text-slate-700 
 									bg-slate-300 hover:text-slate-900 hover:font-bold cursor-pointer "
 									onClick={async () => {
-										if (isLoggedIn) {
+										if (session) {
 											setOpenWorkflows(true);
-										} else if (!isLoggedIn) {
+										} else {
 											setUiErrorMessage('Please login to save workflows');
 										}
 									}}

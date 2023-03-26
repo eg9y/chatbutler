@@ -1,3 +1,4 @@
+import { Session } from '@supabase/supabase-js';
 import { nanoid } from 'nanoid';
 import {
 	Connection,
@@ -40,6 +41,9 @@ export type UseStoreSetType = (
 ) => void;
 
 export interface RFState {
+	session: Session | null;
+	setSession: (session: Session | null) => void;
+
 	workflows: {
 		id: string;
 		name: string;
@@ -92,6 +96,12 @@ export interface RFState {
 const useStore = create<RFState>()(
 	persist(
 		(set, get) => ({
+			session: null,
+			setSession: (session: Session | null) => {
+				set({
+					session,
+				});
+			},
 			reactFlowInstance: null,
 			setReactFlowInstance: (instance: ReactFlowInstance | null) => {
 				set({

@@ -1,19 +1,19 @@
 import { Edge } from 'reactflow';
 
-import { SimpleWorkflow } from './dbTypes';
 import supabase from '../auth/supabaseClient';
 import { Inputs } from '../nodes/types/Input';
 import { CustomNode } from '../nodes/types/NodeTypes';
+import { RFState } from '../store/useStore';
 
 const selectWorkflow = async (
-	edges: Edge<any>[],
-	nodes: CustomNode[],
-	currentWorkflow: SimpleWorkflow | null,
-	setUiErrorMessage: (message: string | null) => void,
-	setCurrentWorkflow: (workflow: SimpleWorkflow) => void,
 	newWorkflowId: string,
-	setNodes: (nodes: CustomNode[]) => void,
-	setEdges: (edges: Edge<any>[]) => void,
+	nodes: RFState['nodes'],
+	edges: RFState['edges'],
+	currentWorkflow: RFState['currentWorkflow'],
+	setUiErrorMessage: RFState['setUiErrorMessage'],
+	setCurrentWorkflow: RFState['setCurrentWorkflow'],
+	setNodes: RFState['setNodes'],
+	setEdges: RFState['setEdges'],
 ) => {
 	// save current workflow first before switching
 	if (currentWorkflow) {

@@ -11,7 +11,7 @@ import RunnableToolbarTemplate from './templates/RunnableToolbarTemplate';
 import { ClassifyNodeDataType, NodeTypesEnum } from './types/NodeTypes';
 import FullScreenEditor from '../components/FullScreenEditor';
 import ShowPromptSwitch from '../components/ShowPromptSwitch';
-import useStore, { selector } from '../store/useStore';
+import useStore, { RFState, selector } from '../store/useStore';
 import { conditionalClassNames } from '../utils/classNames';
 import { handleChange } from '../utils/handleFormChange';
 
@@ -225,7 +225,7 @@ const Content: FC<{
 	setText: (newPresent: string, checkpoint?: boolean | undefined) => void;
 	data: ClassifyNodeDataType;
 	id: string;
-	updateNode: any;
+	updateNode: RFState['updateNode'];
 	presentTextType: string;
 	setTextType: (newPresent: string, checkpoint?: boolean | undefined) => void;
 }> = ({ presentText, setText, data, id, updateNode, showPrompt, presentTextType, setTextType }) => {

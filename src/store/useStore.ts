@@ -26,6 +26,7 @@ import onEdgesDelete from './onEdgesDelete';
 import onPlaceholderAdd from './onPlaceholderAdd';
 import storage from './storage';
 import updateNode from './updateNode';
+import { SimpleWorkflow } from '../db/dbTypes';
 import {
 	CustomNode,
 	InputNode,
@@ -49,7 +50,7 @@ export interface RFState {
 		name: string;
 	}[];
 	setWorkflows: (workflows: { id: string; name: string }[]) => void;
-	currentWorkflow: { id: string; user_id: string; name: string } | null;
+	currentWorkflow: SimpleWorkflow | null;
 	setCurrentWorkflow: (workflow: { id: string; user_id: string; name: string }) => void;
 	reactFlowInstance: ReactFlowInstance | null;
 	setReactFlowInstance: (instance: ReactFlowInstance | null) => void;

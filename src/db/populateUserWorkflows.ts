@@ -1,12 +1,14 @@
-import { Session } from '@supabase/supabase-js';
-
 import supabase from '../auth/supabaseClient';
+import { RFState } from '../store/useStore';
 
 const populateUserWorkflows = async (
-	setWorkflows: (workflows: { id: string; name: string }[]) => void,
-	setUiErrorMessage: (message: string | null) => void,
-	session: Session,
+	setWorkflows: RFState['setWorkflows'],
+	setUiErrorMessage: RFState['setUiErrorMessage'],
+	session: RFState['session'],
 ) => {
+	if (!session) {
+		return;
+	}
 	const { data, error } = await supabase
 		.from('workflows')
 		.select('id, name')

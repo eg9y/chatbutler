@@ -41,7 +41,7 @@ export default function UserWorkflows({
 					<li
 						key={workflow.id}
 						className="col-span-1 flex flex-col divide-y divide-gray-300 rounded-lg bg-white text-center 
-                        shadow border-1 border-slate-400"
+					shadow border-1 border-slate-400"
 					>
 						<div className="flex flex-1 flex-col p-8">
 							<h3 className="mt-6 text-sm font-medium text-gray-900">

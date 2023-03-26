@@ -1,5 +1,6 @@
 import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
+import { nanoid } from 'nanoid';
 import { useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { shallow } from 'zustand/shallow';
@@ -9,11 +10,19 @@ import useStore, { selector } from '../store/useStore';
 
 export default function AuthPage() {
 	const [, setLocation] = useLocation();
-	const { setSession } = useStore(selector, shallow);
+	const { setSession, nodes, setCurrentWorkflow } = useStore(selector, shallow);
 
 	useEffect(() => {
 		const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
 			if (event === 'SIGNED_IN') {
+				// if user have been creating a workflow without logging in, save it
+				if (nodes.length && session) {
+					setCurrentWorkflow({
+						id: nanoid(),
+						name: 'Untitled Workflow',
+						user_id: session?.user.id,
+					});
+				}
 				setSession(session);
 				setLocation('/');
 			}
@@ -23,7 +32,7 @@ export default function AuthPage() {
 		return () => {
 			authListener.subscription.unsubscribe();
 		};
-	}, [setLocation, setSession]);
+	}, [nodes.length, setCurrentWorkflow, setLocation, setSession]);
 	return (
 		<>
 			<div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">

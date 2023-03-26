@@ -98,7 +98,7 @@ export default function MainApp({ params }: { params: DefaultParams | null }) {
 				);
 			})();
 		},
-		[session, nodes, edges],
+		[session, nodes, edges, workflows],
 		3000,
 	);
 

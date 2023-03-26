@@ -131,7 +131,7 @@ const NavBar = () => {
 								// set new workflowId;
 								setCurrentWorkflow({
 									id: nanoid(),
-									name: `Untitled Workflow ${new Date().toLocaleString()}`,
+									name: `Untitled Workflow`,
 									user_id: session.user.id,
 								});
 							} else {

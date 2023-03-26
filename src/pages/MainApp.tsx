@@ -114,12 +114,12 @@ export default function MainApp({ params }: { params: DefaultParams | null }) {
 			await populateUserWorkflows(setWorkflows, setUiErrorMessage, session);
 			if (params && params.id) {
 				await selectWorkflow(
-					edges,
+					params.id,
 					nodes,
+					edges,
 					currentWorkflow,
 					setUiErrorMessage,
 					setCurrentWorkflow,
-					params.id,
 					setNodes,
 					setEdges,
 				);

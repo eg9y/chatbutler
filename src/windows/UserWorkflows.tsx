@@ -2,7 +2,6 @@ import { Dialog, Transition } from '@headlessui/react';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { nanoid } from 'nanoid';
 import { Fragment, useState } from 'react';
-import { ReactFlowInstance } from 'reactflow';
 import { shallow } from 'zustand/shallow';
 
 import { ReactComponent as Loading } from '../assets/loading.svg';
@@ -59,12 +58,12 @@ export default function UserWorkflows({
 										onClick={async () => {
 											setIsLoading(true);
 											await selectWorkflow(
-												edges,
+												workflow.id,
 												nodes,
+												edges,
 												currentWorkflow,
 												setUiErrorMessage,
 												setCurrentWorkflow,
-												workflow.id,
 												setNodes,
 												setEdges,
 											);

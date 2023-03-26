@@ -81,7 +81,7 @@ const selectWorkflow = async (
 	if (typeof data.edges === 'string') {
 		setEdges(JSON.parse(data.edges as string));
 	} else {
-		setEdges(data.edges as unknown as Edge<any>[]);
+		setEdges(data.edges as unknown as Edge[]);
 	}
 	setCurrentWorkflow({
 		id: data.id,

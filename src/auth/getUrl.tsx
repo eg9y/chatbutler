@@ -1,6 +1,6 @@
 const getURL = () => {
 	let url =
-		import.meta.env.VERCEL_URL ?? // Automatically set by Vercel.
+		process.env.VERCEL_URL ?? // Automatically set by Vercel.
 		'http://localhost:3000/';
 	// Make sure to include `https://` when not localhost.
 	url = url.includes('http') ? url : `https://${url}`;

@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'wouter';
 
+import getUrl from '../auth/getUrl';
+
 export default function Gallery() {
 	const [publicWorkflows, setPublicWorkflows] = useState<
 		{
@@ -16,7 +18,7 @@ export default function Gallery() {
 	useEffect(() => {
 		(async () => {
 			setIsLoading(true);
-			const data = await fetch('http://localhost:3000/api/getWorkflows')
+			const data = await fetch(`${getUrl()}api/getWorkflows`)
 				.then((res) => {
 					return res.json();
 				})

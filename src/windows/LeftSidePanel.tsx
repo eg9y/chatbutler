@@ -70,14 +70,16 @@ export default function LeftSidePanel({
 			}}
 			className="bg-slate-50 w-full shadow-lg border-r-1 border-slate-400"
 		>
-			<UserWorkflows
-				currentWorkflow={currentWorkflow}
-				setCurrentWorkflow={setCurrentWorkflow}
-				setWorkflows={setWorkflows}
-				open={openWorkflows}
-				setOpen={setOpenWorkflows}
-				reactFlowInstance={reactFlowInstance}
-			/>
+			{session && (
+				<UserWorkflows
+					currentWorkflow={currentWorkflow}
+					setCurrentWorkflow={setCurrentWorkflow}
+					setWorkflows={setWorkflows}
+					open={openWorkflows}
+					setOpen={setOpenWorkflows}
+					reactFlowInstance={reactFlowInstance}
+				/>
+			)}
 			<div className="flex flex-col justify-between h-full py-1 border-1">
 				<div className="space-y-1 flex flex-col gap-2">
 					<div className="flex flex-col justify-between px-2">

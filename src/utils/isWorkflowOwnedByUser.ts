@@ -3,7 +3,7 @@ import { DefaultParams } from 'wouter';
 
 const isWorkflowOwnedByUser = (session: Session | null, params: DefaultParams | null): boolean => {
 	if (!params?.user_id) {
-		return false;
+		return true;
 	}
 	return !!session && params && session.user.id === params.user_id;
 };

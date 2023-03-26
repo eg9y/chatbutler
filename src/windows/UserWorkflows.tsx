@@ -169,7 +169,7 @@ export default function UserWorkflows({
 											const { data, error } = await supabase
 												.from('workflows')
 												.insert({
-													name: `New Workflow ${id}`,
+													name: `New ${id}`,
 													id,
 													// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 													user_id: session!.user.id,

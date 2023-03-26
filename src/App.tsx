@@ -12,7 +12,7 @@ import useStore, { selector } from './store/useStore';
 function App() {
 	const { setSession } = useStore(selector, shallow);
 
-	const [, params] = useRoute('/app/:id');
+	const [, params] = useRoute('/app/:user_id/:id');
 
 	useEffect(() => {
 		(async () => {
@@ -31,7 +31,7 @@ function App() {
 				<Route path="/">
 					<MainApp params={params} />
 				</Route>
-				<Route path="/app/:id">
+				<Route path="/app/:user_id/:id">
 					<MainApp params={params} />
 				</Route>
 				<Route path="/gallery" component={Gallery} />

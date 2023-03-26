@@ -2,12 +2,13 @@ import { Dialog, Transition } from '@headlessui/react';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { nanoid } from 'nanoid';
 import { Fragment, useState } from 'react';
+import { ReactFlowInstance } from 'reactflow';
 import { shallow } from 'zustand/shallow';
 
 import { ReactComponent as Loading } from '../assets/loading.svg';
 import supabase from '../auth/supabaseClient';
 import selectWorkflow from '../db/selectWorkflow';
-import useStore, { selector } from '../store/useStore';
+import useStore, { RFState, selector } from '../store/useStore';
 
 export default function UserWorkflows({
 	currentWorkflow,
@@ -15,17 +16,16 @@ export default function UserWorkflows({
 	setCurrentWorkflow,
 	open,
 	setOpen,
+	reactFlowInstance,
 }: {
-	currentWorkflow: {
-		id: string;
-		name: string;
-	} | null;
-	setWorkflows: (workflows: { id: string; name: string }[]) => void;
-	setCurrentWorkflow: (id: string | null, name: string | null) => void;
+	currentWorkflow: RFState['currentWorkflow'];
+	setWorkflows: RFState['setWorkflows'];
+	setCurrentWorkflow: RFState['setCurrentWorkflow'];
 	open: boolean;
 	setOpen: (open: boolean) => void;
+	reactFlowInstance: RFState['reactFlowInstance'];
 }) {
-	const { setUiErrorMessage, workflows, setNodes, setEdges, nodes, edges } = useStore(
+	const { setUiErrorMessage, workflows, setNodes, setEdges, nodes, edges, session } = useStore(
 		selector,
 		shallow,
 	);
@@ -64,12 +64,20 @@ export default function UserWorkflows({
 												currentWorkflow,
 												setUiErrorMessage,
 												setCurrentWorkflow,
-												workflow,
+												workflow.id,
 												setNodes,
 												setEdges,
 											);
 											setOpen(false);
 											setIsLoading(false);
+											if (
+												!open &&
+												reactFlowInstance &&
+												'fitView' in reactFlowInstance
+											) {
+												reactFlowInstance.fitView();
+												reactFlowInstance.zoomOut();
+											}
 										}}
 									>
 										<span className="truncate">Open</span>
@@ -145,7 +153,7 @@ export default function UserWorkflows({
 									as="h3"
 									className="text-3xl font-semibold leading-6 text-gray-900 pb-4 flex gap-2"
 								>
-									Your Workflows
+									My Workflows
 									<span>
 										{isLoading && (
 											<Loading className="animate-spin -ml-1 mr-3 h-7 w-7 text-black" />
@@ -159,13 +167,13 @@ export default function UserWorkflows({
 									bg-green-500 hover:bg-green-400  cursor-pointer "
 										onClick={async () => {
 											const id = nanoid();
-											const user = await supabase.auth.getUser();
 											const { data, error } = await supabase
 												.from('workflows')
 												.insert({
 													name: `New Workflow ${id}`,
 													id,
-													user_id: user.data.user?.id,
+													// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+													user_id: session!.user.id,
 												})
 												.select()
 												.single();

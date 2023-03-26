@@ -11,13 +11,14 @@ import ReactFlow, {
 } from 'reactflow';
 import { DefaultParams } from 'wouter';
 import { shallow } from 'zustand/shallow';
+import 'reactflow/dist/base.css';
 
-import supabase from '../auth/supabaseClient';
 import LoadingOverlay from '../components/LoadingOverlay';
 import Notification from '../components/Notification';
 import RunFromStart from '../components/RunFromStart';
 import ConnectionLine from '../connection/ConnectionLine';
-import getInitialState from '../db/getInitialState';
+import populateUserWorkflows from '../db/populateUserWorkflows';
+import selectWorkflow from '../db/selectWorkflow';
 import syncDataToSupabase from '../db/syncToSupabase';
 import CustomEdge from '../edges/CustomEdgeType';
 import ChatMessageNode from '../nodes/ChatMessageNode';
@@ -29,10 +30,10 @@ import PlaceholderNode from '../nodes/PlaceholderNode';
 import TextInputNode from '../nodes/TextInputNode';
 import { NodeTypesEnum } from '../nodes/types/NodeTypes';
 import useStore, { selector } from '../store/useStore';
+import isWorkflowOwnedByUser from '../utils/isWorkflowOwnedByUser';
 import { useDebouncedEffect } from '../utils/useDebouncedEffect';
 import LeftSidePanel from '../windows/LeftSidePanel';
 import SettingsPanel from '../windows/SettingsPanel/panel';
-import 'reactflow/dist/base.css';
 
 const nodeTypes = {
 	classify: ClassifyNode,
@@ -64,10 +65,11 @@ export default function MainApp({ params }: { params: DefaultParams | null }) {
 		setReactFlowInstance,
 		currentWorkflow,
 		setCurrentWorkflow,
-		setWorkflows,
 		setUiErrorMessage,
 		setNodes,
 		setEdges,
+		workflows,
+		setWorkflows,
 	} = useStore(selector, shallow);
 
 	const [settingsView, setSettingsView] = useState(true);
@@ -85,7 +87,15 @@ export default function MainApp({ params }: { params: DefaultParams | null }) {
 				if (!session) {
 					return;
 				}
-				await syncDataToSupabase(nodes, edges, currentWorkflow);
+				await syncDataToSupabase(
+					nodes,
+					edges,
+					currentWorkflow,
+					workflows,
+					setWorkflows,
+					session,
+					params,
+				);
 			})();
 		},
 		[session, nodes, edges],
@@ -101,18 +111,19 @@ export default function MainApp({ params }: { params: DefaultParams | null }) {
 				return;
 			}
 			setIsLoading(true);
-			await getInitialState(
-				params,
-				setCurrentWorkflow,
-				setWorkflows,
-				setUiErrorMessage,
-				edges,
-				nodes,
-				currentWorkflow,
-				setNodes,
-				setEdges,
-				session,
-			);
+			await populateUserWorkflows(setWorkflows, setUiErrorMessage, session);
+			if (params && params.id) {
+				await selectWorkflow(
+					edges,
+					nodes,
+					currentWorkflow,
+					setUiErrorMessage,
+					setCurrentWorkflow,
+					params.id,
+					setNodes,
+					setEdges,
+				);
+			}
 			setIsLoading(false);
 		})();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -278,24 +289,19 @@ export default function MainApp({ params }: { params: DefaultParams | null }) {
 					width: '100vw',
 				}}
 			>
-				<div style={{}} ref={reactFlowWrapper}>
+				<div ref={reactFlowWrapper}>
 					<ReactFlow
 						multiSelectionKeyCode="Shift"
 						onDrop={handleDrop}
-						nodesDraggable={unlockGraph}
-						nodesConnectable={unlockGraph}
-						nodesFocusable={unlockGraph}
-						edgesFocusable={unlockGraph}
-						elementsSelectable={unlockGraph}
+						nodesDraggable={unlockGraph && isWorkflowOwnedByUser(session, params)}
+						nodesConnectable={unlockGraph && isWorkflowOwnedByUser(session, params)}
+						nodesFocusable={unlockGraph && isWorkflowOwnedByUser(session, params)}
+						edgesFocusable={unlockGraph && isWorkflowOwnedByUser(session, params)}
+						elementsSelectable={unlockGraph && isWorkflowOwnedByUser(session, params)}
 						onInit={(reactFlowInstance: ReactFlowInstance) => onInit(reactFlowInstance)}
 						onDragOver={(e) => e.preventDefault()}
 						nodes={nodes}
 						edges={edges}
-						defaultViewport={{
-							x: 0,
-							y: 0,
-							zoom: 0.3,
-						}}
 						minZoom={0.3}
 						onNodesChange={onNodesChange}
 						onEdgesChange={onEdgesChange}

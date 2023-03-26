@@ -6,6 +6,7 @@ export default function Gallery() {
 		{
 			id: string;
 			name: string;
+			user_id: string;
 			description?: string;
 			image?: string;
 		}[]
@@ -39,20 +40,21 @@ export default function Gallery() {
 	}, []);
 	return (
 		<div className="bg-white">
-			<div className="mx-auto max-w-2xl py-10 px-4 sm:py-4 sm:px-6 lg:max-w-7xl lg:px-8">
+			<div className="mx-auto max-w-2xl py-10 px-20 sm:py-4 sm:px-6 lg:max-w-7xl lg:px-20">
 				<h1 className="text-2xl font-bold mb-6">Workflow Gallery</h1>
-				{isLoading ? <div>Loading...</div> : <Card items={publicWorkflows} />}
+				{isLoading ? <div>Loading...</div> : <Card publicWorkflows={publicWorkflows} />}
 			</div>
 		</div>
 	);
 }
 
 const Card = ({
-	items,
+	publicWorkflows,
 }: {
-	items: {
+	publicWorkflows: {
 		id: string;
 		name: string;
+		user_id: string;
 		description?: string;
 		image?: string;
 	}[];
@@ -60,7 +62,7 @@ const Card = ({
 	const [, setLocation] = useLocation();
 	return (
 		<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-			{items.map((item, index) => (
+			{publicWorkflows.map((item, index) => (
 				<div
 					key={index}
 					className="border-1 border-slate-300
@@ -69,11 +71,7 @@ const Card = ({
 					flex flex-col
 					"
 				>
-					<div
-						className="bg-white rounded-md  p-4 
-					 items-center justify-center space-y-4 grow
-					"
-					>
+					<div className="bg-white rounded-md  p-4 items-center justify-center space-y-4 grow">
 						{item.image ? (
 							<img
 								src={item.image}
@@ -86,7 +84,7 @@ const Card = ({
 						<h2 className="text-xl font-semibold">{item.name}</h2>
 						<p className="text-sm">
 							{item?.description}
-							Journaling app
+							-description goes here-
 						</p>
 					</div>
 					<div className="flex border-t-1 border-slate-300 w-full">
@@ -96,7 +94,7 @@ const Card = ({
                                         cursor-pointer hover:bg-slate-200
                                     justify-center gap-x-3 border border-transparent py-4 text-sm font-semibold text-gray-900"
 								onClick={async () => {
-									setLocation(`/app/${item.id}`);
+									setLocation(`/app/${item.user_id}/${item.id}`);
 								}}
 							>
 								<span className="truncate">Open</span>

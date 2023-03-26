@@ -2,13 +2,15 @@ import { Dialog } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/20/solid';
 import { nanoid } from 'nanoid';
 import { useState } from 'react';
-import { useLocation } from 'wouter';
+import { useLocation, useRoute } from 'wouter';
 import { shallow } from 'zustand/shallow';
 
 import EditableText from './EditableText';
 import supabase from '../auth/supabaseClient';
+import syncDataToSupabase from '../db/syncToSupabase';
 import useStore, { selector } from '../store/useStore';
 import { conditionalClassNames } from '../utils/classNames';
+import isWorkflowOwnedByUser from '../utils/isWorkflowOwnedByUser';
 
 const NavBar = () => {
 	const navigation = [
@@ -16,21 +18,36 @@ const NavBar = () => {
 		{ name: 'Gallery', href: '/gallery' },
 	];
 	const [location, setLocation] = useLocation();
+	const [, params] = useRoute('/app/:user_id/:id');
 
-	const { session, setSession, currentWorkflow, setCurrentWorkflow, setWorkflows, clearGraph } =
-		useStore(selector, shallow);
+	const {
+		session,
+		setSession,
+		currentWorkflow,
+		setCurrentWorkflow,
+		clearGraph,
+		nodes,
+		edges,
+		workflows,
+		setWorkflows,
+		setUiErrorMessage,
+	} = useStore(selector, shallow);
 
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+	function isLocationApp() {
+		return location.startsWith('/app') || location === '/';
+	}
 
 	return (
 		<header
 			style={{
 				height: '5vh',
 			}}
-			className="bg-slate-100 border-b-1 border-slate-400 "
+			className="bg-slate-100 border-b-1 border-slate-400 z-20"
 		>
 			<nav
-				className="mx-auto flex  items-center justify-between p-2 lg:px-2"
+				className="mx-auto flex items-center justify-between p-2 lg:px-2 h-full"
 				aria-label="Global"
 			>
 				<div className="-m-1.5 p-1.5 flex-1 flex gap-10 items-center">
@@ -44,7 +61,23 @@ const NavBar = () => {
 										location === item.href && 'underline underline-offset-4',
 										`text-sm font-semibold leading-6 text-blue-900 cursor-pointer`,
 									)}
-									onClick={() => {
+									onClick={async () => {
+										if (isLocationApp() && currentWorkflow) {
+											// save current workflow without blocking
+											syncDataToSupabase(
+												nodes,
+												edges,
+												currentWorkflow,
+												workflows,
+												setWorkflows,
+												session,
+												params,
+											).catch((error) => {
+												setUiErrorMessage(
+													`Error saving work: ${error.message}`,
+												);
+											});
+										}
 										setLocation(item.href);
 									}}
 								>
@@ -65,19 +98,22 @@ const NavBar = () => {
 					</div>
 				</div>
 				<div>
-					{(location.startsWith('/app') || location === '/') && (
-						<span className="text-slate-800">
+					{isLocationApp() && (
+						<div className="text-slate-800 flex gap-2 items-center">
 							{session && currentWorkflow ? (
 								<EditableText
-									text={currentWorkflow.name}
 									currentWorkflow={currentWorkflow}
 									setCurrentWorkflow={setCurrentWorkflow}
 									setWorkflows={setWorkflows}
+									session={session}
 								/>
 							) : (
 								'Untitled Workflow'
 							)}
-						</span>
+							{!isWorkflowOwnedByUser(session, params) && (
+								<p className="text-slate-500">(Read Mode)</p>
+							)}
+						</div>
 					)}
 				</div>
 
@@ -93,10 +129,11 @@ const NavBar = () => {
 								// clear graph;
 								clearGraph();
 								// set new workflowId;
-								setCurrentWorkflow(
-									nanoid(),
-									`Untitled Workflow ${new Date().toLocaleString()}`,
-								);
+								setCurrentWorkflow({
+									id: nanoid(),
+									name: `Untitled Workflow ${new Date().toLocaleString()}`,
+									user_id: session.user.id,
+								});
 							} else {
 								setLocation('/auth');
 							}

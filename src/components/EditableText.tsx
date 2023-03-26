@@ -1,48 +1,76 @@
 import { useState } from 'react';
+import { useRoute } from 'wouter';
 import { shallow } from 'zustand/shallow';
 
-import useStore, { selector } from '../store/useStore';
+import useStore, { RFState, selector } from '../store/useStore';
+import isWorkflowOwnedByUser from '../utils/isWorkflowOwnedByUser';
 
 const EditableText = ({
-	text,
 	currentWorkflow,
 	setCurrentWorkflow,
 	setWorkflows,
+	session,
 }: {
-	text: string;
-	currentWorkflow: {
-		id: string;
-		name: string;
-	} | null;
-	setCurrentWorkflow: (id: string | null, name: string | null) => void;
-	setWorkflows: (workflows: { id: string; name: string }[]) => void;
+	currentWorkflow: RFState['currentWorkflow'];
+	setCurrentWorkflow: RFState['setCurrentWorkflow'];
+	setWorkflows: RFState['setWorkflows'];
+	session: RFState['session'];
 }) => {
-	const { workflows } = useStore(selector, shallow);
+	const { workflows, setUiErrorMessage } = useStore(selector, shallow);
 	const [isEditing, setIsEditing] = useState(false);
+	const [acceptableText, setAcceptableText] = useState(
+		currentWorkflow ? currentWorkflow.name : '',
+	);
+	const [, params] = useRoute('/app/:user_id/:id');
 
 	const handleTextClick = () => {
+		if (!isWorkflowOwnedByUser(session, params)) {
+			return;
+		}
 		if (!isEditing) {
 			setIsEditing(true);
 		}
 	};
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setCurrentWorkflow(null, e.target.value);
+		if (e.target.value.length >= 5 && e.target.value.length <= 30) {
+			setAcceptableText(e.target.value);
+		}
+
+		if (currentWorkflow) {
+			setCurrentWorkflow({
+				...currentWorkflow,
+				name: e.target.value,
+			});
+		}
 	};
 
 	const handleSubmit = () => {
 		setIsEditing(false);
+
+		if (currentWorkflow && currentWorkflow.name.length > 30) {
+			setUiErrorMessage('Workflow name cannot be longer than 30 characters');
+		} else if (currentWorkflow && currentWorkflow.name.length < 5) {
+			setUiErrorMessage('Workflow name must be at least 5 characters');
+		}
+
 		// update workflows to edit the name field
 		const newWorkflows = workflows.map((workflow) => {
 			if (workflow.id === currentWorkflow?.id) {
 				return {
 					...workflow,
-					name: text,
+					name: acceptableText,
 				};
 			}
 			return workflow;
 		});
-		setWorkflows(newWorkflows);
+		if (currentWorkflow) {
+			setCurrentWorkflow({
+				...currentWorkflow,
+				name: acceptableText,
+			});
+			setWorkflows(newWorkflows);
+		}
 	};
 
 	const inputStyle =
@@ -50,7 +78,7 @@ const EditableText = ({
 
 	return (
 		<div className="text-lg bg-slate-50 flex items-center">
-			{!isEditing && (
+			{currentWorkflow && !isEditing && (
 				<p
 					onClick={handleTextClick}
 					style={{
@@ -60,13 +88,13 @@ const EditableText = ({
 					}}
 					className={`font-medium text-gray-800 cursor-pointer`}
 				>
-					{text}
+					{currentWorkflow.name}
 				</p>
 			)}
-			{isEditing && (
+			{currentWorkflow && isEditing && (
 				<input
 					autoFocus
-					value={text}
+					value={currentWorkflow.name}
 					onChange={handleInputChange}
 					onBlur={handleSubmit}
 					onKeyDown={(e) => {

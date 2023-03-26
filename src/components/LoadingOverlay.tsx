@@ -8,7 +8,7 @@ export default function LoadingOverlay({ open }: { open: boolean }) {
 				as="div"
 				className="relative z-10"
 				onClose={() => {
-					console.log('loading...');
+					return;
 				}}
 			>
 				<Transition.Child

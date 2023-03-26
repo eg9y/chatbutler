@@ -7,13 +7,12 @@ import {
 	ShareIcon,
 	BeakerIcon,
 } from '@heroicons/react/20/solid';
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import { ReactFlowInstance } from 'reactflow';
 import { shallow } from 'zustand/shallow';
 
 const rightAngleSvg = new URL('../assets/right-angle.svg', import.meta.url).href;
 import UserWorkflows from './UserWorkflows';
-import supabase from '../auth/supabaseClient';
 import { NodeTypesEnum } from '../nodes/types/NodeTypes';
 import useStore, { selector } from '../store/useStore';
 import { conditionalClassNames } from '../utils/classNames';
@@ -64,13 +63,6 @@ export default function LeftSidePanel({
 		onAdd(type, position);
 	};
 
-	useEffect(() => {
-		if (!openWorkflows && reactFlowInstance && 'fitView' in reactFlowInstance) {
-			reactFlowInstance.fitView();
-			reactFlowInstance.zoomOut();
-		}
-	}, [openWorkflows, reactFlowInstance]);
-
 	return (
 		<aside
 			style={{
@@ -84,9 +76,10 @@ export default function LeftSidePanel({
 				setWorkflows={setWorkflows}
 				open={openWorkflows}
 				setOpen={setOpenWorkflows}
+				reactFlowInstance={reactFlowInstance}
 			/>
 			<div className="flex flex-col justify-between h-full py-1 border-1">
-				<div className="space-y-1 flex flex-col gap-4">
+				<div className="space-y-1 flex flex-col gap-2">
 					<div className="flex flex-col justify-between px-2">
 						<div className="flex flex-col border-b-1 pb-2 border-slate-300">
 							<ul className="list-disc list-inside">
@@ -110,15 +103,31 @@ export default function LeftSidePanel({
 						</div>
 					</div>
 
-					<div>
-						<div className="bg-slate-200 flex justify-between">
-							<p className="text-start text-slate-900 font-semibold text-md pr-2 pl-4 py-1">
-								Settings
-							</p>
-						</div>
-						<div className="mt-1 px-2 space-y-1" aria-labelledby="projects-headline">
+					<div className="flex flex-col justify-between px-1">
+						<div className="flex flex-col gap-2">
 							<a
-								className="group flex items-center rounded-md px-3 py-2 text-sm font-medium text-slate-700 
+								className="group p-2 flex items-center text-sm font-medium text-slate-700 
+									bg-slate-300 hover:text-slate-900 hover:font-bold cursor-pointer "
+								onClick={async () => {
+									if (session) {
+										setOpenWorkflows(true);
+									} else {
+										setUiErrorMessage('Please login to save workflows');
+									}
+								}}
+							>
+								<BeakerIcon
+									className={
+										'text-slate-500 group-hover:text-slate-600 -ml-1 mr-3 h-6 w-6 flex-shrink-0'
+									}
+									aria-hidden="true"
+								/>
+								<span className="truncate">My Workflows</span>
+							</a>
+						</div>
+						<div className="mt-1 space-y-1" aria-labelledby="projects-headline">
+							<a
+								className="group flex items-center px-3 py-2 text-sm font-medium text-slate-700 
 								bg-slate-300 hover:text-slate-900 hover:font-bold cursor-pointer "
 								onClick={async () => {
 									const currentKey = localStorage.getItem('openAIKey') || '';
@@ -146,80 +155,6 @@ export default function LeftSidePanel({
 								<span className="truncate">OpenAI Key</span>
 							</a>
 						</div>
-						{/* <div className="mt-1 px-2 space-y-1" aria-labelledby="projects-headline">
-							<a
-								className="group flex items-center rounded-md px-3 py-2 text-sm font-medium text-slate-700 
-								bg-slate-300 hover:text-slate-900 hover:font-bold cursor-pointer "
-								onClick={() => {
-									if (isLoggedIn) {
-										supabase.auth.signOut();
-										setIsLoggedIn(false);
-										setWorkflows([]);
-										// clear graph;
-										clearGraph();
-										// set new workflowId;
-										setCurrentWorkflow(
-											nanoid(),
-											`Untitled Workflow ${new Date().toLocaleString()}`,
-										);
-									} else {
-										goToLogin();
-									}
-								}}
-							>
-								{isLoggedIn ? (
-									<>
-										<UserCircleIcon
-											className={
-												'text-slate-500  group-hover:text-slate-900 -ml-1 mr-3 h-6 w-6 flex-shrink-0'
-											}
-											aria-hidden="true"
-										/>
-										<span className="truncate">Logout</span>
-									</>
-								) : (
-									<>
-										<UserCircleIcon
-											className={
-												'text-slate-500  group-hover:text-slate-900 -ml-1 mr-3 h-6 w-6 flex-shrink-0'
-											}
-											aria-hidden="true"
-										/>
-										<span className="truncate">Login</span>
-									</>
-								)}
-							</a>
-						</div> */}
-					</div>
-					<div className="flex flex-col gap-1">
-						<div className="bg-slate-200 flex justify-between ">
-							<p className="text-start text-slate-900 font-semibold text-md pr-2 pl-4 py-1">
-								Workflows
-							</p>
-						</div>
-						<div className="flex flex-col justify-between gap-4  px-2 py-2 ">
-							<div className="flex flex-col gap-2">
-								<a
-									className="group p-2 flex items-center rounded-md text-sm font-medium text-slate-700 
-									bg-slate-300 hover:text-slate-900 hover:font-bold cursor-pointer "
-									onClick={async () => {
-										if (session) {
-											setOpenWorkflows(true);
-										} else {
-											setUiErrorMessage('Please login to save workflows');
-										}
-									}}
-								>
-									<BeakerIcon
-										className={
-											'text-slate-500 group-hover:text-slate-600 -ml-1 mr-3 h-6 w-6 flex-shrink-0'
-										}
-										aria-hidden="true"
-									/>
-									<span className="truncate">Your Workflows</span>
-								</a>
-							</div>
-						</div>
 					</div>
 					<div>
 						<div className="bg-slate-200 flex justify-between">
@@ -236,11 +171,11 @@ export default function LeftSidePanel({
 								addNodeToCenter={addNodeToCenter}
 								Icon={ChatBubbleLeftRightIcon}
 							/>
-							<div className="px-1 mr-1 flex">
+							<div className="flex">
 								<img src={rightAngleSvg} alt="SVG as an image" />
-								<div>
+								<div className="grow">
 									<NodeType
-										name="Chat Message"
+										name="Message"
 										nodeType={NodeTypesEnum.chatMessage}
 										handleDrag={handleDrag}
 										addNodeToCenter={addNodeToCenter}

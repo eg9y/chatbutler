@@ -23,30 +23,33 @@ export interface Database {
 			workflows: {
 				Row: {
 					created_at: string | null;
+					description: string | null;
 					edges: Json | null;
 					id: string;
 					is_public: boolean;
 					name: string;
 					nodes: Json | null;
-					user_id: string | null;
+					user_id: string;
 				};
 				Insert: {
 					created_at?: string | null;
+					description?: string | null;
 					edges?: Json | null;
 					id: string;
 					is_public?: boolean;
 					name: string;
 					nodes?: Json | null;
-					user_id?: string | null;
+					user_id: string;
 				};
 				Update: {
 					created_at?: string | null;
+					description?: string | null;
 					edges?: Json | null;
 					id?: string;
 					is_public?: boolean;
 					name?: string;
 					nodes?: Json | null;
-					user_id?: string | null;
+					user_id?: string;
 				};
 			};
 		};

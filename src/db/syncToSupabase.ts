@@ -1,16 +1,21 @@
-import { Edge } from 'reactflow';
+import { DefaultParams } from 'wouter';
 
 import supabase from '../auth/supabaseClient';
-import { CustomNode } from '../nodes/types/NodeTypes';
+import { RFState } from '../store/useStore';
+import isWorkflowOwnedByUser from '../utils/isWorkflowOwnedByUser';
 
 const syncDataToSupabase = async (
-	nodes: CustomNode[],
-	edges: Edge<any>[],
-	currentWorkflow: { id: string; name: string } | null,
+	nodes: RFState['nodes'],
+	edges: RFState['edges'],
+	currentWorkflow: RFState['currentWorkflow'],
+	workflows: RFState['workflows'],
+	setWorkflows: RFState['setWorkflows'],
+	session: RFState['session'],
+	params: DefaultParams | null,
 ) => {
-	if (!currentWorkflow) return;
+	if (!currentWorkflow || !session) return;
 
-	const { error } = await supabase
+	const { data, error } = await supabase
 		.from('workflows')
 		.update({
 			edges: JSON.parse(JSON.stringify(edges)),
@@ -19,10 +24,30 @@ const syncDataToSupabase = async (
 		})
 		.eq('id', currentWorkflow.id)
 		.select();
+	if (!data || (data.length === 0 && isWorkflowOwnedByUser(session, params))) {
+		// 'Syncing local data to the cloud...
+		const { data, error: insertionError } = await supabase
+			.from('workflows')
+			.insert({
+				id: currentWorkflow.id,
+				edges: JSON.parse(JSON.stringify(edges)),
+				nodes: JSON.parse(JSON.stringify(nodes)),
+				name: currentWorkflow.name,
+				user_id: session.user.id,
+			})
+			.select('id, name')
+			.single();
+
+		if (data) {
+			//'Data synced to Supabase:'
+			setWorkflows([...workflows, data]);
+		}
+		if (insertionError) {
+			console.error('Error syncing data to Supabase:', insertionError);
+		}
+	}
 	if (error) {
 		console.error('Error syncing data to Supabase:', error);
-
-		// TODO: Save user's local workflow data to supabase
 	}
 };
 

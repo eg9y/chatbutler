@@ -49,13 +49,10 @@ export interface RFState {
 		name: string;
 	}[];
 	setWorkflows: (workflows: { id: string; name: string }[]) => void;
+	currentWorkflow: { id: string; user_id: string; name: string } | null;
+	setCurrentWorkflow: (workflow: { id: string; user_id: string; name: string }) => void;
 	reactFlowInstance: ReactFlowInstance | null;
 	setReactFlowInstance: (instance: ReactFlowInstance | null) => void;
-	currentWorkflow: {
-		id: string;
-		name: string;
-	} | null;
-	setCurrentWorkflow: (id: string | null, name: string | null) => void;
 	uiErrorMessage: string | null;
 	unlockGraph: boolean;
 	clearGraph: () => void;
@@ -115,26 +112,10 @@ const useStore = create<RFState>()(
 				});
 			},
 			currentWorkflow: null,
-			setCurrentWorkflow: (id: string | null, name: string | null) => {
-				// only update defined values
-				if (!id && !name) return;
-				const currentWorkflow = get().currentWorkflow;
-				if (currentWorkflow) {
-					set({
-						currentWorkflow: {
-							...currentWorkflow,
-							id: id || currentWorkflow.id,
-							name: name || currentWorkflow.name,
-						},
-					});
-				} else {
-					set({
-						currentWorkflow: {
-							id: id || nanoid(),
-							name: name || 'Untitled Workflow',
-						},
-					});
-				}
+			setCurrentWorkflow: (workflow: { id: string; user_id: string; name: string }) => {
+				set({
+					currentWorkflow: workflow,
+				});
 			},
 			uiErrorMessage: null,
 			clearGraph: () => {

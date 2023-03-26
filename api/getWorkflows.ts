@@ -3,9 +3,9 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 import { Database } from '../src/schema';
 
-export const config = {
-	runtime: 'experimental-edge',
-};
+// export const config = {
+// 	runtime: 'experimental-edge',
+// };
 
 export default async function handler(request: VercelRequest, response: VercelResponse) {
 	const supabaseUrl = process.env.VITE_SUPABASE_URL || '';
@@ -28,7 +28,7 @@ export default async function handler(request: VercelRequest, response: VercelRe
 		{
 			status: 200,
 			headers: {
-				'Cache-Control': 's-maxage=14400',
+				// 'Cache-Control': 's-maxage=14400',
 				'Content-Type': 'application/json',
 			},
 		},

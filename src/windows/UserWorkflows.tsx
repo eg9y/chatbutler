@@ -1,35 +1,36 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { nanoid } from 'nanoid';
-import { Fragment } from 'react';
-import { Edge } from 'reactflow';
+import { Fragment, useState } from 'react';
 import { shallow } from 'zustand/shallow';
 
+import { ReactComponent as Loading } from '../assets/loading.svg';
 import supabase from '../auth/supabaseClient';
-import { CustomNode } from '../nodes/types/NodeTypes';
+import selectWorkflow from '../db/selectWorkflow';
 import useStore, { selector } from '../store/useStore';
 
 export default function UserWorkflows({
+	currentWorkflow,
 	setWorkflows,
-	setWorkflowId,
+	setCurrentWorkflow,
 	open,
 	setOpen,
 }: {
+	currentWorkflow: {
+		id: string;
+		name: string;
+	} | null;
 	setWorkflows: (workflows: { id: string; name: string }[]) => void;
-	setWorkflowId: (workflowId: string) => void;
+	setCurrentWorkflow: (id: string | null, name: string | null) => void;
 	open: boolean;
 	setOpen: (open: boolean) => void;
 }) {
-	const {
-		setUiErrorMessage,
-		workflows,
-		setNodes,
-		setEdges,
-		setWorkflowName,
-		workflowId,
-		nodes,
-		edges,
-	} = useStore(selector, shallow);
+	const { setUiErrorMessage, workflows, setNodes, setEdges, nodes, edges } = useStore(
+		selector,
+		shallow,
+	);
+
+	const [isLoading, setIsLoading] = useState(false);
 
 	const GridList = () => {
 		return (
@@ -56,48 +57,19 @@ export default function UserWorkflows({
                                         cursor-pointer hover:bg-slate-200
                                     justify-center gap-x-3 rounded-bl-lg border border-transparent py-4 text-sm font-semibold text-gray-900"
 										onClick={async () => {
-											const { error: updateCurrentWorkflowError } =
-												await supabase
-													.from('workflows')
-													.update({
-														edges: JSON.parse(JSON.stringify(edges)),
-														nodes: JSON.parse(JSON.stringify(nodes)),
-													})
-													.eq('id', workflowId);
-
-											if (updateCurrentWorkflowError) {
-												setUiErrorMessage(
-													updateCurrentWorkflowError.message,
-												);
-												return;
-											}
-											// set new workflowId;
-											setWorkflowId(workflow.id);
-											// fetch workflow from supabase
-											const { data, error } = await supabase
-												.from('workflows')
-												.select('nodes, edges, name')
-												.eq('id', workflow.id)
-												.single();
-
-											if (error) {
-												setUiErrorMessage(error.message);
-											}
-											if (data) {
-												// set graph
-												if (typeof data.nodes === 'string') {
-													setNodes(JSON.parse(data.nodes as string));
-												} else {
-													setNodes(data.nodes as unknown as CustomNode[]);
-												}
-												if (typeof data.edges === 'string') {
-													setEdges(JSON.parse(data.edges as string));
-												} else {
-													setEdges(data.edges as unknown as Edge<any>[]);
-												}
-												setWorkflowName(data.name);
-												setOpen(false);
-											}
+											setIsLoading(true);
+											await selectWorkflow(
+												edges,
+												nodes,
+												currentWorkflow,
+												setUiErrorMessage,
+												setCurrentWorkflow,
+												workflow,
+												setNodes,
+												setEdges,
+											);
+											setOpen(false);
+											setIsLoading(false);
 										}}
 									>
 										<span className="truncate">Select</span>
@@ -130,7 +102,16 @@ export default function UserWorkflows({
 
 	return (
 		<Transition.Root show={open} as={Fragment}>
-			<Dialog as="div" className="relative z-10" onClose={setOpen}>
+			<Dialog
+				as="div"
+				className="relative z-10"
+				onClose={(close) => {
+					if (currentWorkflow === null) {
+						return false;
+					}
+					setOpen(close);
+				}}
+			>
 				<Transition.Child
 					as={Fragment}
 					enter="ease-out duration-300"
@@ -162,9 +143,14 @@ export default function UserWorkflows({
 							>
 								<Dialog.Title
 									as="h3"
-									className="text-3xl font-semibold leading-6 text-gray-900 pb-4"
+									className="text-3xl font-semibold leading-6 text-gray-900 pb-4 flex gap-2"
 								>
 									Your Workflows
+									<span>
+										{isLoading && (
+											<Loading className="animate-spin -ml-1 mr-3 h-7 w-7 text-black" />
+										)}
+									</span>
 								</Dialog.Title>
 								<GridList />
 								<div className="mt-5 sm:mt-6 flex flex-col grow items-end justify-end">

@@ -5,15 +5,19 @@ import useStore, { selector } from '../store/useStore';
 
 const EditableText = ({
 	text,
-	setText,
+	currentWorkflow,
+	setCurrentWorkflow,
 	setWorkflows,
 }: {
 	text: string;
-	setText: (text: string) => void;
-
+	currentWorkflow: {
+		id: string;
+		name: string;
+	} | null;
+	setCurrentWorkflow: (id: string | null, name: string | null) => void;
 	setWorkflows: (workflows: { id: string; name: string }[]) => void;
 }) => {
-	const { workflows, setWorkflowName } = useStore(selector, shallow);
+	const { workflows } = useStore(selector, shallow);
 	const [isEditing, setIsEditing] = useState(false);
 
 	const handleTextClick = () => {
@@ -23,14 +27,14 @@ const EditableText = ({
 	};
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setText(e.target.value);
+		setCurrentWorkflow(null, e.target.value);
 	};
 
-	const handleInputBlur = () => {
+	const handleSubmit = () => {
 		setIsEditing(false);
 		// update workflows to edit the name field
 		const newWorkflows = workflows.map((workflow) => {
-			if (workflow.id === text) {
+			if (workflow.id === currentWorkflow?.id) {
 				return {
 					...workflow,
 					name: text,
@@ -39,7 +43,6 @@ const EditableText = ({
 			return workflow;
 		});
 		setWorkflows(newWorkflows);
-		setWorkflowName(text);
 	};
 
 	const inputStyle =
@@ -65,10 +68,10 @@ const EditableText = ({
 					autoFocus
 					value={text}
 					onChange={handleInputChange}
-					onBlur={handleInputBlur}
+					onBlur={handleSubmit}
 					onKeyDown={(e) => {
 						if (e.key === 'Enter') {
-							handleInputBlur();
+							handleSubmit();
 						}
 					}}
 					className={`${inputStyle}`}

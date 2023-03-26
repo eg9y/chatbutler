@@ -45,7 +45,7 @@ const ChatMessage: FC<NodeProps<ChatMessageNodeDataType>> = (props) => {
 					setShowFullScreen={setShowFullScreen}
 					presentText={presentText}
 					setText={setText}
-					LabelComponent={(
+					labelComponent={(
 						updateNode: (id: string, data: ChatMessageNodeDataType) => void,
 					) => (
 						<div className="font-medium leading-6 relative flex items-end p-1">

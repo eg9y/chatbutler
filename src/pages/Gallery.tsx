@@ -10,6 +10,7 @@ const navigation = [
 
 const Card = ({
 	items,
+	setIsLoading,
 }: {
 	items: {
 		id: string;
@@ -17,7 +18,9 @@ const Card = ({
 		description?: string;
 		image?: string;
 	}[];
+	setIsLoading: (isLoading: boolean) => void;
 }) => {
+	const [, setLocation] = useLocation();
 	return (
 		<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
 			{items.map((item, index) => (
@@ -28,6 +31,11 @@ const Card = ({
 					border-1 border-slate-300
 					cursor-pointer
 					hover:bg-slate-100 hover:shadow-lg transition-shadow duration-300 ease-in-out"
+					onClick={async () => {
+						setIsLoading(true);
+						setIsLoading(false);
+						setLocation(`/app/${item.id}`);
+					}}
 				>
 					{item.image ? (
 						<img
@@ -56,6 +64,7 @@ export default function Gallery() {
 		}[]
 	>([]);
 	const [, setLocation] = useLocation();
+	const [isLoading, setIsLoading] = useState(false);
 
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -72,16 +81,16 @@ export default function Gallery() {
 				.catch((err) => console.error(err));
 			setPublicWorkflows(data.data);
 
-			// const mock = [
-			// 	{
-			// 		id: 'ytJrgJM3K-XrJHIo1Wfok',
-			// 		name: 'customer support workflow',
-			// 	},
-			// 	{
-			// 		id: 'l_vZ-onDE9kqbmv3uX-IP',
-			// 		name: 'prompterinod',
-			// 	},
-			// ];
+			const mock = [
+				{
+					id: 'ytJrgJM3K-XrJHIo1Wfok',
+					name: 'customer support workflow',
+				},
+				{
+					id: 'l_vZ-onDE9kqbmv3uX-IP',
+					name: 'prompterinod',
+				},
+			];
 
 			// setPublicWorkflows(mock);
 		})();
@@ -181,7 +190,7 @@ export default function Gallery() {
 			</header>
 			<div className="mx-auto max-w-2xl py-10 px-4 sm:py-4 sm:px-6 lg:max-w-7xl lg:px-8">
 				<h1 className="text-2xl font-bold mb-6">Workflow Gallery</h1>
-				<Card items={publicWorkflows} />
+				<Card items={publicWorkflows} setIsLoading={setIsLoading} />
 			</div>
 		</div>
 	);

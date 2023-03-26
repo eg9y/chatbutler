@@ -156,7 +156,7 @@ const Content: FC<{
 								WebkitBoxOrient: 'vertical',
 								overflow: 'hidden',
 							}}
-							className=""
+							className="whitespace-pre-wrap"
 						>
 							{data.response}
 						</p>

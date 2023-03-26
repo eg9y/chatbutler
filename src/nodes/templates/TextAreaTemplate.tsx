@@ -15,7 +15,7 @@ interface TextAreaTemplateInterface {
 	show: boolean;
 	bgColor?: string;
 	setShow: (show: boolean) => void;
-	LabelComponent?: React.ElementType;
+	labelComponent?: (updateNode: any) => React.ReactNode;
 }
 
 const TextAreaTemplate: FC<
@@ -39,7 +39,7 @@ const TextAreaTemplate: FC<
 	bgColor = 'bg-yellow-200',
 	showFullScreen,
 	setShowFullScreen,
-	LabelComponent,
+	labelComponent,
 	children,
 }) => {
 	const { updateNode } = useStore(selector, shallow);
@@ -79,8 +79,8 @@ const TextAreaTemplate: FC<
 				{ShowPromptSwitch(show, setShow)}
 			</div>
 			<div className="px-4 gap-1 w-full flex justify-between items-center h-14">
-				{LabelComponent ? (
-					<LabelComponent />
+				{labelComponent ? (
+					labelComponent(updateNode)
 				) : (
 					<>
 						<label htmlFor="text" className="block font-medium leading-6 text-2xl">

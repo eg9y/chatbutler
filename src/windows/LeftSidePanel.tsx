@@ -12,7 +12,7 @@ import {
 import { nanoid } from 'nanoid';
 import { FC, useEffect, useState } from 'react';
 import { ReactFlowInstance } from 'reactflow';
-import { useLocation } from 'wouter';
+import { useLocation, useRoute } from 'wouter';
 import { shallow } from 'zustand/shallow';
 
 const rightAngleSvg = new URL('../assets/right-angle.svg', import.meta.url).href;
@@ -42,13 +42,13 @@ export default function LeftSidePanel({
 		setOpenAiKey,
 		setUiErrorMessage,
 		clearGraph,
-		setWorkflowId,
 		setWorkflows,
-		workflowName,
-		setWorkflowName,
+		currentWorkflow,
+		setCurrentWorkflow,
 	} = useStore(selector, shallow);
 	const [dragging, setDragging] = useState(false);
-	const [openWorkflows, setOpenWorkflows] = useState(true);
+
+	const [openWorkflows, setOpenWorkflows] = useState(!currentWorkflow);
 
 	const [, setLocation] = useLocation();
 
@@ -104,6 +104,13 @@ export default function LeftSidePanel({
 			}}
 			className="bg-slate-50 w-full shadow-lg border-r-1 border-slate-400"
 		>
+			<UserWorkflows
+				currentWorkflow={currentWorkflow}
+				setCurrentWorkflow={setCurrentWorkflow}
+				setWorkflows={setWorkflows}
+				open={openWorkflows}
+				setOpen={setOpenWorkflows}
+			/>
 			<div className="flex flex-col justify-between h-full py-1 border-1">
 				<div className="space-y-1 flex flex-col gap-4">
 					<div className="flex flex-col justify-between px-2">
@@ -128,20 +135,13 @@ export default function LeftSidePanel({
 								</a>
 							</ul>
 						</div>
-						{isLoggedIn ? (
+						{isLoggedIn && currentWorkflow && (
 							<EditableText
-								text={workflowName}
-								setText={setWorkflowName}
+								text={currentWorkflow.name}
+								currentWorkflow={currentWorkflow}
+								setCurrentWorkflow={setCurrentWorkflow}
 								setWorkflows={setWorkflows}
 							/>
-						) : (
-							<div className="pb-1  py-1">
-								<p className="text-xs text-slate-700">
-									Welcome to promptsandbox.io, a free visual programming tool that
-									makes it easy to work with OpenAI APIs like GPT-4, allowing you
-									to create and link nodes to generate complex outputs with ease.
-								</p>
-							</div>
 						)}
 					</div>
 
@@ -193,7 +193,10 @@ export default function LeftSidePanel({
 										// clear graph;
 										clearGraph();
 										// set new workflowId;
-										setWorkflowId(nanoid());
+										setCurrentWorkflow(
+											nanoid(),
+											`Untitled Workflow ${new Date().toLocaleString()}`,
+										);
 									} else {
 										goToLogin();
 									}
@@ -253,9 +256,8 @@ export default function LeftSidePanel({
 								<a
 									className="group p-2 flex items-center rounded-md text-sm font-medium text-slate-700 
 									bg-slate-300 hover:text-slate-900 hover:font-bold cursor-pointer "
-									onClick={async () => {
-										goToGallery();
-									}}
+									target="_blank"
+									href="/gallery"
 								>
 									<PhotoIcon
 										className={
@@ -268,12 +270,6 @@ export default function LeftSidePanel({
 							</div>
 						</div>
 					</div>
-					<UserWorkflows
-						setWorkflowId={setWorkflowId}
-						setWorkflows={setWorkflows}
-						open={openWorkflows}
-						setOpen={setOpenWorkflows}
-					/>
 					<div>
 						<div className="bg-slate-200 flex justify-between">
 							<p className="text-start text-slate-900 font-semibold text-md pr-2 pl-4 py-1">

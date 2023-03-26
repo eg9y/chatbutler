@@ -1,6 +1,7 @@
 import react from '@vitejs/plugin-react-swc';
 import { defineConfig } from 'vite';
 import eslint from 'vite-plugin-eslint';
+import svgr from 'vite-plugin-svgr';
 import { tscPlugin } from 'vite-plugin-tsc-watch';
 import vercel from 'vite-plugin-vercel';
 
@@ -11,6 +12,9 @@ export default defineConfig({
 			fix: true,
 		}),
 		react(),
+		svgr({
+			esbuildOptions: { loader: 'tsx' },
+		}),
 		vercel(),
 		{
 			...tscPlugin(),

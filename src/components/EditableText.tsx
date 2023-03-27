@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { useRoute } from 'wouter';
 import { shallow } from 'zustand/shallow';
 
 import useStore, { RFState, selector } from '../store/useStore';
 import isWorkflowOwnedByUser from '../utils/isWorkflowOwnedByUser';
+import { useQueryParams } from '../utils/useQueryParams';
 
 const EditableText = ({
 	currentWorkflow,
@@ -21,7 +21,7 @@ const EditableText = ({
 	const [acceptableText, setAcceptableText] = useState(
 		currentWorkflow ? currentWorkflow.name : '',
 	);
-	const [, params] = useRoute('/app/:user_id/:id');
+	const params = useQueryParams();
 
 	const handleTextClick = () => {
 		if (!isWorkflowOwnedByUser(session, params)) {

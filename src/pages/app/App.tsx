@@ -9,7 +9,6 @@ import ReactFlow, {
 	ReactFlowInstance,
 	Controls,
 } from 'reactflow';
-import { DefaultParams, useRoute } from 'wouter';
 import { shallow } from 'zustand/shallow';
 import 'reactflow/dist/base.css';
 
@@ -32,6 +31,7 @@ import { NodeTypesEnum } from '../../nodes/types/NodeTypes';
 import useStore, { selector } from '../../store/useStore';
 import isWorkflowOwnedByUser from '../../utils/isWorkflowOwnedByUser';
 import { useDebouncedEffect } from '../../utils/useDebouncedEffect';
+import { useQueryParams } from '../../utils/useQueryParams';
 import LeftSidePanel from '../../windows/LeftSidePanel';
 import SettingsPanel from '../../windows/SettingsPanel/panel';
 
@@ -50,7 +50,8 @@ const edgeTypes = {
 };
 
 export default function App() {
-	const [, params] = useRoute('/app/:user_id/:id');
+	const params = useQueryParams();
+
 	const {
 		session,
 		nodes,
@@ -104,7 +105,6 @@ export default function App() {
 	);
 
 	useEffect(() => {
-		console.log('params', params);
 		(async () => {
 			if (!session) {
 				setTimeout(() => {

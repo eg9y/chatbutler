@@ -2,7 +2,7 @@ import { Dialog } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/20/solid';
 import { nanoid } from 'nanoid';
 import { useState } from 'react';
-import { useLocation, useRoute } from 'wouter';
+import { useLocation } from 'wouter';
 import { shallow } from 'zustand/shallow';
 
 import EditableText from './EditableText';
@@ -11,6 +11,7 @@ import syncDataToSupabase from '../db/syncToSupabase';
 import useStore, { selector } from '../store/useStore';
 import { conditionalClassNames } from '../utils/classNames';
 import isWorkflowOwnedByUser from '../utils/isWorkflowOwnedByUser';
+import { useQueryParams } from '../utils/useQueryParams';
 
 const NavBar = () => {
 	const navigation = [
@@ -18,7 +19,7 @@ const NavBar = () => {
 		{ name: 'Gallery', href: '/gallery/' },
 	];
 	const [location] = useLocation();
-	const [, params] = useRoute('/app/:user_id/:id');
+	const params = useQueryParams();
 
 	const {
 		session,

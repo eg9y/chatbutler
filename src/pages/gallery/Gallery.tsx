@@ -106,7 +106,10 @@ const Card = ({
                                         cursor-pointer hover:bg-slate-200
                                     justify-center gap-x-3 border border-transparent py-4 text-sm font-semibold text-gray-900"
 								onClick={async () => {
-									window.open(`/app/${item.user_id}/${item.id}`, '_blank');
+									window.open(
+										`/?user_id=${item.user_id}&id=${item.id}`,
+										'_blank',
+									);
 								}}
 							>
 								<span className="truncate">Open</span>

@@ -1,4 +1,4 @@
-import supabase from '../auth/supabaseClient';
+import supabase from './supabaseClient';
 import { RFState } from '../store/useStore';
 
 const populateUserWorkflows = async (

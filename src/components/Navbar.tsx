@@ -1,24 +1,27 @@
 import { Dialog } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/20/solid';
 import { nanoid } from 'nanoid';
-import { useState } from 'react';
-import { useLocation, useRoute } from 'wouter';
+import { useCallback, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { shallow } from 'zustand/shallow';
 
 import EditableText from './EditableText';
-import supabase from '../auth/supabaseClient';
+import supabase from '../db/supabaseClient';
 import syncDataToSupabase from '../db/syncToSupabase';
 import useStore, { selector } from '../store/useStore';
 import { conditionalClassNames } from '../utils/classNames';
 import isWorkflowOwnedByUser from '../utils/isWorkflowOwnedByUser';
+import { useConvertedParams } from '../utils/unseConvertedParams';
 
 const NavBar = () => {
 	const navigation = [
 		{ name: 'Builder', href: '/' },
 		{ name: 'Gallery', href: '/gallery/' },
 	];
-	const [location] = useLocation();
-	const [, params] = useRoute('/app/:user_id/:id');
+
+	const location = useLocation();
+	const convertParams = useConvertedParams();
+	const params = convertParams();
 
 	const {
 		session,
@@ -35,9 +38,11 @@ const NavBar = () => {
 
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-	function isLocationApp() {
-		return location.startsWith('/app') || location === '/';
-	}
+	const isLocationApp = useCallback(() => {
+		return (
+			location.pathname === '/' || location.pathname === `/${params?.user_id}/${params?.id}`
+		);
+	}, [location, params]);
 
 	return (
 		<header
@@ -58,7 +63,8 @@ const NavBar = () => {
 								<a
 									key={item.name}
 									className={conditionalClassNames(
-										location === item.href && 'underline underline-offset-4',
+										location.pathname === item.href &&
+											'underline underline-offset-4',
 										`text-sm font-semibold leading-6 text-blue-900 cursor-pointer`,
 									)}
 									onClick={async () => {
@@ -117,12 +123,11 @@ const NavBar = () => {
 					)}
 				</div>
 
-				<div className="flex flex-1 justify-end">
-					<a
-						href="#"
-						className="text-sm font-semibold leading-6 text-gray-900"
-						onClick={() => {
-							if (session) {
+				<div className="flex flex-1 justify-end text-sm font-semibold leading-6 text-gray-900">
+					{session ? (
+						<a
+							className="cursor-pointer"
+							onClick={() => {
 								supabase.auth.signOut();
 								setSession(null);
 								setWorkflows([]);
@@ -134,21 +139,20 @@ const NavBar = () => {
 									name: `Untitled Workflow`,
 									user_id: session.user.id,
 								});
-							} else {
+							}}
+						>
+							Log out <span aria-hidden="true">&larr;</span>
+						</a>
+					) : (
+						<a
+							className="cursor-pointer"
+							onClick={() => {
 								window.open('/auth/', '_self');
-							}
-						}}
-					>
-						{session ? (
-							<p>
-								Log out <span aria-hidden="true">&larr;</span>
-							</p>
-						) : (
-							<p>
-								Log in <span aria-hidden="true">&rarr;</span>
-							</p>
-						)}
-					</a>
+							}}
+						>
+							Log in <span aria-hidden="true">&rarr;</span>
+						</a>
+					)}
 				</div>
 			</nav>
 			<Dialog
@@ -170,14 +174,6 @@ const NavBar = () => {
 								<XMarkIcon className="h-6 w-6" aria-hidden="true" />
 							</button>
 						</div>
-						<a href="#" className="-m-1.5 p-1.5">
-							<span className="sr-only">Your Company</span>
-							<img
-								className="h-8 w-auto"
-								src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-								alt=""
-							/>
-						</a>
 						<div className="flex flex-1 justify-end">
 							<a href="#" className="text-sm font-semibold leading-6 text-gray-900">
 								Log in <span aria-hidden="true">&rarr;</span>

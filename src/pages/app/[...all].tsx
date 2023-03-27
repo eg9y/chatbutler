@@ -1,5 +1,6 @@
 import { ChevronDoubleRightIcon, ChevronDoubleLeftIcon } from '@heroicons/react/20/solid';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import ReactFlow, {
 	MiniMap,
 	Background,
@@ -9,7 +10,6 @@ import ReactFlow, {
 	ReactFlowInstance,
 	Controls,
 } from 'reactflow';
-import { DefaultParams, useRoute } from 'wouter';
 import { shallow } from 'zustand/shallow';
 import 'reactflow/dist/base.css';
 
@@ -31,9 +31,11 @@ import TextInputNode from '../../nodes/TextInputNode';
 import { NodeTypesEnum } from '../../nodes/types/NodeTypes';
 import useStore, { selector } from '../../store/useStore';
 import isWorkflowOwnedByUser from '../../utils/isWorkflowOwnedByUser';
+import { useConvertedParams } from '../../utils/unseConvertedParams';
 import { useDebouncedEffect } from '../../utils/useDebouncedEffect';
 import LeftSidePanel from '../../windows/LeftSidePanel';
 import SettingsPanel from '../../windows/SettingsPanel/panel';
+import Layout from '../Layout';
 
 const nodeTypes = {
 	classify: ClassifyNode,
@@ -50,7 +52,9 @@ const edgeTypes = {
 };
 
 export default function App() {
-	const [, params] = useRoute('/app/:user_id/:id');
+	const convertParams = useConvertedParams();
+	const params = convertParams();
+
 	const {
 		session,
 		nodes,
@@ -104,19 +108,19 @@ export default function App() {
 	);
 
 	useEffect(() => {
-		console.log('params', params);
 		(async () => {
 			if (!session) {
 				setTimeout(() => {
 					setIsLoading(false);
 				}, 500);
-				return;
+			} else {
+				setIsLoading(true);
+				await populateUserWorkflows(setWorkflows, setUiErrorMessage, session);
 			}
-			setIsLoading(true);
-			await populateUserWorkflows(setWorkflows, setUiErrorMessage, session);
 			if (params && params.id) {
 				await selectWorkflow(
-					params.id,
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					params.id!,
 					nodes,
 					edges,
 					currentWorkflow,
@@ -214,141 +218,51 @@ export default function App() {
 	};
 
 	return (
-		<div
-			style={{
-				height: '95vh',
-				width: '100vw',
-			}}
-			className="flex"
-		>
-			<LoadingOverlay open={isLoading} />
-			<div className="absolute p-4 flex w-full justify-center">
-				<div className="flex gap-4 items-center">
-					<RunFromStart />
-				</div>
-			</div>
+		<Layout>
 			<div
 				style={{
-					height: '95vh',
-					width: nodeView ? '15vw' : 0,
-					maxWidth: '200px',
-					minWidth: '180px',
-				}}
-				className="absolute z-10 flex max-w-sm"
-			>
-				{nodeView && (
-					<LeftSidePanel
-						onAdd={onAdd}
-						reactFlowWrapper={reactFlowWrapper}
-						reactFlowInstance={reactFlowInstance}
-					/>
-				)}
-				<div
-					style={{
-						height: '30px',
-						width: '20px',
-					}}
-					className="m-0 cursor-pointer shadow-lg bg-slate-200 border-b-1 border-r-1 border-slate-300 flex gap-10 item-center"
-				>
-					<div
-						className="grow"
-						onClick={() => {
-							setNodeView(!nodeView);
-						}}
-					>
-						{nodeView ? (
-							<ChevronDoubleRightIcon
-								style={{
-									height: '30px',
-									width: '20px',
-								}}
-								className={
-									'text-slate-800 group-hover:text-slate-500 h-full mx-auto'
-								}
-								aria-hidden="true"
-							/>
-						) : (
-							<ChevronDoubleLeftIcon
-								style={{
-									height: '30px',
-									width: '20px',
-								}}
-								className={
-									'text-slate-800 group-hover:text-slate-500 h-full mx-auto'
-								}
-								aria-hidden="true"
-							/>
-						)}
-					</div>
-				</div>
-			</div>
-
-			<div
-				className="grid grid-cols-2"
-				style={{
-					gridTemplateColumns: '1fr auto',
 					height: '95vh',
 					width: '100vw',
 				}}
+				className="flex"
 			>
-				<div ref={reactFlowWrapper}>
-					<ReactFlow
-						multiSelectionKeyCode="Shift"
-						onDrop={handleDrop}
-						nodesDraggable={unlockGraph && isWorkflowOwnedByUser(session, params)}
-						nodesConnectable={unlockGraph && isWorkflowOwnedByUser(session, params)}
-						nodesFocusable={unlockGraph && isWorkflowOwnedByUser(session, params)}
-						edgesFocusable={unlockGraph && isWorkflowOwnedByUser(session, params)}
-						elementsSelectable={unlockGraph && isWorkflowOwnedByUser(session, params)}
-						onInit={(reactFlowInstance: ReactFlowInstance) => onInit(reactFlowInstance)}
-						onDragOver={(e) => e.preventDefault()}
-						nodes={nodes}
-						edges={edges}
-						minZoom={0.3}
-						onNodesChange={onNodesChange}
-						onEdgesChange={onEdgesChange}
-						onConnect={onConnect}
-						nodeTypes={nodeTypes}
-						edgeTypes={edgeTypes}
-						connectionLineComponent={ConnectionLine}
-						onNodeDragStart={onNodeDragStop}
-						onNodeClick={onNodeDragStop}
-						onEdgesDelete={onEdgesDelete}
-						defaultEdgeOptions={{
-							type: 'default',
-							animated: true,
-							style: {
-								strokeWidth: 2,
-								stroke: '#002',
-							},
-							markerEnd: {
-								type: MarkerType.ArrowClosed,
-								width: 25,
-								height: 25,
-								color: '#002',
-							},
-						}}
-					>
-						<Controls className="ml-52" />
-						<MiniMap pannable={true} />
-						<Background
-							variant={BackgroundVariant.Dots}
-							gap={14}
-							size={2}
-							color={'#8E8E8E'}
+				<LoadingOverlay open={isLoading} />
+				<div className="absolute p-4 flex w-full justify-center">
+					<div className="flex gap-4 items-center">
+						<RunFromStart />
+					</div>
+				</div>
+				<div
+					style={{
+						height: '95vh',
+						width: nodeView ? '15vw' : 0,
+						maxWidth: '200px',
+						minWidth: '180px',
+					}}
+					className="absolute z-10 flex max-w-sm"
+				>
+					{nodeView && (
+						<LeftSidePanel
+							onAdd={onAdd}
+							reactFlowWrapper={reactFlowWrapper}
+							reactFlowInstance={reactFlowInstance}
 						/>
-						<Panel position="top-center">
-							<Notification />
-						</Panel>
-						<Panel
-							position="top-right"
-							className="m-0 cursor-pointer shadow-lg bg-slate-200 border-b-1 border-l-1 border-slate-300"
+					)}
+					<div
+						style={{
+							height: '30px',
+							width: '20px',
+						}}
+						className="m-0 cursor-pointer shadow-lg bg-slate-200 border-b-1 border-r-1 border-slate-300 flex gap-10 item-center"
+					>
+						<div
+							className="grow"
 							onClick={() => {
-								setSettingsView(!settingsView);
+								setNodeView(!nodeView);
 							}}
 						>
-							{settingsView ? (
-								<ChevronDoubleLeftIcon
+							{nodeView ? (
+								<ChevronDoubleRightIcon
 									style={{
 										height: '30px',
 										width: '20px',
@@ -359,49 +273,145 @@ export default function App() {
 									aria-hidden="true"
 								/>
 							) : (
-								<ChevronDoubleRightIcon
+								<ChevronDoubleLeftIcon
 									style={{
 										height: '30px',
 										width: '20px',
 									}}
-									className={' group-hover:text-slate-500 h-full mx-auto'}
+									className={
+										'text-slate-800 group-hover:text-slate-500 h-full mx-auto'
+									}
 									aria-hidden="true"
 								/>
 							)}
-						</Panel>
-					</ReactFlow>
+						</div>
+					</div>
 				</div>
 
-				{settingsView ? (
-					<div
-						className=""
-						style={{
-							width: `${settingsPanelWidth}px`,
-							position: 'relative',
-						}}
-					>
+				<div
+					className="grid grid-cols-2"
+					style={{
+						gridTemplateColumns: '1fr auto',
+						height: '95vh',
+						width: '100vw',
+					}}
+				>
+					<div ref={reactFlowWrapper}>
+						<ReactFlow
+							multiSelectionKeyCode="Shift"
+							onDrop={handleDrop}
+							nodesDraggable={unlockGraph && isWorkflowOwnedByUser(session, params)}
+							nodesConnectable={unlockGraph && isWorkflowOwnedByUser(session, params)}
+							nodesFocusable={unlockGraph && isWorkflowOwnedByUser(session, params)}
+							edgesFocusable={unlockGraph && isWorkflowOwnedByUser(session, params)}
+							elementsSelectable={
+								unlockGraph && isWorkflowOwnedByUser(session, params)
+							}
+							onInit={(reactFlowInstance: ReactFlowInstance) =>
+								onInit(reactFlowInstance)
+							}
+							onDragOver={(e) => e.preventDefault()}
+							nodes={nodes}
+							edges={edges}
+							minZoom={0.3}
+							onNodesChange={onNodesChange}
+							onEdgesChange={onEdgesChange}
+							onConnect={onConnect}
+							nodeTypes={nodeTypes}
+							edgeTypes={edgeTypes}
+							connectionLineComponent={ConnectionLine}
+							onNodeDragStart={onNodeDragStop}
+							onNodeClick={onNodeDragStop}
+							onEdgesDelete={onEdgesDelete}
+							defaultEdgeOptions={{
+								type: 'default',
+								animated: true,
+								style: {
+									strokeWidth: 2,
+									stroke: '#002',
+								},
+								markerEnd: {
+									type: MarkerType.ArrowClosed,
+									width: 25,
+									height: 25,
+									color: '#002',
+								},
+							}}
+						>
+							<Controls className="ml-52" />
+							<MiniMap pannable={true} />
+							<Background
+								variant={BackgroundVariant.Dots}
+								gap={14}
+								size={2}
+								color={'#8E8E8E'}
+							/>
+							<Panel position="top-center">
+								<Notification />
+							</Panel>
+							<Panel
+								position="top-right"
+								className="m-0 cursor-pointer shadow-lg bg-slate-200 border-b-1 border-l-1 border-slate-300"
+								onClick={() => {
+									setSettingsView(!settingsView);
+								}}
+							>
+								{settingsView ? (
+									<ChevronDoubleLeftIcon
+										style={{
+											height: '30px',
+											width: '20px',
+										}}
+										className={
+											'text-slate-800 group-hover:text-slate-500 h-full mx-auto'
+										}
+										aria-hidden="true"
+									/>
+								) : (
+									<ChevronDoubleRightIcon
+										style={{
+											height: '30px',
+											width: '20px',
+										}}
+										className={' group-hover:text-slate-500 h-full mx-auto'}
+										aria-hidden="true"
+									/>
+								)}
+							</Panel>
+						</ReactFlow>
+					</div>
+
+					{settingsView ? (
+						<div
+							className=""
+							style={{
+								width: `${settingsPanelWidth}px`,
+								position: 'relative',
+							}}
+						>
+							<div
+								// animate on hover to show that it's resizable
+								className="absolute -left-2 top-0 bottom-0 bg-blue-200 cursor-col-resize opacity-0 hover:opacity-80 transition-opacity duration-300"
+								style={{
+									width: '10px',
+								}}
+								onMouseDown={handleMouseDown}
+							/>
+							<SettingsPanel />
+						</div>
+					) : (
 						<div
 							// animate on hover to show that it's resizable
-							className="absolute -left-2 top-0 bottom-0 bg-blue-200 cursor-col-resize opacity-0 hover:opacity-80 transition-opacity duration-300"
+							className="bg-slate-200 shadow-xl border-1 border-slate-300"
 							style={{
 								width: '10px',
+								height: '95vh',
 							}}
 							onMouseDown={handleMouseDown}
 						/>
-						<SettingsPanel />
-					</div>
-				) : (
-					<div
-						// animate on hover to show that it's resizable
-						className="bg-slate-200 shadow-xl border-1 border-slate-300"
-						style={{
-							width: '10px',
-							height: '95vh',
-						}}
-						onMouseDown={handleMouseDown}
-					/>
-				)}
+					)}
+				</div>
 			</div>
-		</div>
+		</Layout>
 	);
 }

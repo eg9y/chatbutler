@@ -15,7 +15,7 @@ import { useQueryParams } from '../utils/useQueryParams';
 
 const NavBar = () => {
 	const navigation = [
-		{ name: 'Builder', href: '/' },
+		{ name: 'Sandbox', href: '/' },
 		{ name: 'Gallery', href: '/gallery/' },
 	];
 	const [location] = useLocation();
@@ -105,7 +105,7 @@ const NavBar = () => {
 									session={session}
 								/>
 							) : (
-								'Untitled Workflow'
+								'Untitled Sandbox'
 							)}
 							{!isWorkflowOwnedByUser(session, params) && (
 								<p className="text-slate-500">(Read Mode)</p>
@@ -128,7 +128,7 @@ const NavBar = () => {
 								// set new workflowId;
 								setCurrentWorkflow({
 									id: nanoid(),
-									name: `Untitled Workflow`,
+									name: `Untitled Sandbox`,
 									user_id: session.user.id,
 								});
 							} else {

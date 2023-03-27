@@ -106,13 +106,8 @@ export default function App() {
 
 	useEffect(() => {
 		(async () => {
-			if (!session) {
-				setTimeout(() => {
-					setIsLoading(false);
-				}, 500);
-				return;
-			}
 			setIsLoading(true);
+			setCurrentWorkflow(null);
 			await populateUserWorkflows(setWorkflows, setUiErrorMessage, session);
 			if (params && params.id) {
 				await selectWorkflow(
@@ -129,7 +124,7 @@ export default function App() {
 			setIsLoading(false);
 		})();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [params]);
 
 	const handleMouseDown = (e: any) => {
 		e.preventDefault();
@@ -223,7 +218,7 @@ export default function App() {
 		>
 			<LoadingOverlay open={isLoading} />
 			<div className="absolute p-4 flex w-full justify-center">
-				<div className="flex gap-4 items-center">
+				<div className="flex gap-4 items-center z-10">
 					<RunFromStart />
 				</div>
 			</div>

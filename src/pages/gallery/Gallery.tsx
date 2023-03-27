@@ -16,19 +16,6 @@ export default function Gallery() {
 	useEffect(() => {
 		(async () => {
 			setIsLoading(true);
-			// const { data, error } = await supabase
-			// 	.from('workflows')
-			// 	.select('id, name, user_id, description');
-			// if (error) {
-			// 	console.log(error);
-			// 	setIsLoading(false);
-			// 	return;
-			// } else if (!data) {
-			// 	console.log('no data');
-			// 	setIsLoading(false);
-			// 	return;
-			// }
-			// setPublicWorkflows(data);
 
 			const data = await fetch(`${getUrl()}api/getWorkflows`)
 				.then((res) => {
@@ -55,7 +42,7 @@ export default function Gallery() {
 	return (
 		<div className="bg-white">
 			<div className="mx-auto max-w-2xl py-10 px-20 sm:py-4 sm:px-6 lg:max-w-7xl lg:px-20">
-				<h1 className="text-2xl font-bold mb-6">Workflow Gallery</h1>
+				<h1 className="text-2xl font-bold mb-6">Sandbox Gallery</h1>
 				{isLoading ? <div>Loading...</div> : <Card publicWorkflows={publicWorkflows} />}
 			</div>
 		</div>

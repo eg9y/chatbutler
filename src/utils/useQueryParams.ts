@@ -18,7 +18,7 @@ export function useQueryParams() {
 	const [queryParams, setQueryParams] = useState<{ id: string; user_id: string } | null>(null);
 
 	useEffect(() => {
-		const queryString = window.location.search;
+		const queryString = document.location.search;
 		const parsedParams = parseQueryParams(queryString);
 		setQueryParams(parsedParams);
 	}, []);

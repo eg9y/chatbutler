@@ -1,5 +1,4 @@
 import { Session } from '@supabase/supabase-js';
-import { nanoid } from 'nanoid';
 import {
 	Connection,
 	Edge,
@@ -51,7 +50,7 @@ export interface RFState {
 	}[];
 	setWorkflows: (workflows: { id: string; name: string }[]) => void;
 	currentWorkflow: SimpleWorkflow | null;
-	setCurrentWorkflow: (workflow: { id: string; user_id: string; name: string }) => void;
+	setCurrentWorkflow: (workflow: { id: string; user_id: string; name: string } | null) => void;
 	reactFlowInstance: ReactFlowInstance | null;
 	setReactFlowInstance: (instance: ReactFlowInstance | null) => void;
 	uiErrorMessage: string | null;
@@ -113,7 +112,9 @@ const useStore = create<RFState>()(
 				});
 			},
 			currentWorkflow: null,
-			setCurrentWorkflow: (workflow: { id: string; user_id: string; name: string }) => {
+			setCurrentWorkflow: (
+				workflow: { id: string; user_id: string; name: string } | null,
+			) => {
 				set({
 					currentWorkflow: workflow,
 				});

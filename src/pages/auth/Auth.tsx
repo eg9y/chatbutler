@@ -17,7 +17,7 @@ export default function AuthPage() {
 				if (nodes.length && session) {
 					setCurrentWorkflow({
 						id: nanoid(),
-						name: 'Untitled Workflow',
+						name: 'Untitled Sandbox',
 						user_id: session?.user.id,
 					});
 				}

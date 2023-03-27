@@ -36,7 +36,6 @@ const selectWorkflow = async (
 		.select()
 		.eq('id', newWorkflowId)
 		.single();
-
 	if (error) {
 		setUiErrorMessage(error.message);
 	}

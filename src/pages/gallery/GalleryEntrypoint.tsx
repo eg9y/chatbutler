@@ -1,11 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
-import App from './App';
-import './index.css';
+import Gallery from './Gallery';
+import Layout from '../Layout';
+
+import '../index.css';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 	<React.StrictMode>
-		<App />
+		<Layout>
+			<Gallery />
+		</Layout>
 	</React.StrictMode>,
 );

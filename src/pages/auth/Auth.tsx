@@ -2,14 +2,12 @@ import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
 import { nanoid } from 'nanoid';
 import { useEffect } from 'react';
-import { useLocation } from 'wouter';
 import { shallow } from 'zustand/shallow';
 
-import supabase from '../auth/supabaseClient';
-import useStore, { selector } from '../store/useStore';
+import supabase from '../../auth/supabaseClient';
+import useStore, { selector } from '../../store/useStore';
 
 export default function AuthPage() {
-	const [, setLocation] = useLocation();
 	const { setSession, nodes, setCurrentWorkflow } = useStore(selector, shallow);
 
 	useEffect(() => {
@@ -24,7 +22,7 @@ export default function AuthPage() {
 					});
 				}
 				setSession(session);
-				setLocation('/');
+				window.open('/', '_self');
 			}
 		});
 
@@ -32,7 +30,7 @@ export default function AuthPage() {
 		return () => {
 			authListener.subscription.unsubscribe();
 		};
-	}, [nodes.length, setCurrentWorkflow, setLocation, setSession]);
+	}, [nodes.length, setCurrentWorkflow, setSession]);
 	return (
 		<>
 			<div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">

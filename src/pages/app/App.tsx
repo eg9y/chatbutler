@@ -9,31 +9,31 @@ import ReactFlow, {
 	ReactFlowInstance,
 	Controls,
 } from 'reactflow';
-import { DefaultParams } from 'wouter';
+import { DefaultParams, useRoute } from 'wouter';
 import { shallow } from 'zustand/shallow';
 import 'reactflow/dist/base.css';
 
-import LoadingOverlay from '../components/LoadingOverlay';
-import Notification from '../components/Notification';
-import RunFromStart from '../components/RunFromStart';
-import ConnectionLine from '../connection/ConnectionLine';
-import populateUserWorkflows from '../db/populateUserWorkflows';
-import selectWorkflow from '../db/selectWorkflow';
-import syncDataToSupabase from '../db/syncToSupabase';
-import CustomEdge from '../edges/CustomEdgeType';
-import ChatMessageNode from '../nodes/ChatMessageNode';
-import ChatPromptNode from '../nodes/ChatPromptNode';
-import ClassifyCategoriesNode from '../nodes/ClassifyCategoriesNode';
-import ClassifyNode from '../nodes/ClassifyNode';
-import LLMPromptNode from '../nodes/LLMPromptNode';
-import PlaceholderNode from '../nodes/PlaceholderNode';
-import TextInputNode from '../nodes/TextInputNode';
-import { NodeTypesEnum } from '../nodes/types/NodeTypes';
-import useStore, { selector } from '../store/useStore';
-import isWorkflowOwnedByUser from '../utils/isWorkflowOwnedByUser';
-import { useDebouncedEffect } from '../utils/useDebouncedEffect';
-import LeftSidePanel from '../windows/LeftSidePanel';
-import SettingsPanel from '../windows/SettingsPanel/panel';
+import LoadingOverlay from '../../components/LoadingOverlay';
+import Notification from '../../components/Notification';
+import RunFromStart from '../../components/RunFromStart';
+import ConnectionLine from '../../connection/ConnectionLine';
+import populateUserWorkflows from '../../db/populateUserWorkflows';
+import selectWorkflow from '../../db/selectWorkflow';
+import syncDataToSupabase from '../../db/syncToSupabase';
+import CustomEdge from '../../edges/CustomEdgeType';
+import ChatMessageNode from '../../nodes/ChatMessageNode';
+import ChatPromptNode from '../../nodes/ChatPromptNode';
+import ClassifyCategoriesNode from '../../nodes/ClassifyCategoriesNode';
+import ClassifyNode from '../../nodes/ClassifyNode';
+import LLMPromptNode from '../../nodes/LLMPromptNode';
+import PlaceholderNode from '../../nodes/PlaceholderNode';
+import TextInputNode from '../../nodes/TextInputNode';
+import { NodeTypesEnum } from '../../nodes/types/NodeTypes';
+import useStore, { selector } from '../../store/useStore';
+import isWorkflowOwnedByUser from '../../utils/isWorkflowOwnedByUser';
+import { useDebouncedEffect } from '../../utils/useDebouncedEffect';
+import LeftSidePanel from '../../windows/LeftSidePanel';
+import SettingsPanel from '../../windows/SettingsPanel/panel';
 
 const nodeTypes = {
 	classify: ClassifyNode,
@@ -49,7 +49,8 @@ const edgeTypes = {
 	custom: CustomEdge,
 };
 
-export default function MainApp({ params }: { params: DefaultParams | null }) {
+export default function App() {
+	const [, params] = useRoute('/app/:user_id/:id');
 	const {
 		session,
 		nodes,

@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useLocation } from 'wouter';
 
-import getUrl from '../auth/getUrl';
-import supabase from '../auth/supabaseClient';
+import getUrl from '../../auth/getUrl';
 
 export default function Gallery() {
 	const [publicWorkflows, setPublicWorkflows] = useState<
@@ -74,7 +72,6 @@ const Card = ({
 		description: string | null;
 	}[];
 }) => {
-	const [, setLocation] = useLocation();
 	return (
 		<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
 			{publicWorkflows.map((item, index) => (
@@ -109,7 +106,7 @@ const Card = ({
                                         cursor-pointer hover:bg-slate-200
                                     justify-center gap-x-3 border border-transparent py-4 text-sm font-semibold text-gray-900"
 								onClick={async () => {
-									setLocation(`/app/${item.user_id}/${item.id}`);
+									window.open(`/app/${item.user_id}/${item.id}`, '_blank');
 								}}
 							>
 								<span className="truncate">Open</span>

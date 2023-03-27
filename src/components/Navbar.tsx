@@ -17,7 +17,7 @@ const NavBar = () => {
 		{ name: 'Builder', href: '/' },
 		{ name: 'Gallery', href: '/gallery' },
 	];
-	const [location, setLocation] = useLocation();
+	const [location] = useLocation();
 	const [, params] = useRoute('/app/:user_id/:id');
 
 	const {
@@ -78,7 +78,7 @@ const NavBar = () => {
 												);
 											});
 										}
-										setLocation(item.href);
+										window.open(item.href, '_self');
 									}}
 								>
 									{item.name}
@@ -135,7 +135,7 @@ const NavBar = () => {
 									user_id: session.user.id,
 								});
 							} else {
-								setLocation('/auth');
+								window.open('/auth', '_self');
 							}
 						}}
 					>

@@ -6,6 +6,9 @@ import svgr from 'vite-plugin-svgr';
 import { tscPlugin } from 'vite-plugin-tsc-watch';
 import vercel from 'vite-plugin-vercel';
 
+const root = resolve(__dirname, 'src/pages/');
+const outDir = resolve(__dirname, 'dist');
+
 // https://vitejs.dev/config/
 export default defineConfig({
 	plugins: [
@@ -22,12 +25,15 @@ export default defineConfig({
 			enforce: 'post',
 		},
 	],
+	root,
 	build: {
+		outDir,
+		emptyOutDir: true,
 		rollupOptions: {
 			input: {
-				main: resolve(__dirname, 'index.html'),
-				gallery: resolve(__dirname, 'src/pages/gallery.html'),
-				auth: resolve(__dirname, 'src/pages/auth.html'),
+				main: resolve(root, 'index.html'),
+				gallery: resolve(root, 'gallery', 'index.html'),
+				auth: resolve(root, 'auth', 'index.html'),
 			},
 		},
 	},

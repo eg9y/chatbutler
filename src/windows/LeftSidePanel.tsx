@@ -64,12 +64,7 @@ export default function LeftSidePanel({
 	};
 
 	return (
-		<aside
-			style={{
-				height: '100vh',
-			}}
-			className="bg-slate-50 w-full shadow-lg border-r-1 border-slate-400"
-		>
+		<aside className="bg-slate-50 w-full shadow-lg border-r-1 border-slate-400">
 			{session && (
 				<UserWorkflows
 					currentWorkflow={currentWorkflow}

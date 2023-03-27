@@ -41,7 +41,7 @@ export default function SettingsPanel() {
 
 	return (
 		<div
-			style={{ height: '100vh' }}
+			style={{ height: '95vh' }}
 			className="bg-slate-50 shadow-xl flex flex-col w-full  border-l-1 border-slate-400"
 		>
 			<div

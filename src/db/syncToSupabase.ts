@@ -24,9 +24,13 @@ const syncDataToSupabase = async (
 		})
 		.eq('id', currentWorkflow.id)
 		.select();
+	if (error) {
+		console.error('Error syncing data to Supabase:', error);
+	}
+
 	if (!data || (data.length === 0 && isWorkflowOwnedByUser(session, params))) {
 		// 'Syncing local data to the cloud...
-		const { data, error: insertionError } = await supabase
+		const { data: insertionData, error: insertionError } = await supabase
 			.from('workflows')
 			.insert({
 				id: currentWorkflow.id,
@@ -38,16 +42,20 @@ const syncDataToSupabase = async (
 			.select('id, name')
 			.single();
 
-		if (data) {
+		if (insertionData) {
 			//'Data synced to Supabase:'
-			setWorkflows([...workflows, data]);
+			setWorkflows([...workflows, insertionData]);
 		}
 		if (insertionError) {
-			console.error('Error syncing data to Supabase:', insertionError);
+			console.error('Error inserting data to Supabase:', insertionError);
+			console.log({
+				id: currentWorkflow.id,
+				edges: JSON.parse(JSON.stringify(edges)),
+				nodes: JSON.parse(JSON.stringify(nodes)),
+				name: currentWorkflow.name,
+				user_id: session.user.id,
+			});
 		}
-	}
-	if (error) {
-		console.error('Error syncing data to Supabase:', error);
 	}
 };
 

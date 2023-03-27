@@ -25,19 +25,17 @@ function App() {
 	}, []);
 
 	return (
-		<div>
+		<Router>
 			<NavBar />
-			<Router>
-				<Route path="/">
-					<MainApp params={params} />
-				</Route>
-				<Route path="/app/:user_id/:id">
-					<MainApp params={params} />
-				</Route>
-				<Route path="/gallery" component={Gallery} />
-				<Route path="/auth" component={AuthGuard} />
-			</Router>
-		</div>
+			<Route path="/">
+				<MainApp params={params} />
+			</Route>
+			<Route path="/app/:user_id/:id">
+				<MainApp params={params} />
+			</Route>
+			<Route path="/gallery" component={Gallery} />
+			<Route path="/auth" component={AuthGuard} />
+		</Router>
 	);
 }
 

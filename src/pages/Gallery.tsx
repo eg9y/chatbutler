@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useLocation } from 'wouter';
 
 import getUrl from '../auth/getUrl';
+import supabase from '../auth/supabaseClient';
 
 export default function Gallery() {
 	const [publicWorkflows, setPublicWorkflows] = useState<
@@ -9,8 +10,7 @@ export default function Gallery() {
 			id: string;
 			name: string;
 			user_id: string;
-			description?: string;
-			image?: string;
+			description: string | null;
 		}[]
 	>([]);
 	const [isLoading, setIsLoading] = useState(false);
@@ -18,6 +18,20 @@ export default function Gallery() {
 	useEffect(() => {
 		(async () => {
 			setIsLoading(true);
+			// const { data, error } = await supabase
+			// 	.from('workflows')
+			// 	.select('id, name, user_id, description');
+			// if (error) {
+			// 	console.log(error);
+			// 	setIsLoading(false);
+			// 	return;
+			// } else if (!data) {
+			// 	console.log('no data');
+			// 	setIsLoading(false);
+			// 	return;
+			// }
+			// setPublicWorkflows(data);
+
 			const data = await fetch(`${getUrl()}api/getWorkflows`)
 				.then((res) => {
 					return res.json();
@@ -57,8 +71,7 @@ const Card = ({
 		id: string;
 		name: string;
 		user_id: string;
-		description?: string;
-		image?: string;
+		description: string | null;
 	}[];
 }) => {
 	const [, setLocation] = useLocation();
@@ -74,15 +87,15 @@ const Card = ({
 					"
 				>
 					<div className="bg-white rounded-md  p-4 items-center justify-center space-y-4 grow">
-						{item.image ? (
+						{/* {item.image ? (
 							<img
 								src={item.image}
 								alt={item.name}
 								className="w-full h-48 object-cover rounded-md"
 							/>
 						) : (
-							<div className="w-full h-48 bg-slate-300 rounded-md"></div>
-						)}
+							)} */}
+						<div className="w-full h-48 bg-slate-300 rounded-md"></div>
 						<h2 className="text-xl font-semibold">{item.name}</h2>
 						<p className="text-sm">
 							{item?.description}

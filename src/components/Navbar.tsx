@@ -15,7 +15,7 @@ import isWorkflowOwnedByUser from '../utils/isWorkflowOwnedByUser';
 const NavBar = () => {
 	const navigation = [
 		{ name: 'Builder', href: '/' },
-		{ name: 'Gallery', href: '/gallery' },
+		{ name: 'Gallery', href: '/gallery/' },
 	];
 	const [location] = useLocation();
 	const [, params] = useRoute('/app/:user_id/:id');
@@ -100,7 +100,7 @@ const NavBar = () => {
 				<div>
 					{isLocationApp() && (
 						<div className="text-slate-800 flex gap-2 items-center">
-							{session && currentWorkflow ? (
+							{currentWorkflow ? (
 								<EditableText
 									currentWorkflow={currentWorkflow}
 									setCurrentWorkflow={setCurrentWorkflow}
@@ -135,7 +135,7 @@ const NavBar = () => {
 									user_id: session.user.id,
 								});
 							} else {
-								window.open('/auth', '_self');
+								window.open('/auth/', '_self');
 							}
 						}}
 					>

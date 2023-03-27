@@ -104,6 +104,7 @@ export default function App() {
 	);
 
 	useEffect(() => {
+		console.log('params', params);
 		(async () => {
 			if (!session) {
 				setTimeout(() => {

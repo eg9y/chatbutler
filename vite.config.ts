@@ -1,13 +1,10 @@
 import react from '@vitejs/plugin-react-swc';
-import { resolve } from 'path';
 import { defineConfig } from 'vite';
 import eslint from 'vite-plugin-eslint';
+import Pages from 'vite-plugin-pages';
 import svgr from 'vite-plugin-svgr';
 import { tscPlugin } from 'vite-plugin-tsc-watch';
 import vercel from 'vite-plugin-vercel';
-
-const root = resolve(__dirname, 'src/pages/');
-const outDir = resolve(__dirname, 'dist');
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -24,17 +21,12 @@ export default defineConfig({
 			...tscPlugin(),
 			enforce: 'post',
 		},
+		Pages({
+			dirs: [
+				{ dir: 'src/pages/app', baseRoute: '' },
+				{ dir: 'src/pages/gallery', baseRoute: 'gallery' },
+				{ dir: 'src/pages/auth', baseRoute: 'auth' },
+			],
+		}),
 	],
-	root,
-	build: {
-		outDir,
-		emptyOutDir: true,
-		rollupOptions: {
-			input: {
-				main: resolve(root, 'index.html'),
-				gallery: resolve(root, 'gallery', 'index.html'),
-				auth: resolve(root, 'auth', 'index.html'),
-			},
-		},
-	},
 });

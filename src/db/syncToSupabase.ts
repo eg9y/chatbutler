@@ -1,6 +1,6 @@
 import { DefaultParams } from 'wouter';
 
-import supabase from '../auth/supabaseClient';
+import supabase from './supabaseClient';
 import { RFState } from '../store/useStore';
 import isWorkflowOwnedByUser from '../utils/isWorkflowOwnedByUser';
 
@@ -48,13 +48,6 @@ const syncDataToSupabase = async (
 		}
 		if (insertionError) {
 			console.error('Error inserting data to Supabase:', insertionError);
-			console.log({
-				id: currentWorkflow.id,
-				edges: JSON.parse(JSON.stringify(edges)),
-				nodes: JSON.parse(JSON.stringify(nodes)),
-				name: currentWorkflow.name,
-				user_id: session.user.id,
-			});
 		}
 	}
 };

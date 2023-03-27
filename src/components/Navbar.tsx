@@ -36,10 +36,6 @@ const NavBar = () => {
 
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-	function isLocationApp() {
-		return location.startsWith('/app') || location === '/';
-	}
-
 	return (
 		<header
 			style={{
@@ -63,7 +59,7 @@ const NavBar = () => {
 										`text-sm font-semibold leading-6 text-blue-900 cursor-pointer`,
 									)}
 									onClick={async () => {
-										if (isLocationApp() && currentWorkflow) {
+										if (location === '/' && currentWorkflow) {
 											// save current workflow without blocking
 											syncDataToSupabase(
 												nodes,
@@ -99,7 +95,7 @@ const NavBar = () => {
 					</div>
 				</div>
 				<div>
-					{isLocationApp() && (
+					{location === '/' && (
 						<div className="text-slate-800 flex gap-2 items-center">
 							{currentWorkflow ? (
 								<EditableText

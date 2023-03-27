@@ -21,7 +21,7 @@ const EditableText = ({
 	const [acceptableText, setAcceptableText] = useState(
 		currentWorkflow ? currentWorkflow.name : '',
 	);
-	const [, params] = useRoute('/:user_id/:id');
+	const [, params] = useRoute('/app/:user_id/:id');
 
 	const handleTextClick = () => {
 		if (!isWorkflowOwnedByUser(session, params)) {

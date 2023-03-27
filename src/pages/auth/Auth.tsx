@@ -4,9 +4,8 @@ import { nanoid } from 'nanoid';
 import { useEffect } from 'react';
 import { shallow } from 'zustand/shallow';
 
-import supabase from '../../db/supabaseClient';
+import supabase from '../../auth/supabaseClient';
 import useStore, { selector } from '../../store/useStore';
-import Layout from '../Layout';
 
 export default function AuthPage() {
 	const { setSession, nodes, setCurrentWorkflow } = useStore(selector, shallow);
@@ -33,7 +32,7 @@ export default function AuthPage() {
 		};
 	}, [nodes.length, setCurrentWorkflow, setSession]);
 	return (
-		<Layout>
+		<>
 			<div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
 				<div className="sm:mx-auto sm:w-full sm:max-w-md">
 					<h1 className="mx-auto h-12 w-auto text-5xl text-center">Promptsandbox.io</h1>
@@ -59,6 +58,6 @@ export default function AuthPage() {
 					/>
 				</div>
 			</div>
-		</Layout>
+		</>
 	);
 }

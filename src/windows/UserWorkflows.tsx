@@ -5,8 +5,8 @@ import { Fragment, useState } from 'react';
 import { shallow } from 'zustand/shallow';
 
 import { ReactComponent as Loading } from '../assets/loading.svg';
+import supabase from '../auth/supabaseClient';
 import selectWorkflow from '../db/selectWorkflow';
-import supabase from '../db/supabaseClient';
 import useStore, { RFState, selector } from '../store/useStore';
 
 export default function UserWorkflows({

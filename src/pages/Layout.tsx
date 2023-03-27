@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { shallow } from 'zustand/shallow';
 
+import supabase from '../auth/supabaseClient';
 import NavBar from '../components/Navbar';
-import supabase from '../db/supabaseClient';
 import useStore, { selector } from '../store/useStore';
 
 function Layout({ children }: { children: React.ReactNode }) {

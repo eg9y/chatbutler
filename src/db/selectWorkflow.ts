@@ -1,6 +1,6 @@
 import { Edge } from 'reactflow';
 
-import supabase from './supabaseClient';
+import supabase from '../auth/supabaseClient';
 import { Inputs } from '../nodes/types/Input';
 import { CustomNode } from '../nodes/types/NodeTypes';
 import { RFState } from '../store/useStore';

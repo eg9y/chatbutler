@@ -20,7 +20,7 @@ const InputNodesList = ({
 	const { getNodes } = useStore(selector, shallow);
 	const inputNodes = getNodes(data.inputs.inputs);
 	return (
-		<div className="flex gap-2 flex-wrap">
+		<div className="flex gap-2 flex-wrap  text-2xl">
 			{inputNodes
 				.filter((inputNode) => {
 					if (

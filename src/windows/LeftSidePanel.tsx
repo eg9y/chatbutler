@@ -156,7 +156,7 @@ export default function LeftSidePanel({
 					<div>
 						<div className="bg-slate-200 flex justify-between">
 							<p className="text-start text-slate-900 font-semibold text-md pr-2 pl-4 py-1">
-								Add Nodes
+								GPT
 							</p>
 						</div>
 						<div className="flex flex-col gap-1 px-2 py-2">
@@ -180,7 +180,22 @@ export default function LeftSidePanel({
 									/>
 								</div>
 							</div>
-
+							<NodeType
+								name="Complete API"
+								nodeType={NodeTypesEnum.llmPrompt}
+								handleDrag={handleDrag}
+								addNodeToCenter={addNodeToCenter}
+								Icon={DocumentTextIcon}
+							/>
+						</div>
+					</div>
+					<div>
+						<div className="bg-slate-200 flex justify-between">
+							<p className="text-start text-slate-900 font-semibold text-md pr-2 pl-4 py-1">
+								Helper
+							</p>
+						</div>
+						<div className="flex flex-col gap-1 px-2 py-2">
 							<NodeType
 								name="Text"
 								nodeType={NodeTypesEnum.textInput}
@@ -189,14 +204,30 @@ export default function LeftSidePanel({
 								Icon={Bars3CenterLeftIcon}
 							/>
 							<NodeType
-								name="Complete API"
-								nodeType={NodeTypesEnum.llmPrompt}
+								name="Classify"
+								nodeType={NodeTypesEnum.classify}
 								handleDrag={handleDrag}
 								addNodeToCenter={addNodeToCenter}
-								Icon={DocumentTextIcon}
+								Icon={ShareIcon}
+							/>
+						</div>
+					</div>
+					<div>
+						<div className="bg-slate-200 flex justify-between">
+							<p className="text-start text-slate-900 font-semibold text-md pr-2 pl-4 py-1">
+								File
+							</p>
+						</div>
+						<div className="flex flex-col gap-1 px-2 py-2">
+							<NodeType
+								name="File"
+								nodeType={NodeTypesEnum.classify}
+								handleDrag={handleDrag}
+								addNodeToCenter={addNodeToCenter}
+								Icon={ShareIcon}
 							/>
 							<NodeType
-								name="Classify"
+								name="File Search"
 								nodeType={NodeTypesEnum.classify}
 								handleDrag={handleDrag}
 								addNodeToCenter={addNodeToCenter}

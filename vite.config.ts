@@ -3,6 +3,7 @@ import { resolve } from 'path';
 import { defineConfig } from 'vite';
 import eslint from 'vite-plugin-eslint';
 import svgr from 'vite-plugin-svgr';
+import topLevelAwait from 'vite-plugin-top-level-await';
 import { tscPlugin } from 'vite-plugin-tsc-watch';
 import vercel from 'vite-plugin-vercel';
 
@@ -15,6 +16,7 @@ export default defineConfig({
 		eslint({
 			fix: true,
 		}),
+		topLevelAwait(),
 		react(),
 		svgr({
 			esbuildOptions: { loader: 'tsx' },
@@ -25,6 +27,7 @@ export default defineConfig({
 			enforce: 'post',
 		},
 	],
+
 	root,
 	build: {
 		outDir,
@@ -32,6 +35,7 @@ export default defineConfig({
 		rollupOptions: {
 			input: {
 				main: resolve(root, 'index.html'),
+				files: resolve(root, 'files', 'index.html'),
 				gallery: resolve(root, 'gallery', 'index.html'),
 				auth: resolve(root, 'auth', 'index.html'),
 			},

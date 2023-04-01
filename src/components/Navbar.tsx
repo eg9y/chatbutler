@@ -16,6 +16,7 @@ import { useQueryParams } from '../utils/useQueryParams';
 const NavBar = () => {
 	const navigation = [
 		{ name: 'Sandbox', href: '/' },
+		{ name: 'Files', href: '/files/' },
 		{ name: 'Gallery', href: '/gallery/' },
 	];
 	const [location] = useLocation();

@@ -48,7 +48,7 @@ const syncDataToSupabase = async (
 		}
 		if (insertionError) {
 			console.error('Error inserting data to Supabase:', insertionError);
-			console.log({
+			console.error({
 				id: currentWorkflow.id,
 				edges: JSON.parse(JSON.stringify(edges)),
 				nodes: JSON.parse(JSON.stringify(nodes)),

@@ -26,7 +26,7 @@ const ChatPrompt: FC<NodeProps<ChatPromptNodeDataType>> = (props) => {
 					width: '35rem',
 				}}
 				className={` bg-slate-100 shadow-lg border-2  ${
-					selected ? 'border-indigo-600' : 'border-slate-300'
+					selected ? 'border-indigo-600' : 'border-slate-400'
 				} flex flex-col `}
 			>
 				{RunnableToolbarTemplate(data, selected, updateNode, id)}
@@ -94,10 +94,12 @@ const ChatPrompt: FC<NodeProps<ChatPromptNodeDataType>> = (props) => {
 				style={{
 					left: '-4.5rem',
 				}}
-				className="top-1/2 h-7 bg-slate-50 flex gap-1 border-1 border-slate-700"
+				className="top-1/2 h-10 bg-slate-50 flex gap-1 border-1 border-slate-700"
 			>
 				<div className=" bg-purple-300 w-5 h-full pointer-events-none"></div>
-				<p className="text-xl font-bold self-center -z-10 pointer-events-none p-1">Chat</p>
+				<p className="bg-transparent  border-slate-700 text-xl font-bold self-center -z-10 pointer-events-none p-1">
+					Chat
+				</p>
 			</Handle>
 
 			<Handle type="source" position={Position.Right} id="chat-prompt" className="w-4 h-4" />

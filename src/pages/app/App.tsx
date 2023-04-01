@@ -332,7 +332,7 @@ export default function App() {
 							size={2}
 							color={'#8E8E8E'}
 						/>
-						<Panel position="top-center">
+						<Panel position="top-right" className="z-12">
 							<Notification />
 						</Panel>
 						<Panel

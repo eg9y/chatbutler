@@ -6,6 +6,7 @@ import { shallow } from 'zustand/shallow';
 import FullScreenEditor from '../../components/FullScreenEditor';
 import ShowPromptSwitch from '../../components/ShowPromptSwitch';
 import useStore, { selector } from '../../store/useStore';
+import { conditionalClassNames } from '../../utils/classNames';
 import { handleChange } from '../../utils/handleFormChange';
 import { DefaultNodeDataType } from '../types/NodeTypes';
 
@@ -45,9 +46,9 @@ const TextAreaTemplate: FC<
 	const { updateNode } = useStore(selector, shallow);
 	// TODO: Fullscreen button to edit prompts with a larger display
 	return (
-		<div className="flex flex-col h-full">
+		<div className={conditionalClassNames('flex flex-col h-full')}>
 			<div
-				className={`p-4 flex justify-between items-center border-b-1 border-slate-400 text-2xl ${bgColor}`}
+				className={`p-4 flex justify-between items-center border-b-1 border-slate-400 text-4xl ${bgColor}`}
 			>
 				<div className="flex gap-2 items-center">
 					<h1 className="text-start">
@@ -86,7 +87,9 @@ const TextAreaTemplate: FC<
 						<label htmlFor="text" className="block font-medium leading-6 text-2xl">
 							{fieldName}:
 						</label>
-						<p className="truncate text-start flex-grow">{!show && presentText}</p>
+						<p className="truncate text-start text-xl flex-grow">
+							{!show && presentText}
+						</p>
 					</>
 				)}
 				<ArrowsPointingOutIcon
@@ -139,13 +142,12 @@ const Content: FC<{
 	id: string;
 	updateNode: any;
 	children: React.ReactNode;
-}> = ({ presentText, setText, data, id, updateNode, showPrompt, children }) => {
+}> = ({ presentText, setText, data, id, updateNode, children }) => {
 	return (
 		<div
 			style={{
-				height: showPrompt ? '35rem' : '0rem',
+				height: '35rem',
 			}}
-			className="h-full text-xl"
 		>
 			{/* list of data.inputs string Set */}
 			<div className="h-full flex flex-col gap-1 px-4 pb-4 text-slate-900">
@@ -153,7 +155,7 @@ const Content: FC<{
 					rows={4}
 					name="text"
 					id={`text-${id}`}
-					className="nowheel nodrag text-xl flex-grow w-full rounded-md border-0 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-1 focus:ring-inset focus:ring-slate-400 sm:leading-6"
+					className="nowheel nodrag text-2xl flex-grow w-full rounded-md border-0 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-1 focus:ring-inset focus:ring-slate-400 sm:leading-10"
 					value={presentText}
 					onFocus={(e) => {
 						e.target.selectionStart = 0;

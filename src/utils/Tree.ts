@@ -90,7 +90,7 @@ export async function traverseTree(
 			);
 			await runNode(node, get, set);
 		} catch (error: any) {
-			throw new Error('Error running node', error);
+			throw new Error('Error running node', error.message);
 		}
 
 		if (node.data.isBreakpoint) {

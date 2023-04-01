@@ -21,14 +21,11 @@ const ChatMessage: FC<NodeProps<ChatMessageNodeDataType>> = (props) => {
 	const { present: presentText } = textState;
 	const [showFullScreen, setShowFullScreen] = useState(false);
 
-	const [showPrompt, setshowPrompt] = useState(true);
+	const [showPrompt, setshowPrompt] = useState(false);
 
 	return (
 		<div className="">
 			<div
-				style={{
-					width: '35rem',
-				}}
 				className={`m-3 bg-slate-100 shadow-lg border-2  ${
 					selected ? 'border-purple-600' : 'border-slate-400'
 				} flex flex-col relative shadow-lg `}
@@ -36,8 +33,8 @@ const ChatMessage: FC<NodeProps<ChatMessageNodeDataType>> = (props) => {
 				{/* how to spread  */}
 				<TextAreaTemplate
 					{...props}
-					title="Chat Message"
-					fieldName="Chat Message"
+					title="Msg"
+					fieldName="Msg"
 					bgColor="bg-purple-200"
 					show={showPrompt}
 					setShow={setshowPrompt}

@@ -2,10 +2,11 @@ import { ChevronDoubleRightIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
 import { shallow } from 'zustand/shallow';
 
-import useStore, { selector } from '../store/useStore';
+import { useStore, useStoreSecret, selector, selectorSecret } from '../store';
 
 export default function RunFromStart() {
 	const { setUiErrorMessage, traverseTree, clearAllNodeResponses } = useStore(selector, shallow);
+	const { openAiKey } = useStoreSecret(selectorSecret, shallow);
 
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -13,7 +14,7 @@ export default function RunFromStart() {
 		setIsLoading(true);
 		try {
 			clearAllNodeResponses();
-			await traverseTree();
+			await traverseTree(openAiKey);
 
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} catch (error: any) {

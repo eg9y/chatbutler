@@ -47,7 +47,7 @@ export class SupabaseVectorStore extends VectorStore {
 		const rows = vectors.map((embedding, idx) => ({
 			content: documents[idx].pageContent,
 			embedding,
-			metadata: documents[idx].metadata,
+			documnt_id: documents[idx].metadata.documentId,
 		}));
 
 		// upsert returns 500/502/504 (yes really any of them) if given too many rows/characters

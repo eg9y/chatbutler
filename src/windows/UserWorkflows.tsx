@@ -7,7 +7,8 @@ import { shallow } from 'zustand/shallow';
 import { ReactComponent as Loading } from '../assets/loading.svg';
 import useSupabase from '../auth/supabaseClient';
 import selectWorkflow from '../db/selectWorkflow';
-import useStore, { RFState, selector } from '../store/useStore';
+import { useStore, useStoreSecret, selectorSecret, selector } from '../store';
+import { RFState } from '../store/useStore';
 
 export default function UserWorkflows({
 	currentWorkflow,
@@ -24,10 +25,11 @@ export default function UserWorkflows({
 	setOpen: (open: boolean) => void;
 	reactFlowInstance: RFState['reactFlowInstance'];
 }) {
-	const { setUiErrorMessage, workflows, setNodes, setEdges, nodes, edges, session } = useStore(
+	const { setUiErrorMessage, workflows, setNodes, setEdges, nodes, edges } = useStore(
 		selector,
 		shallow,
 	);
+	const { session } = useStoreSecret(selectorSecret, shallow);
 
 	const supabase = useSupabase();
 

@@ -1,6 +1,8 @@
-import 'https://deno.land/x/xhr@0.1.0/mod.ts';
+// Follow this setup guide to integrate the Deno language server with your editor:
+// https://deno.land/manual/getting_started/setup_your_environment
+// This enables autocomplete, go to definition, etc.
+
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
-import { Configuration, OpenAIApi } from 'https://esm.sh/openai@3.2.1';
 
 import { corsHeaders } from '../_shared/cors.ts';
 import { hexToString } from '../_shared/hex.ts';
@@ -13,24 +15,30 @@ serve(async (req) => {
 	}
 
 	const supabase = supabaseClient(req);
-	// Now we can get the session or user object
 	const {
 		data: { user },
 	} = await supabase.auth.getUser();
 
+	if (!user) {
+		return new Response('Not authorized', {
+			status: 401,
+			headers: {
+				'content-type': 'application/json',
+			},
+		});
+	}
+
 	// call supabase function
 	const { data, error } = await supabase.rpc('get_open_ai_key', {
-		p_user_id: user?.id ?? '',
+		p_user_id: user.id,
 		p_secret_key: Deno.env.get('PGSODIUM_SECRET_KEY') ?? '',
 	});
 
 	if (error) {
-		console.error(error);
-	}
-	if (!data) {
-		return new Response('You have not set your OpenAI Key', {
-			status: 200,
+		return new Response(JSON.stringify(error), {
+			status: 500,
 			headers: {
+				...corsHeaders,
 				'content-type': 'application/json',
 			},
 		});
@@ -38,33 +46,8 @@ serve(async (req) => {
 
 	const openAiApiKey = hexToString(data[0].open_ai_key);
 
-	const { texts } = await req.json();
-
-	const clientConfig = new Configuration({
-		apiKey: openAiApiKey,
-	});
-	const client = new OpenAIApi(clientConfig);
-
-	const embeddings: number[][] = [];
-
-	const response = await client.createEmbedding({
-		model: 'text-embedding-ada-002',
-		input: texts,
-	});
-
-	if (!response) {
-		throw new Error('No response from OpenAI');
-	}
-	for (let j = 0; j < texts.length; j += 1) {
-		embeddings.push(response.data.data[j].embedding);
-	}
-
-	return new Response(JSON.stringify(embeddings), {
-		status: 200,
-		headers: {
-			...corsHeaders,
-			'content-type': 'application/json',
-		},
+	return new Response(JSON.stringify(openAiApiKey), {
+		headers: { 'content-type': 'application/json' },
 	});
 });
 

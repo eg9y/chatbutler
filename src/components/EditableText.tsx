@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { shallow } from 'zustand/shallow';
 
 import useStore, { RFState, selector } from '../store/useStore';
+import { RFStateSecret } from '../store/useStoreSecret';
 import isWorkflowOwnedByUser from '../utils/isWorkflowOwnedByUser';
 import { useQueryParams } from '../utils/useQueryParams';
 
@@ -14,7 +15,7 @@ const EditableText = ({
 	currentWorkflow: RFState['currentWorkflow'];
 	setCurrentWorkflow: RFState['setCurrentWorkflow'];
 	setWorkflows: RFState['setWorkflows'];
-	session: RFState['session'];
+	session: RFStateSecret['session'];
 }) => {
 	const { workflows, setUiErrorMessage } = useStore(selector, shallow);
 	const [isEditing, setIsEditing] = useState(false);

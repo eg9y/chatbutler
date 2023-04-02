@@ -3,6 +3,7 @@ import { DefaultParams } from 'wouter';
 
 import { Database } from '../schema';
 import { RFState } from '../store/useStore';
+import { RFStateSecret } from '../store/useStoreSecret';
 import isWorkflowOwnedByUser from '../utils/isWorkflowOwnedByUser';
 
 const syncDataToSupabase = async (
@@ -11,7 +12,7 @@ const syncDataToSupabase = async (
 	currentWorkflow: RFState['currentWorkflow'],
 	workflows: RFState['workflows'],
 	setWorkflows: RFState['setWorkflows'],
-	session: RFState['session'],
+	session: RFStateSecret['session'],
 	params: DefaultParams | null,
 	supabase: SupabaseClient<Database>,
 ) => {

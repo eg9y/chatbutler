@@ -5,10 +5,10 @@ import { useEffect } from 'react';
 import { shallow } from 'zustand/shallow';
 
 import useSupabase from '../../auth/supabaseClient';
-import useStore, { selector } from '../../store/useStore';
+import { useStore, selector } from '../../store';
 
 export default function AuthPage() {
-	const { setSession, nodes, setCurrentWorkflow } = useStore(selector, shallow);
+	const { nodes, setCurrentWorkflow } = useStore(selector, shallow);
 
 	const supabase = useSupabase();
 
@@ -23,7 +23,6 @@ export default function AuthPage() {
 						user_id: session?.user.id,
 					});
 				}
-				setSession(session);
 				window.open('/', '_self');
 			}
 		});
@@ -32,7 +31,7 @@ export default function AuthPage() {
 		return () => {
 			authListener.subscription.unsubscribe();
 		};
-	}, [nodes.length, setCurrentWorkflow, setSession, supabase]);
+	}, [nodes.length, setCurrentWorkflow, supabase]);
 	return (
 		<>
 			<div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">

@@ -53,11 +53,6 @@ export class OpenAIEmbeddings extends Embeddings implements ModelParams {
 	) {
 		super(fields ?? {});
 
-		const apiKey = fields?.openAIApiKey ?? process.env.OPENAI_API_KEY;
-		if (!apiKey) {
-			throw new Error('OpenAI API key not found');
-		}
-
 		this.modelName = fields?.modelName ?? this.modelName;
 		this.batchSize = fields?.batchSize ?? this.batchSize;
 		this.stripNewLines = fields?.stripNewLines ?? this.stripNewLines;

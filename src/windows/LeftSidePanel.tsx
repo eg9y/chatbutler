@@ -9,6 +9,7 @@ import {
 	MagnifyingGlassIcon,
 	ArrowRightOnRectangleIcon,
 } from '@heroicons/react/20/solid';
+import { SupabaseClient } from '@supabase/supabase-js';
 import { FC, useState } from 'react';
 import { ReactFlowInstance } from 'reactflow';
 import { shallow } from 'zustand/shallow';
@@ -16,13 +17,16 @@ import { shallow } from 'zustand/shallow';
 const rightAngleSvg = new URL('../assets/right-angle.svg', import.meta.url).href;
 import UserWorkflows from './UserWorkflows';
 import { NodeTypesEnum } from '../nodes/types/NodeTypes';
-import useStore, { RFState, selector } from '../store/useStore';
+import { Database } from '../schema';
+import { useStore, useStoreSecret, selector, selectorSecret } from '../store';
+import { RFStateSecret } from '../store/useStoreSecret';
 import { conditionalClassNames } from '../utils/classNames';
 
 export default function LeftSidePanel({
 	onAdd,
 	reactFlowWrapper,
 	reactFlowInstance,
+	supabase,
 }: {
 	onAdd: (
 		type: NodeTypesEnum,
@@ -33,15 +37,13 @@ export default function LeftSidePanel({
 	) => void;
 	reactFlowWrapper: React.MutableRefObject<HTMLDivElement | null>;
 	reactFlowInstance: ReactFlowInstance<any, any> | null;
+	supabase: SupabaseClient<Database>;
 }) {
-	const {
-		session,
-		setOpenAiKey,
-		setUiErrorMessage,
-		setWorkflows,
-		currentWorkflow,
-		setCurrentWorkflow,
-	} = useStore(selector, shallow);
+	const { setUiErrorMessage, setWorkflows, currentWorkflow, setCurrentWorkflow } = useStore(
+		selector,
+		shallow,
+	);
+	const { session, openAiKey, setOpenAiKey } = useStoreSecret(selectorSecret, shallow);
 	const [dragging, setDragging] = useState(false);
 
 	const [openWorkflows, setOpenWorkflows] = useState(!currentWorkflow);
@@ -129,9 +131,9 @@ export default function LeftSidePanel({
 								className="group flex items-center px-3 py-2 text-sm font-medium text-slate-700 
 								bg-slate-300 hover:text-slate-900 hover:font-bold cursor-pointer "
 								onClick={async () => {
-									const currentKey = localStorage.getItem('openAIKey') || '';
+									const currentKey = openAiKey || '';
 									const newOpenAIKey = window.prompt(
-										"Enter your OpenAI Key here (It'll be saved in your browser)",
+										'Enter your OpenAI Key here',
 										currentKey,
 									);
 
@@ -141,8 +143,16 @@ export default function LeftSidePanel({
 
 									if (newOpenAIKey === '') {
 										console.log('No key entered');
+									} else {
+										if (session) {
+											await supabase.functions.invoke('insert-api-key', {
+												body: {
+													api_key: newOpenAIKey,
+												},
+											});
+										}
+										setOpenAiKey(newOpenAIKey);
 									}
-									setOpenAiKey(newOpenAIKey);
 								}}
 							>
 								<Cog6ToothIcon
@@ -251,7 +261,7 @@ const NodeType: FC<{
 	nodeType: NodeTypesEnum;
 	handleDrag: (e: React.DragEvent<HTMLDivElement>) => void;
 	addNodeToCenter: (type: NodeTypesEnum) => void;
-	session?: RFState['session'];
+	session?: RFStateSecret['session'];
 	needAuth?: boolean;
 	Icon: React.ForwardRefExoticComponent<
 		React.SVGProps<SVGSVGElement> & {

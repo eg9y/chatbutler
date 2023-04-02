@@ -1,4 +1,3 @@
-import { Session } from '@supabase/supabase-js';
 import {
 	Connection,
 	Edge,
@@ -25,7 +24,7 @@ import onEdgesDelete from './onEdgesDelete';
 import onPlaceholderAdd from './onPlaceholderAdd';
 import storage from './storage';
 import updateNode from './updateNode';
-import { SimpleWorkflow } from '../db/dbTypes';
+import { DocumentDbSchema, SimpleWorkflow } from '../db/dbTypes';
 import {
 	CustomNode,
 	InputNode,
@@ -33,7 +32,6 @@ import {
 	NodeTypesEnum,
 	TextInputNodeDataType,
 } from '../nodes/types/NodeTypes';
-import { Database } from '../schema';
 import { runNode, traverseTree } from '../utils/Tree';
 
 export type UseStoreSetType = (
@@ -42,10 +40,8 @@ export type UseStoreSetType = (
 ) => void;
 
 export interface RFState {
-	session: Session | null;
-	setSession: (session: Session | null) => void;
-	documents: Database['public']['Tables']['documents']['Row'][];
-	setDocuments: (documents: Database['public']['Tables']['documents']['Row'][]) => void;
+	documents: DocumentDbSchema[];
+	setDocuments: (documents: DocumentDbSchema[]) => void;
 	workflows: {
 		id: string;
 		name: string;
@@ -59,8 +55,6 @@ export interface RFState {
 	unlockGraph: boolean;
 	clearGraph: () => void;
 	setUiErrorMessage: (message: string | null) => void;
-	openAIApiKey: string | null;
-	setOpenAiKey: (key: string | null) => void;
 	nodes: CustomNode[];
 	edges: Edge[];
 	setNodes: (nodes: CustomNode[]) => void;
@@ -86,8 +80,8 @@ export interface RFState {
 	// TODO: type this
 	updateNode: any;
 	updateInputExample: any;
-	traverseTree: () => void;
-	runNode: (node: CustomNode) => void;
+	traverseTree: (openAiKey: string) => void;
+	runNode: (node: CustomNode, openAiKey: string) => void;
 	clearAllNodeResponses: () => void;
 }
 
@@ -95,14 +89,8 @@ export interface RFState {
 const useStore = create<RFState>()(
 	persist(
 		(set, get) => ({
-			session: null,
-			setSession: (session: Session | null) => {
-				set({
-					session,
-				});
-			},
 			documents: [],
-			setDocuments: (documents: Database['public']['Tables']['documents']['Row'][]) => {
+			setDocuments: (documents: DocumentDbSchema[]) => {
 				set({
 					documents,
 				});
@@ -156,19 +144,6 @@ const useStore = create<RFState>()(
 				set({
 					uiErrorMessage: message,
 				});
-			},
-			setOpenAiKey: (key: string | null) => {
-				if (key) {
-					window.localStorage.setItem('openAIKey', key);
-					set({
-						openAIApiKey: key,
-					});
-				} else {
-					window.localStorage.removeItem('openAIKey');
-					set({
-						openAIApiKey: key,
-					});
-				}
 			},
 			onNodeDragStop: (_: React.MouseEvent<Element, MouseEvent>, node: CustomNode) => {
 				set({
@@ -253,11 +228,11 @@ const useStore = create<RFState>()(
 					selectedNode,
 				});
 			},
-			traverseTree: () => {
-				traverseTree(get, set);
+			traverseTree: (openAiKey: string) => {
+				traverseTree(get, set, openAiKey);
 			},
-			runNode: (node: CustomNode) => {
-				runNode(node, get, set);
+			runNode: (node: CustomNode, openAiKey: string) => {
+				runNode(node, get, set, openAiKey);
 			},
 			clearAllNodeResponses: () => {
 				const nodes = get().nodes;

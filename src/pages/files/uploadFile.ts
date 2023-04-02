@@ -12,7 +12,6 @@ const handleFileUpload = async (
 		if (!user.data.user) {
 			throw new Error('user not logged in');
 		}
-		console.log(user.data.user);
 		const documentUrl = `${user.data.user.id}/${file.name}`;
 		const { data: fileUpload, error: fileUploadError } = await supabase.storage
 			.from('documents')

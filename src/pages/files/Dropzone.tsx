@@ -4,7 +4,8 @@ import { shallow } from 'zustand/shallow';
 import uploadFile from './uploadFile';
 import { ReactComponent as Loading } from '../../assets/loading.svg';
 import useSupabase from '../../auth/supabaseClient';
-import useStore, { RFState, selector } from '../../store/useStore';
+import { useStoreSecret, selectorSecret } from '../../store';
+import { RFState } from '../../store/useStore';
 
 type DropZoneProps = {
 	documents: RFState['documents'];
@@ -14,7 +15,7 @@ type DropZoneProps = {
 const Dropzone: React.FC<DropZoneProps> = ({ documents, setDocuments }) => {
 	const dropzoneRef = useRef<HTMLDivElement>(null);
 	const [uploadProgress, setUploadProgress] = useState<number | null>(null);
-	const { session } = useStore(selector, shallow);
+	const { session } = useStoreSecret(selectorSecret, shallow);
 	const supabase = useSupabase();
 
 	const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {

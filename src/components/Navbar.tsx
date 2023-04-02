@@ -8,7 +8,7 @@ import { shallow } from 'zustand/shallow';
 import EditableText from './EditableText';
 import useSupabase from '../auth/supabaseClient';
 import syncDataToSupabase from '../db/syncToSupabase';
-import useStore, { selector } from '../store/useStore';
+import { useStore, useStoreSecret, selector, selectorSecret } from '../store';
 import { conditionalClassNames } from '../utils/classNames';
 import isWorkflowOwnedByUser from '../utils/isWorkflowOwnedByUser';
 import { useQueryParams } from '../utils/useQueryParams';
@@ -23,8 +23,6 @@ const NavBar = () => {
 	const params = useQueryParams();
 
 	const {
-		session,
-		setSession,
 		currentWorkflow,
 		setCurrentWorkflow,
 		clearGraph,
@@ -34,6 +32,7 @@ const NavBar = () => {
 		setWorkflows,
 		setUiErrorMessage,
 	} = useStore(selector, shallow);
+	const { session, setSession } = useStoreSecret(selectorSecret, shallow);
 
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 

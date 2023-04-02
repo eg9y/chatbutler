@@ -3,10 +3,10 @@ import { shallow } from 'zustand/shallow';
 
 import useSupabase from '../auth/supabaseClient';
 import NavBar from '../components/Navbar';
-import useStore, { selector } from '../store/useStore';
+import { useStoreSecret, selectorSecret } from '../store';
 
 function Layout({ children }: { children: React.ReactNode }) {
-	const { setSession } = useStore(selector, shallow);
+	const { setSession } = useStoreSecret(selectorSecret, shallow);
 	const supabase = useSupabase();
 
 	useEffect(() => {

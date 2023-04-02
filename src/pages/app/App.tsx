@@ -32,7 +32,7 @@ import PlaceholderNode from '../../nodes/PlaceholderNode';
 import SearchNode from '../../nodes/SearchNode';
 import TextInputNode from '../../nodes/TextInputNode';
 import { NodeTypesEnum } from '../../nodes/types/NodeTypes';
-import useStore, { selector } from '../../store/useStore';
+import { useStore, useStoreSecret, selector, selectorSecret } from '../../store';
 import isWorkflowOwnedByUser from '../../utils/isWorkflowOwnedByUser';
 import { useDebouncedEffect } from '../../utils/useDebouncedEffect';
 import { useQueryParams } from '../../utils/useQueryParams';
@@ -59,7 +59,6 @@ export default function App() {
 	const params = useQueryParams();
 
 	const {
-		session,
 		setDocuments,
 		nodes,
 		edges,
@@ -80,6 +79,7 @@ export default function App() {
 		workflows,
 		setWorkflows,
 	} = useStore(selector, shallow);
+	const { session, setSession, setOpenAiKey } = useStoreSecret(selectorSecret, shallow);
 
 	const [settingsView, setSettingsView] = useState(true);
 	const [nodeView, setNodeView] = useState(true);
@@ -117,9 +117,21 @@ export default function App() {
 	useEffect(() => {
 		(async () => {
 			setIsLoading(true);
+			const sessionResponse = await supabase.auth.getSession();
+			const currentSession = sessionResponse.data.session;
+			setSession(currentSession);
 			setCurrentWorkflow(null);
-			await populateUserWorkflows(setWorkflows, setUiErrorMessage, session, supabase);
-			await populateUserDocuments(setDocuments, setUiErrorMessage, session, supabase);
+			await populateUserWorkflows(setWorkflows, setUiErrorMessage, currentSession, supabase);
+			await populateUserDocuments(setDocuments, setUiErrorMessage, currentSession, supabase);
+			if (currentSession?.user) {
+				const { data, error } = await supabase.functions.invoke('get-api-key');
+				if (error) {
+					setUiErrorMessage(error.message);
+				}
+				if (data) {
+					setOpenAiKey(data);
+				}
+			}
 			if (params && params.id) {
 				await selectWorkflow(
 					params.id,
@@ -252,6 +264,7 @@ export default function App() {
 						onAdd={onAdd}
 						reactFlowWrapper={reactFlowWrapper}
 						reactFlowInstance={reactFlowInstance}
+						supabase={supabase}
 					/>
 				)}
 				<div

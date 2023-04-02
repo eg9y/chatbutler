@@ -1,6 +1,7 @@
 import { Node } from 'reactflow';
 
 import { Inputs } from './Input';
+import { DocumentDbSchema } from '../../db/dbTypes';
 
 export type DefaultNodeDataType = {
 	name: string;
@@ -65,13 +66,12 @@ export type ClassifyNodeCategoriesDataType = {
 	}[];
 } & DefaultNodeDataType;
 
-export type FileTextDataType = {
-	fileName: string;
-} & DefaultNodeDataType;
+type DocumentDataType = {
+	document?: DocumentDbSchema;
+};
 
-export type SearchDataType = {
-	fileName: string;
-} & DefaultNodeDataType;
+export type FileTextDataType = DocumentDataType & DefaultNodeDataType;
+export type SearchDataType = DocumentDataType & DefaultNodeDataType;
 
 export enum NodeTypesEnum {
 	llmPrompt = 'llmPrompt',

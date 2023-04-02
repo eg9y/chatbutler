@@ -1,5 +1,9 @@
 import { Edge } from 'reactflow';
 
+import { createSupabaseClient } from '../auth/supabaseClient';
+import { OpenAIEmbeddings } from '../backgroundTasks/langChainBrowser/embeddings';
+import { SupabaseVectorStore } from '../backgroundTasks/langChainBrowser/vectorstores/supabase';
+import { processFile } from '../backgroundTasks/processFile';
 import {
 	ChatMessageNodeDataType,
 	ChatPromptNodeDataType,
@@ -8,6 +12,7 @@ import {
 	CustomNode,
 	LLMPromptNodeDataType,
 	NodeTypesEnum,
+	SearchDataType,
 } from '../nodes/types/NodeTypes';
 import {
 	ChatSequence,
@@ -16,6 +21,7 @@ import {
 	parsePromptInputs,
 } from '../openai/openai';
 import { RFState } from '../store/useStore';
+import { RFStateSecret } from '../store/useStoreSecret';
 
 function collectChatMessages(node: CustomNode, get: () => RFState): CustomNode[] {
 	const queue: CustomNode[] = [node];
@@ -50,6 +56,7 @@ function collectChatMessages(node: CustomNode, get: () => RFState): CustomNode[]
 export async function traverseTree(
 	get: () => RFState,
 	set: (state: Partial<RFState>) => void,
+	openAiKey: string,
 ): Promise<void> {
 	const visited = new Set<string>();
 	const skipped = new Set<string>();
@@ -88,7 +95,7 @@ export async function traverseTree(
 				skipped,
 				getSkippedExclusiveChildren,
 			);
-			await runNode(node, get, set);
+			await runNode(node, get, set, openAiKey);
 		} catch (error: any) {
 			throw new Error('Error running node', error.message);
 		}
@@ -125,6 +132,7 @@ export async function runNode(
 	node: CustomNode,
 	get: () => RFState,
 	set: (state: Partial<RFState>) => void,
+	openAiKey: string,
 ) {
 	if (
 		node.type === NodeTypesEnum.llmPrompt ||
@@ -143,7 +151,7 @@ export async function runNode(
 		const inputs = node.data.inputs;
 		if (inputs) {
 			const response = await getOpenAIResponse(
-				get().openAIApiKey,
+				openAiKey,
 				node.data as LLMPromptNodeDataType,
 				get().getNodes(inputs.inputs),
 			);
@@ -169,6 +177,77 @@ export async function runNode(
 			}
 		}
 	} else if (node.type === NodeTypesEnum.search) {
+		try {
+			const document = (node.data as SearchDataType)?.document;
+			if (!document) {
+				throw new Error('Document is not defined');
+			}
+			const document_url = document.document_url;
+			const supabase = createSupabaseClient();
+			const { data: isDocumentProcessed, error: isDocumentProcessedError } = await supabase
+				.from('document_contents')
+				.select('document_id')
+				.eq('document_id', document.id)
+				.limit(1);
+			if (isDocumentProcessedError) {
+				throw new Error('Error checking if document is processed');
+			}
+			if (isDocumentProcessed?.length === 0) {
+				// Document is not processed
+				// get document from store
+				const { data, error } = await supabase.storage
+					.from('documents')
+					.createSignedUrl(document_url, 60);
+
+				if (error) {
+					throw new Error('Error getting document from store');
+				}
+				if (!data) {
+					throw new Error('Error getting document from store');
+				}
+				const signedUrl = data.signedUrl;
+				// use fetch to get the document
+				const response = await fetch(signedUrl);
+				const documentContents = await response.text();
+				const chunkedUpDocuments = await processFile(documentContents, document.id);
+
+				if (!chunkedUpDocuments) {
+					throw new Error('Error processing file');
+				}
+
+				const vectorStore = await SupabaseVectorStore.fromTexts(
+					chunkedUpDocuments?.map((doc) => doc.pageContent),
+					chunkedUpDocuments?.map((doc) => doc.metadata),
+					new OpenAIEmbeddings(),
+					{
+						client: supabase,
+						tableName: 'document_contents',
+						queryName: 'match_document_contents',
+					},
+				);
+				const searchResults = await vectorStore.similaritySearch(node.data.text, 3);
+				console.log(searchResults);
+			} else {
+				console.log('placeholder');
+			}
+		} catch (error) {
+			console.log(error);
+		}
+
+		// TODO: search
+		/*
+			- fetch document from store where url is document_url
+			- check if document is already processed
+		    	- check document_contents for one row that has a column document_id equals to the document id
+			- if not processed:
+				- process document based on file type such that we get Document[]
+				- use SupabaseVector to index the document using the Document[]
+			- else if processed:
+				- get document contents from document_contents where document_id equals to the document id
+				- make sure final data is Document[]
+			- query by using SupababaseVector
+		*/
+
 		console.log('placeholder');
 	} else if (node.type === NodeTypesEnum.chatPrompt) {
 		const chatMessageNodes = collectChatMessages(node, get);
@@ -183,13 +262,13 @@ export async function runNode(
 				content: data.response,
 			};
 		});
-		const response = await getOpenAIChatResponse(
-			get().openAIApiKey,
-			node.data as ChatPromptNodeDataType,
-			chatSequence,
-		);
-		const completion = response.data.choices[0].message?.content;
-		// const completion = 'foo';
+		// const response = await getOpenAIChatResponse(
+		// 	get().openAIApiKey,
+		// 	node.data as ChatPromptNodeDataType,
+		// 	chatSequence,
+		// );
+		// const completion = response.data.choices[0].message?.content;
+		const completion = 'foo';
 		if (completion) {
 			node.data = {
 				...node.data,
@@ -220,11 +299,7 @@ export async function runNode(
 									\n${classifyData.textType}: ${parsedText}`,
 			},
 		] as ChatSequence;
-		const response = await getOpenAIChatResponse(
-			get().openAIApiKey,
-			classifyData,
-			chatSequence,
-		);
+		const response = await getOpenAIChatResponse(openAiKey, classifyData, chatSequence);
 		const completion = response.data.choices[0].message?.content;
 		// const completion = 'hackernews';
 		if (completion) {

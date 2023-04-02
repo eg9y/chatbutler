@@ -47,27 +47,29 @@ const Search: FC<NodeProps<SearchDataType>> = (props) => {
 									id="model"
 									name="fileId"
 									className="block w-full rounded-md border-0 py-1.5 text-slate-900 ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-2xl sm:leading-6"
-									value={data.fileName}
+									value={data.document?.id || ''}
 									onChange={async (e) => {
-										const selectedFile = e.target.selectedOptions[0].value;
-										const document = await db.DocumentMetadata.filter((doc) => {
-											return doc.name === selectedFile;
-										}).first();
+										const selectedDocumentId =
+											e.target.selectedOptions[0].value;
+										if (selectedDocumentId === '') return;
+										const selectedDocument = documents.find(
+											(document) =>
+												document.id === parseInt(selectedDocumentId),
+										);
 										updateNode(id, {
 											...data,
-											response: document?.content || '',
-											fileName: document?.name || '',
+											document: selectedDocument,
 										});
 									}}
 								>
 									{documents?.map((document) => (
-										<option key={document.id} value={document.name || ''}>
+										<option key={document.id} value={document.id || ''}>
 											{document.name}
 										</option>
 									))}
 								</select>
 							</div>
-							<p className="text-2xl">Search:</p>
+							<p className="text-2xl">Search Query:</p>
 							<TextAreaTemplate
 								{...props}
 								presentText={presentText}

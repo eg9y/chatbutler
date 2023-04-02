@@ -2,11 +2,12 @@ import { SupabaseClient } from '@supabase/supabase-js';
 
 import { Database } from '../schema';
 import { RFState } from '../store/useStore';
+import { RFStateSecret } from '../store/useStoreSecret';
 
 const populateUserDocuments = async (
 	setDocuments: RFState['setDocuments'],
 	setUiErrorMessage: RFState['setUiErrorMessage'],
-	session: RFState['session'],
+	session: RFStateSecret['session'],
 	supabase: SupabaseClient<Database>,
 ) => {
 	if (!session) {

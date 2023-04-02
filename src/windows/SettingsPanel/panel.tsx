@@ -34,6 +34,10 @@ export default function SettingsPanel() {
 			return 'Chat Message';
 		} else if (selectedNode.type === NodeTypesEnum.classify) {
 			return 'Classify';
+		} else if (selectedNode.type === NodeTypesEnum.fileText) {
+			return 'File Text';
+		} else if (selectedNode.type === NodeTypesEnum.search) {
+			return 'File Search';
 		} else {
 			return 'TBD';
 		}

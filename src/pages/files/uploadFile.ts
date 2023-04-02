@@ -1,41 +1,58 @@
-import { db } from '../../backgroundTasks/dexieDb/db';
-import { processFile } from '../../backgroundTasks/processFile';
+import { SupabaseClient } from '@supabase/supabase-js';
 
-const handleFileUpload = (
+import { Database } from '../../schema';
+
+const handleFileUpload = async (
 	file: File,
 	setUploadProgress: React.Dispatch<React.SetStateAction<number | null>>,
+	supabase: SupabaseClient<Database>,
 ) => {
-	const reader = new FileReader();
-
 	if (file.type === 'text/plain') {
-		reader.onprogress = (progressEvent) => {
-			const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
-			setUploadProgress(progress);
-		};
+		const user = await supabase.auth.getUser();
+		if (!user.data.user) {
+			throw new Error('user not logged in');
+		}
+		console.log(user.data.user);
+		const documentUrl = `${user.data.user.id}/${file.name}`;
+		const { data: fileUpload, error: fileUploadError } = await supabase.storage
+			.from('documents')
+			.upload(documentUrl, file, {
+				cacheControl: '3600',
+				upsert: false,
+			});
 
-		reader.onloadend = async () => {
-			const result = reader.result;
+		if (fileUploadError) {
+			console.log('fileUploadError', fileUploadError);
+			return;
+		}
+		if (!fileUpload) {
+			console.log('file upload failed');
+			return;
+		}
 
-			const documentId = await db.DocumentMetadata.add({
-				created_at: new Date().toDateString(),
+		const { data: newDocument, error } = await supabase
+			.from('documents')
+			.insert({
 				name: file.name,
 				file_format: file.type,
 				size: file.size,
-			});
+				document_url: documentUrl,
+				user_id: user.data.user.id,
+			})
+			.select()
+			.single();
 
-			if (result) {
-				const openAIKey = localStorage.getItem('openAIKey');
-				if (!openAIKey) {
-					alert('Please enter your OpenAI API key in the settings page');
-					return;
-				}
-				processFile(result, documentId as number, openAIKey);
-				setUploadProgress(null);
-			}
-		};
+		if (error) {
+			console.log('error', error);
+			return;
+		}
 
-		reader.readAsText(file);
+		setUploadProgress(null);
+
+		return newDocument;
 	}
+
+	return null;
 };
 
 export default handleFileUpload;

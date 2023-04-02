@@ -37,15 +37,14 @@ const InputNodesList = ({
 							'bg-emerald-600 text-white hover:bg-emerald-700 border-l-8 border-emerald-400',
 						inputNode.type === NodeTypesEnum.llmPrompt &&
 							'bg-amber-600 text-white hover:bg-amber-700  border-l-8 border-amber-400',
-						`rounded py-1 px-2 font-semibold shadow-sm `,
 						inputNode.type === NodeTypesEnum.chatPrompt &&
 							'bg-indigo-600 text-white hover:bg-indigo-700  border-l-8 border-indigo-400',
-						`rounded py-1 px-2 font-semibold shadow-sm `,
 						inputNode.type === NodeTypesEnum.chatMessage &&
 							'bg-indigo-200 text-slate-500 hover:bg-indigo-400  border-l-8 border-indigo-300',
-						`rounded py-1 px-2 font-semibold shadow-sm `,
 						inputNode.type === NodeTypesEnum.classifyCategories &&
 							'bg-rose-200 text-slate-500 hover:bg-rose-400  border-l-8 border-rose-300',
+						inputNode.type === NodeTypesEnum.fileText &&
+							'bg-sky-200  hover:bg-rose-400  border-l-8 border-sky-300',
 						`rounded py-1 px-2 font-semibold shadow-sm `,
 					);
 					return (

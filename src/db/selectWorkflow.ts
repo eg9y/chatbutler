@@ -1,8 +1,9 @@
+import { SupabaseClient } from '@supabase/supabase-js';
 import { Edge } from 'reactflow';
 
-import supabase from '../auth/supabaseClient';
 import { Inputs } from '../nodes/types/Input';
 import { CustomNode } from '../nodes/types/NodeTypes';
+import { Database } from '../schema';
 import { RFState } from '../store/useStore';
 
 const selectWorkflow = async (
@@ -14,6 +15,7 @@ const selectWorkflow = async (
 	setCurrentWorkflow: RFState['setCurrentWorkflow'],
 	setNodes: RFState['setNodes'],
 	setEdges: RFState['setEdges'],
+	supabase: SupabaseClient<Database>,
 ) => {
 	// save current workflow first before switching
 	if (currentWorkflow) {

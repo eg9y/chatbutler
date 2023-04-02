@@ -4,11 +4,13 @@ import { nanoid } from 'nanoid';
 import { useEffect } from 'react';
 import { shallow } from 'zustand/shallow';
 
-import supabase from '../../auth/supabaseClient';
+import useSupabase from '../../auth/supabaseClient';
 import useStore, { selector } from '../../store/useStore';
 
 export default function AuthPage() {
 	const { setSession, nodes, setCurrentWorkflow } = useStore(selector, shallow);
+
+	const supabase = useSupabase();
 
 	useEffect(() => {
 		const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
@@ -30,7 +32,7 @@ export default function AuthPage() {
 		return () => {
 			authListener.subscription.unsubscribe();
 		};
-	}, [nodes.length, setCurrentWorkflow, setSession]);
+	}, [nodes.length, setCurrentWorkflow, setSession, supabase]);
 	return (
 		<>
 			<div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">

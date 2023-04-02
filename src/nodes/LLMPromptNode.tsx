@@ -7,6 +7,7 @@ import useUndo from 'use-undo';
 import { shallow } from 'zustand/shallow';
 
 import InputNodesList from './templates/InputNodesList';
+import NodeTemplate from './templates/NodeTemplate';
 import RunnableToolbarTemplate from './templates/RunnableToolbarTemplate';
 import TextAreaTemplate from './templates/TextAreaTemplate';
 import { LLMPromptNodeDataType } from './types/NodeTypes';
@@ -35,7 +36,7 @@ const LLMPrompt: FC<NodeProps<LLMPromptNodeDataType>> = (props) => {
 			>
 				{RunnableToolbarTemplate(data, selected, updateNode, id)}
 				{/* how to spread  */}
-				<TextAreaTemplate
+				<NodeTemplate
 					{...props}
 					title="LLM"
 					fieldName="Prompt"
@@ -43,21 +44,26 @@ const LLMPrompt: FC<NodeProps<LLMPromptNodeDataType>> = (props) => {
 					setShow={setshowPrompt}
 					showFullScreen={showFullScreen}
 					setShowFullScreen={setShowFullScreen}
-					presentText={presentText}
-					setText={setText}
 				>
 					{(updateNode: (id: string, data: LLMPromptNodeDataType) => void) => (
-						<div className="flex flex-col gap-2 text-md ">
-							<InputNodesList
-								data={data}
-								id={id}
+						<>
+							<TextAreaTemplate
+								{...props}
+								presentText={presentText}
 								setText={setText}
-								updateNode={updateNode}
-								type={type}
 							/>
-						</div>
+							<div className="flex flex-col gap-2 text-md ">
+								<InputNodesList
+									data={data}
+									id={id}
+									setText={setText}
+									updateNode={updateNode}
+									type={type}
+								/>
+							</div>
+						</>
 					)}
-				</TextAreaTemplate>
+				</NodeTemplate>
 			</div>
 			<Disclosure
 				as="div"

@@ -12,10 +12,12 @@ import ReactFlow, {
 import { shallow } from 'zustand/shallow';
 import 'reactflow/dist/base.css';
 
+import useSupabase from '../../auth/supabaseClient';
 import LoadingOverlay from '../../components/LoadingOverlay';
 import Notification from '../../components/Notification';
 import RunFromStart from '../../components/RunFromStart';
 import ConnectionLine from '../../connection/ConnectionLine';
+import populateUserDocuments from '../../db/populateUserDocuments';
 import populateUserWorkflows from '../../db/populateUserWorkflows';
 import selectWorkflow from '../../db/selectWorkflow';
 import syncDataToSupabase from '../../db/syncToSupabase';
@@ -24,8 +26,10 @@ import ChatMessageNode from '../../nodes/ChatMessageNode';
 import ChatPromptNode from '../../nodes/ChatPromptNode';
 import ClassifyCategoriesNode from '../../nodes/ClassifyCategoriesNode';
 import ClassifyNode from '../../nodes/ClassifyNode';
+import FileNode from '../../nodes/FileTextNode';
 import LLMPromptNode from '../../nodes/LLMPromptNode';
 import PlaceholderNode from '../../nodes/PlaceholderNode';
+import SearchNode from '../../nodes/SearchNode';
 import TextInputNode from '../../nodes/TextInputNode';
 import { NodeTypesEnum } from '../../nodes/types/NodeTypes';
 import useStore, { selector } from '../../store/useStore';
@@ -42,6 +46,8 @@ const nodeTypes = {
 	textInput: TextInputNode,
 	chatPrompt: ChatPromptNode,
 	chatMessage: ChatMessageNode,
+	fileText: FileNode,
+	search: SearchNode,
 	placeholder: PlaceholderNode,
 };
 
@@ -54,6 +60,7 @@ export default function App() {
 
 	const {
 		session,
+		setDocuments,
 		nodes,
 		edges,
 		onNodesChange,
@@ -83,6 +90,8 @@ export default function App() {
 
 	const [isLoading, setIsLoading] = useState(true);
 
+	const supabase = useSupabase();
+
 	useDebouncedEffect(
 		() => {
 			(async () => {
@@ -97,6 +106,7 @@ export default function App() {
 					setWorkflows,
 					session,
 					params,
+					supabase,
 				);
 			})();
 		},
@@ -108,7 +118,8 @@ export default function App() {
 		(async () => {
 			setIsLoading(true);
 			setCurrentWorkflow(null);
-			await populateUserWorkflows(setWorkflows, setUiErrorMessage, session);
+			await populateUserWorkflows(setWorkflows, setUiErrorMessage, session, supabase);
+			await populateUserDocuments(setDocuments, setUiErrorMessage, session, supabase);
 			if (params && params.id) {
 				await selectWorkflow(
 					params.id,
@@ -119,6 +130,7 @@ export default function App() {
 					setCurrentWorkflow,
 					setNodes,
 					setEdges,
+					supabase,
 				);
 			}
 			setIsLoading(false);
@@ -196,6 +208,10 @@ export default function App() {
 				nodeTypeEnum = NodeTypesEnum.chatMessage;
 			} else if (type === 'classify') {
 				nodeTypeEnum = NodeTypesEnum.classify;
+			} else if (type === 'fileText') {
+				nodeTypeEnum = NodeTypesEnum.fileText;
+			} else if (type === 'search') {
+				nodeTypeEnum = NodeTypesEnum.search;
 			}
 
 			onAdd(nodeTypeEnum, position);

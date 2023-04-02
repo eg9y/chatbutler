@@ -6,7 +6,7 @@ import { useLocation } from 'wouter';
 import { shallow } from 'zustand/shallow';
 
 import EditableText from './EditableText';
-import supabase from '../auth/supabaseClient';
+import useSupabase from '../auth/supabaseClient';
 import syncDataToSupabase from '../db/syncToSupabase';
 import useStore, { selector } from '../store/useStore';
 import { conditionalClassNames } from '../utils/classNames';
@@ -36,6 +36,8 @@ const NavBar = () => {
 	} = useStore(selector, shallow);
 
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+	const supabase = useSupabase();
 
 	return (
 		<header
@@ -70,6 +72,7 @@ const NavBar = () => {
 												setWorkflows,
 												session,
 												params,
+												supabase,
 											).catch((error) => {
 												setUiErrorMessage(
 													`Error saving work: ${error.message}`,

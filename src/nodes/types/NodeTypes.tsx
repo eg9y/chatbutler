@@ -18,7 +18,9 @@ export type AllDataTypes =
 	| ChatPromptNodeDataType
 	| ClassifyNodeDataType
 	| ClassifyNodeCategoriesDataType
-	| ChatMessageNodeDataType;
+	| ChatMessageNodeDataType
+	| SearchDataType
+	| FileTextDataType;
 
 export type CustomNode = Node<AllDataTypes>;
 export type InputNode = Node<
@@ -63,6 +65,14 @@ export type ClassifyNodeCategoriesDataType = {
 	}[];
 } & DefaultNodeDataType;
 
+export type FileTextDataType = {
+	fileName: string;
+} & DefaultNodeDataType;
+
+export type SearchDataType = {
+	fileName: string;
+} & DefaultNodeDataType;
+
 export enum NodeTypesEnum {
 	llmPrompt = 'llmPrompt',
 	textInput = 'textInput',
@@ -71,4 +81,6 @@ export enum NodeTypesEnum {
 	classify = 'classify',
 	classifyCategories = 'classifyCategories',
 	placeholder = 'placeholder',
+	fileText = 'fileText',
+	search = 'search',
 }

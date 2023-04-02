@@ -10,6 +10,7 @@ export interface DocumentMetadata {
 	name: string;
 	file_format: string;
 	size: number;
+	content: string;
 }
 
 export interface DocumentCollections {
@@ -30,8 +31,8 @@ export class MySubClassedDexie extends Dexie {
 
 	constructor() {
 		super('documents');
-		this.version(2).stores({
-			DocumentMetadata: '++id, name, file_format',
+		this.version(3).stores({
+			DocumentMetadata: '++id, name, file_format, content',
 			DocumentEmbeddings: '++id, document_id, title, embeddings',
 			DocumentCollections: '++id,name,documents',
 		});

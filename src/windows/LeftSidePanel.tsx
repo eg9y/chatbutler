@@ -6,6 +6,8 @@ import {
 	ChatBubbleLeftRightIcon,
 	ShareIcon,
 	BeakerIcon,
+	MagnifyingGlassIcon,
+	ArrowRightOnRectangleIcon,
 } from '@heroicons/react/20/solid';
 import { FC, useState } from 'react';
 import { ReactFlowInstance } from 'reactflow';
@@ -14,7 +16,7 @@ import { shallow } from 'zustand/shallow';
 const rightAngleSvg = new URL('../assets/right-angle.svg', import.meta.url).href;
 import UserWorkflows from './UserWorkflows';
 import { NodeTypesEnum } from '../nodes/types/NodeTypes';
-import useStore, { selector } from '../store/useStore';
+import useStore, { RFState, selector } from '../store/useStore';
 import { conditionalClassNames } from '../utils/classNames';
 
 export default function LeftSidePanel({
@@ -185,7 +187,7 @@ export default function LeftSidePanel({
 								nodeType={NodeTypesEnum.llmPrompt}
 								handleDrag={handleDrag}
 								addNodeToCenter={addNodeToCenter}
-								Icon={DocumentTextIcon}
+								Icon={ArrowRightOnRectangleIcon}
 							/>
 						</div>
 					</div>
@@ -220,18 +222,22 @@ export default function LeftSidePanel({
 						</div>
 						<div className="flex flex-col gap-1 px-2 py-2">
 							<NodeType
-								name="File"
-								nodeType={NodeTypesEnum.classify}
+								name="File Text"
+								nodeType={NodeTypesEnum.fileText}
 								handleDrag={handleDrag}
 								addNodeToCenter={addNodeToCenter}
-								Icon={ShareIcon}
+								Icon={DocumentTextIcon}
+								session={session}
+								needAuth={true}
 							/>
 							<NodeType
-								name="File Search"
-								nodeType={NodeTypesEnum.classify}
+								name="Search"
+								nodeType={NodeTypesEnum.search}
 								handleDrag={handleDrag}
 								addNodeToCenter={addNodeToCenter}
-								Icon={ShareIcon}
+								Icon={MagnifyingGlassIcon}
+								session={session}
+								needAuth={true}
 							/>
 						</div>
 					</div>
@@ -245,19 +251,24 @@ const NodeType: FC<{
 	nodeType: NodeTypesEnum;
 	handleDrag: (e: React.DragEvent<HTMLDivElement>) => void;
 	addNodeToCenter: (type: NodeTypesEnum) => void;
+	session?: RFState['session'];
+	needAuth?: boolean;
 	Icon: React.ForwardRefExoticComponent<
 		React.SVGProps<SVGSVGElement> & {
 			title?: string | undefined;
 			titleId?: string | undefined;
 		}
 	>;
-}> = ({ name, handleDrag, addNodeToCenter, nodeType, Icon }) => {
+}> = ({ name, handleDrag, addNodeToCenter, nodeType, session, Icon, needAuth = false }) => {
 	const colorClassName = conditionalClassNames(
 		nodeType === NodeTypesEnum.chatMessage && `ring-indigo-300`,
 		nodeType === NodeTypesEnum.chatPrompt && `ring-indigo-300`,
 		nodeType === NodeTypesEnum.llmPrompt && `ring-amber-400`,
 		nodeType === NodeTypesEnum.classify && `ring-rose-300`,
 		nodeType === NodeTypesEnum.textInput && `ring-emerald-400`,
+		nodeType === NodeTypesEnum.fileText && `ring-sky-400`,
+		nodeType === NodeTypesEnum.search && `ring-sky-400`,
+		needAuth && !session && `opacity-50 pointer-events-none`,
 		`text-slate-600 hover:bg-slate-100 hover:text-slate-900 group flex items-center rounded-md px-3 py-2 text-sm font-medium cursor-pointer ring-2 ring-inset`,
 	);
 	return (

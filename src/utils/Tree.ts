@@ -168,6 +168,8 @@ export async function runNode(
 				};
 			}
 		}
+	} else if (node.type === NodeTypesEnum.search) {
+		console.log('placeholder');
 	} else if (node.type === NodeTypesEnum.chatPrompt) {
 		const chatMessageNodes = collectChatMessages(node, get);
 		console.log(

@@ -1,12 +1,14 @@
 import { useEffect } from 'react';
 import { shallow } from 'zustand/shallow';
 
-import supabase from '../auth/supabaseClient';
+import useSupabase from '../auth/supabaseClient';
 import NavBar from '../components/Navbar';
 import useStore, { selector } from '../store/useStore';
 
 function Layout({ children }: { children: React.ReactNode }) {
 	const { setSession } = useStore(selector, shallow);
+	const supabase = useSupabase();
+
 	useEffect(() => {
 		(async () => {
 			const currentSession = await supabase.auth.getSession();

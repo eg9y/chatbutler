@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { TrashIcon } from '@heroicons/react/24/outline';
-import { useLiveQuery } from 'dexie-react-hooks';
+import { shallow } from 'zustand/shallow';
 
 import Dropzone from './Dropzone';
-import { db } from '../../backgroundTasks/dexieDb/db';
+import useSupabase from '../../auth/supabaseClient';
+import useStore, { selector } from '../../store/useStore';
 import { conditionalClassNames } from '../../utils/classNames';
 
 const tabs = [
@@ -12,7 +13,10 @@ const tabs = [
 ];
 
 export default function Files() {
-	const documents = useLiveQuery(() => db.DocumentMetadata.toArray());
+	const { documents, setDocuments } = useStore(selector, shallow);
+
+	const supabase = useSupabase();
+
 	return (
 		<>
 			<div className="flex h-full">
@@ -34,7 +38,10 @@ export default function Files() {
 										<p className="text-sm">Supported file types: txt</p>
 									</div>
 									<div className="flex-1">
-										<Dropzone />
+										<Dropzone
+											documents={documents}
+											setDocuments={setDocuments}
+										/>
 									</div>
 								</div>
 
@@ -128,19 +135,20 @@ export default function Files() {
 													<button
 														className="bg-slate-50 p-1 rounded-md"
 														onClick={async () => {
-															await db.DocumentMetadata.delete(
-																file.id!,
+															await supabase.storage
+																.from('documents')
+																.remove([file.document_url]);
+															await supabase
+																.from('documents')
+																.delete()
+																.match({ id: file.id })
+																.select();
+															setDocuments(
+																documents.filter(
+																	(document) =>
+																		document.id !== file.id,
+																),
 															);
-															await db.DocumentCollections.filter(
-																(collection) => {
-																	return collection.documents.has(
-																		file.id!,
-																	);
-																},
-															).delete();
-															await db.DocumentEmbeddings.where({
-																document_id: file.id!,
-															}).delete();
 														}}
 													>
 														<TrashIcon

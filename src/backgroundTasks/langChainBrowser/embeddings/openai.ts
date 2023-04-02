@@ -1,6 +1,12 @@
-import { Configuration, OpenAIApi, CreateEmbeddingRequest, ConfigurationParameters } from 'openai';
+import {
+	FunctionsFetchError,
+	FunctionsHttpError,
+	FunctionsRelayError,
+} from '@supabase/supabase-js';
+import { CreateEmbeddingRequestInput } from 'openai';
 
 import { Embeddings, EmbeddingsParams } from './base.js';
+import { createSupabaseClient } from '../../../auth/supabaseClient.js';
 import { chunkArray } from '../util/index.js';
 
 interface ModelParams {
@@ -34,9 +40,7 @@ export class OpenAIEmbeddings extends Embeddings implements ModelParams {
 	 */
 	stripNewLines = true;
 
-	private client!: OpenAIApi;
-
-	private clientConfig: ConfigurationParameters;
+	supabase = createSupabaseClient();
 
 	constructor(
 		fields?: Partial<ModelParams> &
@@ -46,7 +50,6 @@ export class OpenAIEmbeddings extends Embeddings implements ModelParams {
 				openAIApiKey?: string;
 				stripNewLines?: boolean;
 			},
-		configuration?: ConfigurationParameters,
 	) {
 		super(fields ?? {});
 
@@ -58,11 +61,6 @@ export class OpenAIEmbeddings extends Embeddings implements ModelParams {
 		this.modelName = fields?.modelName ?? this.modelName;
 		this.batchSize = fields?.batchSize ?? this.batchSize;
 		this.stripNewLines = fields?.stripNewLines ?? this.stripNewLines;
-
-		this.clientConfig = {
-			apiKey,
-			...configuration,
-		};
 	}
 
 	async embedDocuments(texts: string[]): Promise<number[][]> {
@@ -75,10 +73,7 @@ export class OpenAIEmbeddings extends Embeddings implements ModelParams {
 
 		for (let i = 0; i < subPrompts.length; i += 1) {
 			const input = subPrompts[i];
-			const response = await this.embeddingWithRetry({
-				model: this.modelName,
-				input,
-			});
+			const response = await this.embeddingWithRetry(input);
 			if (!response) {
 				throw new Error('No data returned from API');
 			}
@@ -91,32 +86,35 @@ export class OpenAIEmbeddings extends Embeddings implements ModelParams {
 	}
 
 	async embedQuery(text: string): Promise<number[]> {
-		const response = await this.embeddingWithRetry({
-			model: this.modelName,
-			input: this.stripNewLines ? text.replaceAll('\n', ' ') : text,
-		});
+		const response = await this.embeddingWithRetry(
+			this.stripNewLines ? text.replaceAll('\n', ' ') : text,
+		);
 		if (!response) {
 			throw new Error('No data returned from API');
 		}
 		return response.data.data[0].embedding;
 	}
 
-	private async embeddingWithRetry(request: CreateEmbeddingRequest) {
-		if (!this.client) {
-			const clientConfig = new Configuration({
-				...this.clientConfig,
-				baseOptions: {
-					...this.clientConfig.baseOptions,
-				},
-			});
-			this.client = new OpenAIApi(clientConfig);
-		}
-
+	private async embeddingWithRetry(input: CreateEmbeddingRequestInput) {
 		let currentAttempt = 0;
-
 		while (currentAttempt <= retryOptions.retries) {
 			try {
-				return this.caller.call(this.client.createEmbedding.bind(this.client), request);
+				const { data, error } = await this.supabase.functions.invoke('embed', {
+					body: { texts: input },
+				});
+
+				if (error instanceof FunctionsHttpError) {
+					console.log('Function returned an error', error.message);
+					throw new Error(error.message);
+				} else if (error instanceof FunctionsRelayError) {
+					console.log('Relay error:', error.message);
+					throw new Error(error.message);
+				} else if (error instanceof FunctionsFetchError) {
+					console.log('Fetch error:', error.message);
+					throw new Error(error.message);
+				}
+
+				return data;
 			} catch (error: any) {
 				console.error('Error during API call:', error);
 				// If the error is not related to rate limits or server errors, don't retry.

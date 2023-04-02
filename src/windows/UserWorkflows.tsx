@@ -5,7 +5,7 @@ import { Fragment, useState } from 'react';
 import { shallow } from 'zustand/shallow';
 
 import { ReactComponent as Loading } from '../assets/loading.svg';
-import supabase from '../auth/supabaseClient';
+import useSupabase from '../auth/supabaseClient';
 import selectWorkflow from '../db/selectWorkflow';
 import useStore, { RFState, selector } from '../store/useStore';
 
@@ -28,6 +28,8 @@ export default function UserWorkflows({
 		selector,
 		shallow,
 	);
+
+	const supabase = useSupabase();
 
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -66,6 +68,7 @@ export default function UserWorkflows({
 												setCurrentWorkflow,
 												setNodes,
 												setEdges,
+												supabase,
 											);
 											setOpen(false);
 											setIsLoading(false);

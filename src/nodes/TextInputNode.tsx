@@ -3,6 +3,7 @@ import { Handle, Position, NodeProps } from 'reactflow';
 import useUndo from 'use-undo';
 
 import InputNodesList from './templates/InputNodesList';
+import NodeTemplate from './templates/NodeTemplate';
 import TextAreaTemplate from './templates/TextAreaTemplate';
 import { TextInputNodeDataType } from './types/NodeTypes';
 
@@ -24,7 +25,7 @@ const TextInput: FC<NodeProps<TextInputNodeDataType>> = (props) => {
 					selected ? 'border-emerald-600' : 'border-slate-400'
 				} flex flex-col `}
 			>
-				<TextAreaTemplate
+				<NodeTemplate
 					{...props}
 					title="Text"
 					fieldName="Text"
@@ -33,21 +34,26 @@ const TextInput: FC<NodeProps<TextInputNodeDataType>> = (props) => {
 					setShow={setshowPrompt}
 					showFullScreen={showFullScreen}
 					setShowFullScreen={setShowFullScreen}
-					presentText={presentText}
-					setText={setText}
 				>
 					{(updateNode: (id: string, data: TextInputNodeDataType) => void) => (
-						<div className="flex flex-col gap-2 text-md ">
-							<InputNodesList
-								data={data}
-								id={id}
+						<>
+							<TextAreaTemplate
+								{...props}
+								presentText={presentText}
 								setText={setText}
-								updateNode={updateNode}
-								type={type}
 							/>
-						</div>
+							<div className="flex flex-col gap-2 text-md ">
+								<InputNodesList
+									data={data}
+									id={id}
+									setText={setText}
+									updateNode={updateNode}
+									type={type}
+								/>
+							</div>
+						</>
 					)}
-				</TextAreaTemplate>
+				</NodeTemplate>
 			</div>
 			<Handle
 				type="target"

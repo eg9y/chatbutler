@@ -1,11 +1,21 @@
 import React, { useRef, useState } from 'react';
+import { shallow } from 'zustand/shallow';
 
 import uploadFile from './uploadFile';
 import { ReactComponent as Loading } from '../../assets/loading.svg';
+import useSupabase from '../../auth/supabaseClient';
+import useStore, { RFState, selector } from '../../store/useStore';
 
-const Dropzone: React.FC = () => {
+type DropZoneProps = {
+	documents: RFState['documents'];
+	setDocuments: RFState['setDocuments'];
+};
+
+const Dropzone: React.FC<DropZoneProps> = ({ documents, setDocuments }) => {
 	const dropzoneRef = useRef<HTMLDivElement>(null);
 	const [uploadProgress, setUploadProgress] = useState<number | null>(null);
+	const { session } = useStore(selector, shallow);
+	const supabase = useSupabase();
 
 	const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
 		e.preventDefault();
@@ -31,10 +41,13 @@ const Dropzone: React.FC = () => {
 		input.click();
 	};
 
-	const handleFiles = (files: FileList) => {
+	const handleFiles = async (files: FileList) => {
 		for (let i = 0; i < files.length; i++) {
 			const file = files[i];
-			uploadFile(file, setUploadProgress);
+			const newDocument = await uploadFile(file, setUploadProgress, supabase);
+			if (newDocument) {
+				setDocuments([...documents, newDocument]);
+			}
 		}
 		alert(`Your file has been uploaded`);
 	};
@@ -45,7 +58,13 @@ const Dropzone: React.FC = () => {
 			className="border-2 border-dashed bg-slate-50 border-slate-400 rounded-md h-48 flex items-center justify-center text-center cursor-pointer"
 			onDragOver={handleDragOver}
 			onDrop={handleDrop}
-			onClick={handleClick}
+			onClick={() => {
+				if (!session) {
+					alert(`You must be logged in to upload a file`);
+					return;
+				}
+				handleClick();
+			}}
 		>
 			{uploadProgress ? (
 				<Loading className="animate-spin -ml-1 mr-3 h-7 w-7 text-black" />

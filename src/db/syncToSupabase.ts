@@ -1,6 +1,7 @@
+import { SupabaseClient } from '@supabase/supabase-js';
 import { DefaultParams } from 'wouter';
 
-import supabase from '../auth/supabaseClient';
+import { Database } from '../schema';
 import { RFState } from '../store/useStore';
 import isWorkflowOwnedByUser from '../utils/isWorkflowOwnedByUser';
 
@@ -12,6 +13,7 @@ const syncDataToSupabase = async (
 	setWorkflows: RFState['setWorkflows'],
 	session: RFState['session'],
 	params: DefaultParams | null,
+	supabase: SupabaseClient<Database>,
 ) => {
 	if (!currentWorkflow || !session) return;
 

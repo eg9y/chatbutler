@@ -59,6 +59,42 @@ const onAdd = (
 				stop: [],
 			},
 		};
+	} else if (type === NodeTypesEnum.fileText) {
+		node = {
+			id: generateUniqueId(type),
+			type,
+			position: {
+				x,
+				y,
+			},
+			data: {
+				name: `file ${nodeLength}`,
+				text: `This is a file text ${nodeLength}`,
+				children: [],
+				inputs: new Inputs(),
+				response: `This is a file text ${nodeLength}`,
+				isLoading: false,
+				isBreakpoint: false,
+			},
+		};
+	} else if (type === NodeTypesEnum.search) {
+		node = {
+			id: generateUniqueId(type),
+			type,
+			position: {
+				x,
+				y,
+			},
+			data: {
+				name: `file ${nodeLength}`,
+				text: `This is a file text ${nodeLength}`,
+				children: [],
+				inputs: new Inputs(),
+				response: `This is a file text ${nodeLength}`,
+				isLoading: false,
+				isBreakpoint: false,
+			},
+		};
 	} else if (type === NodeTypesEnum.classify) {
 		const nodeId = generateUniqueId(type);
 		const classifyCategoriesId = generateUniqueId(NodeTypesEnum.classifyCategories);

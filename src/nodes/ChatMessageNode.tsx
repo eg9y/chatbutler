@@ -3,6 +3,7 @@ import { Handle, Position, NodeProps } from 'reactflow';
 import useUndo from 'use-undo';
 
 import InputNodesList from './templates/InputNodesList';
+import NodeTemplate from './templates/NodeTemplate';
 import TextAreaTemplate from './templates/TextAreaTemplate';
 import { ChatMessageNodeDataType } from './types/NodeTypes';
 
@@ -31,7 +32,7 @@ const ChatMessage: FC<NodeProps<ChatMessageNodeDataType>> = (props) => {
 				} flex flex-col relative shadow-lg `}
 			>
 				{/* how to spread  */}
-				<TextAreaTemplate
+				<NodeTemplate
 					{...props}
 					title="Msg"
 					fieldName="Msg"
@@ -40,8 +41,6 @@ const ChatMessage: FC<NodeProps<ChatMessageNodeDataType>> = (props) => {
 					setShow={setshowPrompt}
 					showFullScreen={showFullScreen}
 					setShowFullScreen={setShowFullScreen}
-					presentText={presentText}
-					setText={setText}
 					labelComponent={(
 						updateNode: (id: string, data: ChatMessageNodeDataType) => void,
 					) => (
@@ -85,17 +84,24 @@ const ChatMessage: FC<NodeProps<ChatMessageNodeDataType>> = (props) => {
 					)}
 				>
 					{(updateNode: (id: string, data: ChatMessageNodeDataType) => void) => (
-						<div className="flex flex-col gap-2 text-md ">
-							<InputNodesList
-								data={data}
-								id={id}
+						<>
+							<TextAreaTemplate
+								{...props}
+								presentText={presentText}
 								setText={setText}
-								updateNode={updateNode}
-								type={type}
 							/>
-						</div>
+							<div className="flex flex-col gap-2 text-md ">
+								<InputNodesList
+									data={data}
+									id={id}
+									setText={setText}
+									updateNode={updateNode}
+									type={type}
+								/>
+							</div>
+						</>
 					)}
-				</TextAreaTemplate>
+				</NodeTemplate>
 				<Handle
 					type="target"
 					position={Position.Left}

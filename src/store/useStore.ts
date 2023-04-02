@@ -33,6 +33,7 @@ import {
 	NodeTypesEnum,
 	TextInputNodeDataType,
 } from '../nodes/types/NodeTypes';
+import { Database } from '../schema';
 import { runNode, traverseTree } from '../utils/Tree';
 
 export type UseStoreSetType = (
@@ -43,7 +44,8 @@ export type UseStoreSetType = (
 export interface RFState {
 	session: Session | null;
 	setSession: (session: Session | null) => void;
-
+	documents: Database['public']['Tables']['documents']['Row'][];
+	setDocuments: (documents: Database['public']['Tables']['documents']['Row'][]) => void;
 	workflows: {
 		id: string;
 		name: string;
@@ -97,6 +99,12 @@ const useStore = create<RFState>()(
 			setSession: (session: Session | null) => {
 				set({
 					session,
+				});
+			},
+			documents: [],
+			setDocuments: (documents: Database['public']['Tables']['documents']['Row'][]) => {
+				set({
+					documents,
 				});
 			},
 			reactFlowInstance: null,

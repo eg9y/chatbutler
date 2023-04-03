@@ -47,7 +47,7 @@ serve(async (req) => {
 		});
 	}
 
-	return new Response('OK', { headers: { 'Content-Type': 'application/json' } });
+	return new Response('OK', { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 });
 
 // To invoke:

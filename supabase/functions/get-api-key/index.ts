@@ -47,7 +47,7 @@ serve(async (req) => {
 	const openAiApiKey = hexToString(data[0].open_ai_key);
 
 	return new Response(JSON.stringify(openAiApiKey), {
-		headers: { 'content-type': 'application/json' },
+		headers: { ...corsHeaders, 'content-type': 'application/json' },
 	});
 });
 

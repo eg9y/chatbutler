@@ -71,7 +71,10 @@ type DocumentDataType = {
 };
 
 export type FileTextDataType = DocumentDataType & DefaultNodeDataType;
-export type SearchDataType = DocumentDataType & DefaultNodeDataType;
+export type SearchDataType = {
+	results: number;
+} & DocumentDataType &
+	DefaultNodeDataType;
 
 export enum NodeTypesEnum {
 	llmPrompt = 'llmPrompt',

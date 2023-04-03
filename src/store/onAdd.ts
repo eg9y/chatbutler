@@ -93,6 +93,7 @@ const onAdd = (
 				response: `This is a file text ${nodeLength}`,
 				isLoading: false,
 				isBreakpoint: false,
+				results: 3,
 			},
 		};
 	} else if (type === NodeTypesEnum.classify) {

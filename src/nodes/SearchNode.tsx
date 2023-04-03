@@ -1,4 +1,4 @@
-import { memo, FC, useState } from 'react';
+import { memo, FC, useState, useEffect } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
 import useUndo from 'use-undo';
 import { shallow } from 'zustand/shallow';
@@ -7,7 +7,6 @@ import InputNodesList from './templates/InputNodesList';
 import NodeTemplate from './templates/NodeTemplate';
 import TextAreaTemplate from './templates/TextAreaTemplate';
 import { SearchDataType } from './types/NodeTypes';
-import { db } from '../backgroundTasks/dexieDb/db';
 import useStore, { selector } from '../store/useStore';
 
 const Search: FC<NodeProps<SearchDataType>> = (props) => {
@@ -18,7 +17,19 @@ const Search: FC<NodeProps<SearchDataType>> = (props) => {
 	const [showPrompt, setshowPrompt] = useState(true);
 	const [showFullScreen, setShowFullScreen] = useState(false);
 
-	const { documents } = useStore(selector, shallow);
+	const { documents, updateNode } = useStore(selector, shallow);
+
+	useEffect(() => {
+		const documentId = data.document?.id;
+		const isDocumentDeleted = documents.find((document) => document.id === documentId);
+		if (!isDocumentDeleted) {
+			updateNode(id, {
+				...data,
+				document: documents[0],
+			});
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [documents]);
 
 	return (
 		<div className="">
@@ -40,7 +51,7 @@ const Search: FC<NodeProps<SearchDataType>> = (props) => {
 					showFullScreen={showFullScreen}
 					setShowFullScreen={setShowFullScreen}
 				>
-					{(updateNode: (id: string, data: SearchDataType) => void) => (
+					{() => (
 						<>
 							<div className="py-1">
 								<select
@@ -69,7 +80,7 @@ const Search: FC<NodeProps<SearchDataType>> = (props) => {
 									))}
 								</select>
 							</div>
-							<p className="text-2xl">Search Query:</p>
+							<p className="text-2xl pt-4 pb-1">Search Query:</p>
 							<TextAreaTemplate
 								{...props}
 								presentText={presentText}
@@ -82,6 +93,20 @@ const Search: FC<NodeProps<SearchDataType>> = (props) => {
 									setText={setText}
 									updateNode={updateNode}
 									type={type}
+								/>
+							</div>
+							<div className="flex items-center gap-2 pt-4">
+								<p className="text-2xl">Total Results:</p>
+								<input
+									type="text"
+									value={data.results}
+									className="nodrag w-16 text-2xl text-center border-2 border-slate-400 rounded-md"
+									onChange={(e) => {
+										updateNode(id, {
+											...data,
+											results: parseInt(e.target.value),
+										});
+									}}
 								/>
 							</div>
 						</>

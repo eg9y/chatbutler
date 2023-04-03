@@ -22,7 +22,6 @@ import {
 	parsePromptInputs,
 } from '../openai/openai';
 import { RFState } from '../store/useStore';
-import { RFStateSecret } from '../store/useStoreSecret';
 
 function collectChatMessages(node: CustomNode, get: () => RFState): CustomNode[] {
 	const queue: CustomNode[] = [node];
@@ -180,7 +179,8 @@ export async function runNode(
 		}
 	} else if (node.type === NodeTypesEnum.search) {
 		try {
-			const document = (node.data as SearchDataType)?.document;
+			const searchNode = node.data as SearchDataType;
+			const document = searchNode?.document;
 			if (!document) {
 				throw new Error('Document is not defined');
 			}
@@ -228,7 +228,10 @@ export async function runNode(
 						queryName: 'match_document_contents',
 					},
 				);
-				searchResults = await vectorStore.similaritySearch(node.data.text, 3);
+				searchResults = await vectorStore.similaritySearch(
+					searchNode.text,
+					searchNode.results,
+				);
 			} else {
 				const vectorStore = await SupabaseVectorStore.fromExistingIndex(
 					new OpenAIEmbeddings(),
@@ -238,16 +241,25 @@ export async function runNode(
 						queryName: 'match_document_contents',
 					},
 				);
-				searchResults = await vectorStore.similaritySearch(node.data.text, 5);
+				searchResults = await vectorStore.similaritySearch(
+					searchNode.text,
+					searchNode.results,
+				);
 			}
 			console.log(searchResults);
 			node.data = {
 				...node.data,
+				// TODO: need to have a combiner node or a for loop node
 				response: searchResults.map((result) => result.pageContent).join(''),
 				isLoading: false,
 			};
 		} catch (error) {
 			console.log(error);
+			node.data = {
+				...node.data,
+				isLoading: false,
+			};
+			throw error;
 		}
 	} else if (node.type === NodeTypesEnum.chatPrompt) {
 		const chatMessageNodes = collectChatMessages(node, get);
@@ -262,13 +274,13 @@ export async function runNode(
 				content: data.response,
 			};
 		});
-		// const response = await getOpenAIChatResponse(
-		// 	get().openAIApiKey,
-		// 	node.data as ChatPromptNodeDataType,
-		// 	chatSequence,
-		// );
-		// const completion = response.data.choices[0].message?.content;
-		const completion = 'foo';
+		const response = await getOpenAIChatResponse(
+			openAiKey,
+			node.data as ChatPromptNodeDataType,
+			chatSequence,
+		);
+		const completion = response.data.choices[0].message?.content;
+		// const completion = 'foo';
 		if (completion) {
 			node.data = {
 				...node.data,

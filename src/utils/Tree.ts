@@ -1,6 +1,7 @@
 import { Edge } from 'reactflow';
 
 import { createSupabaseClient } from '../auth/supabaseClient';
+import { Document } from '../backgroundTasks/langChainBrowser/document';
 import { OpenAIEmbeddings } from '../backgroundTasks/langChainBrowser/embeddings';
 import { SupabaseVectorStore } from '../backgroundTasks/langChainBrowser/vectorstores/supabase';
 import { processFile } from '../backgroundTasks/processFile';
@@ -137,7 +138,8 @@ export async function runNode(
 	if (
 		node.type === NodeTypesEnum.llmPrompt ||
 		node.type === NodeTypesEnum.chatPrompt ||
-		node.type === NodeTypesEnum.classify
+		node.type === NodeTypesEnum.classify ||
+		node.type === NodeTypesEnum.search
 	) {
 		node.data = {
 			...node.data,
@@ -192,6 +194,7 @@ export async function runNode(
 			if (isDocumentProcessedError) {
 				throw new Error('Error checking if document is processed');
 			}
+			let searchResults: Document[] = [];
 			if (isDocumentProcessed?.length === 0) {
 				// Document is not processed
 				// get document from store
@@ -225,30 +228,27 @@ export async function runNode(
 						queryName: 'match_document_contents',
 					},
 				);
-				const searchResults = await vectorStore.similaritySearch(node.data.text, 3);
-				console.log(searchResults);
+				searchResults = await vectorStore.similaritySearch(node.data.text, 3);
 			} else {
-				console.log('placeholder');
+				const vectorStore = await SupabaseVectorStore.fromExistingIndex(
+					new OpenAIEmbeddings(),
+					{
+						client: supabase,
+						tableName: 'document_contents',
+						queryName: 'match_document_contents',
+					},
+				);
+				searchResults = await vectorStore.similaritySearch(node.data.text, 5);
 			}
+			console.log(searchResults);
+			node.data = {
+				...node.data,
+				response: searchResults.map((result) => result.pageContent).join(''),
+				isLoading: false,
+			};
 		} catch (error) {
 			console.log(error);
 		}
-
-		// TODO: search
-		/*
-			- fetch document from store where url is document_url
-			- check if document is already processed
-		    	- check document_contents for one row that has a column document_id equals to the document id
-			- if not processed:
-				- process document based on file type such that we get Document[]
-				- use SupabaseVector to index the document using the Document[]
-			- else if processed:
-				- get document contents from document_contents where document_id equals to the document id
-				- make sure final data is Document[]
-			- query by using SupababaseVector
-		*/
-
-		console.log('placeholder');
 	} else if (node.type === NodeTypesEnum.chatPrompt) {
 		const chatMessageNodes = collectChatMessages(node, get);
 		console.log(

@@ -1,5 +1,6 @@
 import 'https://deno.land/x/xhr@0.1.0/mod.ts';
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
+import { retry } from 'https://deno.land/std@0.181.0/async/mod.ts';
 import { Configuration, OpenAIApi } from 'https://esm.sh/openai@3.2.1';
 
 import { corsHeaders } from '../_shared/cors.ts';
@@ -47,25 +48,47 @@ serve(async (req) => {
 
 	const embeddings: number[][] = [];
 
-	const response = await client.createEmbedding({
-		model: 'text-embedding-ada-002',
-		input: texts,
-	});
+	try {
+		const retryPromise = await retry(
+			async () => {
+				const response = await client.createEmbedding({
+					model: 'text-embedding-ada-002',
+					input: texts,
+				});
 
-	if (!response) {
-		throw new Error('No response from OpenAI');
-	}
-	for (let j = 0; j < texts.length; j += 1) {
-		embeddings.push(response.data.data[j].embedding);
-	}
+				if (!response) {
+					throw new Error('No response from OpenAI');
+				}
+				for (let j = 0; j < texts.length; j += 1) {
+					embeddings.push(response.data.data[j].embedding);
+				}
 
-	return new Response(JSON.stringify(embeddings), {
-		status: 200,
-		headers: {
-			...corsHeaders,
-			'content-type': 'application/json',
-		},
-	});
+				return embeddings;
+			},
+			{
+				multiplier: 2,
+				maxTimeout: 60000,
+				maxAttempts: 3,
+				minTimeout: 100,
+			},
+		);
+
+		return new Response(JSON.stringify(retryPromise), {
+			status: 200,
+			headers: {
+				...corsHeaders,
+				'content-type': 'application/json',
+			},
+		});
+	} catch (error) {
+		return new Response(`NOT OK: ${error.message}`, {
+			status: 500,
+			headers: {
+				...corsHeaders,
+				'content-type': 'application/json',
+			},
+		});
+	}
 });
 
 // To invoke:

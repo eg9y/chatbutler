@@ -13,18 +13,6 @@ interface ModelParams {
 	modelName: string;
 }
 
-// Configure retry options
-const retryOptions = {
-	retries: 5, // Maximum number of retries
-	factor: 2, // Exponential factor
-	minTimeout: 1000, // Minimum time between retries in milliseconds
-	maxTimeout: 60000, // Maximum time between retries in milliseconds
-};
-
-function sleep(ms: number) {
-	return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 export class OpenAIEmbeddings extends Embeddings implements ModelParams {
 	modelName = 'text-embedding-ada-002';
 
@@ -69,11 +57,12 @@ export class OpenAIEmbeddings extends Embeddings implements ModelParams {
 		for (let i = 0; i < subPrompts.length; i += 1) {
 			const input = subPrompts[i];
 			const response = await this.embeddingWithRetry(input);
+
 			if (!response) {
 				throw new Error('No data returned from API');
 			}
 			for (let j = 0; j < input.length; j += 1) {
-				embeddings.push(response.data.data[j].embedding);
+				embeddings.push(response[j]);
 			}
 		}
 
@@ -81,54 +70,36 @@ export class OpenAIEmbeddings extends Embeddings implements ModelParams {
 	}
 
 	async embedQuery(text: string): Promise<number[]> {
-		const response = await this.embeddingWithRetry(
+		const response = await this.embeddingWithRetry([
 			this.stripNewLines ? text.replaceAll('\n', ' ') : text,
-		);
+		]);
 		if (!response) {
 			throw new Error('No data returned from API');
 		}
-		return response.data.data[0].embedding;
+		return response[0];
 	}
 
 	private async embeddingWithRetry(input: CreateEmbeddingRequestInput) {
-		let currentAttempt = 0;
-		while (currentAttempt <= retryOptions.retries) {
-			try {
-				const { data, error } = await this.supabase.functions.invoke('embed', {
-					body: { texts: input },
-				});
+		try {
+			const { data, error } = await this.supabase.functions.invoke('embed', {
+				body: { texts: input },
+			});
 
-				if (error instanceof FunctionsHttpError) {
-					console.log('Function returned an error', error.message);
-					throw new Error(error.message);
-				} else if (error instanceof FunctionsRelayError) {
-					console.log('Relay error:', error.message);
-					throw new Error(error.message);
-				} else if (error instanceof FunctionsFetchError) {
-					console.log('Fetch error:', error.message);
-					throw new Error(error.message);
-				}
-
-				return data;
-			} catch (error: any) {
-				console.error('Error during API call:', error);
-				// If the error is not related to rate limits or server errors, don't retry.
-				if (![429, 500, 502, 503, 504].includes(error.status)) {
-					throw error;
-				}
-
-				currentAttempt++;
-				if (currentAttempt <= retryOptions.retries) {
-					const timeout = Math.min(
-						retryOptions.minTimeout * retryOptions.factor ** (currentAttempt - 1),
-						retryOptions.maxTimeout,
-					);
-					await sleep(timeout);
-				} else {
-					throw new Error('Max retries reached');
-				}
+			if (error instanceof FunctionsHttpError) {
+				console.log('Function returned an error', error.message);
+				throw new Error(error.message);
+			} else if (error instanceof FunctionsRelayError) {
+				console.log('Relay error:', error.message);
+				throw new Error(error.message);
+			} else if (error instanceof FunctionsFetchError) {
+				console.log('Fetch error:', error.message);
+				throw new Error(error.message);
 			}
+
+			return data;
+		} catch (error: any) {
+			console.error('Error during API call:', error);
+			throw new Error('Max retries reached');
 		}
-		return null;
 	}
 }

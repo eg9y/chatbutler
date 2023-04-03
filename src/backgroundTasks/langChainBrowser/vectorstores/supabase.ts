@@ -47,7 +47,7 @@ export class SupabaseVectorStore extends VectorStore {
 		const rows = vectors.map((embedding, idx) => ({
 			content: documents[idx].pageContent,
 			embedding,
-			documnt_id: documents[idx].metadata.documentId,
+			document_id: documents[idx].metadata.documentId,
 		}));
 
 		// upsert returns 500/502/504 (yes really any of them) if given too many rows/characters
@@ -70,12 +70,14 @@ export class SupabaseVectorStore extends VectorStore {
 		k: number,
 		filter: {
 			filter_document_ids: number[] | null;
+		} = {
+			filter_document_ids: null,
 		},
 	): Promise<[Document, number][]> {
 		const matchDocumentsParams: SearchEmbeddingsParams = {
 			query_embedding: query,
 			match_count: k,
-			filter_document_ids: filter.filter_document_ids,
+			filter_document_ids: filter?.filter_document_ids,
 		};
 
 		const { data: searches, error } = await this.client.rpc(

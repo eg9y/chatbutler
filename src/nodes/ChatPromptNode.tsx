@@ -13,7 +13,7 @@ import { conditionalClassNames } from '../utils/classNames';
 const ChatPrompt: FC<NodeProps<ChatPromptNodeDataType>> = (props) => {
 	const { data, selected, id } = props;
 
-	const { updateNode, openAIApiKey } = useStore(selector, shallow);
+	const { updateNode } = useStore(selector, shallow);
 	const [showPrompt, setshowPrompt] = useState(true);
 	const [showFullScreen, setShowFullScreen] = useState(false);
 

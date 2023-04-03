@@ -9,6 +9,7 @@ import {
 	MagnifyingGlassIcon,
 	ArrowRightOnRectangleIcon,
 	WrenchIcon,
+	AcademicCapIcon,
 } from '@heroicons/react/20/solid';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { FC, useState } from 'react';
@@ -16,6 +17,7 @@ import { ReactFlowInstance } from 'reactflow';
 import { shallow } from 'zustand/shallow';
 
 const rightAngleSvg = new URL('../assets/right-angle.svg', import.meta.url).href;
+import Tutorial from './Tutorial';
 import UserWorkflows from './UserWorkflows';
 import { NodeTypesEnum } from '../nodes/types/NodeTypes';
 import { Database } from '../schema';
@@ -48,6 +50,7 @@ export default function LeftSidePanel({
 	const [dragging, setDragging] = useState(false);
 
 	const [openWorkflows, setOpenWorkflows] = useState(!currentWorkflow);
+	const [openTutorials, setOpenTutorials] = useState(false);
 
 	const handleDrag = (e: React.DragEvent<HTMLDivElement>) => {
 		e.preventDefault();
@@ -80,6 +83,7 @@ export default function LeftSidePanel({
 					reactFlowInstance={reactFlowInstance}
 				/>
 			)}
+			<Tutorial open={openTutorials} setOpen={setOpenTutorials} />
 			<div className="flex flex-col justify-between h-full py-1 border-1">
 				<div className="space-y-1 flex flex-col gap-2">
 					<div className="flex flex-col justify-between px-2">
@@ -92,14 +96,6 @@ export default function LeftSidePanel({
 									rel="noreferrer"
 								>
 									more info
-								</a>
-								<a
-									className="list-item text-xs text-slate-600 underline hover:font-semibold cursor-pointer"
-									href="https://github.com/eg9y/promptsandbox.io"
-									target="_blank"
-									rel="noreferrer"
-								>
-									tutorial
 								</a>
 							</ul>
 						</div>
@@ -163,6 +159,23 @@ export default function LeftSidePanel({
 									aria-hidden="true"
 								/>
 								<span className="truncate">OpenAI Key</span>
+							</a>
+						</div>
+						<div className="flex flex-col gap-2 mt-1">
+							<a
+								className="group p-2 flex items-center text-sm font-medium text-slate-700 
+									bg-slate-300 hover:text-slate-900 hover:font-bold cursor-pointer "
+								onClick={async () => {
+									setOpenTutorials(true);
+								}}
+							>
+								<AcademicCapIcon
+									className={
+										'text-slate-500 group-hover:text-slate-600 -ml-1 mr-3 h-6 w-6 flex-shrink-0'
+									}
+									aria-hidden="true"
+								/>
+								<span className="truncate">Tutorial</span>
 							</a>
 						</div>
 					</div>

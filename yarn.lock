@@ -4421,6 +4421,11 @@ vite-plugin-vercel@^0.1.6:
     fast-glob "^3.2.12"
     zod "^3.20.2"
 
+vite-plugin-wasm@^3.2.2:
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/vite-plugin-wasm/-/vite-plugin-wasm-3.2.2.tgz#7a66fef27733a0dea9b2b14f942a6389a2523f7c"
+  integrity sha512-cdbBUNR850AEoMd5nvLmnyeq63CSfoP1ctD/L2vLk/5+wsgAPlAVAzUK5nGKWO/jtehNlrSSHLteN+gFQw7VOA==
+
 vite@^4.1.0:
   version "4.2.1"
   resolved "https://registry.yarnpkg.com/vite/-/vite-4.2.1.tgz#6c2eb337b0dfd80a9ded5922163b94949d7fc254"

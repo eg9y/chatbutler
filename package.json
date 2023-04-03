@@ -59,6 +59,7 @@
     "vite": "^4.1.0",
     "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-top-level-await": "^1.3.0",
-    "vite-plugin-tsc-watch": "^2.0.1"
+    "vite-plugin-tsc-watch": "^2.0.1",
+    "vite-plugin-wasm": "^3.2.2"
   }
 }

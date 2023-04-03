@@ -6,6 +6,7 @@ import svgr from 'vite-plugin-svgr';
 import topLevelAwait from 'vite-plugin-top-level-await';
 import { tscPlugin } from 'vite-plugin-tsc-watch';
 import vercel from 'vite-plugin-vercel';
+import wasm from 'vite-plugin-wasm';
 
 const root = resolve(__dirname, 'src/pages/');
 const outDir = resolve(__dirname, 'dist');
@@ -16,6 +17,7 @@ export default defineConfig({
 		eslint({
 			fix: true,
 		}),
+		wasm(),
 		topLevelAwait(),
 		react(),
 		svgr({

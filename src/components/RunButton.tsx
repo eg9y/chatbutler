@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { shallow } from 'zustand/shallow';
 
 import { ReactComponent as Loading } from '../assets/loading.svg';
-import useStore, { selector } from '../store/useStore';
+import { useStore, useStoreSecret, selector, selectorSecret } from '../store';
 
 export default function RunButton({
 	text = 'Run',
@@ -17,6 +17,7 @@ export default function RunButton({
 	id: string;
 }) {
 	const { setUiErrorMessage, getNodes, runNode } = useStore(selector, shallow);
+	const { openAiKey } = useStoreSecret(selectorSecret, shallow);
 
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -27,7 +28,7 @@ export default function RunButton({
 			try {
 				// get current node
 				const currentNode = getNodes([id])[0];
-				await runNode(currentNode);
+				await runNode(currentNode, openAiKey);
 
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			} catch (error: any) {

@@ -8,6 +8,7 @@ import {
 	BeakerIcon,
 	MagnifyingGlassIcon,
 	ArrowRightOnRectangleIcon,
+	WrenchIcon,
 } from '@heroicons/react/20/solid';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { FC, useState } from 'react';
@@ -249,6 +250,13 @@ export default function LeftSidePanel({
 								session={session}
 								needAuth={true}
 							/>
+							<NodeType
+								name="Combine File(s)"
+								nodeType={NodeTypesEnum.combine}
+								handleDrag={handleDrag}
+								addNodeToCenter={addNodeToCenter}
+								Icon={WrenchIcon}
+							/>
 						</div>
 					</div>
 				</div>
@@ -278,6 +286,7 @@ const NodeType: FC<{
 		nodeType === NodeTypesEnum.textInput && `ring-emerald-400`,
 		nodeType === NodeTypesEnum.fileText && `ring-sky-400`,
 		nodeType === NodeTypesEnum.search && `ring-sky-400`,
+		nodeType === NodeTypesEnum.combine && `ring-sky-400`,
 		needAuth && !session && `opacity-50 pointer-events-none`,
 		`text-slate-600 hover:bg-slate-100 hover:text-slate-900 group flex items-center rounded-md px-3 py-2 text-sm font-medium cursor-pointer ring-2 ring-inset`,
 	);

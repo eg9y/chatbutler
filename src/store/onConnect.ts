@@ -86,6 +86,18 @@ const onConnect = (get: () => RFState, set: UseStoreSetType, connection: Connect
 		connection.targetHandle === 'chat-prompt-messages'
 	) {
 		return;
+	} else if (
+		// combine input only accepts lists
+		connection.targetHandle === 'combine-input' &&
+		connection.sourceHandle !== 'search-output'
+	) {
+		return;
+	} else if (
+		// search can only connect to nodes that accepts lists
+		connection.sourceHandle === 'search-output' &&
+		connection.targetHandle !== 'combine-input'
+	) {
+		return;
 	}
 
 	if (connection.source) {

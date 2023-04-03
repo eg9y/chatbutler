@@ -44,7 +44,11 @@ const InputNodesList = ({
 						inputNode.type === NodeTypesEnum.classifyCategories &&
 							'bg-rose-200 text-slate-500 hover:bg-rose-400  border-l-8 border-rose-300',
 						inputNode.type === NodeTypesEnum.fileText &&
-							'bg-sky-200  hover:bg-rose-400  border-l-8 border-sky-300',
+							'bg-sky-200  hover:bg-sky-400  border-l-8 border-sky-300',
+						inputNode.type === NodeTypesEnum.search &&
+							'bg-sky-200  hover:bg-sky-400  border-l-8 border-sky-300',
+						inputNode.type === NodeTypesEnum.combine &&
+							'bg-sky-200  hover:bg-sky-400  border-l-8 border-sky-300',
 						`rounded py-1 px-2 font-semibold shadow-sm `,
 					);
 					return (

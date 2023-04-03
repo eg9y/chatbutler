@@ -23,7 +23,7 @@ export type AllDataTypes =
 	| SearchDataType
 	| FileTextDataType;
 
-export type CustomNode = Node<AllDataTypes>;
+export type CustomNode = Node<CombineDataType | AllDataTypes>;
 export type InputNode = Node<
 	LLMPromptNodeDataType | TextInputNodeDataType | ChatPromptNodeDataType
 >;
@@ -76,6 +76,8 @@ export type SearchDataType = {
 } & DocumentDataType &
 	DefaultNodeDataType;
 
+export type CombineDataType = DefaultNodeDataType;
+
 export enum NodeTypesEnum {
 	llmPrompt = 'llmPrompt',
 	textInput = 'textInput',
@@ -86,4 +88,5 @@ export enum NodeTypesEnum {
 	placeholder = 'placeholder',
 	fileText = 'fileText',
 	search = 'search',
+	combine = 'combine',
 }

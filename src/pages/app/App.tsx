@@ -26,6 +26,7 @@ import ChatMessageNode from '../../nodes/ChatMessageNode';
 import ChatPromptNode from '../../nodes/ChatPromptNode';
 import ClassifyCategoriesNode from '../../nodes/ClassifyCategoriesNode';
 import ClassifyNode from '../../nodes/ClassifyNode';
+import CombineNode from '../../nodes/CombineNode';
 import FileNode from '../../nodes/FileTextNode';
 import LLMPromptNode from '../../nodes/LLMPromptNode';
 import PlaceholderNode from '../../nodes/PlaceholderNode';
@@ -48,6 +49,7 @@ const nodeTypes = {
 	chatMessage: ChatMessageNode,
 	fileText: FileNode,
 	search: SearchNode,
+	combine: CombineNode,
 	placeholder: PlaceholderNode,
 };
 
@@ -224,6 +226,8 @@ export default function App() {
 				nodeTypeEnum = NodeTypesEnum.fileText;
 			} else if (type === 'search') {
 				nodeTypeEnum = NodeTypesEnum.search;
+			} else if (type === 'combine') {
+				nodeTypeEnum = NodeTypesEnum.combine;
 			}
 
 			onAdd(nodeTypeEnum, position);

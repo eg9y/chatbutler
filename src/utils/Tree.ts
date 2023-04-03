@@ -178,6 +178,7 @@ export async function runNode(
 			}
 		}
 	} else if (node.type === NodeTypesEnum.search) {
+		const inputs = node.data.inputs;
 		try {
 			const searchNode = node.data as SearchDataType;
 			const document = searchNode?.document;
@@ -228,8 +229,10 @@ export async function runNode(
 						queryName: 'match_document_contents',
 					},
 				);
+				const inputNodes = get().getNodes(inputs.inputs);
+				const parsedPrompt = parsePromptInputs(searchNode.text, inputNodes);
 				searchResults = await vectorStore.similaritySearch(
-					searchNode.text,
+					parsedPrompt,
 					searchNode.results,
 				);
 			} else {
@@ -241,8 +244,10 @@ export async function runNode(
 						queryName: 'match_document_contents',
 					},
 				);
+				const inputNodes = get().getNodes(inputs.inputs);
+				const parsedPrompt = parsePromptInputs(searchNode.text, inputNodes);
 				searchResults = await vectorStore.similaritySearch(
-					searchNode.text,
+					parsedPrompt,
 					searchNode.results,
 				);
 			}
@@ -250,7 +255,7 @@ export async function runNode(
 			node.data = {
 				...node.data,
 				// TODO: need to have a combiner node or a for loop node
-				response: searchResults.map((result) => result.pageContent).join(''),
+				response: JSON.stringify(searchResults),
 				isLoading: false,
 			};
 		} catch (error) {
@@ -260,6 +265,27 @@ export async function runNode(
 				isLoading: false,
 			};
 			throw error;
+		}
+	} else if (node.type === NodeTypesEnum.combine) {
+		const inputs = node.data.inputs;
+		if (inputs) {
+			const inputNodes = get().getNodes(inputs.inputs);
+			// inputNodes are guaranteed to be Documents[]
+			const combined = inputNodes
+				.map((n) => {
+					return JSON.parse(n.data.response)
+						.map((documentContent: Document) => {
+							// TODO: add metadata to document_contents db, and theen add it to the response
+							return `Text: ${documentContent.pageContent}\n`;
+						})
+						.join('\n\n');
+				})
+				.join('\n\n');
+			node.data = {
+				...node.data,
+				response: combined,
+				isLoading: false,
+			};
 		}
 	} else if (node.type === NodeTypesEnum.chatPrompt) {
 		const chatMessageNodes = collectChatMessages(node, get);

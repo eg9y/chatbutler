@@ -169,7 +169,7 @@ export default function LeftSidePanel({
 					<Disclosure defaultOpen={true}>
 						{({ open }) => (
 							<>
-								<Disclosure.Button className="bg-slate-300 flex justify-between">
+								<Disclosure.Button className="bg-slate-300 flex justify-between border-b-1 border-slate-400">
 									<p className="text-start text-slate-900 font-semibold text-md pr-2 pl-4">
 										GPT
 									</p>
@@ -214,7 +214,7 @@ export default function LeftSidePanel({
 					<Disclosure defaultOpen={true}>
 						{({ open }) => (
 							<>
-								<Disclosure.Button className="bg-slate-300 flex justify-between">
+								<Disclosure.Button className="bg-slate-300 flex justify-between border-b-1 border-slate-400">
 									<p className="text-start text-slate-900 font-semibold text-md pr-2 pl-4">
 										Helper
 									</p>
@@ -261,7 +261,7 @@ export default function LeftSidePanel({
 					<Disclosure defaultOpen={true}>
 						{({ open }) => (
 							<>
-								<Disclosure.Button className="bg-slate-300 flex justify-between">
+								<Disclosure.Button className="bg-slate-300 flex justify-between border-b-1 border-slate-400">
 									<p className="text-start text-slate-900 font-semibold text-md pr-2 pl-4">
 										File
 									</p>
@@ -305,7 +305,7 @@ export default function LeftSidePanel({
 				</div>
 				<div>
 					<button
-						className="p-3 bg-red-500 hover:bg-red-600 text-white text-md font-semibold mx-auto rounded flex items-center"
+						className="px-3 py-1 bg-red-500 hover:bg-red-600 text-white text-md font-semibold mx-auto rounded flex items-center"
 						onClick={() => {
 							// Are you sure prompt
 							if (window.confirm('Are you sure you want to clear the graph?')) {
@@ -339,17 +339,18 @@ const NodeType: FC<{
 	>;
 }> = ({ name, handleDrag, addNodeToCenter, nodeType, session, Icon, needAuth = false }) => {
 	const colorClassName = conditionalClassNames(
-		nodeType === NodeTypesEnum.chatMessage && `ring-indigo-300`,
-		nodeType === NodeTypesEnum.chatPrompt && `ring-indigo-300`,
-		nodeType === NodeTypesEnum.llmPrompt && `ring-amber-400`,
-		nodeType === NodeTypesEnum.classify && `ring-rose-300`,
-		nodeType === NodeTypesEnum.text && `ring-emerald-400`,
-		nodeType === NodeTypesEnum.inputText && `ring-emerald-400`,
-		nodeType === NodeTypesEnum.fileText && `ring-sky-400`,
-		nodeType === NodeTypesEnum.search && `ring-sky-400`,
-		nodeType === NodeTypesEnum.combine && `ring-sky-400`,
+		nodeType === NodeTypesEnum.chatMessage && `bg-indigo-200 border-2 border-indigo-400`,
+		nodeType === NodeTypesEnum.chatPrompt && `bg-indigo-200 border-2 border-indigo-400`,
+		nodeType === NodeTypesEnum.llmPrompt && `bg-amber-200 border-2 border-amber-400`,
+		nodeType === NodeTypesEnum.classify && `bg-rose-200 border-2 border-rose-400`,
+		nodeType === NodeTypesEnum.text && `bg-emerald-200 border-2 border-emerald-400`,
+		nodeType === NodeTypesEnum.inputText && `bg-emerald-200 border-2 border-emerald-400`,
+		nodeType === NodeTypesEnum.outputText && `bg-emerald-200 border-2 border-emerald-400`,
+		nodeType === NodeTypesEnum.fileText && `bg-sky-200 border-2 border-sky-400`,
+		nodeType === NodeTypesEnum.search && `bg-sky-200 border-2 border-sky-400`,
+		nodeType === NodeTypesEnum.combine && `bg-sky-200 border-2 border-sky-400`,
 		needAuth && !session && `opacity-50 pointer-events-none`,
-		`text-slate-600 hover:bg-slate-100 hover:text-slate-900 group flex items-center rounded-md px-3 py-2 text-sm font-medium cursor-pointer ring-2 ring-inset`,
+		`text-slate-600 group flex items-center rounded-md px-3 py-1 text-sm cursor-pointer`,
 	);
 	return (
 		<div
@@ -362,7 +363,7 @@ const NodeType: FC<{
 			<a className={colorClassName} onClick={() => addNodeToCenter(nodeType)}>
 				<Icon
 					className={
-						'text-slate-400 group-hover:text-slate-500 -ml-1 mr-3 h-6 w-6 flex-shrink-0'
+						'text-slate-500 group-hover:text-slate-500 -ml-1 mr-3 h-4 w-4 flex-shrink-0'
 					}
 					aria-hidden="true"
 				/>

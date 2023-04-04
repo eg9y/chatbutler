@@ -20,7 +20,7 @@ export default function NodesPanel({ selectedNode }: { selectedNode: CustomNode 
 	return (
 		<div className="py-3 flex flex-col justify-between w-full h-full">
 			{/* TODO: Clear graph logic */}
-			<div className="grow relative  overflow-scroll">
+			<div className="grow relative overflow-scroll">
 				<div className="absolute w-full">
 					<Chat messages={chatApp} loading={false} />
 				</div>

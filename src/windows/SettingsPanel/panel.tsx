@@ -52,7 +52,7 @@ export default function SettingsPanel() {
 			<Disclosure defaultOpen={true}>
 				{({ open }) => (
 					<>
-						<Disclosure.Button className="bg-slate-300 flex justify-between">
+						<Disclosure.Button className="bg-slate-300 flex justify-between border-b-1 border-slate-400">
 							<p className="text-start text-slate-900 font-semibold text-md pr-2 pl-4">
 								{prettyPrintType(selectedNode)}
 							</p>
@@ -70,49 +70,51 @@ export default function SettingsPanel() {
 							className="flex flex-col gap-1 px-2"
 						>
 							{selectedNode && (
-								<div className="ml-2 h-full">
-									{selectedNode.type === NodeTypesEnum.llmPrompt && (
-										<LLMPromptTabs
-											selectedNode={
-												selectedNode as Node<LLMPromptNodeDataType>
-											}
-											updateNode={updateNode}
-										/>
-									)}
-									{selectedNode.type === NodeTypesEnum.text && (
-										<TextTabs
-											selectedNode={selectedNode}
-											updateNode={updateNode}
-										/>
-									)}
-									{selectedNode.type === NodeTypesEnum.chatMessage && (
-										<ChatMessageTabs
-											selectedNode={selectedNode}
-											updateNode={updateNode}
-										/>
-									)}
-									{selectedNode.type === NodeTypesEnum.chatPrompt && (
-										<ChatPromptTabs
-											selectedNode={
-												selectedNode as Node<ChatPromptNodeDataType>
-											}
-											updateNode={updateNode}
-										/>
-									)}
-									{selectedNode.type === NodeTypesEnum.classify && (
-										<ClassifyTabs
-											selectedNode={
-												selectedNode as Node<ClassifyNodeDataType>
-											}
-											updateNode={updateNode}
-										/>
-									)}
-									{selectedNode.type === NodeTypesEnum.search && (
-										<SearchTabs
-											selectedNode={selectedNode as Node<SearchDataType>}
-											updateNode={updateNode}
-										/>
-									)}
+								<div className="ml-2 h-full relative overflow-y-scroll">
+									<div className="absolute w-full">
+										{selectedNode.type === NodeTypesEnum.llmPrompt && (
+											<LLMPromptTabs
+												selectedNode={
+													selectedNode as Node<LLMPromptNodeDataType>
+												}
+												updateNode={updateNode}
+											/>
+										)}
+										{selectedNode.type === NodeTypesEnum.text && (
+											<TextTabs
+												selectedNode={selectedNode}
+												updateNode={updateNode}
+											/>
+										)}
+										{selectedNode.type === NodeTypesEnum.chatMessage && (
+											<ChatMessageTabs
+												selectedNode={selectedNode}
+												updateNode={updateNode}
+											/>
+										)}
+										{selectedNode.type === NodeTypesEnum.chatPrompt && (
+											<ChatPromptTabs
+												selectedNode={
+													selectedNode as Node<ChatPromptNodeDataType>
+												}
+												updateNode={updateNode}
+											/>
+										)}
+										{selectedNode.type === NodeTypesEnum.classify && (
+											<ClassifyTabs
+												selectedNode={
+													selectedNode as Node<ClassifyNodeDataType>
+												}
+												updateNode={updateNode}
+											/>
+										)}
+										{selectedNode.type === NodeTypesEnum.search && (
+											<SearchTabs
+												selectedNode={selectedNode as Node<SearchDataType>}
+												updateNode={updateNode}
+											/>
+										)}
+									</div>
 								</div>
 							)}
 						</Disclosure.Panel>
@@ -122,7 +124,7 @@ export default function SettingsPanel() {
 			<Disclosure defaultOpen={true}>
 				{({ open }) => (
 					<div className="grow flex flex-col">
-						<Disclosure.Button className="bg-slate-300 flex justify-between w-full">
+						<Disclosure.Button className="bg-slate-300 flex justify-between w-full  border-b-1 border-slate-400">
 							<p className="text-start text-slate-900 font-semibold text-md pr-2 pl-4">
 								Chat
 							</p>

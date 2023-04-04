@@ -1,3 +1,4 @@
+import { Disclosure } from '@headlessui/react';
 import {
 	Cog6ToothIcon,
 	Bars3CenterLeftIcon,
@@ -10,6 +11,9 @@ import {
 	ArrowRightOnRectangleIcon,
 	WrenchIcon,
 	AcademicCapIcon,
+	TrashIcon,
+	ChevronRightIcon,
+	PencilIcon,
 } from '@heroicons/react/20/solid';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { FC, useState } from 'react';
@@ -42,10 +46,8 @@ export default function LeftSidePanel({
 	reactFlowInstance: ReactFlowInstance<any, any> | null;
 	supabase: SupabaseClient<Database>;
 }) {
-	const { setUiErrorMessage, setWorkflows, currentWorkflow, setCurrentWorkflow } = useStore(
-		selector,
-		shallow,
-	);
+	const { setUiErrorMessage, setWorkflows, currentWorkflow, setCurrentWorkflow, clearGraph } =
+		useStore(selector, shallow);
 	const { session, openAiKey, setOpenAiKey } = useStoreSecret(selectorSecret, shallow);
 	const [dragging, setDragging] = useState(false);
 
@@ -72,7 +74,7 @@ export default function LeftSidePanel({
 	};
 
 	return (
-		<aside className="bg-slate-50 w-full shadow-lg border-r-1 border-slate-400">
+		<aside className="bg-slate-50 w-full h-full overflow-auto shadow-lg border-r-1 border-slate-400">
 			{session && (
 				<UserWorkflows
 					currentWorkflow={currentWorkflow}
@@ -85,22 +87,7 @@ export default function LeftSidePanel({
 			)}
 			<Tutorial open={openTutorials} setOpen={setOpenTutorials} />
 			<div className="flex flex-col justify-between h-full py-1 border-1">
-				<div className="space-y-1 flex flex-col gap-2">
-					<div className="flex flex-col justify-between px-2">
-						<div className="flex flex-col border-b-1 pb-2 border-slate-300">
-							<ul className="list-disc list-inside">
-								<a
-									className="list-item text-xs text-slate-600 underline hover:font-semibold cursor-pointer"
-									href="https://github.com/eg9y/promptsandbox.io"
-									target="_blank"
-									rel="noreferrer"
-								>
-									more info
-								</a>
-							</ul>
-						</div>
-					</div>
-
+				<div className="space-y-1 flex flex-col">
 					<div className="flex flex-col justify-between px-1">
 						<div className="flex flex-col gap-2">
 							<a
@@ -125,7 +112,7 @@ export default function LeftSidePanel({
 						</div>
 						<div className="mt-1 space-y-1" aria-labelledby="projects-headline">
 							<a
-								className="group flex items-center px-3 py-2 text-sm font-medium text-slate-700 
+								className="group flex items-center px-2 py-2 text-sm font-medium text-slate-700 
 								bg-slate-300 hover:text-slate-900 hover:font-bold cursor-pointer "
 								onClick={async () => {
 									const currentKey = openAiKey || '';
@@ -179,99 +166,159 @@ export default function LeftSidePanel({
 							</a>
 						</div>
 					</div>
-					<div>
-						<div className="bg-slate-200 flex justify-between">
-							<p className="text-start text-slate-900 font-semibold text-md pr-2 pl-4 py-1">
-								GPT
-							</p>
-						</div>
-						<div className="flex flex-col gap-1 px-2 py-2">
-							{/* TODO: Refactor node blocks */}
-							<NodeType
-								name="Chat API"
-								nodeType={NodeTypesEnum.chatPrompt}
-								handleDrag={handleDrag}
-								addNodeToCenter={addNodeToCenter}
-								Icon={ChatBubbleLeftRightIcon}
-							/>
-							<div className="flex">
-								<img src={rightAngleSvg} alt="SVG as an image" />
-								<div className="grow">
+					<Disclosure defaultOpen={true}>
+						{({ open }) => (
+							<>
+								<Disclosure.Button className="bg-slate-300 flex justify-between">
+									<p className="text-start text-slate-900 font-semibold text-md pr-2 pl-4">
+										GPT
+									</p>
+									<ChevronRightIcon
+										className={conditionalClassNames(
+											open ? 'rotate-90 transform' : '',
+											'w-5 text-slate-500',
+										)}
+									/>
+								</Disclosure.Button>
+								<Disclosure.Panel className="flex flex-col gap-1 px-2">
 									<NodeType
-										name="Message"
-										nodeType={NodeTypesEnum.chatMessage}
+										name="Chat API"
+										nodeType={NodeTypesEnum.chatPrompt}
 										handleDrag={handleDrag}
 										addNodeToCenter={addNodeToCenter}
-										Icon={ChatBubbleLeftEllipsisIcon}
+										Icon={ChatBubbleLeftRightIcon}
 									/>
-								</div>
-							</div>
-							<NodeType
-								name="Complete API"
-								nodeType={NodeTypesEnum.llmPrompt}
-								handleDrag={handleDrag}
-								addNodeToCenter={addNodeToCenter}
-								Icon={ArrowRightOnRectangleIcon}
-							/>
-						</div>
-					</div>
-					<div>
-						<div className="bg-slate-200 flex justify-between">
-							<p className="text-start text-slate-900 font-semibold text-md pr-2 pl-4 py-1">
-								Helper
-							</p>
-						</div>
-						<div className="flex flex-col gap-1 px-2 py-2">
-							<NodeType
-								name="Text"
-								nodeType={NodeTypesEnum.textInput}
-								handleDrag={handleDrag}
-								addNodeToCenter={addNodeToCenter}
-								Icon={Bars3CenterLeftIcon}
-							/>
-							<NodeType
-								name="Classify"
-								nodeType={NodeTypesEnum.classify}
-								handleDrag={handleDrag}
-								addNodeToCenter={addNodeToCenter}
-								Icon={ShareIcon}
-							/>
-						</div>
-					</div>
-					<div>
-						<div className="bg-slate-200 flex justify-between">
-							<p className="text-start text-slate-900 font-semibold text-md pr-2 pl-4 py-1">
-								File
-							</p>
-						</div>
-						<div className="flex flex-col gap-1 px-2 py-2">
-							<NodeType
-								name="File Text"
-								nodeType={NodeTypesEnum.fileText}
-								handleDrag={handleDrag}
-								addNodeToCenter={addNodeToCenter}
-								Icon={DocumentTextIcon}
-								session={session}
-								needAuth={true}
-							/>
-							<NodeType
-								name="Search"
-								nodeType={NodeTypesEnum.search}
-								handleDrag={handleDrag}
-								addNodeToCenter={addNodeToCenter}
-								Icon={MagnifyingGlassIcon}
-								session={session}
-								needAuth={true}
-							/>
-							<NodeType
-								name="Combine File(s)"
-								nodeType={NodeTypesEnum.combine}
-								handleDrag={handleDrag}
-								addNodeToCenter={addNodeToCenter}
-								Icon={WrenchIcon}
-							/>
-						</div>
-					</div>
+									<div className="flex">
+										<img src={rightAngleSvg} alt="SVG as an image" />
+										<div className="grow">
+											<NodeType
+												name="Message"
+												nodeType={NodeTypesEnum.chatMessage}
+												handleDrag={handleDrag}
+												addNodeToCenter={addNodeToCenter}
+												Icon={ChatBubbleLeftEllipsisIcon}
+											/>
+										</div>
+									</div>
+									<NodeType
+										name="Complete API"
+										nodeType={NodeTypesEnum.llmPrompt}
+										handleDrag={handleDrag}
+										addNodeToCenter={addNodeToCenter}
+										Icon={PencilIcon}
+									/>
+								</Disclosure.Panel>
+							</>
+						)}
+					</Disclosure>
+					<Disclosure defaultOpen={true}>
+						{({ open }) => (
+							<>
+								<Disclosure.Button className="bg-slate-300 flex justify-between">
+									<p className="text-start text-slate-900 font-semibold text-md pr-2 pl-4">
+										Helper
+									</p>
+									<ChevronRightIcon
+										className={conditionalClassNames(
+											open ? 'rotate-90 transform' : '',
+											'w-5 text-slate-500',
+										)}
+									/>
+								</Disclosure.Button>
+								<Disclosure.Panel className="flex flex-col gap-1 px-2">
+									<NodeType
+										name="Text"
+										nodeType={NodeTypesEnum.text}
+										handleDrag={handleDrag}
+										addNodeToCenter={addNodeToCenter}
+										Icon={Bars3CenterLeftIcon}
+									/>
+									<NodeType
+										name="Text Input"
+										nodeType={NodeTypesEnum.inputText}
+										handleDrag={handleDrag}
+										addNodeToCenter={addNodeToCenter}
+										Icon={ArrowRightOnRectangleIcon}
+									/>
+									<NodeType
+										name="Text Output"
+										nodeType={NodeTypesEnum.outputText}
+										handleDrag={handleDrag}
+										addNodeToCenter={addNodeToCenter}
+										Icon={ArrowRightOnRectangleIcon}
+									/>
+									<NodeType
+										name="Classify"
+										nodeType={NodeTypesEnum.classify}
+										handleDrag={handleDrag}
+										addNodeToCenter={addNodeToCenter}
+										Icon={ShareIcon}
+									/>
+								</Disclosure.Panel>
+							</>
+						)}
+					</Disclosure>
+					<Disclosure defaultOpen={true}>
+						{({ open }) => (
+							<>
+								<Disclosure.Button className="bg-slate-300 flex justify-between">
+									<p className="text-start text-slate-900 font-semibold text-md pr-2 pl-4">
+										File
+									</p>
+									<ChevronRightIcon
+										className={conditionalClassNames(
+											open ? 'rotate-90 transform' : '',
+											'w-5 text-slate-500',
+										)}
+									/>
+								</Disclosure.Button>
+								<Disclosure.Panel className="flex flex-col gap-1 px-2">
+									<NodeType
+										name="File Text"
+										nodeType={NodeTypesEnum.fileText}
+										handleDrag={handleDrag}
+										addNodeToCenter={addNodeToCenter}
+										Icon={DocumentTextIcon}
+										session={session}
+										needAuth={true}
+									/>
+									<NodeType
+										name="Search"
+										nodeType={NodeTypesEnum.search}
+										handleDrag={handleDrag}
+										addNodeToCenter={addNodeToCenter}
+										Icon={MagnifyingGlassIcon}
+										session={session}
+										needAuth={true}
+									/>
+									<NodeType
+										name="Combine File(s)"
+										nodeType={NodeTypesEnum.combine}
+										handleDrag={handleDrag}
+										addNodeToCenter={addNodeToCenter}
+										Icon={WrenchIcon}
+									/>
+								</Disclosure.Panel>
+							</>
+						)}
+					</Disclosure>
+				</div>
+				<div>
+					<button
+						className="p-3 bg-red-500 hover:bg-red-600 text-white text-md font-semibold mx-auto rounded flex items-center"
+						onClick={() => {
+							// Are you sure prompt
+							if (window.confirm('Are you sure you want to clear the graph?')) {
+								clearGraph();
+							}
+						}}
+					>
+						<TrashIcon
+							className={' group-hover:text-slate-500 mx-auto h-5 w-5'}
+							aria-hidden="true"
+						/>
+						<span>Clear graph</span>
+					</button>
 				</div>
 			</div>
 		</aside>
@@ -296,7 +343,8 @@ const NodeType: FC<{
 		nodeType === NodeTypesEnum.chatPrompt && `ring-indigo-300`,
 		nodeType === NodeTypesEnum.llmPrompt && `ring-amber-400`,
 		nodeType === NodeTypesEnum.classify && `ring-rose-300`,
-		nodeType === NodeTypesEnum.textInput && `ring-emerald-400`,
+		nodeType === NodeTypesEnum.text && `ring-emerald-400`,
+		nodeType === NodeTypesEnum.inputText && `ring-emerald-400`,
 		nodeType === NodeTypesEnum.fileText && `ring-sky-400`,
 		nodeType === NodeTypesEnum.search && `ring-sky-400`,
 		nodeType === NodeTypesEnum.combine && `ring-sky-400`,

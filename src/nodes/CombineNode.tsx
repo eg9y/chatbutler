@@ -18,14 +18,14 @@ const Combine: FC<NodeProps<CombineDataType>> = (props) => {
 	const [showFullScreen, setShowFullScreen] = useState(false);
 
 	return (
-		<div className="">
+		<div>
 			<div
 				style={{
 					width: '35rem',
 				}}
 				className={`m-3 bg-slate-100 shadow-lg border-2  ${
 					selected ? 'border-sky-600' : 'border-slate-300'
-				} flex flex-col `}
+				} flex flex-col`}
 			>
 				{/* how to spread  */}
 				<NodeTemplate

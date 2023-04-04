@@ -2,14 +2,14 @@ import { PlayIcon } from '@heroicons/react/20/solid';
 import { Node } from 'reactflow';
 import { shallow } from 'zustand/shallow';
 
-import { LLMPromptNodeDataType, TextInputNodeDataType } from '../../../../../nodes/types/NodeTypes';
+import { LLMPromptNodeDataType, TextNodeDataType } from '../../../../../nodes/types/NodeTypes';
 import useStore, { selector } from '../../../../../store/useStore';
 
 export default function TestTab({
 	selectedNode,
 }: {
 	selectedNode: Node<LLMPromptNodeDataType>;
-	updateNode: (id: string, data: LLMPromptNodeDataType | TextInputNodeDataType) => void;
+	updateNode: (id: string, data: LLMPromptNodeDataType | TextNodeDataType) => void;
 }) {
 	const { updateInputExample } = useStore(selector, shallow);
 

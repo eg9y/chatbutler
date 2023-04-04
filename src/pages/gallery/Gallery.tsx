@@ -28,10 +28,14 @@ export default function Gallery() {
 			// 	{
 			// 		id: 'ytJrgJM3K-XrJHIo1Wfok',
 			// 		name: 'customer support workflow',
+			// 		user_id: '5f9f1c9b-8c1e-4b5c-9b1a-8c1e4b5c9b1a',
+			// 		description: 'a description ',
 			// 	},
 			// 	{
 			// 		id: 'l_vZ-onDE9kqbmv3uX-IP',
 			// 		name: 'prompterinod',
+			// 		user_id: '5f9f1c9b-8c1e-4b5c-9b1a-8c1e4b5c9b1a',
+			// 		description: 'a description ',
 			// 	},
 			// ];
 			// setPublicWorkflows(mock);
@@ -65,12 +69,12 @@ const Card = ({
 				<div
 					key={index}
 					className="border-1 border-slate-300
-					cursor-pointer shadow-md
+					shadow-md
 					hover:shadow-lg transition-shadow duration-300 ease-in-out
 					flex flex-col
 					"
 				>
-					<div className="bg-white rounded-md  p-4 items-center justify-center space-y-4 grow">
+					<div className="bg-white flex flex-col rounded-md p-4 items-start justify-center space-y-4 grow">
 						{/* {item.image ? (
 							<img
 								src={item.image}
@@ -85,6 +89,7 @@ const Card = ({
 							{item?.description}
 							-description goes here-
 						</p>
+						<a className="text-blue-600 text-sm cursor-pointer">Read more...</a>
 					</div>
 					<div className="flex border-t-1 border-slate-300 w-full">
 						<div className="flex w-0 flex-1 border-r-1 border-slate-300">
@@ -99,19 +104,22 @@ const Card = ({
 									);
 								}}
 							>
-								<span className="truncate">Open</span>
+								<span className="truncate">Sandbox</span>
 							</a>
 						</div>
-						<div className="flex w-0 flex-1">
+						<div className="flex w-0 flex-1 border-r-1 border-slate-300">
 							<a
 								className="relative -mr-px inline-flex w-0 flex-1 items-center 
                                         cursor-pointer hover:bg-slate-200
                                     justify-center gap-x-3 border border-transparent py-4 text-sm font-semibold text-gray-900"
 								onClick={async () => {
-									console.log('placeholder');
+									window.open(
+										`/?user_id=${item.user_id}&id=${item.id}`,
+										'_blank',
+									);
 								}}
 							>
-								<span className="truncate">Description</span>
+								<span className="truncate">App</span>
 							</a>
 						</div>
 					</div>

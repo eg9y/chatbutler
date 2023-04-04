@@ -1,5 +1,5 @@
 import { Dialog } from '@headlessui/react';
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/20/solid';
+import { ArrowTopRightOnSquareIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/20/solid';
 import { nanoid } from 'nanoid';
 import { useState } from 'react';
 import { useLocation } from 'wouter';
@@ -117,10 +117,21 @@ const NavBar = () => {
 					)}
 				</div>
 
-				<div className="flex flex-1 justify-end">
+				<div className="flex flex-1 justify-end items-center gap-4 text-sm">
+					<a
+						className="flex gap-1 items-center hover:font-semibold cursor-pointer"
+						href="https://github.com/eg9y/promptsandbox.io"
+						target="_blank"
+						rel="noreferrer"
+					>
+						GitHub{' '}
+						<span>
+							<ArrowTopRightOnSquareIcon className="h-4 w-4" aria-hidden="true" />
+						</span>
+					</a>
 					<a
 						href="#"
-						className="text-sm font-semibold leading-6 text-gray-900"
+						className=" font-semibold leading-6 text-gray-900"
 						onClick={() => {
 							if (session) {
 								supabase.auth.signOut();

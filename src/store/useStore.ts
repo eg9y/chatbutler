@@ -30,9 +30,10 @@ import {
 	InputNode,
 	LLMPromptNodeDataType,
 	NodeTypesEnum,
-	TextInputNodeDataType,
+	TextNodeDataType,
 } from '../nodes/types/NodeTypes';
 import { runNode, traverseTree } from '../utils/Tree';
+import { Message } from '../windows/SettingsPanel/Chat/types';
 
 export type UseStoreSetType = (
 	partial: RFState | Partial<RFState> | ((state: RFState) => RFState | Partial<RFState>),
@@ -40,6 +41,12 @@ export type UseStoreSetType = (
 ) => void;
 
 export interface RFState {
+	waitingUserResponse: boolean;
+	setWaitingUserResponse: (waiting: boolean) => void;
+	pauseResolver: (value: string) => void;
+	setPauseResolver: (resolver: (value: string) => void) => void;
+	chatApp: Message[];
+	setChatApp: (messages: Message[]) => void;
 	documents: DocumentDbSchema[];
 	setDocuments: (documents: DocumentDbSchema[]) => void;
 	workflows: {
@@ -89,6 +96,25 @@ export interface RFState {
 const useStore = create<RFState>()(
 	persist(
 		(set, get) => ({
+			chatApp: [],
+			setChatApp: (messages: Message[]) => {
+				set({
+					chatApp: messages,
+				});
+			},
+			waitingUserResponse: false,
+			setWaitingUserResponse: (waiting: boolean) => {
+				set({
+					waitingUserResponse: waiting,
+				});
+			},
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			pauseResolver: (value: string) => {},
+			setPauseResolver: (resolver: (value: string) => void) => {
+				set({
+					pauseResolver: resolver,
+				});
+			},
 			documents: [],
 			setDocuments: (documents: DocumentDbSchema[]) => {
 				set({
@@ -207,7 +233,7 @@ const useStore = create<RFState>()(
 			},
 			updateNode: (
 				nodeId: string,
-				data: LLMPromptNodeDataType & TextInputNodeDataType,
+				data: LLMPromptNodeDataType & TextNodeDataType,
 				newPosition?: { mode: 'add' | 'set'; x: number; y: number },
 			) => {
 				return updateNode(get, set, nodeId, data, newPosition);

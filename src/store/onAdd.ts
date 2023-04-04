@@ -198,7 +198,7 @@ const onAdd = (
 			edges: addEdge(edge, edges),
 		});
 		return;
-	} else if (type === NodeTypesEnum.textInput) {
+	} else if (type === NodeTypesEnum.text) {
 		node = {
 			id: generateUniqueId(type),
 			type,
@@ -212,6 +212,42 @@ const onAdd = (
 				children: [],
 				inputs: new Inputs(),
 				response: `This is a test input ${nodeLength}`,
+				isLoading: false,
+				isBreakpoint: false,
+			},
+		};
+	} else if (type === NodeTypesEnum.inputText) {
+		node = {
+			id: generateUniqueId(type),
+			type,
+			position: {
+				x,
+				y,
+			},
+			data: {
+				name: `input`,
+				text: `input prompt`,
+				children: [],
+				inputs: new Inputs(),
+				response: `input text`,
+				isLoading: false,
+				isBreakpoint: false,
+			},
+		};
+	} else if (type === NodeTypesEnum.outputText) {
+		node = {
+			id: generateUniqueId(type),
+			type,
+			position: {
+				x,
+				y,
+			},
+			data: {
+				name: `output`,
+				text: `output`,
+				children: [],
+				inputs: new Inputs(),
+				response: `output`,
 				isLoading: false,
 				isBreakpoint: false,
 			},

@@ -1,32 +1,33 @@
-import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/20/solid';
-import { useState } from 'react';
+import { Disclosure } from '@headlessui/react';
+import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import { Node } from 'reactflow';
 import { shallow } from 'zustand/shallow';
 
+import ChatPanel from './ChatPanel';
 import ChatMessageTabs from './nodeSettings/chatMessage/tabs';
 import ChatPromptTabs from './nodeSettings/chatPromptNode/tabs';
 import ClassifyTabs from './nodeSettings/classifyNode/tabs';
 import LLMPromptTabs from './nodeSettings/llmPromptNode/tabs';
-import TextInputTabs from './nodeSettings/textInputNode/tabs';
-import NodesPanel from './NodesPanel';
+import SearchTabs from './nodeSettings/searchNode/tabs';
+import TextTabs from './nodeSettings/textNode/tabs';
 import {
 	ChatPromptNodeDataType,
 	ClassifyNodeDataType,
 	LLMPromptNodeDataType,
 	NodeTypesEnum,
+	SearchDataType,
 } from '../../nodes/types/NodeTypes';
 import useStore, { selector } from '../../store/useStore';
+import { conditionalClassNames } from '../../utils/classNames';
 
 export default function SettingsPanel() {
 	const { selectedNode, updateNode } = useStore(selector, shallow);
-	const [topDivCollapsed, setTopDivCollapsed] = useState(false);
-	const [bottomDivCollapsed, setBottomDivCollapsed] = useState(false);
 
 	function prettyPrintType(selectedNode: Node | null) {
 		if (!selectedNode) return;
 		if (selectedNode.type === NodeTypesEnum.llmPrompt) {
 			return 'LLM Prompt';
-		} else if (selectedNode.type === NodeTypesEnum.textInput) {
+		} else if (selectedNode.type === NodeTypesEnum.text) {
 			return 'Input Text';
 		} else if (selectedNode.type === NodeTypesEnum.chatPrompt) {
 			return 'Chat Prompt';
@@ -46,102 +47,98 @@ export default function SettingsPanel() {
 	return (
 		<div
 			style={{ height: '95vh' }}
-			className="bg-slate-50 shadow-xl flex flex-col w-full  border-l-1 border-slate-400"
+			className="bg-slate-50 shadow-xl flex flex-col w-full border-l-1 border-slate-400"
 		>
-			<div
-				className="bg-slate-200 flex justify-between cursor-pointer"
-				onClick={() => setTopDivCollapsed(!topDivCollapsed)}
-			>
-				<p className="text-start text-slate-900 font-semibold text-md pr-2 pl-4 py-1">
-					{prettyPrintType(selectedNode)}
-				</p>
-				<button className=" text-slate-900 font-semibold text-md px-2 py-1">
-					{topDivCollapsed ? (
-						<ChevronUpIcon
-							className={'text-slate-600 group-hover:text-slate-500 h-full mx-auto'}
-							aria-hidden="true"
-						/>
-					) : (
-						<ChevronDownIcon
-							className={'text-slate-600 group-hover:text-slate-500 h-full mx-auto'}
-							aria-hidden="true"
-						/>
-					)}
-				</button>
-			</div>
-			<div
-				style={{
-					height: topDivCollapsed ? '1%' : '60%',
-					flexGrow: bottomDivCollapsed ? '1' : 0,
-				}}
-				className="flex flex-col overflow-hidden"
-			>
-				{!topDivCollapsed && selectedNode && (
-					<div className="ml-2 h-full">
-						{selectedNode.type === NodeTypesEnum.llmPrompt && (
-							<LLMPromptTabs
-								selectedNode={selectedNode as Node<LLMPromptNodeDataType>}
-								updateNode={updateNode}
+			<Disclosure defaultOpen={true}>
+				{({ open }) => (
+					<>
+						<Disclosure.Button className="bg-slate-300 flex justify-between">
+							<p className="text-start text-slate-900 font-semibold text-md pr-2 pl-4">
+								{prettyPrintType(selectedNode)}
+							</p>
+							<ChevronRightIcon
+								className={conditionalClassNames(
+									open ? 'rotate-90 transform' : '',
+									'w-5 text-slate-500',
+								)}
 							/>
-						)}
-						{selectedNode.type === NodeTypesEnum.textInput && (
-							<TextInputTabs selectedNode={selectedNode} updateNode={updateNode} />
-						)}
-						{selectedNode.type === NodeTypesEnum.chatMessage && (
-							<ChatMessageTabs selectedNode={selectedNode} updateNode={updateNode} />
-						)}
-						{selectedNode.type === NodeTypesEnum.chatPrompt && (
-							<ChatPromptTabs
-								selectedNode={selectedNode as Node<ChatPromptNodeDataType>}
-								updateNode={updateNode}
+						</Disclosure.Button>
+						<Disclosure.Panel
+							style={{
+								height: '50vh',
+							}}
+							className="flex flex-col gap-1 px-2"
+						>
+							{selectedNode && (
+								<div className="ml-2 h-full">
+									{selectedNode.type === NodeTypesEnum.llmPrompt && (
+										<LLMPromptTabs
+											selectedNode={
+												selectedNode as Node<LLMPromptNodeDataType>
+											}
+											updateNode={updateNode}
+										/>
+									)}
+									{selectedNode.type === NodeTypesEnum.text && (
+										<TextTabs
+											selectedNode={selectedNode}
+											updateNode={updateNode}
+										/>
+									)}
+									{selectedNode.type === NodeTypesEnum.chatMessage && (
+										<ChatMessageTabs
+											selectedNode={selectedNode}
+											updateNode={updateNode}
+										/>
+									)}
+									{selectedNode.type === NodeTypesEnum.chatPrompt && (
+										<ChatPromptTabs
+											selectedNode={
+												selectedNode as Node<ChatPromptNodeDataType>
+											}
+											updateNode={updateNode}
+										/>
+									)}
+									{selectedNode.type === NodeTypesEnum.classify && (
+										<ClassifyTabs
+											selectedNode={
+												selectedNode as Node<ClassifyNodeDataType>
+											}
+											updateNode={updateNode}
+										/>
+									)}
+									{selectedNode.type === NodeTypesEnum.search && (
+										<SearchTabs
+											selectedNode={selectedNode as Node<SearchDataType>}
+											updateNode={updateNode}
+										/>
+									)}
+								</div>
+							)}
+						</Disclosure.Panel>
+					</>
+				)}
+			</Disclosure>
+			<Disclosure defaultOpen={true}>
+				{({ open }) => (
+					<div className="grow flex flex-col">
+						<Disclosure.Button className="bg-slate-300 flex justify-between w-full">
+							<p className="text-start text-slate-900 font-semibold text-md pr-2 pl-4">
+								Chat
+							</p>
+							<ChevronRightIcon
+								className={conditionalClassNames(
+									open ? 'rotate-90 transform' : '',
+									'w-5 text-slate-500',
+								)}
 							/>
-						)}
-						{selectedNode.type === NodeTypesEnum.classify && (
-							<ClassifyTabs
-								selectedNode={selectedNode as Node<ClassifyNodeDataType>}
-								updateNode={updateNode}
-							/>
-						)}
+						</Disclosure.Button>
+						<Disclosure.Panel className="flex flex-col gap-1 px-2 grow">
+							<ChatPanel selectedNode={selectedNode} />
+						</Disclosure.Panel>
 					</div>
 				)}
-			</div>
-			<div
-				style={{
-					height: bottomDivCollapsed ? '5%' : '40%',
-				}}
-				className=" bg-white flex flex-col"
-			>
-				<div
-					className="bg-slate-200 flex gap-1 justify-between cursor-pointer"
-					onClick={() => setBottomDivCollapsed(!bottomDivCollapsed)}
-				>
-					<p className="text-start text-slate-900 font-semibold text-md pr-2 pl-4 py-1">
-						Nodes
-					</p>
-					<button className="text-slate-900 font-semibold text-md px-2 py-1">
-						{bottomDivCollapsed ? (
-							<ChevronDownIcon
-								className={
-									'text-slate-600 group-hover:text-slate-500 h-full mx-auto'
-								}
-								aria-hidden="true"
-							/>
-						) : (
-							<ChevronUpIcon
-								className={
-									'text-slate-600 group-hover:text-slate-500 h-full mx-auto'
-								}
-								aria-hidden="true"
-							/>
-						)}
-					</button>
-				</div>
-				{!bottomDivCollapsed && (
-					<div className="">
-						<NodesPanel selectedNode={selectedNode} />
-					</div>
-				)}
-			</div>
+			</Disclosure>
 		</div>
 	);
 }

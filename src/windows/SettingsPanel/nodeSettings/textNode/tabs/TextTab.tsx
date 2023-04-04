@@ -36,6 +36,19 @@ export default function PromptTab({
 								/>
 							</div>
 						</div>
+						<div className="">
+							<label htmlFor="response" className="block">
+								Value
+							</label>
+							<input
+								type="text"
+								name="response"
+								id="response"
+								className="block w-full rounded-md border-0 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:py-1.5 sm:text-sm sm:leading-6"
+								value={selectedNode.data.response}
+								onChange={handleChange}
+							/>
+						</div>
 					</form>
 				</div>
 			)}

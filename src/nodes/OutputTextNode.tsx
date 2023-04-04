@@ -5,9 +5,9 @@ import useUndo from 'use-undo';
 import InputNodesList from './templates/InputNodesList';
 import NodeTemplate from './templates/NodeTemplate';
 import TextAreaTemplate from './templates/TextAreaTemplate';
-import { TextInputNodeDataType } from './types/NodeTypes';
+import { OutputTextDataType } from './types/NodeTypes';
 
-const TextInput: FC<NodeProps<TextInputNodeDataType>> = (props) => {
+const OutputText: FC<NodeProps<OutputTextDataType>> = (props) => {
 	const { data, selected, id, type } = props;
 	const [textState, { set: setText }] = useUndo(data.text);
 	const { present: presentText } = textState;
@@ -23,19 +23,19 @@ const TextInput: FC<NodeProps<TextInputNodeDataType>> = (props) => {
 				}}
 				className={`m-3 bg-slate-100 shadow-lg border-2  ${
 					selected ? 'border-emerald-600' : 'border-slate-400'
-				} flex flex-col `}
+				} flex flex-col bg-emerald-200`}
 			>
 				<NodeTemplate
 					{...props}
-					title="Text"
-					fieldName="Text"
+					title="Output"
+					fieldName="Output Text"
 					bgColor="bg-emerald-200"
 					show={showPrompt}
 					setShow={setshowPrompt}
 					showFullScreen={showFullScreen}
 					setShowFullScreen={setShowFullScreen}
 				>
-					{(updateNode: (id: string, data: TextInputNodeDataType) => void) => (
+					{(updateNode: (id: string, data: OutputTextDataType) => void) => (
 						<>
 							<TextAreaTemplate
 								{...props}
@@ -66,4 +66,4 @@ const TextInput: FC<NodeProps<TextInputNodeDataType>> = (props) => {
 	);
 };
 
-export default memo(TextInput);
+export default memo(OutputText);

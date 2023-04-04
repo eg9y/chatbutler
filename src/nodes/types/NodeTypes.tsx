@@ -15,18 +15,19 @@ export type DefaultNodeDataType = {
 
 export type AllDataTypes =
 	| LLMPromptNodeDataType
-	| TextInputNodeDataType
+	| TextNodeDataType
 	| ChatPromptNodeDataType
 	| ClassifyNodeDataType
 	| ClassifyNodeCategoriesDataType
 	| ChatMessageNodeDataType
 	| SearchDataType
+	| OutputTextDataType
+	| InputTextDataType
+	| CombineDataType
 	| FileTextDataType;
 
-export type CustomNode = Node<CombineDataType | AllDataTypes>;
-export type InputNode = Node<
-	LLMPromptNodeDataType | TextInputNodeDataType | ChatPromptNodeDataType
->;
+export type CustomNode = Node<AllDataTypes>;
+export type InputNode = Node<LLMPromptNodeDataType | TextNodeDataType | ChatPromptNodeDataType>;
 
 type OpenAIAPIRequest = {
 	model: string;
@@ -48,7 +49,7 @@ export type ChatMessageNodeDataType = {
 	role: 'user' | 'assistant' | 'system';
 } & DefaultNodeDataType;
 
-export type TextInputNodeDataType = DefaultNodeDataType;
+export type TextNodeDataType = DefaultNodeDataType;
 
 export type PlaceholderDataType = {
 	typeToCreate: NodeTypesEnum | null;
@@ -77,10 +78,12 @@ export type SearchDataType = {
 	DefaultNodeDataType;
 
 export type CombineDataType = DefaultNodeDataType;
+export type InputTextDataType = DefaultNodeDataType;
+export type OutputTextDataType = DefaultNodeDataType;
 
 export enum NodeTypesEnum {
 	llmPrompt = 'llmPrompt',
-	textInput = 'textInput',
+	text = 'text',
 	chatPrompt = 'chatPrompt',
 	chatMessage = 'chatMessage',
 	classify = 'classify',
@@ -89,4 +92,6 @@ export enum NodeTypesEnum {
 	fileText = 'fileText',
 	search = 'search',
 	combine = 'combine',
+	inputText = 'inputText',
+	outputText = 'outputText',
 }

@@ -8,7 +8,7 @@ import { generateUniqueId } from '../store/onAdd';
 import useStore, { selector } from '../store/useStore';
 import { conditionalClassNames } from '../utils/classNames';
 
-const TextInput: FC<NodeProps<ClassifyNodeCategoriesDataType>> = (props) => {
+const Text: FC<NodeProps<ClassifyNodeCategoriesDataType>> = (props) => {
 	const { data, id } = props;
 	const { updateNode, deleteEdges, getNodes } = useStore(selector, shallow);
 	const [classifications, setClassifications] = useState(data ? data.classifications : []);
@@ -170,4 +170,4 @@ const TextInput: FC<NodeProps<ClassifyNodeCategoriesDataType>> = (props) => {
 	);
 };
 
-export default memo(TextInput);
+export default memo(Text);

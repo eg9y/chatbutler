@@ -28,10 +28,12 @@ import ClassifyCategoriesNode from '../../nodes/ClassifyCategoriesNode';
 import ClassifyNode from '../../nodes/ClassifyNode';
 import CombineNode from '../../nodes/CombineNode';
 import FileNode from '../../nodes/FileTextNode';
+import InputTextNode from '../../nodes/InputTextNode';
 import LLMPromptNode from '../../nodes/LLMPromptNode';
+import OutputTextNode from '../../nodes/OutputTextNode';
 import PlaceholderNode from '../../nodes/PlaceholderNode';
 import SearchNode from '../../nodes/SearchNode';
-import TextInputNode from '../../nodes/TextInputNode';
+import TextNode from '../../nodes/TextNode';
 import { NodeTypesEnum } from '../../nodes/types/NodeTypes';
 import { useStore, useStoreSecret, selector, selectorSecret } from '../../store';
 import isWorkflowOwnedByUser from '../../utils/isWorkflowOwnedByUser';
@@ -44,7 +46,9 @@ const nodeTypes = {
 	classify: ClassifyNode,
 	classifyCategories: ClassifyCategoriesNode,
 	llmPrompt: LLMPromptNode,
-	textInput: TextInputNode,
+	text: TextNode,
+	inputText: InputTextNode,
+	outputText: OutputTextNode,
 	chatPrompt: ChatPromptNode,
 	chatMessage: ChatMessageNode,
 	fileText: FileNode,
@@ -210,35 +214,20 @@ export default function App() {
 				x: event.clientX - reactFlowBounds.left,
 				y: event.clientY - reactFlowBounds.top,
 			});
-
-			let nodeTypeEnum = NodeTypesEnum.llmPrompt;
-			if (type === 'llmPrompt') {
-				nodeTypeEnum = NodeTypesEnum.llmPrompt;
-			} else if (type === 'textInput') {
-				nodeTypeEnum = NodeTypesEnum.textInput;
-			} else if (type === 'chatPrompt') {
-				nodeTypeEnum = NodeTypesEnum.chatPrompt;
-			} else if (type === 'chatMessage') {
-				nodeTypeEnum = NodeTypesEnum.chatMessage;
-			} else if (type === 'classify') {
-				nodeTypeEnum = NodeTypesEnum.classify;
-			} else if (type === 'fileText') {
-				nodeTypeEnum = NodeTypesEnum.fileText;
-			} else if (type === 'search') {
-				nodeTypeEnum = NodeTypesEnum.search;
-			} else if (type === 'combine') {
-				nodeTypeEnum = NodeTypesEnum.combine;
-			}
-
+			const nodeTypeEnum = type as NodeTypesEnum;
 			onAdd(nodeTypeEnum, position);
 		},
 		[onAdd, reactFlowInstance],
 	);
 
-	const onInit = (reactFlowInstance: ReactFlowInstance) => {
-		reactFlowInstance.fitView();
-		setReactFlowInstance(reactFlowInstance);
-	};
+	const onInit = useCallback(
+		(reactFlowInstance: ReactFlowInstance) => {
+			reactFlowInstance.fitView();
+			setReactFlowInstance(reactFlowInstance);
+		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[reactFlowInstance],
+	);
 
 	return (
 		<div

@@ -1,13 +1,13 @@
 import { Node } from 'reactflow';
 
 import { RFState, UseStoreSetType } from './useStore';
-import { InputNode, LLMPromptNodeDataType, TextInputNodeDataType } from '../nodes/types/NodeTypes';
+import { InputNode, LLMPromptNodeDataType, TextNodeDataType } from '../nodes/types/NodeTypes';
 
 const updateNode = (
 	get: () => RFState,
 	set: UseStoreSetType,
 	nodeId: string,
-	data: LLMPromptNodeDataType & TextInputNodeDataType,
+	data: LLMPromptNodeDataType & TextNodeDataType,
 	position?: {
 		mode: 'add' | 'set';
 		x: number;

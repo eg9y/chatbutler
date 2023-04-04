@@ -6,13 +6,17 @@ import { ReactComponent as Loading } from '../assets/loading.svg';
 import { useStore, useStoreSecret, selector, selectorSecret } from '../store';
 
 export default function RunFromStart() {
-	const { setUiErrorMessage, traverseTree, clearAllNodeResponses } = useStore(selector, shallow);
+	const { setUiErrorMessage, traverseTree, clearAllNodeResponses, setChatApp } = useStore(
+		selector,
+		shallow,
+	);
 	const { openAiKey } = useStoreSecret(selectorSecret, shallow);
 
 	const [isLoading, setIsLoading] = useState(false);
 
 	async function getResponse() {
 		setIsLoading(true);
+		setChatApp([]);
 		try {
 			clearAllNodeResponses();
 			await traverseTree(openAiKey);

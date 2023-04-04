@@ -2,11 +2,15 @@ import { Dialog, Disclosure, Transition } from '@headlessui/react';
 import { ChevronRightIcon } from '@heroicons/react/24/outline';
 import { Fragment, useState } from 'react';
 
+import Chat from './Tutorials/GptNodes/Chat';
+import GptNodes from './Tutorials/GptNodes/GptNodes';
 import Overview from './Tutorials/Overview';
+import UseCases from './Tutorials/UseCases';
 import { conditionalClassNames } from '../utils/classNames';
 
 const navigation = [
 	{ name: 'Overview', current: true },
+	{ name: 'Use Cases', current: false },
 	{
 		name: 'GPT Nodes',
 		current: false,
@@ -35,7 +39,7 @@ export default function Tutorial({
 
 	return (
 		<Transition.Root show={open} as={Fragment}>
-			<Dialog as="div" className="relative z-10" onClose={setOpen}>
+			<Dialog as="div" className="relative z-10 font-tutorial text-xl" onClose={setOpen}>
 				<Transition.Child
 					as={Fragment}
 					enter="ease-out duration-300"
@@ -76,6 +80,9 @@ export default function Tutorial({
 										<SideBar setPage={setPage} />
 									</div>
 									{page === 'Overview' && <Overview />}
+									{page === 'Use Cases' && <UseCases />}
+									{page === 'GPT Nodes' && <GptNodes />}
+									{page === 'Chat' && <Chat />}
 								</div>
 							</Dialog.Panel>
 						</Transition.Child>

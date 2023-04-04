@@ -31,9 +31,7 @@ export default function Files() {
 										<h1 className="text-2xl font-bold text-gray-900">Files</h1>
 										<p className="max-w-md">
 											Upload files to enable semantic search and ideation
-											using OpenAI APIs, allowing you to efficiently generate
-											and discover ideas within small to medium-sized
-											documents.
+											using OpenAI APIs.
 										</p>
 										<p className="text-sm">Supported file types: txt</p>
 									</div>

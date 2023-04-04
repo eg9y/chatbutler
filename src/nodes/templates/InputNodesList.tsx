@@ -33,8 +33,10 @@ const InputNodesList = ({
 				})
 				.map((inputNode: InputNode) => {
 					const colorClass = conditionalClassNames(
-						inputNode.type === NodeTypesEnum.textInput &&
-							'bg-emerald-600 text-white hover:bg-emerald-700 border-l-8 border-emerald-400',
+						inputNode.type === NodeTypesEnum.text ||
+							inputNode.type === NodeTypesEnum.inputText ||
+							(inputNode.type === NodeTypesEnum.outputText &&
+								'bg-emerald-600 text-white hover:bg-emerald-700 border-l-8 border-emerald-400'),
 						inputNode.type === NodeTypesEnum.llmPrompt &&
 							'bg-amber-600 text-white hover:bg-amber-700  border-l-8 border-amber-400',
 						inputNode.type === NodeTypesEnum.chatPrompt &&

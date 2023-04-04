@@ -1,10 +1,10 @@
 import { Inputs } from '../nodes/types/Input';
 import { CustomNode, NodeTypesEnum } from '../nodes/types/NodeTypes';
 
-const textInputNode = {
+const textNode = {
 	id: 'text-input',
 	position: { x: 100, y: 125 },
-	type: NodeTypesEnum.textInput,
+	type: NodeTypesEnum.text,
 	data: {
 		name: 'language',
 		text: 'Bahasa Indonesia',
@@ -17,7 +17,7 @@ const textInputNode = {
 };
 
 export default [
-	textInputNode,
+	textNode,
 	{
 		id: 'llm-prompt-1',
 		position: { x: 300, y: 150 },

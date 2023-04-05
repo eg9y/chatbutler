@@ -359,7 +359,10 @@ export default function App() {
 						</Panel>
 						<Panel
 							position="top-right"
-							className="m-0 cursor-pointer shadow-lg bg-slate-200 border-b-1 border-l-1 border-slate-300"
+							style={{
+								margin: 0,
+							}}
+							className="cursor-pointer shadow-lg bg-slate-200 border-b-1 border-l-1 border-slate-300"
 							onClick={() => {
 								setSettingsView(!settingsView);
 							}}

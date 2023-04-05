@@ -133,8 +133,9 @@ const Combine: FC<NodeProps<CombineDataType>> = (props) => {
 				id="combine-input"
 				style={{
 					left: '-4.0rem',
+					backgroundColor: 'rgb(248 250 252)',
 				}}
-				className="top-1/2 h-10 bg-slate-50 flex gap-1 border-1 border-slate-700"
+				className="top-1/2 h-10 flex gap-1 border-1 border-slate-700"
 			>
 				<div className=" bg-sky-300 w-5 h-full pointer-events-none"></div>
 				<p className="bg-transparent  border-slate-700 text-xl font-bold self-center -z-10 pointer-events-none p-1">

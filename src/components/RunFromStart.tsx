@@ -15,6 +15,11 @@ export default function RunFromStart() {
 	const [isLoading, setIsLoading] = useState(false);
 
 	async function getResponse() {
+		if (openAiKey.trim() === '') {
+			setUiErrorMessage('Please enter an OpenAI API key in the left panel.');
+			return;
+		}
+
 		setIsLoading(true);
 		setChatApp([]);
 		try {

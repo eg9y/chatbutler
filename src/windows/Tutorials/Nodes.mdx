@@ -1,0 +1,30 @@
+Nodes are pieces of code that carry out a particular task. They serve as the foundation for a work process.
+These nodes are linked together to form a sequence, with each node having its own purpose and the ability to 
+connect with others in order to send its data.
+
+The majority of these nodes require an OpenAI API key, as mentioned in the [Overview](link-to-overview-section).
+
+## GPT Nodes
+- **Chat**: Utilizes the OpenAI Chat API, which expects a list of messages representing a conversation and 
+generates responses in a conversational tone. Suitable for few-shot prompting.
+    - **Chat Message**: Functions as a chat message, designed to link with the Chat node
+- **Complete**: Accesses the OpenAI Completion API, which acts like a highly advanced autocompletion system.
+
+
+## Helper Nodes
+- **Text**: Provides constant text as input for other nodes
+- **Text Input**: Requests user input, saved as text, to be used as input for other nodes
+- **Text Output**: Presents text output to the user
+- **Classify**: Categorizes text based on user-defined classifications
+
+## File Nodes
+- **File Text**: Reads a file and outputs its text content
+- **File Search**: Reads a file and outputs text matching a specific search query
+- **Combine**: Merges multiple file objects into a single text
+Note: To use File Nodes, you'll need to upload your files first in the Files tab on the navbar. Currently, only txt 
+files are supported, but support for other file types like pdf, markdown, html, and docx will be added in the future. 
+
+**Note**: Some nodes have constraints when connecting to other nodes. Detailed constraints will be provided in each node's section of the documentation.
+
+You are currently limited to these predefined set of nodes. Custom node creation 
+may be added in the future based on user demand.

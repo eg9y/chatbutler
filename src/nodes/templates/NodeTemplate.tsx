@@ -43,7 +43,7 @@ const NodeTemplate: FC<
 	return (
 		<div className={conditionalClassNames('flex flex-col h-full')}>
 			<div
-				className={`p-4 flex justify-between items-center border-b-1 border-slate-400 text-4xl ${bgColor}`}
+				className={`p-4 flex justify-between items-center border-b-1 border-slate-400 text-3xl ${bgColor}`}
 			>
 				<div className="flex gap-2 items-center">
 					<h1 className="text-start">

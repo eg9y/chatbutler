@@ -1,0 +1,56 @@
+import StepOne from './assets/overview/step-1.webm';
+import StepTwo from './assets/overview/step-2.webm';
+import StepThree from './assets/overview/step-3.webm';
+import VideoPlayer from './components/VideoPlayer';
+
+Welcome to PromptSandbox, a user-friendly platform designed to help you effortlessly create powerful workflows 
+using OpenAI APIs. There's no need for 10 years of coding experience, as you can simply build your 
+workflows by dragging and dropping nodes and connecting them.
+
+In this guide, you will discover how to utilize our primary features. Here&apos;s a summary of the
+process:
+## Summary
+1. Begin by choosing a node relevant to your use case and place it in the
+sandbox. Each node performs a specific function. <a className="cursor-pointer" onClick={() => props.setPage('Nodes')}>Consult this page</a> for a
+list of available nodes.
+    <details open>
+    <summary>Video </summary>
+        <VideoPlayer videoSource="https://promptsandbox-tutorial.s3.us-west-1.amazonaws.com/step-1.webm" />
+    </details>
+2. Enable nodes to communicate with each other by linking them using links.
+    <details>
+    <summary>Video </summary>
+        <VideoPlayer videoSource="https://promptsandbox-tutorial.s3.us-west-1.amazonaws.com/step-2.webm" />
+    </details>
+3. Form a sequence or arrangement with these connected nodes to accomplish your objective. Use the results from the previous
+nodes by clicking on the input under the node&apos;s text box.
+    <details>
+    <summary>Video</summary>
+        <VideoPlayer videoSource="https://promptsandbox-tutorial.s3.us-west-1.amazonaws.com/step-3.webm" />
+    </details>
+4. Execute the workflow by clicking the `Run From Start` button.
+    <details>
+    <summary>Video</summary>
+        <VideoPlayer videoSource="https://promptsandbox-tutorial.s3.us-west-1.amazonaws.com/step-4.webm" />
+    </details>
+5. Make modifications to improve your results by utilizing debugging features
+like breakpoints and running specific nodes.
+    <details>
+    <summary>Video</summary>
+        <VideoPlayer videoSource="https://promptsandbox-tutorial.s3.us-west-1.amazonaws.com/step-5.webm" />
+    </details>
+6. Publish your workflow for use within our chat interface, where users can
+interact with the chat panel to provide inputs and receive outputs derived from your published workflow.
+    - 🛑 **Note**: This feature is still in development and will be available soon.
+
+
+## Use Cases
+PromptSandbox is ideal for various use cases, such as content generation, summarization, translation, and more. 
+For a detailed list of use cases, please refer to the 
+<a className="cursor-pointer" onClick={() => props.setPage('Use Cases')}>Use Cases</a> page.
+
+
+## Prerequisites
+To use PromptSandbox, you need an active OpenAI API key. If you don't have one yet, you can sign up for
+an account [here](https://openai.com/signup).
+To add your key, click on the OpenAI Key button on the left sidebar.

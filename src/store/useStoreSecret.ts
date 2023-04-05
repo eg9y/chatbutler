@@ -28,7 +28,7 @@ const useStoreSecret = create<RFStateSecret>()((set, get) => ({
 		const userSession = get().session;
 		if (!userSession) {
 			alert(
-				`Note: Since you're not logged in, you would have to re-enter your OpenAI API key next time. Logging in would allow you to save your API key in the database in a secure way.`,
+				`Keep in mind that because you're not signed in, you will need to input your OpenAI API key again in the future. It is important to know that storing API keys in your browser is unsafe. By logging in, you can securely save your API key in the database.`,
 			);
 		}
 		set({

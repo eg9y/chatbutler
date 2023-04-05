@@ -1,15 +1,19 @@
 import { Dialog, Disclosure, Transition } from '@headlessui/react';
 import { ChevronRightIcon } from '@heroicons/react/24/outline';
+import { MDXProvider } from '@mdx-js/react';
 import { Fragment, useState } from 'react';
 
-import Chat from './Tutorials/GptNodes/Chat';
-import GptNodes from './Tutorials/GptNodes/GptNodes';
-import Overview from './Tutorials/Overview';
-import UseCases from './Tutorials/UseCases';
+import Search from './Tutorials/Files/Search.mdx';
+import Chat from './Tutorials/GptNodes/Chat.mdx';
+import GptNodes from './Tutorials/GptNodes/GptNodes.mdx';
+import Nodes from './Tutorials/Nodes.mdx';
+import Overview from './Tutorials/Overview.mdx';
+import UseCases from './Tutorials/UseCases.mdx';
 import { conditionalClassNames } from '../utils/classNames';
 
 const navigation = [
 	{ name: 'Overview', current: true },
+	{ name: 'Nodes', current: false },
 	{ name: 'Use Cases', current: false },
 	{
 		name: 'GPT Nodes',
@@ -39,7 +43,7 @@ export default function Tutorial({
 
 	return (
 		<Transition.Root show={open} as={Fragment}>
-			<Dialog as="div" className="relative z-10 font-tutorial text-xl" onClose={setOpen}>
+			<Dialog as="div" className="relative z-10 font-tutorial" onClose={setOpen}>
 				<Transition.Child
 					as={Fragment}
 					enter="ease-out duration-300"
@@ -49,7 +53,7 @@ export default function Tutorial({
 					leaveFrom="opacity-100"
 					leaveTo="opacity-0"
 				>
-					<div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+					<div className="fixed inset-0 bg-slate-300 bg-opacity-75 transition-opacity" />
 				</Transition.Child>
 
 				<div className="fixed inset-0 z-10 overflow-y-auto">
@@ -65,24 +69,35 @@ export default function Tutorial({
 						>
 							<Dialog.Panel
 								style={{
-									height: '70vh',
+									height: '90vh',
 								}}
-								className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full max-w-full sm:p-6 mx-10 flex flex-col"
+								className="relative transform rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full max-w-full sm:p-6 mx-10 flex flex-col"
 							>
 								<Dialog.Title
-									as="h3"
-									className="text-3xl pl-4  font-semibold leading-6 text-gray-900 pb-4 flex gap-2"
+									as="div"
+									className="text-3xl pl-4  font-semibold leading-6 text-slate-900 pb-4 flex gap-12"
 								>
-									Tutorial: {page}
+									<h1>Tutorial</h1>
+									<h2>{page}</h2>
 								</Dialog.Title>
 								<div className="flex h-full w-full">
 									<div className="w-40">
-										<SideBar setPage={setPage} />
+										<SideBar page={page} setPage={setPage} />
 									</div>
-									{page === 'Overview' && <Overview />}
-									{page === 'Use Cases' && <UseCases />}
-									{page === 'GPT Nodes' && <GptNodes />}
-									{page === 'Chat' && <Chat />}
+									<div className="relative overflow-y-scroll w-full">
+										<div className="absolute px-6 w-full py-4 prose prose-h2:m-1">
+											<MDXProvider>
+												{page === 'Overview' && (
+													<Overview setPage={setPage} />
+												)}
+												{page === 'Search' && <Search />}
+												{page === 'Nodes' && <Nodes />}
+												{page === 'Use Cases' && <UseCases />}
+												{page === 'GPT Nodes' && <GptNodes />}
+												{page === 'Chat' && <Chat />}
+											</MDXProvider>
+										</div>
+									</div>
 								</div>
 							</Dialog.Panel>
 						</Transition.Child>
@@ -93,9 +108,9 @@ export default function Tutorial({
 	);
 }
 
-function SideBar({ setPage }: { setPage: (page: string) => void }) {
+function SideBar({ page, setPage }: { page: string; setPage: (page: string) => void }) {
 	return (
-		<div className="flex h-full flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white">
+		<div className="flex h-full flex-col gap-y-5 overflow-y-auto border-r border-slate-200 bg-white">
 			<nav className="flex  flex-col">
 				<ul role="list" className="flex flex-col gap-y-7">
 					<li>
@@ -105,8 +120,10 @@ function SideBar({ setPage }: { setPage: (page: string) => void }) {
 									{!item.children ? (
 										<div
 											className={conditionalClassNames(
-												item.current ? 'bg-gray-50' : 'hover:bg-gray-50',
-												'cursor-pointer block rounded-md py-2 pr-2 pl-10 text-sm leading-6 font-semibold text-gray-700',
+												page === item.name
+													? 'bg-slate-300'
+													: 'hover:bg-slate-50',
+												'cursor-pointer block rounded-md py-2 pr-2 pl-10 text-sm leading-6 font-semibold text-slate-700',
 											)}
 											onClick={() => setPage(item.name)}
 										>
@@ -118,18 +135,18 @@ function SideBar({ setPage }: { setPage: (page: string) => void }) {
 												<>
 													<Disclosure.Button
 														className={conditionalClassNames(
-															item.current
-																? 'bg-gray-50'
-																: 'hover:bg-gray-50',
-															'flex items-center w-full text-left rounded-md p-2 gap-x-3 text-sm leading-6 font-semibold text-gray-700',
+															page === item.name
+																? 'bg-slate-300'
+																: 'hover:bg-slate-50',
+															'flex items-center w-full text-left rounded-md p-2 gap-x-3 text-sm leading-6 font-semibold text-slate-700',
 														)}
 														onClick={() => setPage(item.name)}
 													>
 														<ChevronRightIcon
 															className={conditionalClassNames(
 																open
-																	? 'rotate-90 text-gray-500'
-																	: 'text-gray-400',
+																	? 'rotate-90 text-slate-500'
+																	: 'text-slate-400',
 																'h-5 w-5 shrink-0',
 															)}
 															aria-hidden="true"
@@ -141,10 +158,10 @@ function SideBar({ setPage }: { setPage: (page: string) => void }) {
 															<li key={subItem.name}>
 																<a
 																	className={conditionalClassNames(
-																		item.current
-																			? 'bg-gray-50'
-																			: 'hover:bg-gray-50',
-																		'cursor-pointer block rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700',
+																		page === subItem.name
+																			? 'bg-slate-300'
+																			: 'hover:bg-slate-50',
+																		'cursor-pointer block rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-slate-700',
 																	)}
 																	onClick={() =>
 																		setPage(subItem.name)

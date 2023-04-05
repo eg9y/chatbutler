@@ -16,6 +16,7 @@ module.exports = {
 				'source-sans-pro',
 				'sans-serif',
 			],
+			tutorial: ['system-ui', 'sans-serif'],
 		},
 		extend: {
 			borderWidth: {
@@ -32,5 +33,9 @@ module.exports = {
 		},
 	},
 	// eslint-disable-next-line no-undef
-	plugins: [require('@tailwindcss/forms'), require('@tailwindcss/aspect-ratio')],
+	plugins: [
+		require('@tailwindcss/forms'),
+		require('@tailwindcss/aspect-ratio'),
+		require('@tailwindcss/typography'),
+	],
 };

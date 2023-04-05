@@ -14,6 +14,7 @@ import {
 	TrashIcon,
 	ChevronRightIcon,
 	PencilIcon,
+	ArrowLeftOnRectangleIcon,
 } from '@heroicons/react/20/solid';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { FC, useState } from 'react';
@@ -46,8 +47,16 @@ export default function LeftSidePanel({
 	reactFlowInstance: ReactFlowInstance<any, any> | null;
 	supabase: SupabaseClient<Database>;
 }) {
-	const { setUiErrorMessage, setWorkflows, currentWorkflow, setCurrentWorkflow, clearGraph } =
-		useStore(selector, shallow);
+	const {
+		setUiErrorMessage,
+		setWorkflows,
+		currentWorkflow,
+		setCurrentWorkflow,
+		clearGraph,
+		nodes,
+		setNodes,
+		setChatApp,
+	} = useStore(selector, shallow);
 	const { session, openAiKey, setOpenAiKey } = useStoreSecret(selectorSecret, shallow);
 	const [dragging, setDragging] = useState(false);
 
@@ -238,7 +247,7 @@ export default function LeftSidePanel({
 										nodeType={NodeTypesEnum.inputText}
 										handleDrag={handleDrag}
 										addNodeToCenter={addNodeToCenter}
-										Icon={ArrowRightOnRectangleIcon}
+										Icon={ArrowLeftOnRectangleIcon}
 									/>
 									<NodeType
 										name="Text Output"
@@ -303,7 +312,29 @@ export default function LeftSidePanel({
 						)}
 					</Disclosure>
 				</div>
-				<div>
+				<div className="flex flex-col gap-2 items-center">
+					<button
+						className="bg-red-500 hover:bg-red-600 text-white text-md font-semibold py-1 px-2  rounded flex items-center"
+						onClick={() => {
+							// Are you sure prompt
+							if (window.confirm('Are you sure you want to clear the responses?')) {
+								const clearedNodes = nodes.map((node) => {
+									return {
+										...node,
+										data: {
+											...node.data,
+											response: '',
+											isLoading: false,
+										},
+									};
+								});
+								setNodes(clearedNodes);
+								setChatApp([]);
+							}
+						}}
+					>
+						<span>Clear Responses</span>
+					</button>
 					<button
 						className="px-3 py-1 bg-red-500 hover:bg-red-600 text-white text-md font-semibold mx-auto rounded flex items-center"
 						onClick={() => {

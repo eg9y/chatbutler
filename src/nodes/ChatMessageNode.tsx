@@ -25,7 +25,11 @@ const ChatMessage: FC<NodeProps<ChatMessageNodeDataType>> = (props) => {
 	const [showPrompt, setshowPrompt] = useState(false);
 
 	return (
-		<div className="">
+		<div
+			style={{
+				width: '40rem',
+			}}
+		>
 			<div
 				className={`m-3 bg-slate-100 shadow-lg border-2  ${
 					selected ? 'border-purple-600' : 'border-slate-400'

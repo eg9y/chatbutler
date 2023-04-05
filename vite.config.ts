@@ -1,5 +1,7 @@
+import mdx from '@mdx-js/rollup';
 import react from '@vitejs/plugin-react-swc';
 import { resolve } from 'path';
+import remarkPlugin from 'remark-gfm';
 import { defineConfig } from 'vite';
 import eslint from 'vite-plugin-eslint';
 import svgr from 'vite-plugin-svgr';
@@ -17,6 +19,13 @@ export default defineConfig({
 		eslint({
 			fix: true,
 		}),
+		{
+			enforce: 'pre',
+			...mdx({
+				providerImportSource: '@mdx-js/react',
+				remarkPlugins: [remarkPlugin],
+			}),
+		},
 		wasm(),
 		topLevelAwait(),
 		react(),

@@ -3,21 +3,23 @@ import { Configuration, OpenAIApi } from 'openai';
 import {
 	ChatPromptNodeDataType,
 	ClassifyNodeDataType,
-	InputNode,
 	LLMPromptNodeDataType,
 } from '../nodes/types/NodeTypes';
+import { RFState } from '../store/useStore';
 
 export type ChatSequence = {
 	role: 'user' | 'assistant' | 'system';
 	content: string;
 }[];
 
-export function parsePromptInputs(prompt: string, inputNodes: InputNode[]): string {
+// TODO: Refactor to separate utils file
+export function parsePromptInputs(get: () => RFState, prompt: string, nodeIds: string[]): string {
 	let parsedPrompt = prompt;
-	inputNodes.forEach((inputNode) => {
+	const nodes = get().getNodes([...nodeIds, ...get().globalVariables]);
+	nodes.forEach((node) => {
 		parsedPrompt = parsedPrompt.replace(
-			new RegExp(`{{${inputNode.data.name}}}`, 'g'),
-			inputNode.data.response,
+			new RegExp(`{{${node.data.name}}}`, 'g'),
+			node.data.response,
 		);
 	});
 	return parsedPrompt;
@@ -26,7 +28,8 @@ export function parsePromptInputs(prompt: string, inputNodes: InputNode[]): stri
 export async function getOpenAIResponse(
 	apiKey: string | null,
 	llmPrompt: LLMPromptNodeDataType,
-	inputNodes: InputNode[],
+	inputNodeIds: string[],
+	get: () => RFState,
 ) {
 	try {
 		if (!apiKey) {
@@ -35,7 +38,7 @@ export async function getOpenAIResponse(
 			);
 		}
 
-		const parsedPrompt = parsePromptInputs(llmPrompt.text, inputNodes);
+		const parsedPrompt = parsePromptInputs(get, llmPrompt.text, inputNodeIds);
 
 		const settings: {
 			model: string;

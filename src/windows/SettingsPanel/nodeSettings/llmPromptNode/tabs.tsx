@@ -25,31 +25,29 @@ export default function LLMPromptTabs({
 	const [selected, setSelected] = useState(tabs[0].name);
 
 	return (
-		<div className="h-full">
-			<div className="flex flex-col h-full">
-				<TabsNavigator tabs={tabs} selected={selected} setSelected={setSelected} />
-				<div className="overflow-y-scroll pr-4 pl-2 pt-4">
-					<div className="">
-						{selected === 'Prompt' && (
-							<PromptTab
-								selectedNode={selectedNode}
-								handleChange={(e) =>
-									handleChange(e, selectedNode.id, selectedNode.data, updateNode)
-								}
-							/>
-						)}
-						{selected === 'API' && (
-							<ApiTab
-								selectedNode={selectedNode}
-								handleChange={(e) =>
-									handleChange(e, selectedNode.id, selectedNode.data, updateNode)
-								}
-							/>
-						)}
-						{selected === 'Test' && (
-							<TestTab selectedNode={selectedNode} updateNode={updateNode} />
-						)}
-					</div>
+		<div className="flex flex-col h-full">
+			<TabsNavigator tabs={tabs} selected={selected} setSelected={setSelected} />
+			<div className="overflow-y-auto grow pr-4 pl-2 pt-4">
+				<div className="">
+					{selected === 'Prompt' && (
+						<PromptTab
+							selectedNode={selectedNode}
+							handleChange={(e) =>
+								handleChange(e, selectedNode.id, selectedNode.data, updateNode)
+							}
+						/>
+					)}
+					{selected === 'API' && (
+						<ApiTab
+							selectedNode={selectedNode}
+							handleChange={(e) =>
+								handleChange(e, selectedNode.id, selectedNode.data, updateNode)
+							}
+						/>
+					)}
+					{selected === 'Test' && (
+						<TestTab selectedNode={selectedNode} updateNode={updateNode} />
+					)}
 				</div>
 			</div>
 		</div>

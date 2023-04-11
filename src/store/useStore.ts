@@ -29,11 +29,13 @@ import {
 	CustomNode,
 	InputNode,
 	LLMPromptNodeDataType,
+	LoopDataType,
 	NodeTypesEnum,
 	TextNodeDataType,
 } from '../nodes/types/NodeTypes';
-import { runNode, traverseTree } from '../utils/Tree';
-import { Message } from '../windows/SettingsPanel/Chat/types';
+import { runNode } from '../utils/runNode/runNode';
+import { traverseTree } from '../utils/Tree';
+import { Message } from '../windows/ChatPanel/Chat/types';
 
 export type UseStoreSetType = (
 	partial: RFState | Partial<RFState> | ((state: RFState) => RFState | Partial<RFState>),
@@ -53,6 +55,8 @@ export interface RFState {
 		id: string;
 		name: string;
 	}[];
+	globalVariables: string[];
+	setGlobalVariables: (variables: string[]) => void;
 	setWorkflows: (workflows: { id: string; name: string }[]) => void;
 	currentWorkflow: SimpleWorkflow | null;
 	setCurrentWorkflow: (workflow: { id: string; user_id: string; name: string } | null) => void;
@@ -108,6 +112,12 @@ const useStore = create<RFState>()(
 					waitingUserResponse: waiting,
 				});
 			},
+			globalVariables: [],
+			setGlobalVariables: (variables: string[]) => {
+				set({
+					globalVariables: variables,
+				});
+			},
 			// eslint-disable-next-line @typescript-eslint/no-empty-function
 			pauseResolver: (value: string) => {},
 			setPauseResolver: (resolver: (value: string) => void) => {
@@ -147,6 +157,8 @@ const useStore = create<RFState>()(
 					nodes: [],
 					edges: [],
 					selectedNode: null,
+					globalVariables: [],
+					chatApp: [],
 				});
 			},
 			chatSessions: {},
@@ -170,6 +182,11 @@ const useStore = create<RFState>()(
 				set({
 					uiErrorMessage: message,
 				});
+				setTimeout(() => {
+					set({
+						uiErrorMessage: null,
+					});
+				}, 3000);
 			},
 			onNodeDragStop: (_: React.MouseEvent<Element, MouseEvent>, node: CustomNode) => {
 				set({
@@ -187,6 +204,15 @@ const useStore = create<RFState>()(
 				};
 				if (isSelectedNodeDeleted) {
 					update.selectedNode = null;
+					if (selectedNode?.type === NodeTypesEnum.globalVariable) {
+						const globalVariables = get().globalVariables;
+						const newGlobalVariables = globalVariables.filter(
+							(variable) => variable !== selectedNode?.id,
+						);
+						set({
+							globalVariables: newGlobalVariables,
+						});
+					}
 				}
 				set(update);
 			},
@@ -203,7 +229,7 @@ const useStore = create<RFState>()(
 				});
 			},
 			onConnect: (connection: Connection) => {
-				return onConnect(get, set, connection);
+				return onConnect(get, set, connection, get().setUiErrorMessage);
 			},
 			onEdgesDelete: (edges: Edge[]) => {
 				return onEdgesDelete(get, set, edges);
@@ -263,7 +289,14 @@ const useStore = create<RFState>()(
 			clearAllNodeResponses: () => {
 				const nodes = get().nodes;
 				const updatedNodes = nodes.map((node) => {
-					node.data.response = '';
+					if (node.type !== NodeTypesEnum.globalVariable) {
+						node.data.response = '';
+					}
+					if (node.type === NodeTypesEnum.counter) {
+						node.data.response = '-1';
+					} else if (node.type === NodeTypesEnum.loop) {
+						(node.data as LoopDataType).loopCount = 0;
+					}
 					return node;
 				});
 				set({

@@ -8,6 +8,7 @@ import {
 	CustomNode,
 	PlaceholderDataType,
 	ClassifyNodeCategoriesDataType,
+	ConditionalBooleanOperation,
 } from '../nodes/types/NodeTypes';
 
 export const generateUniqueId = (type: NodeTypesEnum) => {
@@ -212,6 +213,109 @@ const onAdd = (
 				children: [],
 				inputs: new Inputs(),
 				response: `This is a test input ${nodeLength}`,
+				isLoading: false,
+				isBreakpoint: false,
+			},
+		};
+	} else if (type === NodeTypesEnum.globalVariable) {
+		node = {
+			id: generateUniqueId(type),
+			type,
+			position: {
+				x,
+				y,
+			},
+			data: {
+				name: `test var`,
+				text: `value`,
+				children: [],
+				inputs: new Inputs(),
+				response: `value`,
+				isLoading: false,
+				isBreakpoint: false,
+			},
+		};
+
+		// 1. iterate all nodes
+		// 2. insert global variable as input to all nodes
+		// 3. update all nodes
+		const globalVariables = get().globalVariables;
+		set({
+			globalVariables: globalVariables.concat(node.id),
+		});
+	} else if (type === NodeTypesEnum.setVariable) {
+		node = {
+			id: generateUniqueId(type),
+			type,
+			position: {
+				x,
+				y,
+			},
+			data: {
+				name: `test var`,
+				text: `value`,
+				children: [],
+				inputs: new Inputs(),
+				response: `value`,
+				isLoading: false,
+				isBreakpoint: false,
+			},
+		};
+	} else if (type === NodeTypesEnum.counter) {
+		node = {
+			id: generateUniqueId(type),
+			type,
+			position: {
+				x,
+				y,
+			},
+			data: {
+				name: `counter`,
+				text: ``,
+				children: [],
+				inputs: new Inputs(),
+				response: '-1',
+				isLoading: false,
+				isBreakpoint: false,
+			},
+		};
+	} else if (type === NodeTypesEnum.conditional) {
+		node = {
+			id: generateUniqueId(type),
+			type,
+			position: {
+				x,
+				y,
+			},
+			data: {
+				name: `test conditional ${nodeLength}`,
+				text: `value`,
+				booleanOperation: ConditionalBooleanOperation.EqualTo,
+				value: 'value',
+				valueToCompare: 'value to compare',
+				children: [],
+				inputs: new Inputs(),
+				response: `True`,
+				isLoading: false,
+				isBreakpoint: false,
+			},
+		};
+	} else if (type === NodeTypesEnum.loop) {
+		node = {
+			id: generateUniqueId(type),
+			type,
+			position: {
+				x,
+				y,
+			},
+			data: {
+				name: `test loop ${nodeLength}`,
+				text: `loop message`,
+				loopCount: 0,
+				loopMax: 3,
+				children: [],
+				inputs: new Inputs(),
+				response: `loop message`,
 				isLoading: false,
 				isBreakpoint: false,
 			},

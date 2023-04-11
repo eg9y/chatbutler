@@ -58,8 +58,7 @@ const search = async (node: CustomNode, get: () => RFState) => {
 				queryName: 'match_document_contents',
 			},
 		);
-		const inputNodes = get().getNodes(inputs.inputs);
-		const parsedPrompt = parsePromptInputs(searchNode.text, inputNodes);
+		const parsedPrompt = parsePromptInputs(get, searchNode.text, inputs.inputs);
 		searchResults = await vectorStore.similaritySearch(parsedPrompt, searchNode.results);
 	} else {
 		const vectorStore = await SupabaseVectorStore.fromExistingIndex(new OpenAIEmbeddings(), {
@@ -67,11 +66,9 @@ const search = async (node: CustomNode, get: () => RFState) => {
 			tableName: 'document_contents',
 			queryName: 'match_document_contents',
 		});
-		const inputNodes = get().getNodes(inputs.inputs);
-		const parsedPrompt = parsePromptInputs(searchNode.text, inputNodes);
+		const parsedPrompt = parsePromptInputs(get, searchNode.text, inputs.inputs);
 		searchResults = await vectorStore.similaritySearch(parsedPrompt, searchNode.results);
 	}
-	console.log(searchResults);
 	node.data = {
 		...node.data,
 		// TODO: need to have a combiner node or a for loop node

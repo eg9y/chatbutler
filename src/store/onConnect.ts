@@ -1,10 +1,67 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { Connection, addEdge, MarkerType, Edge } from 'reactflow';
+import { Connection, addEdge, MarkerType, Edge, Node } from 'reactflow';
 
 import { RFState, UseStoreSetType } from './useStore';
-import { ChatMessageNodeDataType, InputNode } from '../nodes/types/NodeTypes';
+import { CustomNode, InputNode } from '../nodes/types/NodeTypes';
 
-const onConnect = (get: () => RFState, set: UseStoreSetType, connection: Connection) => {
+// recursively assigning the parentNode and loopId for nodes in a loop
+function isCycle(nodes: CustomNode[], targetNodeIndex: number): boolean {
+	function dfs(currentNodeIndex: number, visited: boolean[], recursionStack: boolean[]): boolean {
+		if (recursionStack[currentNodeIndex]) {
+			return true;
+		}
+
+		if (visited[currentNodeIndex]) {
+			return false;
+		}
+
+		visited[currentNodeIndex] = true;
+		recursionStack[currentNodeIndex] = true;
+
+		console.log(nodes[currentNodeIndex].data.children);
+
+		for (const childId of nodes[currentNodeIndex].data.children) {
+			const childNodeIndex = nodes.findIndex((node) => node.id === childId);
+			if (dfs(childNodeIndex, visited, recursionStack)) {
+				return true;
+			}
+		}
+
+		recursionStack[currentNodeIndex] = false;
+		return false;
+	}
+
+	const visited: boolean[] = new Array(nodes.length).fill(false);
+	const recursionStack: boolean[] = new Array(nodes.length).fill(false);
+	return dfs(targetNodeIndex, visited, recursionStack);
+}
+
+// recursively assigning the parentNode and loopId for nodes in a loop
+function assignLoopChildren(nodes: CustomNode[], targetNodeIndex: number, loopNodeIndex: number) {
+	// Set target node's position to parent node's position
+	nodes[targetNodeIndex].data.loopId = nodes[loopNodeIndex].id;
+	// Iterate through target node's children and call assignLoopChildren recursively
+	nodes[targetNodeIndex].data.children.forEach((childId) => {
+		const childNodeIndex = nodes.findIndex((node) => node.id === childId);
+		if (childNodeIndex !== -1) {
+			assignLoopChildren(nodes, childNodeIndex, loopNodeIndex);
+		}
+	});
+
+	// if leaf child
+	if (nodes[targetNodeIndex].data.children.length === 0) {
+		nodes[loopNodeIndex].data.inputs.addInput(nodes[targetNodeIndex].id, nodes as InputNode[]);
+	}
+
+	return nodes;
+}
+
+const onConnect = (
+	get: () => RFState,
+	set: UseStoreSetType,
+	connection: Connection,
+	setUiErrorMessage: RFState['setUiErrorMessage'],
+) => {
 	let nodes = get().nodes;
 	let edges = get().edges;
 	const targetNodeIndex = nodes.findIndex((n) => n.id === connection.target)!;
@@ -70,6 +127,11 @@ const onConnect = (get: () => RFState, set: UseStoreSetType, connection: Connect
 			},
 		};
 
+		// if (connection.targetHandle === 'chat-prompt-messages') {
+		// 	// if target is a chat prompt, set the source node's parentNode field to the target node's id
+		// 	nodes[sourceNodeIndex].parentNode = connection.target ? connection.target : undefined;
+		// }
+
 		set({
 			nodes: [...nodes],
 		});
@@ -100,6 +162,7 @@ const onConnect = (get: () => RFState, set: UseStoreSetType, connection: Connect
 		return;
 	}
 
+	// placeholder logic
 	if (connection.source) {
 		if ('inputs' in nodes[targetNodeIndex].data) {
 			(nodes[targetNodeIndex] as InputNode).data.inputs.addInput(
@@ -149,11 +212,43 @@ const onConnect = (get: () => RFState, set: UseStoreSetType, connection: Connect
 		};
 	}
 
-	// get source node
 	const sourceNode = nodes[sourceNodeIndex];
-	// get target node
 	const targetNode = nodes[targetNodeIndex];
-	(sourceNode.data as ChatMessageNodeDataType).children.push(targetNode.id);
+
+	sourceNode.data.children.push(targetNode.id);
+
+	// don't allow cycles
+	if (isCycle(nodes, sourceNodeIndex)) {
+		setUiErrorMessage('Creating cycles are not allowed');
+		sourceNode.data.children.pop();
+		return false;
+	}
+
+	// add reference to nodes that are in a loop.
+	if (connection.sourceHandle === 'loop-start-output') {
+		// only allow source loop to only have one target
+		const alreadyConnectedToLoop = edges.some((edge) => {
+			return edge.source === connection.source;
+		});
+
+		if (alreadyConnectedToLoop) {
+			setUiErrorMessage('Loop can only have one target');
+			return false;
+		}
+		nodes[targetNodeIndex].data.loopId = nodes[sourceNodeIndex].id;
+		nodes = assignLoopChildren(nodes, targetNodeIndex, sourceNodeIndex);
+	}
+
+	// if source is part of a loop
+	if (nodes[sourceNodeIndex].data.loopId) {
+		const loopNodeIndex = nodes.findIndex(
+			(node) => node.id === nodes[sourceNodeIndex].data.loopId,
+		);
+		if (loopNodeIndex !== -1) {
+			nodes = assignLoopChildren(nodes, targetNodeIndex, loopNodeIndex);
+		}
+		nodes[loopNodeIndex].data.inputs.deleteInputs([nodes[sourceNodeIndex].id]);
+	}
 
 	set({
 		edges: addEdge(connectionEdge, edges),

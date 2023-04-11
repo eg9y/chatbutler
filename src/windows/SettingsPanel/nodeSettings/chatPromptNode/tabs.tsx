@@ -24,7 +24,7 @@ export default function ChatPromptTabs({
 
 	return (
 		<div className="pr-4">
-			<div className="overflow-y-auto hide-scrollbar pb-40 pt-4">
+			<div className="overflow-y-auto hide-scrollbar">
 				<TabsNavigator tabs={tabs} selected={selected} setSelected={setSelected} />
 				<div className="pt-2">
 					{selected === 'Chat Prompt' && (

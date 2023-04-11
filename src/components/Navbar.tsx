@@ -1,5 +1,10 @@
 import { Dialog } from '@headlessui/react';
-import { ArrowTopRightOnSquareIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/20/solid';
+import {
+	ArrowTopRightOnSquareIcon,
+	Bars3Icon,
+	DocumentTextIcon,
+	XMarkIcon,
+} from '@heroicons/react/20/solid';
 import { nanoid } from 'nanoid';
 import { useState } from 'react';
 import { useLocation } from 'wouter';
@@ -49,42 +54,26 @@ const NavBar = () => {
 				className="mx-auto flex items-center justify-between p-2 lg:px-2 h-full"
 				aria-label="Global"
 			>
-				<div className="-m-1.5 p-1.5 flex-1 flex gap-10 items-center">
-					<div className="text-xl font-bold">PromptSandbox.io</div>
-					<div className="flex">
-						<div className="hidden lg:flex lg:gap-x-4">
-							{navigation.map((item) => (
-								<a
-									key={item.name}
-									className={conditionalClassNames(
-										location === item.href && 'underline underline-offset-4',
-										`text-sm font-semibold leading-6 text-blue-900 cursor-pointer`,
-									)}
-									onClick={async () => {
-										if (location === '/' && currentWorkflow) {
-											// save current workflow without blocking
-											syncDataToSupabase(
-												nodes,
-												edges,
-												currentWorkflow,
-												workflows,
-												setWorkflows,
-												session,
-												params,
-												supabase,
-											).catch((error) => {
-												setUiErrorMessage(
-													`Error saving work: ${error.message}`,
-												);
-											});
-										}
-										window.open(item.href, '_self');
-									}}
-								>
-									{item.name}
-								</a>
-							))}
-						</div>
+				<div className="-m-1.5 p-1.5 flex-1 flex gap-2 items-center">
+					<DocumentTextIcon className="h-6 w-6 text-slate-800" />
+					<div>
+						{location === '/' && (
+							<div className="text-slate-800 flex gap-2 items-center">
+								{currentWorkflow ? (
+									<EditableText
+										currentWorkflow={currentWorkflow}
+										setCurrentWorkflow={setCurrentWorkflow}
+										setWorkflows={setWorkflows}
+										session={session}
+									/>
+								) : (
+									'Untitled Sandbox'
+								)}
+								{!isWorkflowOwnedByUser(session, params) && (
+									<p className="text-slate-500">(Read Mode)</p>
+								)}
+							</div>
+						)}
 						<div className="flex lg:hidden">
 							<button
 								type="button"
@@ -98,23 +87,39 @@ const NavBar = () => {
 					</div>
 				</div>
 				<div>
-					{location === '/' && (
-						<div className="text-slate-800 flex gap-2 items-center">
-							{currentWorkflow ? (
-								<EditableText
-									currentWorkflow={currentWorkflow}
-									setCurrentWorkflow={setCurrentWorkflow}
-									setWorkflows={setWorkflows}
-									session={session}
-								/>
-							) : (
-								'Untitled Sandbox'
-							)}
-							{!isWorkflowOwnedByUser(session, params) && (
-								<p className="text-slate-500">(Read Mode)</p>
-							)}
-						</div>
-					)}
+					<div className="hidden lg:flex lg:gap-x-4">
+						{navigation.map((item) => (
+							<a
+								key={item.name}
+								className={conditionalClassNames(
+									location === item.href && 'underline underline-offset-4',
+									`text-sm font-semibold leading-6 text-blue-900 cursor-pointer`,
+								)}
+								onClick={async () => {
+									if (location === '/' && currentWorkflow) {
+										// save current workflow without blocking
+										syncDataToSupabase(
+											nodes,
+											edges,
+											currentWorkflow,
+											workflows,
+											setWorkflows,
+											session,
+											params,
+											supabase,
+										).catch((error) => {
+											setUiErrorMessage(
+												`Error saving work: ${error.message}`,
+											);
+										});
+									}
+									window.open(item.href, '_self');
+								}}
+							>
+								{item.name}
+							</a>
+						))}
+					</div>
 				</div>
 
 				<div className="flex flex-1 justify-end items-center gap-4 text-sm">

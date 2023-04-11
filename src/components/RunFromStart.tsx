@@ -21,8 +21,8 @@ export default function RunFromStart() {
 		}
 
 		setIsLoading(true);
-		setChatApp([]);
 		try {
+			setChatApp([]);
 			clearAllNodeResponses();
 			await traverseTree(openAiKey);
 

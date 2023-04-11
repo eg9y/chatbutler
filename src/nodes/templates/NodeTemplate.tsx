@@ -1,6 +1,6 @@
-import { ArrowsPointingOutIcon } from '@heroicons/react/20/solid';
+import { ArrowPathIcon, ArrowsPointingOutIcon } from '@heroicons/react/20/solid';
 import { memo, FC } from 'react';
-import { NodeProps } from 'reactflow';
+import { NodeProps, NodeToolbar, Position } from 'reactflow';
 import { shallow } from 'zustand/shallow';
 
 import { ReactComponent as Loading } from '../../assets/loading.svg';
@@ -42,6 +42,13 @@ const NodeTemplate: FC<
 	// TODO: Fullscreen button to edit prompts with a larger display
 	return (
 		<div className={conditionalClassNames('flex flex-col h-full')}>
+			<NodeToolbar
+				position={Position.Right}
+				isVisible={!!data.loopId && data.children.length === 0}
+				className="grow flex items-center"
+			>
+				<ArrowPathIcon className="h-20 w-20 mx-auto text-slate-700/80" />
+			</NodeToolbar>
 			<div
 				className={`p-4 flex justify-between items-center border-b-1 border-slate-400 text-3xl ${bgColor}`}
 			>

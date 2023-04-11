@@ -11,6 +11,8 @@ export type DefaultNodeDataType = {
 	response: string;
 	isLoading: boolean;
 	isBreakpoint: boolean;
+	loopId?: string;
+	isLastLoop?: boolean;
 };
 
 export type AllDataTypes =
@@ -24,10 +26,14 @@ export type AllDataTypes =
 	| OutputTextDataType
 	| InputTextDataType
 	| CombineDataType
+	| ConditionalDataType
+	| CounterDataType
+	| LoopDataType
+	| GlobalVariableDataType
 	| FileTextDataType;
 
-export type CustomNode = Node<AllDataTypes>;
-export type InputNode = Node<LLMPromptNodeDataType | TextNodeDataType | ChatPromptNodeDataType>;
+export type CustomNode = Node<SetVariableDataType | AllDataTypes>;
+export type InputNode = Node<AllDataTypes>;
 
 type OpenAIAPIRequest = {
 	model: string;
@@ -81,6 +87,33 @@ export type CombineDataType = DefaultNodeDataType;
 export type InputTextDataType = DefaultNodeDataType;
 export type OutputTextDataType = DefaultNodeDataType;
 
+export enum ConditionalBooleanOperation {
+	EqualTo = 'Equal To',
+	NotEqualTo = 'Not Equal To',
+	LessThan = 'Less Than',
+	GreaterThan = 'Greater Than',
+	LessThanOrEqualTo = 'Less Than Or Equal To',
+	GreaterThanOrEqualTo = 'Greater Than Or Equal To',
+}
+
+export type ConditionalDataType = {
+	booleanOperation: ConditionalBooleanOperation;
+	value: string;
+	valueToCompare: string;
+} & DefaultNodeDataType;
+
+export type CounterDataType = DefaultNodeDataType;
+
+export type LoopDataType = {
+	loopCount: number;
+	loopMax: number;
+} & DefaultNodeDataType;
+
+export type GlobalVariableDataType = DefaultNodeDataType;
+export type SetVariableDataType = {
+	variableId: string;
+} & DefaultNodeDataType;
+
 export enum NodeTypesEnum {
 	llmPrompt = 'llmPrompt',
 	text = 'text',
@@ -92,6 +125,11 @@ export enum NodeTypesEnum {
 	fileText = 'fileText',
 	search = 'search',
 	combine = 'combine',
+	loop = 'loop',
+	conditional = 'conditional',
+	counter = 'counter',
 	inputText = 'inputText',
 	outputText = 'outputText',
+	globalVariable = 'globalVariable',
+	setVariable = 'setVariable',
 }

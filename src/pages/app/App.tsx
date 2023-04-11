@@ -1,4 +1,4 @@
-import { ChevronDoubleRightIcon, ChevronDoubleLeftIcon } from '@heroicons/react/20/solid';
+import { ChevronDoubleRightIcon } from '@heroicons/react/20/solid';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import ReactFlow, {
 	MiniMap,
@@ -10,6 +10,7 @@ import ReactFlow, {
 	Controls,
 } from 'reactflow';
 import { shallow } from 'zustand/shallow';
+
 import 'reactflow/dist/base.css';
 
 import useSupabase from '../../auth/supabaseClient';
@@ -21,26 +22,32 @@ import populateUserDocuments from '../../db/populateUserDocuments';
 import populateUserWorkflows from '../../db/populateUserWorkflows';
 import selectWorkflow from '../../db/selectWorkflow';
 import syncDataToSupabase from '../../db/syncToSupabase';
-import CustomEdge from '../../edges/CustomEdgeType';
+import { CustomEdgeType } from '../../edges/CustomEdgeType';
 import ChatMessageNode from '../../nodes/ChatMessageNode';
 import ChatPromptNode from '../../nodes/ChatPromptNode';
 import ClassifyCategoriesNode from '../../nodes/ClassifyCategoriesNode';
 import ClassifyNode from '../../nodes/ClassifyNode';
 import CombineNode from '../../nodes/CombineNode';
+import ConditionalNode from '../../nodes/ConditionalNode';
+import CounterNode from '../../nodes/CounterNode';
 import FileNode from '../../nodes/FileTextNode';
+import GlobalVariableNode from '../../nodes/GlobalVariableNode';
 import InputTextNode from '../../nodes/InputTextNode';
 import LLMPromptNode from '../../nodes/LLMPromptNode';
+import LoopNode from '../../nodes/LoopNode';
 import OutputTextNode from '../../nodes/OutputTextNode';
 import PlaceholderNode from '../../nodes/PlaceholderNode';
 import SearchNode from '../../nodes/SearchNode';
+import SetVariableNode from '../../nodes/SetVariableNode';
 import TextNode from '../../nodes/TextNode';
 import { NodeTypesEnum } from '../../nodes/types/NodeTypes';
 import { useStore, useStoreSecret, selector, selectorSecret } from '../../store';
 import isWorkflowOwnedByUser from '../../utils/isWorkflowOwnedByUser';
 import { useDebouncedEffect } from '../../utils/useDebouncedEffect';
 import { useQueryParams } from '../../utils/useQueryParams';
-import LeftSidePanel from '../../windows/LeftSidePanel';
-import SettingsPanel from '../../windows/SettingsPanel/panel';
+import useResize from '../../utils/useResize';
+import ChatPanel from '../../windows/ChatPanel/ChatPanel';
+import SettingsPanel from '../../windows/SettingsPanel/SettingsPanel';
 
 const nodeTypes = {
 	classify: ClassifyNode,
@@ -51,14 +58,19 @@ const nodeTypes = {
 	outputText: OutputTextNode,
 	chatPrompt: ChatPromptNode,
 	chatMessage: ChatMessageNode,
+	loop: LoopNode,
 	fileText: FileNode,
 	search: SearchNode,
 	combine: CombineNode,
+	conditional: ConditionalNode,
 	placeholder: PlaceholderNode,
+	counter: CounterNode,
+	globalVariable: GlobalVariableNode,
+	setVariable: SetVariableNode,
 };
 
 const edgeTypes = {
-	custom: CustomEdge,
+	smart: CustomEdgeType,
 };
 
 export default function App() {
@@ -84,15 +96,11 @@ export default function App() {
 		setEdges,
 		workflows,
 		setWorkflows,
+		setChatApp,
 	} = useStore(selector, shallow);
 	const { session, setSession, setOpenAiKey } = useStoreSecret(selectorSecret, shallow);
 
 	const [settingsView, setSettingsView] = useState(true);
-	const [nodeView, setNodeView] = useState(true);
-
-	const [settingsPanelWidth, setSettingsPanelWidth] = useState(300); // Initial width
-
-	const [isResizing, setIsResizing] = useState(false);
 
 	const [isLoading, setIsLoading] = useState(true);
 
@@ -156,35 +164,7 @@ export default function App() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [params]);
 
-	const handleMouseDown = (e: any) => {
-		e.preventDefault();
-		setIsResizing(true);
-	};
-
-	const handleMouseUp = () => {
-		setIsResizing(false);
-	};
-
-	useEffect(() => {
-		const handleMouseMove = (e: any) => {
-			if (!isResizing) return;
-			const newWidth = window.innerWidth - e.clientX;
-			setSettingsPanelWidth(newWidth);
-		};
-
-		if (isResizing) {
-			window.addEventListener('mousemove', handleMouseMove);
-			window.addEventListener('mouseup', handleMouseUp);
-		} else {
-			window.removeEventListener('mousemove', handleMouseMove);
-			window.removeEventListener('mouseup', handleMouseUp);
-		}
-
-		return () => {
-			window.removeEventListener('mousemove', handleMouseMove);
-			window.removeEventListener('mouseup', handleMouseUp);
-		};
-	}, [isResizing]);
+	const { length: SettingsPanelWidth, handleMouseDown } = useResize(300);
 
 	const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
 
@@ -241,62 +221,29 @@ export default function App() {
 			<div className="absolute p-4 flex w-full justify-center">
 				<div className="flex gap-4 items-center z-10">
 					<RunFromStart />
-				</div>
-			</div>
-			<div
-				style={{
-					height: '95vh',
-					width: nodeView ? '15vw' : 0,
-					maxWidth: '200px',
-					minWidth: '180px',
-				}}
-				className="absolute z-10 flex max-w-sm"
-			>
-				{nodeView && (
-					<LeftSidePanel
-						onAdd={onAdd}
-						reactFlowWrapper={reactFlowWrapper}
-						reactFlowInstance={reactFlowInstance}
-						supabase={supabase}
-					/>
-				)}
-				<div
-					style={{
-						height: '30px',
-						width: '20px',
-					}}
-					className="m-0 cursor-pointer shadow-lg bg-slate-200 border-b-1 border-r-1 border-slate-300 flex gap-10 item-center"
-				>
-					<div
-						className="grow"
+					<button
+						className="bg-red-500 hover:bg-red-600 text-white text-md font-semibold py-1 h-full px-2  rounded flex items-center"
 						onClick={() => {
-							setNodeView(!nodeView);
+							// Are you sure prompt
+							if (window.confirm('Are you sure you want to clear the responses?')) {
+								const clearedNodes = nodes.map((node) => {
+									return {
+										...node,
+										data: {
+											...node.data,
+											response: '',
+											isLoading: false,
+										},
+									};
+								});
+								setNodes(clearedNodes);
+								setChatApp([]);
+								setIsLoading(false);
+							}
 						}}
 					>
-						{nodeView ? (
-							<ChevronDoubleRightIcon
-								style={{
-									height: '30px',
-									width: '20px',
-								}}
-								className={
-									'text-slate-800 group-hover:text-slate-500 h-full mx-auto'
-								}
-								aria-hidden="true"
-							/>
-						) : (
-							<ChevronDoubleLeftIcon
-								style={{
-									height: '30px',
-									width: '20px',
-								}}
-								className={
-									'text-slate-800 group-hover:text-slate-500 h-full mx-auto'
-								}
-								aria-hidden="true"
-							/>
-						)}
-					</div>
+						<span>Clear Run</span>
+					</button>
 				</div>
 			</div>
 
@@ -332,22 +279,77 @@ export default function App() {
 						onNodeClick={onNodeDragStop}
 						onEdgesDelete={onEdgesDelete}
 						defaultEdgeOptions={{
-							type: 'default',
-							animated: true,
+							type: 'smart',
+							// animated: true,
 							style: {
-								strokeWidth: 2,
+								strokeWidth: 10,
 								stroke: '#002',
 							},
 							markerEnd: {
 								type: MarkerType.ArrowClosed,
-								width: 25,
-								height: 25,
+								width: 10,
+								height: 10,
 								color: '#002',
 							},
 						}}
 					>
-						<Controls className="ml-52" />
-						<MiniMap pannable={true} />
+						{settingsView ? (
+							<div
+								className="z-10"
+								style={{
+									height: '95vh',
+									width: `${SettingsPanelWidth}px`,
+									position: 'relative',
+								}}
+							>
+								<SettingsPanel
+									reactFlowWrapper={reactFlowWrapper}
+									reactFlowInstance={reactFlowInstance}
+									supabase={supabase}
+								/>
+								<div
+									// animate on hover to show that it's resizable
+									className="absolute -right-2 top-0 bottom-0 bg-blue-200 cursor-col-resize opacity-0 hover:opacity-80 transition-opacity duration-300"
+									style={{
+										width: '10px',
+									}}
+									onMouseDown={handleMouseDown}
+								/>
+							</div>
+						) : (
+							<div
+								// animate on hover to show that it's resizable
+								className="bg-slate-200 shadow-xl border-1 border-slate-300"
+								style={{
+									width: '10px',
+									height: '95vh',
+								}}
+								onMouseDown={handleMouseDown}
+							/>
+						)}
+						<div
+							style={{
+								top: 0,
+								margin: 0,
+								left: settingsView ? `${SettingsPanelWidth}px` : 10,
+							}}
+							className="cursor-pointer shadow-lg bg-slate-200 border-b-1 border-r-1 border-slate-300 absolute z-20"
+							onClick={() => {
+								setSettingsView(!settingsView);
+							}}
+						>
+							<ChevronDoubleRightIcon
+								style={{
+									height: '30px',
+									width: '20px',
+								}}
+								className={
+									'text-slate-800 group-hover:text-slate-500 h-full mx-auto'
+								}
+								aria-hidden="true"
+							/>
+						</div>
+						<MiniMap position="top-right" pannable={true} />
 						<Background
 							variant={BackgroundVariant.Dots}
 							gap={14}
@@ -357,71 +359,10 @@ export default function App() {
 						<Panel position="top-right" className="z-12">
 							<Notification />
 						</Panel>
-						<Panel
-							position="top-right"
-							style={{
-								margin: 0,
-							}}
-							className="cursor-pointer shadow-lg bg-slate-200 border-b-1 border-l-1 border-slate-300"
-							onClick={() => {
-								setSettingsView(!settingsView);
-							}}
-						>
-							{settingsView ? (
-								<ChevronDoubleLeftIcon
-									style={{
-										height: '30px',
-										width: '20px',
-									}}
-									className={
-										'text-slate-800 group-hover:text-slate-500 h-full mx-auto'
-									}
-									aria-hidden="true"
-								/>
-							) : (
-								<ChevronDoubleRightIcon
-									style={{
-										height: '30px',
-										width: '20px',
-									}}
-									className={' group-hover:text-slate-500 h-full mx-auto'}
-									aria-hidden="true"
-								/>
-							)}
-						</Panel>
 					</ReactFlow>
 				</div>
-
-				{settingsView ? (
-					<div
-						className=""
-						style={{
-							width: `${settingsPanelWidth}px`,
-							position: 'relative',
-						}}
-					>
-						<div
-							// animate on hover to show that it's resizable
-							className="absolute -left-2 top-0 bottom-0 bg-blue-200 cursor-col-resize opacity-0 hover:opacity-80 transition-opacity duration-300"
-							style={{
-								width: '10px',
-							}}
-							onMouseDown={handleMouseDown}
-						/>
-						<SettingsPanel />
-					</div>
-				) : (
-					<div
-						// animate on hover to show that it's resizable
-						className="bg-slate-200 shadow-xl border-1 border-slate-300"
-						style={{
-							width: '10px',
-							height: '95vh',
-						}}
-						onMouseDown={handleMouseDown}
-					/>
-				)}
 			</div>
+			<ChatPanel />
 		</div>
 	);
 }

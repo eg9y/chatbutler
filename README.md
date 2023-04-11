@@ -3,6 +3,7 @@
 promptsandbox.io is a node-based visual programming tool designed to help users create powerful workflows with OpenAI APIs. With an intuitive drag-and-drop interface, users can build dynamic chains of nodes, each performing a specific operation as part of the workflow. This project is built using React, focusing primarily on OpenAI APIs and providing a seamless experience for users working with these APIs.
 
 ![Promptsandbox dashboard](./public/promptsandbox.png)
+
 ## Demo
 
 1. Check out the demo here: [https://promptsandbox.io/](https://promptsandbox.io/)
@@ -27,67 +28,57 @@ promptsandbox.io is a node-based visual programming tool designed to help users 
 
 ### Installation
 
-1. Clone the repository:
+1. Clone the repository, change to the project directory, and install dependencies:
 
-```bash
-git clone https://github.com/your-username/promptsandbox.io.git
-```
+    ```bash
+    git clone https://github.com/your-username/promptsandbox.io.git
+    cd promptsandbox.io
+    yarn install
+    ```
 
-2. Change to the project directory:
+2. Add a .env file in /supabase/
 
-```bash
-cd promptsandbox.io
-```
+    ```bash
+    PGSODIUM_SECRET_KEY=any-random-string
+    ```
 
-3. Install dependencies using Yarn:
+3. Set up Supabase Local instance. You can follow the guide [here](https://supabase.com/docs/guides/cli) or follow the following steps: Install Supabase CLI
 
-```bash
-yarn install
-```
+    ```bash
+    # MacOS
+    brew install supabase/tap/supabase
 
-4. Add a .env file in /supabase/
+    # Windows
+    scoop bucket add supabase https://github.com/supabase/scoop-bucket.git
+    scoop install supabase
 
-```bash
-PGSODIUM_SECRET_KEY=any-random-string
-```
+    # Linux
+    brew install supabase/tap/supabase
+    ```
 
-5. Set up Supabase Local instance. You can follow the guide [here](https://supabase.com/docs/guides/cli) or follow the following steps: Install Supabase CLI
+4. Make sure docker is running and start local supabase instance. You may need to create a Supabase account and run `supabase login` first.
 
-```bash
-# MacOS
-brew install supabase/tap/supabase
+    ```bash
+    supabase start
+    ```
 
-# Windows
-scoop bucket add supabase https://github.com/supabase/scoop-bucket.git
-scoop install supabase
+5. Add another .env file in src/pages/ and include the environment variables. You can get these values by running `supabase status` or the first time you ran supabase start:
 
-# Linux
-brew install supabase/tap/supabase
-```
+    ```bash
+    VITE_SUPABASE_URL= #API URL value from supabase status
+    VITE_SUPABASE_PUBLIC_API= # anon key value
+    SUPABASE_SERVICE_ROLE= # service_rol key
+    ```
 
-6. Make sure docker is running and start local supabase instance. You may need to create a Supabase account and run `supabase login` first.
+6. Run `supabase functions serve` to run all the edge functions locally. Make sure supabase CLI is at least `v1.38.6`.
 
-```bash
-supabase start
-```
+7. Run the development server:
 
-7. Add another .env file in src/pages/ and include the environment variables. You can get these values by running `supabase status` or the first time you ran supabase start:
+    ```bash
+    yarn dev
+    ```
 
-```bash
-VITE_SUPABASE_URL= #API URL value from supabase status
-VITE_SUPABASE_PUBLIC_API= # anon key value
-SUPABASE_SERVICE_ROLE= # service_rol key
-```
-
-8. Run `supabase functions serve` to run all the edge functions locally. Make sure supabase CLI is at least `v1.38.6`.
-
-9. Run the development server:
-
-```bash
-yarn dev
-```
-
-9. Open your browser and navigate to `http://localhost:5173` to access promptsandbox.io.
+8. Finally, open your browser and navigate to `http://localhost:5173` to access promptsandbox.io 🎉.
 
 ## Usage
 

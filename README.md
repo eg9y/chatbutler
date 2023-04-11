@@ -1,6 +1,6 @@
 # promptsandbox.io
 
-promptsandbox.io is a free, open-source, node-based visual programming tool designed to help users create powerful workflows with OpenAI APIs. With an intuitive drag-and-drop interface, users can build dynamic chains of nodes, each performing a specific operation as part of the workflow. This project is built using React, focusing primarily on OpenAI APIs and providing a seamless experience for users working with these APIs.
+promptsandbox.io is a node-based visual programming tool designed to help users create powerful workflows with OpenAI APIs. With an intuitive drag-and-drop interface, users can build dynamic chains of nodes, each performing a specific operation as part of the workflow. This project is built using React, focusing primarily on OpenAI APIs and providing a seamless experience for users working with these APIs.
 
 ![Promptsandbox dashboard](./public/promptsandbox.png)
 ## Demo
@@ -45,13 +45,49 @@ cd promptsandbox.io
 yarn install
 ```
 
-4. Run the development server:
+4. Add a .env file in /supabase/
+
+```bash
+PGSODIUM_SECRET_KEY=any-random-string
+```
+
+5. Set up Supabase Local instance. You can follow the guide [here](https://supabase.com/docs/guides/cli) or follow the following steps: Install Supabase CLI
+
+```bash
+# MacOS
+brew install supabase/tap/supabase
+
+# Windows
+scoop bucket add supabase https://github.com/supabase/scoop-bucket.git
+scoop install supabase
+
+# Linux
+brew install supabase/tap/supabase
+```
+
+6. Make sure docker is running and start local supabase instance. You may need to create a Supabase account and run `supabase login` first.
+
+```bash
+supabase start
+```
+
+7. Add another .env file in src/pages/ and include the environment variables. You can get these values by running `supabase status` or the first time you ran supabase start:
+
+```bash
+VITE_SUPABASE_URL= #API URL value from supabase status
+VITE_SUPABASE_PUBLIC_API= # anon key value
+SUPABASE_SERVICE_ROLE= # service_rol key
+```
+
+8. Run `supabase functions serve` to run all the edge functions locally. Make sure supabase CLI is at least `v1.38.6`.
+
+9. Run the development server:
 
 ```bash
 yarn dev
 ```
 
-5. Open your browser and navigate to `http://localhost:5173` to access promptsandbox.io.
+9. Open your browser and navigate to `http://localhost:5173` to access promptsandbox.io.
 
 ## Usage
 

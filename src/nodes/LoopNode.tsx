@@ -96,8 +96,10 @@ const Loop: FC<NodeProps<LoopDataType>> = (props) => {
 				id="loop-finished-output"
 				style={{
 					right: '-2.6rem',
+					top: '66.666667%',
+					backgroundColor: 'rgb(209 250 229)',
 				}}
-				className="top-1/3 h-10 flex gap-1 border-1 border-slate-700 bg-emerald-100"
+				className="h-10 flex gap-1 border-1 border-slate-700"
 			>
 				<p className="bg-transparent  border-slate-700 text-2xl font-bold self-center -z-10 pointer-events-none p-1">
 					Done
@@ -109,8 +111,10 @@ const Loop: FC<NodeProps<LoopDataType>> = (props) => {
 				id="loop-start-output"
 				style={{
 					right: '-2.5rem',
+					top: '66.666667%',
+					backgroundColor: 'rgb(209 250 229)',
 				}}
-				className="top-2/3 h-10 flex gap-1 border-1 border-slate-700 bg-emerald-100"
+				className="h-10 flex gap-1 border-1 border-slate-700"
 			>
 				<p className="bg-transparent  border-slate-700 text-2xl font-bold self-center -z-10 pointer-events-none p-1">
 					Loop

@@ -96,7 +96,7 @@ const Loop: FC<NodeProps<LoopDataType>> = (props) => {
 				id="loop-finished-output"
 				style={{
 					right: '-2.6rem',
-					top: '66.666667%',
+					top: '33.333333%',
 					backgroundColor: 'rgb(209 250 229)',
 				}}
 				className="h-10 flex gap-1 border-1 border-slate-700"

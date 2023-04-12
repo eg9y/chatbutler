@@ -280,17 +280,13 @@ export default function App() {
 						onEdgesDelete={onEdgesDelete}
 						defaultEdgeOptions={{
 							type: 'smart',
-							// animated: true,
 							style: {
 								strokeWidth: 10,
 								stroke: '#002',
 							},
-							markerEnd: {
-								type: MarkerType.ArrowClosed,
-								width: 10,
-								height: 10,
-								color: '#002',
-							},
+							// markerEnd: {
+							// 	type: MarkerType.ArrowClosed,
+							// },
 						}}
 					>
 						{settingsView ? (
@@ -319,7 +315,7 @@ export default function App() {
 						) : (
 							<div
 								// animate on hover to show that it's resizable
-								className="bg-slate-200 shadow-xl border-1 border-slate-300"
+								className="bg-slate-200 shadow-xl border-1 border-slate-300 relative z-40"
 								style={{
 									width: '10px',
 									height: '95vh',

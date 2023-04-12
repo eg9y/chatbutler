@@ -52,7 +52,21 @@ export const CustomEdgeType: React.FC<EdgeProps> = (props) => {
 	const { edgeCenterX, edgeCenterY, svgPathString } = getSmartEdgeResponse;
 
 	return (
-		<>
+		<svg style={{ overflow: 'visible' }}>
+			<defs>
+				<marker
+					id="arrow"
+					viewBox="0 0 10 10"
+					refX="7"
+					refY="5"
+					markerWidth="3"
+					markerHeight="10"
+					orient="auto-start"
+					// orient="auto-start-reverse"
+				>
+					<path d="M 0 0 L 10 5 L 0 10 z" />
+				</marker>
+			</defs>
 			<path
 				style={style}
 				className={conditionalClassNames(
@@ -60,26 +74,9 @@ export const CustomEdgeType: React.FC<EdgeProps> = (props) => {
 					selected && 'text-emerald-600',
 				)}
 				d={svgPathString}
-				markerEnd={markerEnd}
+				markerEnd={'url(#arrow)'}
 				markerStart={markerStart}
 			/>
-			{/* <foreignObject
-				width={foreignObjectSize}
-				height={foreignObjectSize}
-				x={edgeCenterX - foreignObjectSize / 2}
-				y={edgeCenterY - foreignObjectSize / 2}
-				requiredExtensions="http://www.w3.org/1999/xhtml"
-			>
-				<button
-					onClick={(event) => {
-						event.stopPropagation();
-						alert(`remove ${id}`);
-						//  remove edge
-					}}
-				>
-					X
-				</button>
-			</foreignObject> */}
-		</>
+		</svg>
 	);
 };

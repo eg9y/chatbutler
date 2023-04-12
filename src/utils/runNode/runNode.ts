@@ -10,8 +10,8 @@ import {
 	LoopDataType,
 	SetVariableDataType,
 } from '../../nodes/types/NodeTypes';
-import { parsePromptInputs } from '../../openai/openai';
 import { RFState } from '../../store/useStore';
+import { parsePromptInputs } from '../parsePromptInputs';
 
 export async function runNode(
 	node: CustomNode,

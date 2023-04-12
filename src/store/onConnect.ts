@@ -228,7 +228,9 @@ const onConnect = (
 	if (connection.sourceHandle === 'loop-start-output') {
 		// only allow source loop to only have one target
 		const alreadyConnectedToLoop = edges.some((edge) => {
-			return edge.source === connection.source;
+			return (
+				edge.sourceHandle === connection.sourceHandle && edge.source === connection.source
+			);
 		});
 
 		if (alreadyConnectedToLoop) {

@@ -4,8 +4,8 @@ import { OpenAIEmbeddings } from '../../backgroundTasks/langChainBrowser/embeddi
 import { SupabaseVectorStore } from '../../backgroundTasks/langChainBrowser/vectorstores/supabase';
 import { processFile } from '../../backgroundTasks/processFile';
 import { CustomNode, SearchDataType } from '../../nodes/types/NodeTypes';
-import { parsePromptInputs } from '../../openai/openai';
 import { RFState } from '../../store/useStore';
+import { parsePromptInputs } from '../parsePromptInputs';
 
 const search = async (node: CustomNode, get: () => RFState) => {
 	const inputs = node.data.inputs;

@@ -6,24 +6,12 @@ import {
 	LLMPromptNodeDataType,
 } from '../nodes/types/NodeTypes';
 import { RFState } from '../store/useStore';
+import { parsePromptInputs } from '../utils/parsePromptInputs';
 
 export type ChatSequence = {
 	role: 'user' | 'assistant' | 'system';
 	content: string;
 }[];
-
-// TODO: Refactor to separate utils file
-export function parsePromptInputs(get: () => RFState, prompt: string, nodeIds: string[]): string {
-	let parsedPrompt = prompt;
-	const nodes = get().getNodes([...nodeIds, ...get().globalVariables]);
-	nodes.forEach((node) => {
-		parsedPrompt = parsedPrompt.replace(
-			new RegExp(`{{${node.data.name}}}`, 'g'),
-			node.data.response,
-		);
-	});
-	return parsedPrompt;
-}
 
 export async function getOpenAIResponse(
 	apiKey: string | null,

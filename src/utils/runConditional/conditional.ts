@@ -3,8 +3,8 @@ import {
 	ConditionalDataType,
 	ConditionalBooleanOperation,
 } from '../../nodes/types/NodeTypes';
-import { parsePromptInputs } from '../../openai/openai';
 import { RFState } from '../../store/useStore';
+import { parsePromptInputs } from '../parsePromptInputs';
 
 function conditional(
 	node: CustomNode,

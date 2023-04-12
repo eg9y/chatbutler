@@ -3,8 +3,9 @@ import {
 	ClassifyNodeDataType,
 	ClassifyNodeCategoriesDataType,
 } from '../../nodes/types/NodeTypes';
-import { parsePromptInputs, ChatSequence, getOpenAIChatResponse } from '../../openai/openai';
+import { ChatSequence, getOpenAIChatResponse } from '../../openai/openai';
 import { RFState } from '../../store/useStore';
+import { parsePromptInputs } from '../parsePromptInputs';
 
 async function classify(node: CustomNode, get: () => RFState, openAiKey: string) {
 	const classifyData = node.data as ClassifyNodeDataType;

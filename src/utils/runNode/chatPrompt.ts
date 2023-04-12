@@ -4,8 +4,9 @@ import {
 	ChatPromptNodeDataType,
 	NodeTypesEnum,
 } from '../../nodes/types/NodeTypes';
-import { getOpenAIChatResponse, parsePromptInputs } from '../../openai/openai';
+import { getOpenAIChatResponse } from '../../openai/openai';
 import { RFState } from '../../store/useStore';
+import { parsePromptInputs } from '../parsePromptInputs';
 
 async function chatPrompt(node: CustomNode, get: () => RFState, openAiKey: string) {
 	const chatMessageNodes = collectChatMessages(node, get);

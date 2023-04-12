@@ -96,11 +96,7 @@ const Content: FC<{
 	children: React.ReactNode;
 }> = ({ children }) => {
 	return (
-		<div
-			style={{
-				height: '35rem',
-			}}
-		>
+		<div>
 			<div className="h-full flex flex-col gap-1 px-4 pb-4 text-slate-900">{children}</div>
 		</div>
 	);

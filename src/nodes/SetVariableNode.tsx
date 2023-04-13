@@ -39,7 +39,7 @@ const SetVariable: FC<NodeProps<SetVariableDataType>> = (props) => {
 			<div
 				className={conditionalClassNames(
 					data.isDetailMode && 'h-[40rem] w-[35rem]',
-					`m-3 bg-slate-100 shadow-lg`,
+					`m-3 shadow-lg`,
 				)}
 			>
 				<NodeTemplate

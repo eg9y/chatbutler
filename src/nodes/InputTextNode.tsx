@@ -20,7 +20,7 @@ const InputText: FC<NodeProps<InputTextDataType>> = (props) => {
 			<div
 				className={conditionalClassNames(
 					data.isDetailMode && 'h-[35rem] w-[35rem]',
-					`m-3 bg-slate-100 shadow-lg h-full`,
+					`m-3 shadow-lg h-full`,
 				)}
 			>
 				<NodeTemplate

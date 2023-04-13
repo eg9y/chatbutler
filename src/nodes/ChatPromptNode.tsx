@@ -11,12 +11,11 @@ const ChatPrompt: FC<NodeProps<ChatPromptNodeDataType>> = (props) => {
 
 	const [showFullScreen, setShowFullScreen] = useState(false);
 
-	// TODO: Fullscreen button to edit prompts with a larger display
 	return (
 		<div
 			className={conditionalClassNames(
 				data.isDetailMode && 'h-[40rem] w-[35rem]',
-				`m-3 bg-slate-100 shadow-lg`,
+				`m-3 shadow-lg`,
 			)}
 		>
 			<NodeTemplate

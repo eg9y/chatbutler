@@ -22,7 +22,7 @@ const Conditional: FC<NodeProps<ConditionalDataType>> = (props) => {
 			<div
 				className={conditionalClassNames(
 					data.isDetailMode && 'h-[40rem] w-[35rem]',
-					`m-3 bg-slate-100 shadow-lg`,
+					`m-3 shadow-lg`,
 				)}
 			>
 				{/* how to spread  */}

@@ -17,6 +17,46 @@ interface NodeTemplateInterface {
 	selected: boolean;
 }
 
+function getBackgroundColor(color: string) {
+	if (color === 'green') {
+		return `bg-green-200`;
+	} else if (color === 'emerald') {
+		return `bg-emerald-200`;
+	} else if (color === 'amber') {
+		return `bg-amber-200`;
+	} else if (color === 'purple') {
+		return `bg-purple-200`;
+	} else if (color === 'indigo') {
+		return `bg-indigo-200`;
+	} else if (color === 'sky') {
+		return `bg-sky-200`;
+	} else if (color === 'slate') {
+		return `bg-slate-200`;
+	} else if (color === 'rose') {
+		return `bg-rose-200`;
+	}
+}
+
+function getBorderColor(color: string) {
+	if (color === 'green') {
+		return `border-green-600`;
+	} else if (color === 'emerald') {
+		return `border-emerald-600`;
+	} else if (color === 'amber') {
+		return `border-amber-600`;
+	} else if (color === 'purple') {
+		return `border-purple-600`;
+	} else if (color === 'indigo') {
+		return `border-indigo-600`;
+	} else if (color === 'sky') {
+		return `border-sky-600`;
+	} else if (color === 'slate') {
+		return `border-slate-600`;
+	} else if (color === 'rose') {
+		return `border-rose-600`;
+	}
+}
+
 const NodeTemplate: FC<
 	NodeProps<DefaultNodeDataType> &
 		NodeTemplateInterface & {
@@ -29,7 +69,7 @@ const NodeTemplate: FC<
 	data,
 	title,
 	fieldName,
-	color = 'bg-yellow-200',
+	color = 'yellow',
 	showFullScreen,
 	setShowFullScreen,
 	labelComponent,
@@ -37,13 +77,13 @@ const NodeTemplate: FC<
 	selected,
 }) => {
 	const { updateNode, getNodes } = useStore(selector, shallow);
-	// TODO: Fullscreen button to edit prompts with a larger display
+
 	return (
 		<div
 			className={conditionalClassNames(
 				data.isDetailMode && '35rem',
-				selected ? `border-${color}-600` : 'border-slate-300',
-				'h-full flex flex-col rounded-xl border-2',
+				selected ? getBorderColor(color) : 'border-slate-400',
+				'h-full flex flex-col rounded-xl border-2 bg-slate-100',
 			)}
 		>
 			<NodeToolbar
@@ -55,7 +95,7 @@ const NodeTemplate: FC<
 			</NodeToolbar>
 			<div
 				className={conditionalClassNames(
-					`bg-${color}-200`,
+					getBackgroundColor(color),
 					data.isDetailMode ? 'p-4' : 'pt-10 pb-5 px-8',
 					`p-4 flex gap-2 justify-between items-center border-b-1 border-slate-400 rounded-t-lg text-3xl`,
 				)}
@@ -99,7 +139,7 @@ const NodeTemplate: FC<
 			<div
 				className={conditionalClassNames(
 					data.isDetailMode ? 'h-14 text-2xl' : 'py-10 text-3xl',
-					'px-4 gap-6 w-full flex justify-between items-center ',
+					'px-4 gap-6 w-full flex justify-between items-center bg-slate-100',
 				)}
 			>
 				{data.isDetailMode ? (

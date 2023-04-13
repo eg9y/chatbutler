@@ -15,7 +15,7 @@ const Counter: FC<NodeProps<CounterDataType>> = (props) => {
 					height: '15rem',
 					width: '15rem',
 				}}
-				className={`m-3 bg-slate-100 shadow-lg border-2  ${
+				className={`m-3 shadow-lg border-2  ${
 					selected ? 'border-emerald-600' : 'border-slate-300'
 				} flex items-center justify-center bg-emerald-200`}
 			>

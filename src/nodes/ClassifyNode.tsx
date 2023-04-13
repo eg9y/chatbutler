@@ -28,7 +28,7 @@ const Classify: FC<NodeProps<ClassifyNodeDataType>> = (props) => {
 	// TODO: Fullscreen button to edit prompts with a larger display
 	return (
 		<>
-			<div className={conditionalClassNames(`m-3 bg-slate-100 shadow-lg`)}>
+			<div className={conditionalClassNames(`m-3 shadow-lg`)}>
 				{RunnableToolbarTemplate(data, selected, updateNode, id)}
 				{/* how to spread  */}
 				<div className="">

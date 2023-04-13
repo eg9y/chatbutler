@@ -105,9 +105,7 @@ const NodeTemplate: FC<
 						<span className="font-semibold">{title}</span>
 						{data.isDetailMode && `: ${data.name}`}
 					</h1>
-					{data.isLoading && (
-						<Loading className="animate-spin -ml-1 mr-3 h-7 w-7 text-black" />
-					)}
+					{data.isLoading && <Loading className="animate-spin -ml-1 mr-3 h-7 w-7 " />}
 				</div>
 
 				<button

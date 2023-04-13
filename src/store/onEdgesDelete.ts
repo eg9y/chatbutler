@@ -54,6 +54,8 @@ const onEdgesDelete = (get: () => RFState, set: UseStoreSetType, edges: RFState[
 						}
 					});
 				});
+
+				delete nodes[nodeIndex].data.loopId;
 			}
 		});
 

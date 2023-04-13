@@ -87,6 +87,8 @@ const InputNodesList = ({
 							'bg-emerald-600 text-white hover:bg-emerald-700',
 						inputNode.type === NodeTypesEnum.llmPrompt &&
 							'bg-amber-600 text-white hover:bg-amber-700',
+						inputNode.type === NodeTypesEnum.setVariable &&
+							'bg-slate-600 text-white hover:bg-slate-700',
 						inputNode.type === NodeTypesEnum.chatPrompt &&
 							'bg-purple-600 text-white hover:bg-purple-700',
 						inputNode.type === NodeTypesEnum.singleChatPrompt &&
@@ -109,6 +111,7 @@ const InputNodesList = ({
 							inputNode.type === NodeTypesEnum.outputText) &&
 							'bg-emerald-400',
 						inputNode.type === NodeTypesEnum.llmPrompt && 'bg-amber-400',
+						inputNode.type === NodeTypesEnum.setVariable && 'bg-slate-400',
 						inputNode.type === NodeTypesEnum.chatPrompt && 'bg-purple-400',
 						inputNode.type === NodeTypesEnum.singleChatPrompt && 'bg-purple-400',
 						inputNode.type === NodeTypesEnum.chatMessage && 'bg-purple-300',

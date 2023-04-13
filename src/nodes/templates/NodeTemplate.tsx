@@ -86,6 +86,9 @@ const NodeTemplate: FC<
 				'h-full flex flex-col rounded-xl border-2 bg-slate-100',
 			)}
 		>
+			<NodeToolbar position={Position.Top} isVisible={data.isLoading}>
+				<Loading className="animate-spin h-12 w-12 text-green-500" />
+			</NodeToolbar>
 			<NodeToolbar
 				position={Position.Right}
 				isVisible={!!data.loopId && data.children.length === 0}
@@ -105,7 +108,6 @@ const NodeTemplate: FC<
 						<span className="font-semibold">{title}</span>
 						{data.isDetailMode && `: ${data.name}`}
 					</h1>
-					{data.isLoading && <Loading className="animate-spin -ml-1 mr-3 h-7 w-7 " />}
 				</div>
 
 				<button

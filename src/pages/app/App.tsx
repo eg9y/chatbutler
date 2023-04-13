@@ -325,37 +325,39 @@ export default function App() {
 							pannable={true}
 							className="shadow-lg ring-1 ring-slate-200 rounded-lg"
 							nodeColor={(node) => {
-								if (node.type === 'classify') {
+								if (node.type === NodeTypesEnum.classify) {
 									return 'rgb(254 205 211)';
-								} else if (node.type === 'classifyCategories') {
+								} else if (node.type === NodeTypesEnum.classifyCategories) {
 									return 'rgb(254 205 211)';
-								} else if (node.type === 'llmPrompt') {
+								} else if (node.type === NodeTypesEnum.llmPrompt) {
 									return 'rgb(253 230 138)';
-								} else if (node.type === 'text') {
+								} else if (node.type === NodeTypesEnum.text) {
 									return 'rgb(167 243 208)';
-								} else if (node.type === 'inputText') {
+								} else if (node.type === NodeTypesEnum.inputText) {
 									return 'rgb(167 243 208)';
-								} else if (node.type === 'outputText') {
+								} else if (node.type === NodeTypesEnum.outputText) {
 									return 'rgb(167 243 208)';
-								} else if (node.type === 'loop') {
+								} else if (node.type === NodeTypesEnum.loop) {
 									return 'rgb(167 243 208)';
-								} else if (node.type === 'conditional') {
+								} else if (node.type === NodeTypesEnum.conditional) {
 									return 'rgb(167 243 208)';
-								} else if (node.type === 'counter') {
+								} else if (node.type === NodeTypesEnum.counter) {
 									return 'rgb(167 243 208)';
-								} else if (node.type === 'chatPrompt') {
+								} else if (node.type === NodeTypesEnum.chatPrompt) {
 									return 'rgb(233 213 255)';
-								} else if (node.type === 'chatMessage') {
+								} else if (node.type === NodeTypesEnum.singleChatPrompt) {
 									return 'rgb(233 213 255)';
-								} else if (node.type === 'fileText') {
+								} else if (node.type === NodeTypesEnum.chatMessage) {
+									return 'rgb(233 213 255)';
+								} else if (node.type === NodeTypesEnum.fileText) {
 									return 'rgb(186 230 253)';
-								} else if (node.type === 'search') {
+								} else if (node.type === NodeTypesEnum.search) {
 									return 'rgb(186 230 253)';
-								} else if (node.type === 'combine') {
+								} else if (node.type === NodeTypesEnum.combine) {
 									return 'rgb(186 230 253)';
-								} else if (node.type === 'globalVariable') {
+								} else if (node.type === NodeTypesEnum.globalVariable) {
 									return 'rgb(226 232 240)';
-								} else if (node.type === 'setVariable') {
+								} else if (node.type === NodeTypesEnum.setVariable) {
 									return 'rgb(226 232 240)';
 								}
 								return 'rgb(230,230,230)';

@@ -1,7 +1,7 @@
 import { getAllChildren } from './getChildren';
 import runConditional from './runConditional/runConditional';
 import { runNode } from './runNode/runNode';
-import { CustomNode, NodeTypesEnum } from '../nodes/types/NodeTypes';
+import { CustomNode, LoopDataType, NodeTypesEnum } from '../nodes/types/NodeTypes';
 import { RFState } from '../store/useStore';
 
 export async function traverseTree(
@@ -52,7 +52,7 @@ export async function traverseTree(
 		let childrenNodes = get().getNodes(node.data.children);
 
 		try {
-			if (node.type === NodeTypesEnum.loop) {
+			if (node.type === NodeTypesEnum.loop && (node.data as LoopDataType).loopCount > 0) {
 				const check = await new Promise<boolean>((resolve) => {
 					const chatApp = get().chatApp;
 					get().setChatApp([

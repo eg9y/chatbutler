@@ -17,7 +17,7 @@ const ChatPanel: React.FC = () => {
 	const [currentUncollapsedHeight, setCurrentUncollapsedHeight] = useState(chatPanelHeight);
 
 	useEffect(() => {
-		setLength(chatApp.length + 200);
+		setLength(chatApp.length * 60);
 	}, [chatApp, setLength]);
 
 	return (

@@ -13,7 +13,7 @@ interface Props {
 export const Chat: FC<Props> = ({ messages, loading }) => {
 	return (
 		<div className="relative h-full overflow-y-scroll">
-			<div className="absolute">
+			<div className="absolute w-full">
 				<div className="py-2 grow gap-1 w-full h-full flex flex-col justify-end">
 					{messages.map((message, index) => (
 						<Transition

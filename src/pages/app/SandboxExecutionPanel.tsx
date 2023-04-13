@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import RunFromStart from '../../components/RunFromStart';
+import { LoopDataType, NodeTypesEnum } from '../../nodes/types/NodeTypes';
 import { RFState } from '../../store/useStore';
 
 function SandboxExecutionPanel({
@@ -22,7 +23,7 @@ function SandboxExecutionPanel({
 					// Are you sure prompt
 					if (window.confirm('Are you sure you want to clear the responses?')) {
 						const clearedNodes = nodes.map((node) => {
-							return {
+							const newNode = {
 								...node,
 								data: {
 									...node.data,
@@ -30,6 +31,10 @@ function SandboxExecutionPanel({
 									isLoading: false,
 								},
 							};
+							if (node.type === NodeTypesEnum.loop) {
+								(newNode.data as LoopDataType).loopCount = 0;
+							}
+							return newNode;
 						});
 						setIsLoading(false);
 						setNodes(clearedNodes);

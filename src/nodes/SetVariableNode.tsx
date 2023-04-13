@@ -23,16 +23,20 @@ const SetVariable: FC<NodeProps<SetVariableDataType>> = (props) => {
 	const [selectedGlobalVariable, setSelectedGlobalVariable] = useState<string>('');
 
 	useEffect(() => {
-		setGlobalVariableNodes(getNodes(globalVariables));
-		if (selectedGlobalVariable === '') {
-			setSelectedGlobalVariable(globalVariables[0]);
+		const globalVariableIds = Object.keys(globalVariables);
+		setGlobalVariableNodes(getNodes(globalVariableIds));
+
+		if (data.variableId && data.variableId in globalVariables) {
+			setSelectedGlobalVariable(data.variableId);
+		} else if (selectedGlobalVariable === '') {
+			setSelectedGlobalVariable(globalVariableIds[0]);
 			updateNode(id, {
 				...data,
-				variableId: globalVariables[0],
+				variableId: globalVariableIds[0],
 			});
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [globalVariables, getNodes]);
+	}, [globalVariables]);
 
 	return (
 		<div className="">
@@ -70,8 +74,8 @@ const SetVariable: FC<NodeProps<SetVariableDataType>> = (props) => {
 										});
 									}}
 								>
-									{globalVariableNodes?.map((variable) => (
-										<option key={variable.id} value={variable.data.name || ''}>
+									{Object.values(globalVariableNodes)?.map((variable) => (
+										<option key={variable.id} value={variable.id || ''}>
 											{variable.data.name}
 										</option>
 									))}

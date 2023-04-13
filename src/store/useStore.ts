@@ -56,8 +56,8 @@ export interface RFState {
 		id: string;
 		name: string;
 	}[];
-	globalVariables: string[];
-	setGlobalVariables: (variables: string[]) => void;
+	globalVariables: { [key: string]: string };
+	setGlobalVariables: (variables: { [key: string]: string }) => void;
 	setWorkflows: (workflows: { id: string; name: string }[]) => void;
 	currentWorkflow: SimpleWorkflow | null;
 	setCurrentWorkflow: (workflow: { id: string; user_id: string; name: string } | null) => void;
@@ -127,8 +127,8 @@ const useStore = create<RFState>()(
 					waitingUserResponse: waiting,
 				});
 			},
-			globalVariables: [],
-			setGlobalVariables: (variables: string[]) => {
+			globalVariables: {},
+			setGlobalVariables: (variables: { [key: string]: string }) => {
 				set({
 					globalVariables: variables,
 				});
@@ -172,7 +172,7 @@ const useStore = create<RFState>()(
 					nodes: [],
 					edges: [],
 					selectedNode: null,
-					globalVariables: [],
+					globalVariables: {},
 					chatApp: [],
 				});
 			},
@@ -221,9 +221,8 @@ const useStore = create<RFState>()(
 					update.selectedNode = null;
 					if (selectedNode?.type === NodeTypesEnum.globalVariable) {
 						const globalVariables = get().globalVariables;
-						const newGlobalVariables = globalVariables.filter(
-							(variable) => variable !== selectedNode?.id,
-						);
+						const newGlobalVariables = globalVariables;
+						delete newGlobalVariables[selectedNode?.id];
 						set({
 							globalVariables: newGlobalVariables,
 						});

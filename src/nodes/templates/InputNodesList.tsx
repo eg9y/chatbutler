@@ -22,7 +22,7 @@ const InputNodesList = ({
 }) => {
 	const { getNodes, globalVariables } = useStore(selector, shallow);
 	const inputNodes = getNodes(data.inputs.inputs);
-	const globalVariableNodes = getNodes(globalVariables);
+	const globalVariableNodes = getNodes(Object.keys(globalVariables));
 
 	function addInputToTextBox(
 		id: string,

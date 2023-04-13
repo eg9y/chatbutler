@@ -276,8 +276,9 @@ const onAdd = (
 		// 2. insert global variable as input to all nodes
 		// 3. update all nodes
 		const globalVariables = get().globalVariables;
+		globalVariables[node.id] = node.data.name;
 		set({
-			globalVariables: globalVariables.concat(node.id),
+			globalVariables,
 		});
 	} else if (type === NodeTypesEnum.setVariable) {
 		node = {

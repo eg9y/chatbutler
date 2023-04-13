@@ -319,7 +319,46 @@ export default function App() {
 								aria-hidden="true"
 							/>
 						</div>
-						<MiniMap position="top-right" pannable={true} />
+						<MiniMap
+							position="top-right"
+							pannable={true}
+							nodeColor={(node) => {
+								if (node.type === 'classify') {
+									return 'rgb(254 205 211)';
+								} else if (node.type === 'classifyCategories') {
+									return 'rgb(254 205 211)';
+								} else if (node.type === 'llmPrompt') {
+									return 'rgb(253 230 138)';
+								} else if (node.type === 'text') {
+									return 'rgb(167 243 208)';
+								} else if (node.type === 'inputText') {
+									return 'rgb(167 243 208)';
+								} else if (node.type === 'outputText') {
+									return 'rgb(167 243 208)';
+								} else if (node.type === 'loop') {
+									return 'rgb(167 243 208)';
+								} else if (node.type === 'conditional') {
+									return 'rgb(167 243 208)';
+								} else if (node.type === 'counter') {
+									return 'rgb(167 243 208)';
+								} else if (node.type === 'chatPrompt') {
+									return 'rgb(233 213 255)';
+								} else if (node.type === 'chatMessage') {
+									return 'rgb(233 213 255)';
+								} else if (node.type === 'fileText') {
+									return 'rgb(186 230 253)';
+								} else if (node.type === 'search') {
+									return 'rgb(186 230 253)';
+								} else if (node.type === 'combine') {
+									return 'rgb(186 230 253)';
+								} else if (node.type === 'globalVariable') {
+									return 'rgb(226 232 240)';
+								} else if (node.type === 'setVariable') {
+									return 'rgb(226 232 240)';
+								}
+								return 'rgb(150,150,150)';
+							}}
+						/>
 						<Background
 							variant={BackgroundVariant.Dots}
 							gap={14}

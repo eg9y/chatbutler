@@ -17,7 +17,7 @@ function SandboxExecutionPanel({
 		<div className="flex gap-4 items-center z-10">
 			<RunFromStart isLoading={isLoading} setIsLoading={setIsLoading} />
 			<button
-				className="bg-red-100/50 hover:bg-red-600 border-2 border-red-500 text-red-800 text-md font-semibold py-1 h-full px-2  rounded flex items-center"
+				className="bg-red-100/50 hover:bg-red-200/50 border-2 border-red-500 text-red-800 text-md font-semibold py-1 h-full px-2  rounded flex items-center"
 				onClick={() => {
 					// Are you sure prompt
 					if (window.confirm('Are you sure you want to clear the responses?')) {

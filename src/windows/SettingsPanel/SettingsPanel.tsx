@@ -102,7 +102,7 @@ export default function LeftSidePanel({
 								if (session) {
 									setOpenWorkflows(true);
 								} else {
-									setUiErrorMessage('Please login to save workflows');
+									setUiErrorMessage('Please login to save sandboxes');
 								}
 							}}
 						>
@@ -112,7 +112,7 @@ export default function LeftSidePanel({
 								}
 								aria-hidden="true"
 							/>
-							<span className="truncate">My Workflows</span>
+							<span className="truncate">My Sandboxes</span>
 						</a>
 					</div>
 					<div className="">

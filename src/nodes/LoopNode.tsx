@@ -73,8 +73,14 @@ const Loop: FC<NodeProps<LoopDataType>> = (props) => {
 									/>
 								</div>
 							</div>
-							<div className="grow flex items-center">
-								<ArrowPathIcon className="h-20 w-20 mx-auto text-slate-700" />
+							<div className="grow flex justify-center items-center">
+								<p className="text-5xl">{data.isLoading && data.loopCount}</p>
+								<ArrowPathIcon
+									className={conditionalClassNames(
+										data.isLoading && 'animate-[spin_3s_linear_infinite]',
+										'h-20 w-20 text-slate-700',
+									)}
+								/>
 							</div>
 						</>
 					)}

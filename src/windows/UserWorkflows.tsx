@@ -157,7 +157,7 @@ export default function UserWorkflows({
 									as="h3"
 									className="text-3xl font-semibold leading-6 text-gray-900 pb-4 flex gap-2"
 								>
-									My Workflows
+									My Sandboxes
 									<span>
 										{isLoading && (
 											<Loading className="animate-spin -ml-1 mr-3 h-7 w-7 text-black" />

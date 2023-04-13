@@ -6,6 +6,7 @@ import useUndo from 'use-undo';
 import InputNodesList from './templates/InputNodesList';
 import NodeTemplate from './templates/NodeTemplate';
 import { ConditionalBooleanOperation, ConditionalDataType } from './types/NodeTypes';
+import { conditionalClassNames } from '../utils/classNames';
 
 const Conditional: FC<NodeProps<ConditionalDataType>> = (props) => {
 	const { data, selected, id, type } = props;
@@ -15,29 +16,24 @@ const Conditional: FC<NodeProps<ConditionalDataType>> = (props) => {
 	const [valueToCompareState, { set: setValueToCompare }] = useUndo(data.valueToCompare);
 	const { present: valueToCompare } = valueToCompareState;
 
-	const [showPrompt, setshowPrompt] = useState(true);
 	const [showFullScreen, setShowFullScreen] = useState(false);
 	return (
 		<div className="">
 			<div
-				style={{
-					height: showPrompt ? '40rem' : '5rem',
-					width: '35rem',
-				}}
-				className={`m-3 bg-slate-100 shadow-lg border-2  ${
-					selected ? 'border-emerald-600' : 'border-slate-300'
-				} flex flex-col text-xl`}
+				className={conditionalClassNames(
+					data.isDetailMode && 'h-[40rem] w-[35rem]',
+					`m-3 bg-slate-100 shadow-lg`,
+				)}
 			>
 				{/* how to spread  */}
 				<NodeTemplate
 					{...props}
 					title="Conditional"
 					fieldName="Value"
-					bgColor="bg-emerald-200"
-					show={showPrompt}
-					setShow={setshowPrompt}
+					color="emerald"
 					showFullScreen={showFullScreen}
 					setShowFullScreen={setShowFullScreen}
+					selected={selected}
 				>
 					{(updateNode: (id: string, data: ConditionalDataType) => void) => (
 						<>

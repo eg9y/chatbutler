@@ -221,6 +221,8 @@ const NodesList = ({
 								handleDrag={handleDrag}
 								addNodeToCenter={addNodeToCenter}
 								Icon={WrenchIcon}
+								session={session}
+								needAuth={true}
 							/>
 						</Disclosure.Panel>
 					</>

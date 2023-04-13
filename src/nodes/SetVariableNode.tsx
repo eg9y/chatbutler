@@ -8,6 +8,7 @@ import NodeTemplate from './templates/NodeTemplate';
 import TextAreaTemplate from './templates/TextAreaTemplate';
 import { CustomNode, SetVariableDataType } from './types/NodeTypes';
 import useStore, { selector } from '../store/useStore';
+import { conditionalClassNames } from '../utils/classNames';
 
 const SetVariable: FC<NodeProps<SetVariableDataType>> = (props) => {
 	const { data, selected, id, type } = props;
@@ -15,7 +16,7 @@ const SetVariable: FC<NodeProps<SetVariableDataType>> = (props) => {
 	const { present: presentText } = textState;
 
 	const { globalVariables, getNodes, updateNode } = useStore(selector, shallow);
-	const [showPrompt, setshowPrompt] = useState(true);
+
 	const [showFullScreen, setShowFullScreen] = useState(false);
 
 	const [globalVariableNodes, setGlobalVariableNodes] = useState<CustomNode[]>([]);
@@ -36,22 +37,19 @@ const SetVariable: FC<NodeProps<SetVariableDataType>> = (props) => {
 	return (
 		<div className="">
 			<div
-				style={{
-					width: '35rem',
-				}}
-				className={`m-3 bg-slate-100 shadow-lg border-2  ${
-					selected ? 'border-slate-600' : 'border-slate-400'
-				} flex flex-col `}
+				className={conditionalClassNames(
+					data.isDetailMode && 'h-[40rem] w-[35rem]',
+					`m-3 bg-slate-100 shadow-lg`,
+				)}
 			>
 				<NodeTemplate
 					{...props}
 					title="Set Variable"
 					fieldName="Variable"
-					bgColor="bg-slate-200"
-					show={showPrompt}
-					setShow={setshowPrompt}
+					color="slate"
 					showFullScreen={showFullScreen}
 					setShowFullScreen={setShowFullScreen}
+					selected={selected}
 				>
 					{(updateNode: (id: string, data: SetVariableDataType) => void) => (
 						<>

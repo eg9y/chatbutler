@@ -5,14 +5,18 @@ import { shallow } from 'zustand/shallow';
 import { ReactComponent as Loading } from '../assets/loading.svg';
 import { useStore, useStoreSecret, selector, selectorSecret } from '../store';
 
-export default function RunFromStart() {
+export default function RunFromStart({
+	isLoading,
+	setIsLoading,
+}: {
+	isLoading: boolean;
+	setIsLoading: (isLoading: boolean) => void;
+}) {
 	const { setUiErrorMessage, traverseTree, clearAllNodeResponses, setChatApp } = useStore(
 		selector,
 		shallow,
 	);
 	const { openAiKey } = useStoreSecret(selectorSecret, shallow);
-
-	const [isLoading, setIsLoading] = useState(false);
 
 	async function getResponse() {
 		if (openAiKey.trim() === '') {

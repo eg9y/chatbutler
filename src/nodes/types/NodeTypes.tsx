@@ -12,7 +12,7 @@ export type DefaultNodeDataType = {
 	isLoading: boolean;
 	isBreakpoint: boolean;
 	loopId?: string;
-	isLastLoop?: boolean;
+	isDetailMode: boolean;
 };
 
 export type AllDataTypes =
@@ -32,7 +32,7 @@ export type AllDataTypes =
 	| GlobalVariableDataType
 	| FileTextDataType;
 
-export type CustomNode = Node<SetVariableDataType | AllDataTypes>;
+export type CustomNode = Node<SingleChatPromptDataType | SetVariableDataType | AllDataTypes>;
 export type InputNode = Node<AllDataTypes>;
 
 type OpenAIAPIRequest = {
@@ -133,3 +133,4 @@ export enum NodeTypesEnum {
 	globalVariable = 'globalVariable',
 	setVariable = 'setVariable',
 }
+export type SingleChatPromptDataType = DefaultNodeDataType;

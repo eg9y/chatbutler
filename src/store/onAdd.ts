@@ -58,6 +58,7 @@ const onAdd = (
 				response: '',
 				isBreakpoint: false,
 				stop: [],
+				isDetailMode: true,
 			},
 		};
 	} else if (type === NodeTypesEnum.fileText) {
@@ -76,6 +77,7 @@ const onAdd = (
 				response: `This is a file text ${nodeLength}`,
 				isLoading: false,
 				isBreakpoint: false,
+				isDetailMode: true,
 			},
 		};
 	} else if (type === NodeTypesEnum.search) {
@@ -95,6 +97,7 @@ const onAdd = (
 				isLoading: false,
 				isBreakpoint: false,
 				results: 3,
+				isDetailMode: true,
 			},
 		};
 	} else if (type === NodeTypesEnum.combine) {
@@ -113,6 +116,7 @@ const onAdd = (
 				response: `This is a file text ${nodeLength}`,
 				isLoading: false,
 				isBreakpoint: false,
+				isDetailMode: true,
 			},
 		};
 	} else if (type === NodeTypesEnum.classify) {
@@ -143,6 +147,7 @@ const onAdd = (
 				response: '',
 				isBreakpoint: false,
 				stop: [],
+				isDetailMode: true,
 			},
 		};
 
@@ -168,6 +173,7 @@ const onAdd = (
 				response: ``,
 				isLoading: false,
 				isBreakpoint: false,
+				isDetailMode: true,
 			},
 		};
 
@@ -215,6 +221,7 @@ const onAdd = (
 				response: `This is a test input ${nodeLength}`,
 				isLoading: false,
 				isBreakpoint: false,
+				isDetailMode: true,
 			},
 		};
 	} else if (type === NodeTypesEnum.globalVariable) {
@@ -233,6 +240,7 @@ const onAdd = (
 				response: `value`,
 				isLoading: false,
 				isBreakpoint: false,
+				isDetailMode: true,
 			},
 		};
 
@@ -259,6 +267,7 @@ const onAdd = (
 				response: `value`,
 				isLoading: false,
 				isBreakpoint: false,
+				isDetailMode: true,
 			},
 		};
 	} else if (type === NodeTypesEnum.counter) {
@@ -277,6 +286,7 @@ const onAdd = (
 				response: '-1',
 				isLoading: false,
 				isBreakpoint: false,
+				isDetailMode: true,
 			},
 		};
 	} else if (type === NodeTypesEnum.conditional) {
@@ -298,6 +308,7 @@ const onAdd = (
 				response: `True`,
 				isLoading: false,
 				isBreakpoint: false,
+				isDetailMode: true,
 			},
 		};
 	} else if (type === NodeTypesEnum.loop) {
@@ -318,6 +329,7 @@ const onAdd = (
 				response: `loop message`,
 				isLoading: false,
 				isBreakpoint: false,
+				isDetailMode: true,
 			},
 		};
 	} else if (type === NodeTypesEnum.inputText) {
@@ -336,6 +348,7 @@ const onAdd = (
 				response: `input text`,
 				isLoading: false,
 				isBreakpoint: false,
+				isDetailMode: true,
 			},
 		};
 	} else if (type === NodeTypesEnum.outputText) {
@@ -354,6 +367,7 @@ const onAdd = (
 				response: `output`,
 				isLoading: false,
 				isBreakpoint: false,
+				isDetailMode: true,
 			},
 		};
 	} else if (type === NodeTypesEnum.chatPrompt) {
@@ -381,6 +395,7 @@ const onAdd = (
 				response: '',
 				isBreakpoint: false,
 				stop: [],
+				isDetailMode: true,
 			},
 		};
 		if (parentNode) {
@@ -413,6 +428,7 @@ const onAdd = (
 				response: `This is a chat message ${nodeLength}`,
 				isLoading: false,
 				isBreakpoint: false,
+				isDetailMode: true,
 			},
 		} as CustomNode;
 
@@ -439,6 +455,7 @@ const onAdd = (
 				response: `placeholder ${nodeId}`,
 				isLoading: false,
 				isBreakpoint: false,
+				isDetailMode: true,
 			},
 		};
 

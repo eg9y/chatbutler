@@ -14,29 +14,25 @@ const Combine: FC<NodeProps<CombineDataType>> = (props) => {
 	const [textState, { set: setText }] = useUndo(data.text);
 	const { present: presentText } = textState;
 
-	const [showPrompt, setshowPrompt] = useState(true);
 	const [showFullScreen, setShowFullScreen] = useState(false);
 
 	return (
-		<div>
+		<>
 			<div
-				style={{
-					width: '35rem',
-				}}
-				className={`m-3 bg-slate-100 shadow-lg border-2  ${
-					selected ? 'border-sky-600' : 'border-slate-300'
-				} flex flex-col`}
+				className={conditionalClassNames(
+					data.isDetailMode && 'h-[40rem] w-[35rem]',
+					`m-3 bg-slate-100 shadow-lg`,
+				)}
 			>
 				{/* how to spread  */}
 				<NodeTemplate
 					{...props}
 					title="Combine"
 					fieldName="Combine files"
-					show={showPrompt}
-					setShow={setshowPrompt}
 					showFullScreen={showFullScreen}
 					setShowFullScreen={setShowFullScreen}
-					bgColor="bg-sky-200"
+					color="sky"
+					selected={selected}
 				>
 					{(updateNode: (id: string, data: CombineDataType) => void) => (
 						<>
@@ -148,7 +144,7 @@ const Combine: FC<NodeProps<CombineDataType>> = (props) => {
 				id="combine-output"
 				className="w-4 h-4"
 			/>
-		</div>
+		</>
 	);
 };
 

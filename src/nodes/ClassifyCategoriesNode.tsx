@@ -39,7 +39,7 @@ const Text: FC<NodeProps<ClassifyNodeCategoriesDataType>> = (props) => {
 				style={{
 					width: '25rem',
 				}}
-				className={`my-3 bg-rose-50 shadow-lg border-2 border-slate-400 flex flex-col `}
+				className={`my-3 bg-rose-50 shadow-lg border-2 border-slate-400 flex flex-col rounded-lg `}
 			>
 				<div className="h-full p-4 flex flex-col gap-2">
 					<p className="text-2xl font-semibold">Categories</p>

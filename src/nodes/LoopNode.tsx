@@ -9,6 +9,7 @@ import NodeTemplate from './templates/NodeTemplate';
 import TextAreaTemplate from './templates/TextAreaTemplate';
 import { LoopDataType } from './types/NodeTypes';
 import useStore, { selector } from '../store/useStore';
+import { conditionalClassNames } from '../utils/classNames';
 
 const Loop: FC<NodeProps<LoopDataType>> = (props) => {
 	const { data, selected, id, type } = props;
@@ -16,29 +17,24 @@ const Loop: FC<NodeProps<LoopDataType>> = (props) => {
 	const { present: presentText } = textState;
 	const { setUiErrorMessage } = useStore(selector, shallow);
 
-	const [showPrompt, setshowPrompt] = useState(true);
 	const [showFullScreen, setShowFullScreen] = useState(false);
 	return (
 		<div className="">
 			<div
-				style={{
-					height: showPrompt ? '40rem' : '5rem',
-					width: '35rem',
-				}}
-				className={`m-3 bg-slate-100 shadow-lg border-2  ${
-					selected ? 'border-emerald-600' : 'border-slate-300'
-				} flex flex-col text-xl`}
+				className={conditionalClassNames(
+					data.isDetailMode && 'h-[40rem] w-[35rem]',
+					`m-3 bg-slate-100 shadow-lg`,
+				)}
 			>
 				{/* how to spread  */}
 				<NodeTemplate
 					{...props}
 					title="Loop"
 					fieldName="Loop times"
-					bgColor="bg-emerald-200"
-					show={showPrompt}
-					setShow={setshowPrompt}
+					color="emerald"
 					showFullScreen={showFullScreen}
 					setShowFullScreen={setShowFullScreen}
+					selected={selected}
 				>
 					{(updateNode: (id: string, data: LoopDataType) => void) => (
 						<>

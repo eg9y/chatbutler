@@ -5,7 +5,6 @@ import ReactFlow, {
 	Background,
 	BackgroundVariant,
 	Panel,
-	MarkerType,
 	ReactFlowInstance,
 	Controls,
 } from 'reactflow';
@@ -13,10 +12,10 @@ import { shallow } from 'zustand/shallow';
 
 import 'reactflow/dist/base.css';
 
+import SandboxExecutionPanel from './SandboxExecutionPanel';
 import useSupabase from '../../auth/supabaseClient';
 import LoadingOverlay from '../../components/LoadingOverlay';
 import Notification from '../../components/Notification';
-import RunFromStart from '../../components/RunFromStart';
 import ConnectionLine from '../../connection/ConnectionLine';
 import populateUserDocuments from '../../db/populateUserDocuments';
 import populateUserWorkflows from '../../db/populateUserWorkflows';
@@ -219,32 +218,7 @@ export default function App() {
 		>
 			<LoadingOverlay open={isLoading} />
 			<div className="absolute p-4 flex w-full justify-center">
-				<div className="flex gap-4 items-center z-10">
-					<RunFromStart />
-					<button
-						className="bg-red-500 hover:bg-red-600 text-white text-md font-semibold py-1 h-full px-2  rounded flex items-center"
-						onClick={() => {
-							// Are you sure prompt
-							if (window.confirm('Are you sure you want to clear the responses?')) {
-								const clearedNodes = nodes.map((node) => {
-									return {
-										...node,
-										data: {
-											...node.data,
-											response: '',
-											isLoading: false,
-										},
-									};
-								});
-								setNodes(clearedNodes);
-								setChatApp([]);
-								setIsLoading(false);
-							}
-						}}
-					>
-						<span>Clear Run</span>
-					</button>
-				</div>
+				<SandboxExecutionPanel nodes={nodes} setNodes={setNodes} setChatApp={setChatApp} />
 			</div>
 
 			<div
@@ -273,13 +247,13 @@ export default function App() {
 						onEdgesChange={onEdgesChange}
 						onConnect={onConnect}
 						nodeTypes={nodeTypes}
-						edgeTypes={edgeTypes}
+						// edgeTypes={edgeTypes}
 						connectionLineComponent={ConnectionLine}
 						onNodeDragStart={onNodeDragStop}
 						onNodeClick={onNodeDragStop}
 						onEdgesDelete={onEdgesDelete}
 						defaultEdgeOptions={{
-							type: 'smart',
+							type: 'default',
 							style: {
 								strokeWidth: 10,
 								stroke: '#002',

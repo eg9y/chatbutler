@@ -17,7 +17,7 @@ const ChatPanel: React.FC = () => {
 	const [currentUncollapsedHeight, setCurrentUncollapsedHeight] = useState(chatPanelHeight);
 
 	useEffect(() => {
-		setLength(chatApp.length * 100);
+		setLength(chatApp.length + 200);
 	}, [chatApp, setLength]);
 
 	return (
@@ -26,7 +26,7 @@ const ChatPanel: React.FC = () => {
 			className="absolute bottom-0 right-0 z-4 flex flex-col justify-end max-h-[95vh]"
 		>
 			<div
-				className="flex items-center gap-2 cursor-pointer active:cursor-row-resize hover:bg-slate-300/90 bg-slate-300/70 px-2 w-full rounded-t-md text-center border-1 border-r-0 border-slate-300"
+				className="flex items-center gap-2 cursor-pointer active:cursor-row-resize hover:bg-slate-300/90 bg-slate-300/70 pr-2 w-full rounded-t-md text-center border-1 border-r-0 border-slate-300"
 				onMouseDown={(e) => {
 					handleMouseDown(e);
 				}}

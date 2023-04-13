@@ -8,35 +8,32 @@ import NodeTemplate from './templates/NodeTemplate';
 import { FileTextDataType } from './types/NodeTypes';
 import { db } from '../backgroundTasks/dexieDb/db';
 import useStore, { selector } from '../store/useStore';
+import { conditionalClassNames } from '../utils/classNames';
 
 const FileText: FC<NodeProps<FileTextDataType>> = (props) => {
 	const { data, selected, id, type } = props;
 	const [textState, { set: setText }] = useUndo(data.text);
 	const { present: presentText } = textState;
 
-	const [showPrompt, setshowPrompt] = useState(true);
 	const [showFullScreen, setShowFullScreen] = useState(false);
 	const { documents } = useStore(selector, shallow);
 
 	return (
 		<div className="">
 			<div
-				style={{
-					width: '35rem',
-				}}
-				className={`m-3 bg-slate-100 shadow-lg border-2  ${
-					selected ? 'border-sky-600' : 'border-slate-400'
-				} flex flex-col `}
+				className={conditionalClassNames(
+					data.isDetailMode && 'h-[40rem] w-[35rem]',
+					`m-3 bg-slate-100 shadow-lg`,
+				)}
 			>
 				<NodeTemplate
 					{...props}
 					title="File Text"
 					fieldName="File"
-					bgColor="bg-sky-400"
-					show={showPrompt}
-					setShow={setshowPrompt}
+					color="sky"
 					showFullScreen={showFullScreen}
 					setShowFullScreen={setShowFullScreen}
+					selected={selected}
 				>
 					{(updateNode: (id: string, data: FileTextDataType) => void) => (
 						<>

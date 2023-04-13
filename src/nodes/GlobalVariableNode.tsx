@@ -6,6 +6,7 @@ import { shallow } from 'zustand/shallow';
 import NodeTemplate from './templates/NodeTemplate';
 import { GlobalVariableDataType } from './types/NodeTypes';
 import useStore, { selector } from '../store/useStore';
+import { conditionalClassNames } from '../utils/classNames';
 import { handleChange } from '../utils/handleFormChange';
 
 const GlobalVariable: FC<NodeProps<GlobalVariableDataType>> = (props) => {
@@ -17,29 +18,26 @@ const GlobalVariable: FC<NodeProps<GlobalVariableDataType>> = (props) => {
 	const { present: presentName } = name;
 
 	const { updateNode } = useStore(selector, shallow);
-	const [showPrompt, setshowPrompt] = useState(true);
+
 	const [showFullScreen, setShowFullScreen] = useState(false);
 
 	return (
 		<div className="">
 			<div
-				style={{
-					width: '35rem',
-				}}
-				className={`m-3 bg-slate-100 shadow-lg border-2  ${
-					selected ? 'border-slate-600' : 'border-slate-400'
-				} flex flex-col `}
+				className={conditionalClassNames(
+					data.isDetailMode && 'h-[40rem] w-[35rem]',
+					`m-3 bg-slate-100 shadow-lg`,
+				)}
 			>
 				<NodeTemplate
 					{...props}
 					title="Global Variable"
 					fieldName="Name"
-					bgColor="bg-slate-200"
-					show={showPrompt}
-					setShow={setshowPrompt}
+					color="slate"
 					showFullScreen={showFullScreen}
 					setShowFullScreen={setShowFullScreen}
 					type={type}
+					selected={selected}
 				>
 					{() => (
 						<>

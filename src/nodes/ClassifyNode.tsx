@@ -1,5 +1,5 @@
 import { Disclosure } from '@headlessui/react';
-import { ArrowsPointingOutIcon, SignalIcon } from '@heroicons/react/20/solid';
+import { SignalIcon } from '@heroicons/react/20/solid';
 import { ClipboardIcon } from '@heroicons/react/24/outline';
 import { memo, FC, useState } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
@@ -7,10 +7,9 @@ import useUndo from 'use-undo';
 import { shallow } from 'zustand/shallow';
 
 import InputNodesList from './templates/InputNodesList';
+import NodeTemplate from './templates/NodeTemplate';
 import RunnableToolbarTemplate from './templates/RunnableToolbarTemplate';
 import { ClassifyNodeDataType, NodeTypesEnum } from './types/NodeTypes';
-import FullScreenEditor from '../components/FullScreenEditor';
-import ShowPromptSwitch from '../components/ShowPromptSwitch';
 import useStore, { RFState, selector } from '../store/useStore';
 import { conditionalClassNames } from '../utils/classNames';
 import { handleChange } from '../utils/handleFormChange';
@@ -23,110 +22,39 @@ const Classify: FC<NodeProps<ClassifyNodeDataType>> = (props) => {
 	const { present: presentTextType } = textType;
 
 	const { updateNode } = useStore(selector, shallow);
-	const [showPrompt, setShowPrompt] = useState(true);
+
 	const [showFullScreen, setShowFullScreen] = useState(false);
 
 	// TODO: Fullscreen button to edit prompts with a larger display
 	return (
-		<div className="">
-			<div
-				style={{
-					width: '40rem',
-				}}
-				className={`my-3 bg-slate-100 shadow-lg border-2  ${
-					selected ? 'border-rose-600' : 'border-slate-400'
-				} flex flex-col `}
-			>
+		<>
+			<div className={conditionalClassNames(`m-3 bg-slate-100 shadow-lg`)}>
 				{RunnableToolbarTemplate(data, selected, updateNode, id)}
 				{/* how to spread  */}
 				<div className="">
-					<div className="flex flex-col h-full">
-						<div
-							className={`p-4 flex justify-between items-center border-b-1 border-slate-400 text-2xl bg-rose-200`}
-						>
-							<div className="flex gap-2 items-center">
-								<h1 className="text-start">
-									<span className="font-semibold">Classification:</span>{' '}
-									{data.name}
-								</h1>
-								{data.isLoading && (
-									<svg
-										className="animate-spin -ml-1 mr-3 h-7 w-7 text-black"
-										xmlns="http://www.w3.org/2000/svg"
-										fill="none"
-										viewBox="0 0 24 24"
-									>
-										<circle
-											className="opacity-25"
-											cx="12"
-											cy="12"
-											r="10"
-											stroke="currentColor"
-											strokeWidth="4"
-										></circle>
-										<path
-											className="opacity-75"
-											fill="currentColor"
-											d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-										></path>
-									</svg>
-								)}
-							</div>
-							{ShowPromptSwitch(showPrompt, setShowPrompt)}
-						</div>
-						<div className="px-4 gap-1 w-full flex justify-between items-center h-14">
+					<NodeTemplate
+						{...props}
+						title="Classification"
+						fieldName="Text to classify"
+						color="rose"
+						showFullScreen={showFullScreen}
+						setShowFullScreen={setShowFullScreen}
+						selected={selected}
+					>
+						{() => (
 							<>
-								<label
-									htmlFor="text"
-									className="block font-medium leading-6 text-2xl"
-								>
-									Text to classify:
-								</label>
-								<p className="truncate text-start flex-grow">
-									{!showPrompt && presentText}
-								</p>
+								<Content
+									setText={setText}
+									presentText={presentText}
+									presentTextType={presentTextType}
+									setTextType={setTextType}
+									data={data}
+									id={id}
+									updateNode={updateNode}
+								/>
 							</>
-							<ArrowsPointingOutIcon
-								className={
-									'text-slate-500 hover:text-slate-800  h-8 w-8 flex-shrink-0'
-								}
-								aria-hidden="true"
-								onClick={() => {
-									setShowFullScreen(!showFullScreen);
-								}}
-							/>
-						</div>
-						<div>
-							{showPrompt && (
-								<Content
-									showPrompt={showPrompt}
-									presentText={presentText}
-									setText={setText}
-									presentTextType={presentTextType}
-									setTextType={setTextType}
-									data={data}
-									id={id}
-									updateNode={updateNode}
-								></Content>
-							)}
-							<FullScreenEditor
-								heading="Classify"
-								showFullScreen={showFullScreen}
-								setShowFullScreen={setShowFullScreen}
-							>
-								<Content
-									showPrompt={showPrompt}
-									presentText={presentText}
-									setText={setText}
-									presentTextType={presentTextType}
-									setTextType={setTextType}
-									data={data}
-									id={id}
-									updateNode={updateNode}
-								></Content>
-							</FullScreenEditor>
-						</div>
-					</div>
+						)}
+					</NodeTemplate>
 				</div>
 			</div>
 			<Disclosure
@@ -215,12 +143,11 @@ const Classify: FC<NodeProps<ClassifyNodeDataType>> = (props) => {
 				id="classify"
 				className="bg-transparent"
 			/>
-		</div>
+		</>
 	);
 };
 
 const Content: FC<{
-	showPrompt: boolean;
 	presentText: string;
 	setText: (newPresent: string, checkpoint?: boolean | undefined) => void;
 	data: ClassifyNodeDataType;
@@ -228,15 +155,11 @@ const Content: FC<{
 	updateNode: RFState['updateNode'];
 	presentTextType: string;
 	setTextType: (newPresent: string, checkpoint?: boolean | undefined) => void;
-}> = ({ presentText, setText, data, id, updateNode, showPrompt, presentTextType, setTextType }) => {
+}> = ({ presentText, setText, data, id, updateNode, presentTextType, setTextType }) => {
 	return (
-		<div
-			style={{
-				height: showPrompt ? '35rem' : '0rem',
-			}}
-		>
+		<div className={conditionalClassNames(data.isDetailMode && 'h-[40rem] w-[35rem]')}>
 			{/* list of data.inputs string Set */}
-			<div className="h-full flex flex-col gap-1 px-4 pb-4 text-slate-900">
+			<div className="h-full flex flex-col gap-1 text-slate-900">
 				<textarea
 					rows={4}
 					name="text"

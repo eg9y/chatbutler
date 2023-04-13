@@ -6,6 +6,7 @@ import InputNodesList from './templates/InputNodesList';
 import NodeTemplate from './templates/NodeTemplate';
 import TextAreaTemplate from './templates/TextAreaTemplate';
 import { ChatMessageNodeDataType } from './types/NodeTypes';
+import { conditionalClassNames } from '../utils/classNames';
 
 const ChatMessage: FC<NodeProps<ChatMessageNodeDataType>> = (props) => {
 	const { data, selected, id, type } = props;
@@ -22,29 +23,23 @@ const ChatMessage: FC<NodeProps<ChatMessageNodeDataType>> = (props) => {
 	const { present: presentText } = textState;
 	const [showFullScreen, setShowFullScreen] = useState(false);
 
-	const [showPrompt, setshowPrompt] = useState(false);
-
 	return (
-		<div
-			style={{
-				width: '40rem',
-			}}
-		>
+		<>
 			<div
-				className={`m-3 bg-slate-100 shadow-lg border-2  ${
-					selected ? 'border-purple-600' : 'border-slate-400'
-				} flex flex-col relative shadow-lg `}
+				className={conditionalClassNames(
+					data.isDetailMode && 'h-[40rem] w-[35rem]',
+					`m-3 bg-slate-100 shadow-lg`,
+				)}
 			>
 				{/* how to spread  */}
 				<NodeTemplate
 					{...props}
-					title="Msg"
-					fieldName="Msg"
-					bgColor="bg-purple-200"
-					show={showPrompt}
-					setShow={setshowPrompt}
+					title="Message"
+					fieldName="Message"
+					color="purple"
 					showFullScreen={showFullScreen}
 					setShowFullScreen={setShowFullScreen}
+					selected={selected}
 					labelComponent={(
 						updateNode: (id: string, data: ChatMessageNodeDataType) => void,
 					) => (
@@ -106,20 +101,15 @@ const ChatMessage: FC<NodeProps<ChatMessageNodeDataType>> = (props) => {
 						</>
 					)}
 				</NodeTemplate>
-				<Handle
-					type="target"
-					position={Position.Left}
-					id="chat-message-input"
-					className="w-4 h-4"
-				></Handle>
-				<Handle
-					type="source"
-					position={Position.Right}
-					id="chat-message"
-					className="w-4 h-4"
-				/>
 			</div>
-		</div>
+			<Handle
+				type="target"
+				position={Position.Left}
+				id="chat-message-input"
+				className="w-4 h-4"
+			></Handle>
+			<Handle type="source" position={Position.Right} id="chat-message" className="w-4 h-4" />
+		</>
 	);
 };
 

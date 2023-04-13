@@ -9,29 +9,24 @@ import { conditionalClassNames } from '../utils/classNames';
 const ChatPrompt: FC<NodeProps<ChatPromptNodeDataType>> = (props) => {
 	const { data, selected } = props;
 
-	const [showPrompt, setshowPrompt] = useState(true);
 	const [showFullScreen, setShowFullScreen] = useState(false);
 
 	// TODO: Fullscreen button to edit prompts with a larger display
 	return (
 		<div
-			style={{
-				height: '30rem',
-				width: '35rem',
-			}}
-			className={` bg-slate-100 shadow-lg border-2  ${
-				selected ? 'border-indigo-600' : 'border-slate-400'
-			} `}
+			className={conditionalClassNames(
+				data.isDetailMode && 'h-[40rem] w-[35rem]',
+				`m-3 bg-slate-100 shadow-lg`,
+			)}
 		>
 			<NodeTemplate
 				{...props}
 				title="Chat"
 				fieldName="Chat Prompt"
-				bgColor="bg-purple-200"
-				show={showPrompt}
-				setShow={setshowPrompt}
+				color="purple"
 				showFullScreen={showFullScreen}
 				setShowFullScreen={setShowFullScreen}
+				selected={selected}
 				labelComponent={() => (
 					<div className="h-14 flex justify-between items-center px-4">
 						<p className="flex gap-1 items-center text-xl">

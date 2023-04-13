@@ -20,19 +20,17 @@ const LLMPrompt: FC<NodeProps<LLMPromptNodeDataType>> = (props) => {
 	const { present: presentText } = textState;
 
 	const { updateNode } = useStore(selector, shallow);
-	const [showPrompt, setshowPrompt] = useState(true);
+
 	const [showFullScreen, setShowFullScreen] = useState(false);
 
 	// TODO: Fullscreen button to edit prompts with a larger display
 	return (
-		<div className="">
+		<>
 			<div
-				style={{
-					width: '35rem',
-				}}
-				className={`m-3 bg-slate-100 shadow-lg border-2  ${
-					selected ? 'border-amber-600' : 'border-slate-400'
-				} flex flex-col `}
+				className={conditionalClassNames(
+					data.isDetailMode && 'h-[40rem] w-[35rem]',
+					`m-3 bg-slate-100 shadow-lg`,
+				)}
 			>
 				{RunnableToolbarTemplate(data, selected, updateNode, id)}
 				{/* how to spread  */}
@@ -40,10 +38,10 @@ const LLMPrompt: FC<NodeProps<LLMPromptNodeDataType>> = (props) => {
 					{...props}
 					title="LLM"
 					fieldName="Prompt"
-					show={showPrompt}
-					setShow={setshowPrompt}
 					showFullScreen={showFullScreen}
 					setShowFullScreen={setShowFullScreen}
+					selected={selected}
+					color="amber"
 				>
 					{(updateNode: (id: string, data: LLMPromptNodeDataType) => void) => (
 						<>
@@ -67,7 +65,13 @@ const LLMPrompt: FC<NodeProps<LLMPromptNodeDataType>> = (props) => {
 			</div>
 			<Disclosure
 				as="div"
-				className="space-y-1 absolute w-full"
+				style={{
+					width: '35rem',
+				}}
+				className={conditionalClassNames(
+					!data.isDetailMode && '-right-1/2',
+					'space-y-1 absolute w-full',
+				)}
 				defaultOpen={data.response.length > 0}
 			>
 				{({ open }) => (
@@ -146,7 +150,7 @@ const LLMPrompt: FC<NodeProps<LLMPromptNodeDataType>> = (props) => {
 				className="w-4 h-4"
 			></Handle>
 			<Handle type="source" position={Position.Right} id="text-output" className="w-4 h-4" />
-		</div>
+		</>
 	);
 };
 

@@ -88,9 +88,11 @@ const InputNodesList = ({
 						inputNode.type === NodeTypesEnum.llmPrompt &&
 							'bg-amber-600 text-white hover:bg-amber-700',
 						inputNode.type === NodeTypesEnum.chatPrompt &&
-							'bg-indigo-600 text-white hover:bg-indigo-700',
+							'bg-purple-600 text-white hover:bg-purple-700',
+						inputNode.type === NodeTypesEnum.singleChatPrompt &&
+							'bg-purple-600 text-white hover:bg-purple-700',
 						inputNode.type === NodeTypesEnum.chatMessage &&
-							'bg-indigo-200 text-slate-500 hover:bg-indigo-400',
+							'bg-purple-200 text-slate-500 hover:bg-purple-400',
 						inputNode.type === NodeTypesEnum.classifyCategories &&
 							'bg-rose-200 text-slate-500 hover:bg-rose-400',
 						inputNode.type === NodeTypesEnum.fileText &&
@@ -107,8 +109,9 @@ const InputNodesList = ({
 							inputNode.type === NodeTypesEnum.outputText) &&
 							'bg-emerald-400',
 						inputNode.type === NodeTypesEnum.llmPrompt && 'bg-amber-400',
-						inputNode.type === NodeTypesEnum.chatPrompt && 'bg-indigo-400',
-						inputNode.type === NodeTypesEnum.chatMessage && 'bg-indigo-300',
+						inputNode.type === NodeTypesEnum.chatPrompt && 'bg-purple-400',
+						inputNode.type === NodeTypesEnum.singleChatPrompt && 'bg-purple-400',
+						inputNode.type === NodeTypesEnum.chatMessage && 'bg-purple-300',
 						inputNode.type === NodeTypesEnum.classifyCategories && 'bg-rose-300',
 						inputNode.type === NodeTypesEnum.fileText && 'bg-sky-300',
 						inputNode.type === NodeTypesEnum.search && 'bg-sky-300',

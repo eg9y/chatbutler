@@ -61,6 +61,34 @@ const onAdd = (
 				isDetailMode: true,
 			},
 		};
+	}
+	if (type === NodeTypesEnum.singleChatPrompt) {
+		node = {
+			id: generateUniqueId(type),
+			type,
+			position: {
+				x,
+				y,
+			},
+			data: {
+				name: `chat call`,
+				text: `prompt`,
+				children: [],
+				isLoading: false,
+				model: 'gpt-3.5-turbo',
+				temperature: 0.7,
+				max_tokens: 256,
+				top_p: 1,
+				frequency_penalty: 0.0,
+				presence_penalty: 0.0,
+				best_of: 1,
+				inputs: new Inputs(),
+				response: '',
+				isBreakpoint: false,
+				stop: [],
+				isDetailMode: true,
+			},
+		};
 	} else if (type === NodeTypesEnum.fileText) {
 		node = {
 			id: generateUniqueId(type),
@@ -136,7 +164,7 @@ const onAdd = (
 				children: [classifyCategoriesId],
 				isLoading: false,
 				// TODO: model set
-				model: 'gpt-4',
+				model: 'gpt-3.5-turbo',
 				temperature: 0.7,
 				max_tokens: 256,
 				top_p: 1,
@@ -383,7 +411,7 @@ const onAdd = (
 				name: `test prompt ${nodeLength}`,
 				text: `this is a system message ${nodeLength}`,
 				isLoading: false,
-				model: 'gpt-4',
+				model: 'gpt-3.5-turbo',
 				temperature: 0.7,
 				max_tokens: 256,
 				top_p: 1,

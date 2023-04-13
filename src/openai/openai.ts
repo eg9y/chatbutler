@@ -4,6 +4,7 @@ import {
 	ChatPromptNodeDataType,
 	ClassifyNodeDataType,
 	LLMPromptNodeDataType,
+	SingleChatPromptDataType,
 } from '../nodes/types/NodeTypes';
 import { RFState } from '../store/useStore';
 import { parsePromptInputs } from '../utils/parsePromptInputs';
@@ -70,7 +71,7 @@ export async function getOpenAIResponse(
 
 export async function getOpenAIChatResponse(
 	apiKey: string | null,
-	chatPrompt: ChatPromptNodeDataType | ClassifyNodeDataType,
+	chatPrompt: ChatPromptNodeDataType | ClassifyNodeDataType | SingleChatPromptDataType,
 	chatSequence: {
 		role: 'user' | 'assistant' | 'system';
 		content: string;

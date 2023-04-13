@@ -37,6 +37,7 @@ import OutputTextNode from '../../nodes/OutputTextNode';
 import PlaceholderNode from '../../nodes/PlaceholderNode';
 import SearchNode from '../../nodes/SearchNode';
 import SetVariableNode from '../../nodes/SetVariableNode';
+import SingleChatPromptNode from '../../nodes/SingleChatPromptNode';
 import TextNode from '../../nodes/TextNode';
 import { NodeTypesEnum } from '../../nodes/types/NodeTypes';
 import { useStore, useStoreSecret, selector, selectorSecret } from '../../store';
@@ -54,6 +55,7 @@ const nodeTypes = {
 	text: TextNode,
 	inputText: InputTextNode,
 	outputText: OutputTextNode,
+	singleChatPrompt: SingleChatPromptNode,
 	chatPrompt: ChatPromptNode,
 	chatMessage: ChatMessageNode,
 	loop: LoopNode,

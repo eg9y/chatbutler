@@ -10,6 +10,7 @@ import ChatPromptTabs from './nodeSettings/chatPromptNode/tabs';
 import ClassifyTabs from './nodeSettings/classifyNode/tabs';
 import LLMPromptTabs from './nodeSettings/llmPromptNode/tabs';
 import SearchTabs from './nodeSettings/searchNode/tabs';
+import SingleChatPromptTabs from './nodeSettings/singleChatPromptNode/tabs';
 import TabsTemplate from './nodeSettings/TabsTemplate';
 import TextTabs from './nodeSettings/textNode/tabs';
 import NodesList from './NodesList';
@@ -20,6 +21,7 @@ import {
 	LLMPromptNodeDataType,
 	NodeTypesEnum,
 	SearchDataType,
+	SingleChatPromptDataType,
 } from '../../nodes/types/NodeTypes';
 import { Database } from '../../schema';
 import { useStore, useStoreSecret, selector, selectorSecret } from '../../store';
@@ -300,6 +302,13 @@ function NodeTabs({ selectedNode, updateNode }: { selectedNode: CustomNode; upda
 			return (
 				<SearchTabs
 					selectedNode={selectedNode as Node<SearchDataType>}
+					updateNode={updateNode}
+				/>
+			);
+		case NodeTypesEnum.singleChatPrompt:
+			return (
+				<SingleChatPromptTabs
+					selectedNode={selectedNode as Node<SingleChatPromptDataType>}
 					updateNode={updateNode}
 				/>
 			);

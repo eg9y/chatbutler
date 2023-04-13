@@ -51,6 +51,9 @@ export type LLMPromptNodeDataType = {
 } & OpenAIAPIRequest &
 	DefaultNodeDataType;
 export type ChatPromptNodeDataType = LLMPromptNodeDataType;
+
+export type SingleChatPromptDataType = LLMPromptNodeDataType;
+
 export type ChatMessageNodeDataType = {
 	role: 'user' | 'assistant' | 'system';
 } & DefaultNodeDataType;
@@ -117,6 +120,7 @@ export type SetVariableDataType = {
 export enum NodeTypesEnum {
 	llmPrompt = 'llmPrompt',
 	text = 'text',
+	singleChatPrompt = 'singleChatPrompt',
 	chatPrompt = 'chatPrompt',
 	chatMessage = 'chatMessage',
 	classify = 'classify',
@@ -133,4 +137,3 @@ export enum NodeTypesEnum {
 	globalVariable = 'globalVariable',
 	setVariable = 'setVariable',
 }
-export type SingleChatPromptDataType = DefaultNodeDataType;

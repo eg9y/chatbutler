@@ -11,7 +11,6 @@ import {
 	DocumentTextIcon,
 	MagnifyingGlassIcon,
 	WrenchIcon,
-	PlusIcon,
 	ArrowPathIcon,
 } from '@heroicons/react/20/solid';
 import { FC, useState } from 'react';
@@ -70,6 +69,13 @@ const NodesList = ({
 							/>
 						</Disclosure.Button>
 						<Disclosure.Panel className="flex flex-col gap-1 px-2 py-2">
+							<NodeType
+								name="Single Chat API"
+								nodeType={NodeTypesEnum.singleChatPrompt}
+								handleDrag={handleDrag}
+								addNodeToCenter={addNodeToCenter}
+								Icon={ChatBubbleLeftRightIcon}
+							/>
 							<NodeType
 								name="Chat API"
 								nodeType={NodeTypesEnum.chatPrompt}
@@ -247,6 +253,7 @@ const NodeType: FC<{
 	>;
 }> = ({ name, handleDrag, addNodeToCenter, nodeType, session, Icon, needAuth = false }) => {
 	const colorClassName = conditionalClassNames(
+		nodeType === NodeTypesEnum.singleChatPrompt && `bg-indigo-200 border-1 border-indigo-400`,
 		nodeType === NodeTypesEnum.chatMessage && `bg-indigo-200 border-1 border-indigo-400`,
 		nodeType === NodeTypesEnum.chatPrompt && `bg-indigo-200 border-1 border-indigo-400`,
 		nodeType === NodeTypesEnum.llmPrompt && `bg-amber-200 border-1 border-amber-400`,

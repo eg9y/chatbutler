@@ -6,7 +6,6 @@ import ReactFlow, {
 	BackgroundVariant,
 	Panel,
 	ReactFlowInstance,
-	Controls,
 } from 'reactflow';
 import { shallow } from 'zustand/shallow';
 
@@ -322,6 +321,7 @@ export default function App() {
 						<MiniMap
 							position="top-right"
 							pannable={true}
+							className="shadow-lg ring-1 ring-slate-200 rounded-lg"
 							nodeColor={(node) => {
 								if (node.type === 'classify') {
 									return 'rgb(254 205 211)';
@@ -356,7 +356,7 @@ export default function App() {
 								} else if (node.type === 'setVariable') {
 									return 'rgb(226 232 240)';
 								}
-								return 'rgb(150,150,150)';
+								return 'rgb(230,230,230)';
 							}}
 						/>
 						<Background

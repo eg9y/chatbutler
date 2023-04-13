@@ -1,3 +1,5 @@
+import { PencilIcon } from '@heroicons/react/20/solid';
+
 import { conditionalClassNames } from '../../utils/classNames';
 
 interface TabsInterface {
@@ -22,9 +24,7 @@ export default function TabsNavigator({
 	return (
 		<div className=" bg-slate-50">
 			<div className="sm:hidden">
-				<label htmlFor="tabs" className="sr-only">
-					Select a tab
-				</label>
+				<label htmlFor="tabs">Select a tab</label>
 				{/* Use an "onChange" listener to redirect the user to the selected tab URL. */}
 				<select
 					id="tabs"

@@ -1,11 +1,5 @@
 import { Switch } from '@headlessui/react';
-import {
-	Cog6ToothIcon,
-	BeakerIcon,
-	AcademicCapIcon,
-	TrashIcon,
-	DocumentMagnifyingGlassIcon,
-} from '@heroicons/react/20/solid';
+import { Cog6ToothIcon, BeakerIcon, AcademicCapIcon, TrashIcon } from '@heroicons/react/20/solid';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { useState } from 'react';
 import { ReactFlowInstance, Node } from 'reactflow';
@@ -16,11 +10,13 @@ import ChatPromptTabs from './nodeSettings/chatPromptNode/tabs';
 import ClassifyTabs from './nodeSettings/classifyNode/tabs';
 import LLMPromptTabs from './nodeSettings/llmPromptNode/tabs';
 import SearchTabs from './nodeSettings/searchNode/tabs';
+import TabsTemplate from './nodeSettings/TabsTemplate';
 import TextTabs from './nodeSettings/textNode/tabs';
 import NodesList from './NodesList';
 import {
 	ChatPromptNodeDataType,
 	ClassifyNodeDataType,
+	CustomNode,
 	LLMPromptNodeDataType,
 	NodeTypesEnum,
 	SearchDataType,
@@ -62,21 +58,21 @@ export default function LeftSidePanel({
 	function prettyPrintType(selectedNode: Node | null) {
 		if (!selectedNode) return;
 		if (selectedNode.type === NodeTypesEnum.llmPrompt) {
-			return 'LLM Prompt';
+			return ': LLM Prompt';
 		} else if (selectedNode.type === NodeTypesEnum.text) {
-			return 'Input Text';
+			return ': Input Text';
 		} else if (selectedNode.type === NodeTypesEnum.chatPrompt) {
-			return 'Chat Prompt';
+			return ': Chat Prompt';
 		} else if (selectedNode.type === NodeTypesEnum.chatMessage) {
-			return 'Chat Message';
+			return ': Chat Message';
 		} else if (selectedNode.type === NodeTypesEnum.classify) {
-			return 'Classify';
+			return ': Classify';
 		} else if (selectedNode.type === NodeTypesEnum.fileText) {
-			return 'File Text';
+			return ': File Text';
 		} else if (selectedNode.type === NodeTypesEnum.search) {
-			return 'File Search';
+			return ': File Search';
 		} else {
-			return 'TBD';
+			return `: ${selectedNode.type}`;
 		}
 	}
 
@@ -242,7 +238,7 @@ export default function LeftSidePanel({
 								setCurrentPage('Current');
 							}}
 						>
-							Settings<span className="">: {prettyPrintType(selectedNode)}</span>
+							Settings<span className="">{prettyPrintType(selectedNode)}</span>
 						</button>
 						<div className="flex-grow border-b-1 border-slate-500" />
 					</div>
@@ -259,48 +255,10 @@ export default function LeftSidePanel({
 							{selectedNode && (
 								<div className="ml-2 h-full relative">
 									<div className="absolute w-full h-full">
-										{selectedNode.type === NodeTypesEnum.llmPrompt && (
-											<LLMPromptTabs
-												selectedNode={
-													selectedNode as Node<LLMPromptNodeDataType>
-												}
-												updateNode={updateNode}
-											/>
-										)}
-										{selectedNode.type === NodeTypesEnum.text && (
-											<TextTabs
-												selectedNode={selectedNode}
-												updateNode={updateNode}
-											/>
-										)}
-										{selectedNode.type === NodeTypesEnum.chatMessage && (
-											<ChatMessageTabs
-												selectedNode={selectedNode}
-												updateNode={updateNode}
-											/>
-										)}
-										{selectedNode.type === NodeTypesEnum.chatPrompt && (
-											<ChatPromptTabs
-												selectedNode={
-													selectedNode as Node<ChatPromptNodeDataType>
-												}
-												updateNode={updateNode}
-											/>
-										)}
-										{selectedNode.type === NodeTypesEnum.classify && (
-											<ClassifyTabs
-												selectedNode={
-													selectedNode as Node<ClassifyNodeDataType>
-												}
-												updateNode={updateNode}
-											/>
-										)}
-										{selectedNode.type === NodeTypesEnum.search && (
-											<SearchTabs
-												selectedNode={selectedNode as Node<SearchDataType>}
-												updateNode={updateNode}
-											/>
-										)}
+										<NodeTabs
+											selectedNode={selectedNode}
+											updateNode={updateNode}
+										/>
 									</div>
 								</div>
 							)}
@@ -310,4 +268,63 @@ export default function LeftSidePanel({
 			</div>
 		</aside>
 	);
+}
+function NodeTabs({ selectedNode, updateNode }: { selectedNode: CustomNode; updateNode: any }) {
+	switch (selectedNode.type) {
+		case NodeTypesEnum.llmPrompt:
+			return (
+				<LLMPromptTabs
+					selectedNode={selectedNode as Node<LLMPromptNodeDataType>}
+					updateNode={updateNode}
+				/>
+			);
+		case NodeTypesEnum.text:
+			return <TextTabs selectedNode={selectedNode} updateNode={updateNode} />;
+		case NodeTypesEnum.chatPrompt:
+			return (
+				<ChatPromptTabs
+					selectedNode={selectedNode as Node<ChatPromptNodeDataType>}
+					updateNode={updateNode}
+				/>
+			);
+		case NodeTypesEnum.chatMessage:
+			return <ChatMessageTabs selectedNode={selectedNode} updateNode={updateNode} />;
+		case NodeTypesEnum.classify:
+			return (
+				<ClassifyTabs
+					selectedNode={selectedNode as Node<ClassifyNodeDataType>}
+					updateNode={updateNode}
+				/>
+			);
+		case NodeTypesEnum.search:
+			return (
+				<SearchTabs
+					selectedNode={selectedNode as Node<SearchDataType>}
+					updateNode={updateNode}
+				/>
+			);
+		// case NodeTypesEnum.classifyCategories:
+		// 	return;
+		// case NodeTypesEnum.fileText:
+		// 	return;
+		// case NodeTypesEnum.combine:
+		// 	return;
+		// case NodeTypesEnum.loop:
+		// 	return;
+		// case NodeTypesEnum.conditional:
+		// 	return;
+		// case NodeTypesEnum.counter:
+		// 	return;
+		// case NodeTypesEnum.inputText:
+		// 	return;
+		// case NodeTypesEnum.outputText:
+		// 	return;
+		// case NodeTypesEnum.globalVariable:
+		// 	return;
+		// case NodeTypesEnum.setVariable:
+		// 	return;
+
+		default:
+			return <TabsTemplate selectedNode={selectedNode} updateNode={updateNode} tabs={[]} />;
+	}
 }

@@ -15,23 +15,10 @@ export async function traverseTree(
 		(node) => node.type !== NodeTypesEnum.globalVariable,
 	).length;
 
-	function allParentsVisited(
-		node: CustomNode,
-		visitedNodes: Set<string> = new Set<string>(),
-	): boolean {
+	function allParentsVisited(node: CustomNode): boolean {
 		const inputNodes = get().getNodes(node.data.inputs.inputs);
-
-		if (visitedNodes.has(node.id)) {
-			return true;
-		}
-
-		visitedNodes.add(node.id);
-
 		return inputNodes.every((parent) => {
-			if (visitedNodes.has(parent.id)) {
-				return true;
-			}
-			return false;
+			return visited.has(parent.id);
 		});
 	}
 

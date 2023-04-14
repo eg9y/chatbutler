@@ -28,13 +28,9 @@ export async function traverseTree(
 		visitedNodes.add(node.id);
 
 		return inputNodes.every((parent) => {
-			if (
-				visited.has(parent.id) ||
-				allParentsVisited(parent, new Set<string>(visitedNodes))
-			) {
+			if (visitedNodes.has(parent.id)) {
 				return true;
 			}
-
 			return false;
 		});
 	}

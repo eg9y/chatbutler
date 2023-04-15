@@ -1,5 +1,5 @@
 import { ChevronDoubleUpIcon } from '@heroicons/react/20/solid';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { shallow } from 'zustand/shallow';
 
 import { Chat } from './Chat/Chat';
@@ -12,32 +12,53 @@ const ChatPanel: React.FC = () => {
 	const { setWaitingUserResponse, waitingUserResponse, pauseResolver, chatApp, setChatApp } =
 		useStore(selector, shallow);
 
-	const { length: chatPanelHeight, handleMouseDown, setLength } = useResize(0, false);
+	const chatPanel = useRef<HTMLDivElement | null>(null);
+	const chatMessages = useRef<HTMLDivElement | null>(null);
+	const {
+		length: chatPanelHeight,
+		handleMouseDown,
+		setLength,
+	} = useResize(
+		0,
+		false,
+		chatPanel.current?.getBoundingClientRect().height
+			? chatPanel.current?.getBoundingClientRect().height + 50
+			: 0,
+	);
 
-	const [currentUncollapsedHeight, setCurrentUncollapsedHeight] = useState(chatPanelHeight);
+	const adjustChatPanelHeight = () => {
+		if (chatMessages.current && chatPanel.current) {
+			const messageHeight = chatMessages.current.getBoundingClientRect().height;
+			const chatPanelHeight = chatPanel.current.getBoundingClientRect().height + 50;
+			if (messageHeight && messageHeight > chatPanelHeight) {
+				setLength(chatPanelHeight + messageHeight);
+			}
+		}
+	};
 
 	useEffect(() => {
-		setLength((chatApp.length + 1) * 60);
-	}, [chatApp, setLength]);
+		adjustChatPanelHeight();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [chatApp]);
 
 	return (
 		<div
-			style={{ height: `${chatPanelHeight}px`, width: '30vw' }}
-			className="absolute bottom-0 right-0 z-4 flex flex-col justify-end max-h-[95vh]"
+			style={{ height: `${chatPanelHeight}px` }}
+			className="absolute bottom-0 right-0 z-4 max-h-[95vh] w-[30vw] min-h-0 flex flex-col justify-end"
 		>
 			<div
 				className="flex items-center gap-2 cursor-pointer active:cursor-row-resize hover:bg-slate-300/90 bg-slate-300/70 pr-2 w-full rounded-t-md text-center border-1 border-r-0 border-slate-300"
 				onMouseDown={(e) => {
 					handleMouseDown(e);
 				}}
+				ref={chatPanel}
 			>
 				<div
 					className="h-5 w-6 cursor-pointer"
 					onClick={() => {
 						if (chatPanelHeight === 0) {
-							setLength(currentUncollapsedHeight);
+							adjustChatPanelHeight();
 						} else {
-							setCurrentUncollapsedHeight(chatPanelHeight);
 							setLength(0);
 						}
 					}}
@@ -62,11 +83,12 @@ const ChatPanel: React.FC = () => {
 							)}
 						></span>
 					</span>
+					{chatPanelHeight}
 					<p>Chat</p>
 				</div>
 			</div>
 			<div className={`grow bg-slate-100/70 border-l-1 border-slate-300 px-2`}>
-				<Chat messages={chatApp} loading={false} />
+				<Chat ref={chatMessages} messages={chatApp} loading={false} />
 			</div>
 			<div className="flex flex-col gap-1">
 				{/* TODO: Clear graph logic */}
@@ -81,6 +103,7 @@ const ChatPanel: React.FC = () => {
 				</div>
 			</div>
 		</div>
+		// </div>
 	);
 };
 

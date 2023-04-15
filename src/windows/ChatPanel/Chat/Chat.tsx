@@ -1,5 +1,5 @@
 import { Transition } from '@headlessui/react';
-import { FC } from 'react';
+import { forwardRef } from 'react';
 
 import { ChatLoader } from './ChatLoader';
 import { ChatMessage } from './ChatMessage';
@@ -10,11 +10,11 @@ interface Props {
 	loading: boolean;
 }
 
-export const Chat: FC<Props> = ({ messages, loading }) => {
+export const Chat = forwardRef<HTMLDivElement, Props>(function Chat({ messages, loading }, ref) {
 	return (
 		<div className="relative h-full overflow-y-scroll">
 			<div className="absolute w-full">
-				<div className="py-2 grow gap-1 w-full h-full flex flex-col justify-end">
+				<div ref={ref} className="py-2 grow gap-1 w-full h-full flex flex-col justify-end">
 					{messages.map((message, index) => (
 						<Transition
 							key={index}
@@ -40,4 +40,4 @@ export const Chat: FC<Props> = ({ messages, loading }) => {
 			</div>
 		</div>
 	);
-};
+});

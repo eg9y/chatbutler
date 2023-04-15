@@ -1,5 +1,4 @@
 import { ChevronDoubleRightIcon } from '@heroicons/react/20/solid';
-import { useState } from 'react';
 import { shallow } from 'zustand/shallow';
 
 import { ReactComponent as Loading } from '../assets/loading.svg';
@@ -8,9 +7,11 @@ import { useStore, useStoreSecret, selector, selectorSecret } from '../store';
 export default function RunFromStart({
 	isLoading,
 	setIsLoading,
+	abortControllerRef,
 }: {
 	isLoading: boolean;
 	setIsLoading: (isLoading: boolean) => void;
+	abortControllerRef: React.MutableRefObject<AbortController | null>;
 }) {
 	const { setUiErrorMessage, traverseTree, clearAllNodeResponses, setChatApp } = useStore(
 		selector,
@@ -28,13 +29,23 @@ export default function RunFromStart({
 		try {
 			setChatApp([]);
 			clearAllNodeResponses();
-			await traverseTree(openAiKey);
+			// Create a new AbortController and set it to the ref
+			abortControllerRef.current = new AbortController();
+			const signal = abortControllerRef.current.signal;
+
+			await traverseTree(openAiKey, signal);
 
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} catch (error: any) {
-			setUiErrorMessage(error.message);
+			if (error.message === 'Operation cancelled') {
+				console.log('traverseTree operation cancelled');
+			} else {
+				setUiErrorMessage(error.message);
+			}
 		} finally {
 			setIsLoading(false);
+			// Clean up the abort controller
+			abortControllerRef.current = null;
 		}
 	}
 

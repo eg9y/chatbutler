@@ -266,7 +266,7 @@ export default function App() {
 					>
 						{settingsView ? (
 							<div
-								className="z-10"
+								className="z-10 bg-slate-50"
 								style={{
 									height: '95vh',
 									width: `${SettingsPanelWidth}px`,

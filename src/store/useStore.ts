@@ -92,7 +92,7 @@ export interface RFState {
 	// TODO: type this
 	updateNode: any;
 	updateInputExample: any;
-	traverseTree: (openAiKey: string) => Promise<void>;
+	traverseTree: (openAiKey: string, signal: AbortSignal) => Promise<void>;
 	runNode: (node: CustomNode, openAiKey: string) => Promise<void>;
 	clearAllNodeResponses: () => void;
 }
@@ -294,8 +294,14 @@ const useStore = create<RFState>()(
 					selectedNode,
 				});
 			},
-			traverseTree: (openAiKey: string): Promise<void> => {
-				return traverseTree(get, set, openAiKey);
+			traverseTree: (openAiKey: string, signal: AbortSignal): Promise<void> => {
+				return new Promise((resolve, reject) => {
+					signal.addEventListener('abort', () => {
+						reject(new Error('Operation cancelled'));
+					});
+
+					traverseTree(get, set, openAiKey).then(resolve, reject);
+				});
 			},
 			runNode: (node: CustomNode, openAiKey: string): Promise<void> => {
 				return runNode(node, get, set, openAiKey);

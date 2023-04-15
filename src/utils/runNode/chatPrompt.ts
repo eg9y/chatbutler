@@ -23,15 +23,15 @@ async function chatPrompt(node: CustomNode, get: () => RFState, openAiKey: strin
 		node.data as ChatPromptNodeDataType,
 		chatSequence,
 	);
+
 	const completion = response.data.choices[0].message?.content;
-	// const completion = chatSequence.map((chat) => chat.content).join(', ');
 	if (completion) {
 		node.data = {
 			...node.data,
 			response: completion,
-			isLoading: false,
 		};
 	}
+	node.data.isLoading = false;
 }
 function collectChatMessages(node: CustomNode, get: () => RFState): CustomNode[] {
 	const queue: CustomNode[] = [node];

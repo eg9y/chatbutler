@@ -22,7 +22,7 @@ const Loop: FC<NodeProps<LoopDataType>> = (props) => {
 		<div className="">
 			<div
 				className={conditionalClassNames(
-					data.isDetailMode && 'h-[40rem] w-[35rem]',
+					data.isDetailMode && 'h-[50rem] w-[35rem]',
 					`m-3 shadow-lg`,
 				)}
 			>
@@ -56,7 +56,7 @@ const Loop: FC<NodeProps<LoopDataType>> = (props) => {
 									}}
 								/>
 							</div>
-							<div className="flex flex-col gap-2 text-md">
+							<div className="grow flex flex-col gap-2 text-md">
 								<p className="text-2xl">Input:</p>
 								<TextAreaTemplate
 									{...props}
@@ -73,7 +73,7 @@ const Loop: FC<NodeProps<LoopDataType>> = (props) => {
 									/>
 								</div>
 							</div>
-							<div className="grow flex justify-center items-center">
+							<div className="flex justify-center items-center">
 								<p className="text-5xl">{data.loopCount > 0 && data.loopCount}</p>
 								<ArrowPathIcon
 									className={conditionalClassNames(

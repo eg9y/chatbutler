@@ -12,6 +12,7 @@ import {
 	MagnifyingGlassIcon,
 	WrenchIcon,
 	ArrowPathIcon,
+	PlusIcon,
 } from '@heroicons/react/20/solid';
 import { FC, useState } from 'react';
 import { ReactFlowInstance } from 'reactflow';
@@ -177,13 +178,13 @@ const NodesList = ({
 								addNodeToCenter={addNodeToCenter}
 								Icon={ArrowRightOnRectangleIcon}
 							/>
-							{/* <NodeType
+							<NodeType
 								name="Counter"
 								nodeType={NodeTypesEnum.counter}
 								handleDrag={handleDrag}
 								addNodeToCenter={addNodeToCenter}
 								Icon={PlusIcon}
-							/> */}
+							/>
 						</Disclosure.Panel>
 					</>
 				)}

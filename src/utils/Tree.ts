@@ -18,7 +18,9 @@ export async function traverseTree(
 	function allParentsVisited(node: CustomNode): boolean {
 		const inputNodes = get().getNodes(node.data.inputs.inputs);
 		return inputNodes.every((parent) => {
-			return visited.has(parent.id);
+			return (
+				visited.has(parent.id) || parent.data.loopId || parent.type === NodeTypesEnum.loop
+			);
 		});
 	}
 
@@ -55,6 +57,7 @@ export async function traverseTree(
 					});
 				});
 				if (!check) {
+					// TODO: Break out of loop, but continue running the rest of the tree
 					return true;
 				}
 			}
@@ -96,15 +99,7 @@ export function getRootNodes(get: () => RFState, nodes: CustomNode[]): CustomNod
 	const rootNodes: CustomNode[] = [];
 
 	for (const node of nodes) {
-		if (node.type === NodeTypesEnum.loop) {
-			const inputNodes = get().getNodes(node.data.inputs.inputs);
-			const isAllCycle = inputNodes.every((inputNode) => {
-				return inputNode.data.loopId && inputNode.data.loopId === node.id;
-			});
-			if (isAllCycle) {
-				rootNodes.push(node);
-			}
-		} else if (node.data.inputs.inputs.length === 0) {
+		if (node.data.inputs.inputs.length === 0 && node.type !== NodeTypesEnum.globalVariable) {
 			rootNodes.push(node);
 		}
 	}

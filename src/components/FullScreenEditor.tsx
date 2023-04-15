@@ -28,7 +28,7 @@ export default function FullScreenEditor({
 				</Transition.Child>
 
 				<div className="fixed inset-0 z-10 overflow-y-auto">
-					<div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+					<div className="flex min-h-full items-end justify-center p-2 text-center sm:items-center sm:p-0">
 						<Transition.Child
 							as={Fragment}
 							enter="ease-out duration-300"
@@ -40,13 +40,13 @@ export default function FullScreenEditor({
 						>
 							<Dialog.Panel
 								className="h-full relative transform overflow-hidden rounded-lg 
-								bg-white px-4 pt-5 pb-4  shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-3xl sm:p-6 whitespace-pre-wrap
+								bg-white px-4 shadow-xl transition-all sm:my-2 sm:w-full sm:max-w-4xl sm:p-6 whitespace-pre-wrap
                             "
 							>
 								<div>
 									<div
 										style={{
-											height: '80vh',
+											height: '85vh',
 										}}
 										className="mt-3 sm:mt-5 flex flex-col  text-justify"
 									>

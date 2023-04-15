@@ -14,6 +14,7 @@ function outputText(get: () => RFState, node: CustomNode) {
 	]);
 	node.data = {
 		...node.data,
+		response: parsedText,
 		isLoading: false,
 	};
 }

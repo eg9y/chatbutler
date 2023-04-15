@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import RunFromStart from '../../components/RunFromStart';
 import { LoopDataType, NodeTypesEnum } from '../../nodes/types/NodeTypes';
@@ -14,14 +14,23 @@ function SandboxExecutionPanel({
 	setChatApp: RFState['setChatApp'];
 }) {
 	const [isLoading, setIsLoading] = useState(false);
+	const abortControllerRef = useRef<AbortController | null>(null);
+
 	return (
 		<div className="flex gap-4 items-center z-10">
-			<RunFromStart isLoading={isLoading} setIsLoading={setIsLoading} />
+			<RunFromStart
+				isLoading={isLoading}
+				setIsLoading={setIsLoading}
+				abortControllerRef={abortControllerRef}
+			/>
 			<button
 				className="bg-red-100/50 hover:bg-red-200/50 border-2 border-red-500 text-red-800 text-md font-semibold py-1 h-full px-2  rounded flex items-center"
 				onClick={() => {
 					// Are you sure prompt
 					if (window.confirm('Are you sure you want to clear the responses?')) {
+						if (abortControllerRef.current) {
+							abortControllerRef.current.abort();
+						}
 						const clearedNodes = nodes.map((node) => {
 							const newNode = {
 								...node,

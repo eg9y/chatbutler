@@ -18,8 +18,6 @@ function isCycle(nodes: CustomNode[], targetNodeIndex: number): boolean {
 		visited[currentNodeIndex] = true;
 		recursionStack[currentNodeIndex] = true;
 
-		console.log(nodes[currentNodeIndex].data.children);
-
 		for (const childId of nodes[currentNodeIndex].data.children) {
 			const childNodeIndex = nodes.findIndex((node) => node.id === childId);
 			if (dfs(childNodeIndex, visited, recursionStack)) {

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const useResize = (initialLength: number, isWidth = true) => {
+const useResize = (initialLength: number, isWidth = true, minLength: number | null = null) => {
 	const [isResizing, setIsResizing] = useState(false);
 	const [length, setLength] = useState(initialLength);
 
@@ -17,7 +17,12 @@ const useResize = (initialLength: number, isWidth = true) => {
 		const handleMouseMove = (e: any) => {
 			if (!isResizing) return;
 			const newLength = isWidth ? e.clientX : window.innerHeight - e.clientY;
-			setLength(newLength);
+
+			if (minLength === null || newLength > minLength) {
+				setLength(newLength);
+			} else {
+				setLength(minLength);
+			}
 		};
 
 		if (isResizing) {
@@ -32,7 +37,7 @@ const useResize = (initialLength: number, isWidth = true) => {
 			window.removeEventListener('mousemove', handleMouseMove);
 			window.removeEventListener('mouseup', handleMouseUp);
 		};
-	}, [isResizing, isWidth]);
+	}, [isResizing, isWidth, minLength]);
 
 	return {
 		length,

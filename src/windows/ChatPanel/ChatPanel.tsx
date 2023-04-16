@@ -83,7 +83,6 @@ const ChatPanel: React.FC = () => {
 							)}
 						></span>
 					</span>
-					{chatPanelHeight}
 					<p>Chat</p>
 				</div>
 			</div>

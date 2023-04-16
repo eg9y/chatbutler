@@ -25,10 +25,8 @@ export default function UserWorkflows({
 	setOpen: (open: boolean) => void;
 	reactFlowInstance: RFState['reactFlowInstance'];
 }) {
-	const { setUiErrorMessage, workflows, setNodes, setEdges, nodes, edges } = useStore(
-		selector,
-		shallow,
-	);
+	const { setUiErrorMessage, setGlobalVariables, workflows, setNodes, setEdges, nodes, edges } =
+		useStore(selector, shallow);
 	const { session } = useStoreSecret(selectorSecret, shallow);
 
 	const supabase = useSupabase();
@@ -68,6 +66,7 @@ export default function UserWorkflows({
 												currentWorkflow,
 												setUiErrorMessage,
 												setCurrentWorkflow,
+												setGlobalVariables,
 												setNodes,
 												setEdges,
 												supabase,

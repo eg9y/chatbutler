@@ -97,6 +97,7 @@ export default function App() {
 		workflows,
 		setWorkflows,
 		setChatApp,
+		setGlobalVariables,
 	} = useStore(selector, shallow);
 	const { session, setSession, setOpenAiKey } = useStoreSecret(selectorSecret, shallow);
 
@@ -154,6 +155,7 @@ export default function App() {
 					currentWorkflow,
 					setUiErrorMessage,
 					setCurrentWorkflow,
+					setGlobalVariables,
 					setNodes,
 					setEdges,
 					supabase,

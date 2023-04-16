@@ -1,5 +1,5 @@
 import { SupabaseClient } from '@supabase/supabase-js';
-import { Edge } from 'reactflow';
+import { Edge, Node } from 'reactflow';
 
 import { Inputs } from '../nodes/types/Input';
 import { CustomNode } from '../nodes/types/NodeTypes';
@@ -13,6 +13,7 @@ const selectWorkflow = async (
 	currentWorkflow: RFState['currentWorkflow'],
 	setUiErrorMessage: RFState['setUiErrorMessage'],
 	setCurrentWorkflow: RFState['setCurrentWorkflow'],
+	setGlobalVariables: RFState['setGlobalVariables'],
 	setNodes: RFState['setNodes'],
 	setEdges: RFState['setEdges'],
 	supabase: SupabaseClient<Database>,
@@ -46,8 +47,9 @@ const selectWorkflow = async (
 	}
 
 	// set graph
+	let parsedNodes: Node[] = [];
 	if (typeof data.nodes === 'string') {
-		const parsedNodes = JSON.parse(data.nodes as string).map((node: CustomNode) => {
+		parsedNodes = JSON.parse(data.nodes as string).map((node: CustomNode) => {
 			if ('inputs' in node.data) {
 				return {
 					...node,
@@ -63,7 +65,7 @@ const selectWorkflow = async (
 		});
 		setNodes(parsedNodes);
 	} else {
-		const parsedNodes = (data.nodes as unknown as CustomNode[]).map((node: CustomNode) => {
+		parsedNodes = (data.nodes as unknown as CustomNode[]).map((node: CustomNode) => {
 			if ('inputs' in node.data) {
 				return {
 					...node,
@@ -84,6 +86,26 @@ const selectWorkflow = async (
 	} else {
 		setEdges(data.edges as unknown as Edge[]);
 	}
+
+	// set global variables
+	const globalVariables = parsedNodes
+		.filter((node) => node.type === 'globalVariable')
+		.map((node) => ({
+			id: node.id,
+			data: node.data,
+		}))
+		.reduce(
+			(acc, node) => {
+				acc[node.id] = node.data.name;
+				return acc;
+			},
+			{} as {
+				[key: string]: string;
+			},
+		);
+
+	setGlobalVariables(globalVariables);
+
 	setCurrentWorkflow({
 		id: data.id,
 		name: data.name,

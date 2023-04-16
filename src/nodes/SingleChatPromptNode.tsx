@@ -1,5 +1,5 @@
 import { Disclosure } from '@headlessui/react';
-import { ClipboardIcon, SignalIcon } from '@heroicons/react/20/solid';
+import { ArrowsPointingOutIcon, ClipboardIcon, SignalIcon } from '@heroicons/react/20/solid';
 import { memo, FC, useState } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
 import useUndo from 'use-undo';
@@ -8,6 +8,7 @@ import InputNodesList from './templates/InputNodesList';
 import NodeTemplate from './templates/NodeTemplate';
 import TextAreaTemplate from './templates/TextAreaTemplate';
 import { ChatMessageNodeDataType, SingleChatPromptDataType } from './types/NodeTypes';
+import FullScreenEditor from '../components/FullScreenEditor';
 import { conditionalClassNames } from '../utils/classNames';
 
 const SingleChatPrompt: FC<NodeProps<SingleChatPromptDataType>> = (props) => {
@@ -15,6 +16,7 @@ const SingleChatPrompt: FC<NodeProps<SingleChatPromptDataType>> = (props) => {
 	const [textState, { set: setText }] = useUndo(data.text);
 	const { present: presentText } = textState;
 	const [showFullScreen, setShowFullScreen] = useState(false);
+	const [showFullResponse, setShowFullResponse] = useState(false);
 
 	return (
 		<>
@@ -116,21 +118,48 @@ const SingleChatPrompt: FC<NodeProps<SingleChatPromptDataType>> = (props) => {
 								className="p-3 bg-slate-50 border-1 border-t-0 
 							border-slate-400 rounded-b-lg flex flex-col justify-between gap-4 items-end"
 							>
-								<p>{data.response}</p>
-								<ClipboardIcon
-									className={conditionalClassNames(
-										' -ml-1 mr-1 h-7 w-7 flex-shrink-0 cursor-pointer text-slate-500 hover:text-slate-900 active:scale-50',
-									)}
-									aria-hidden="true"
-									onClick={() => {
-										navigator.clipboard.writeText(data.response);
+								<p
+									style={{
+										display: '-webkit-box',
+										WebkitLineClamp: 10, // Set the desired number of lines before truncating
+										WebkitBoxOrient: 'vertical',
+										overflow: 'hidden',
 									}}
-								/>
+								>
+									{data.response}
+								</p>
+								<div className="flex gap-1">
+									<ClipboardIcon
+										className={conditionalClassNames(
+											' -ml-1 mr-1 h-7 w-7 flex-shrink-0 cursor-pointer text-slate-500 hover:text-slate-900 active:scale-50',
+										)}
+										aria-hidden="true"
+										onClick={() => {
+											navigator.clipboard.writeText(data.response);
+										}}
+									/>
+									<ArrowsPointingOutIcon
+										className={
+											'text-slate-500 hover:text-slate-800  h-8 w-8 flex-shrink-0'
+										}
+										aria-hidden="true"
+										onClick={() => {
+											setShowFullResponse(!showFullResponse);
+										}}
+									/>
+								</div>
 							</div>
 						</Disclosure.Panel>
 					</div>
 				)}
 			</Disclosure>
+			<FullScreenEditor
+				heading={'Response'}
+				showFullScreen={showFullResponse}
+				setShowFullScreen={setShowFullResponse}
+			>
+				<p>{data.response}</p>
+			</FullScreenEditor>
 			<Handle
 				type="target"
 				position={Position.Left}

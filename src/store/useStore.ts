@@ -65,6 +65,7 @@ export interface RFState {
 	setReactFlowInstance: (instance: ReactFlowInstance | null) => void;
 	uiErrorMessage: string | null;
 	unlockGraph: boolean;
+	setUnlockGraph: (unlock: boolean) => void;
 	clearGraph: () => void;
 	setUiErrorMessage: (message: string | null) => void;
 	nodes: CustomNode[];
@@ -178,6 +179,11 @@ const useStore = create<RFState>()(
 			},
 			chatSessions: {},
 			unlockGraph: true,
+			setUnlockGraph: (unlock: boolean) => {
+				set({
+					unlockGraph: unlock,
+				});
+			},
 			openAIApiKey: null,
 			// get nodes from local storage or use initial nodes
 			nodes: initialNodes,

@@ -1,5 +1,5 @@
 import { Transition } from '@headlessui/react';
-import { forwardRef } from 'react';
+import { forwardRef, useEffect, useRef } from 'react';
 
 import { ChatLoader } from './ChatLoader';
 import { ChatMessage } from './ChatMessage';
@@ -11,8 +11,16 @@ interface Props {
 }
 
 export const Chat = forwardRef<HTMLDivElement, Props>(function Chat({ messages, loading }, ref) {
+	const scrollRef = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		if (scrollRef.current) {
+			scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+		}
+	}, [messages]);
+
 	return (
-		<div className="relative h-full overflow-y-scroll">
+		<div className="relative h-full overflow-y-scroll" ref={scrollRef}>
 			<div className="absolute w-full">
 				<div ref={ref} className="py-2 grow gap-1 w-full h-full flex flex-col justify-end">
 					{messages.map((message, index) => (

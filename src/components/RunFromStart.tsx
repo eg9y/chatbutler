@@ -2,24 +2,32 @@ import { ChevronDoubleRightIcon } from '@heroicons/react/20/solid';
 import { shallow } from 'zustand/shallow';
 
 import { ReactComponent as Loading } from '../assets/loading.svg';
+import { NodeTypesEnum, LoopDataType, CustomNode } from '../nodes/types/NodeTypes';
 import { useStore, useStoreSecret, selector, selectorSecret } from '../store';
+import { conditionalClassNames } from '../utils/classNames';
 
 export default function RunFromStart({
 	isLoading,
 	setIsLoading,
 	abortControllerRef,
+	nodes,
 }: {
 	isLoading: boolean;
 	setIsLoading: (isLoading: boolean) => void;
 	abortControllerRef: React.MutableRefObject<AbortController | null>;
+	nodes: CustomNode[];
 }) {
-	const { setUiErrorMessage, traverseTree, clearAllNodeResponses, setChatApp } = useStore(
-		selector,
-		shallow,
-	);
+	const {
+		setUiErrorMessage,
+		traverseTree,
+		clearAllNodeResponses,
+		setChatApp,
+		setNodes,
+		setUnlockGraph,
+	} = useStore(selector, shallow);
 	const { openAiKey } = useStoreSecret(selectorSecret, shallow);
 
-	async function getResponse() {
+	async function runFromStart() {
 		if (openAiKey.trim() === '') {
 			setUiErrorMessage('Please enter an OpenAI API key in the left panel.');
 			return;
@@ -49,17 +57,50 @@ export default function RunFromStart({
 		}
 	}
 
+	function stopRun() {
+		if (abortControllerRef.current) {
+			abortControllerRef.current.abort();
+			const clearedNodes = nodes.map((node) => {
+				const newNode = {
+					...node,
+					data: {
+						...node.data,
+						response: '',
+						isLoading: false,
+					},
+				};
+				if (node.type === NodeTypesEnum.loop) {
+					(newNode.data as LoopDataType).loopCount = 0;
+				}
+				return newNode;
+			});
+			setIsLoading(false);
+			setNodes(clearedNodes);
+			abortControllerRef.current = null;
+		}
+		setUnlockGraph(true);
+	}
+
 	return (
 		<button
-			className="bg-blue-500 hover:bg-blue-600 text-white text-md font-semibold py-1 px-2  rounded flex items-center"
-			onClick={getResponse}
+			className={conditionalClassNames(
+				isLoading ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-500 hover:bg-blue-600 ',
+				'text-white text-md font-semibold py-1 px-2  rounded flex items-center',
+			)}
+			onClick={async () => {
+				if (!isLoading) {
+					await runFromStart();
+				} else {
+					stopRun();
+				}
+			}}
 		>
 			{isLoading ? (
 				<Loading className="animate-spin -ml-1 mr-3 h-7 w-7 text-black" />
 			) : (
 				<ChevronDoubleRightIcon className="h-7 w-7 text-white" />
 			)}
-			<span>Run from start</span>
+			<span>{isLoading ? 'Stop' : 'Run from Start'}</span>
 		</button>
 	);
 }

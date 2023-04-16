@@ -37,23 +37,23 @@ function getBackgroundColor(color: string) {
 	}
 }
 
-function getBorderColor(color: string) {
+function getRingColor(color: string) {
 	if (color === 'green') {
-		return `border-green-600`;
+		return `ring-green-400`;
 	} else if (color === 'emerald') {
-		return `border-emerald-600`;
+		return `ring-emerald-400`;
 	} else if (color === 'amber') {
-		return `border-amber-600`;
+		return `ring-amber-400`;
 	} else if (color === 'purple') {
-		return `border-purple-600`;
+		return `ring-purple-400`;
 	} else if (color === 'indigo') {
-		return `border-indigo-600`;
+		return `ring-indigo-400`;
 	} else if (color === 'sky') {
-		return `border-sky-600`;
+		return `ring-sky-400`;
 	} else if (color === 'slate') {
-		return `border-slate-600`;
+		return `ring-slate-400`;
 	} else if (color === 'rose') {
-		return `border-rose-600`;
+		return `ring-rose-400`;
 	}
 }
 
@@ -82,8 +82,8 @@ const NodeTemplate: FC<
 		<div
 			className={conditionalClassNames(
 				data.isDetailMode && '35rem',
-				selected ? getBorderColor(color) : 'border-slate-400',
-				'h-full flex flex-col rounded-xl border-2 bg-slate-100',
+				selected ? `${getRingColor(color)} ring-8` : 'ring-slate-400 ring-2',
+				'h-full flex flex-col rounded-xl bg-slate-100',
 			)}
 		>
 			<NodeToolbar position={Position.Top} isVisible={data.isLoading}>
@@ -105,8 +105,8 @@ const NodeTemplate: FC<
 			>
 				<div className="flex gap-2 items-center">
 					<h1 className={conditionalClassNames(!data.isDetailMode && 'text-4xl')}>
-						<span className="font-semibold">{title}</span>
-						{data.isDetailMode && `: ${data.name}`}
+						<span className="font-semibold opacity-70">{title}/</span>
+						{data.isDetailMode && ` ${data.name}`}
 					</h1>
 				</div>
 
@@ -138,7 +138,7 @@ const NodeTemplate: FC<
 			</div>
 			<div
 				className={conditionalClassNames(
-					data.isDetailMode ? 'h-14 text-2xl' : 'py-10 text-3xl',
+					data.isDetailMode ? 'h-14 text-2xl' : 'py-10 text-5xl',
 					'px-4 gap-6 w-full flex justify-between items-center bg-slate-100',
 				)}
 			>
@@ -151,7 +151,7 @@ const NodeTemplate: FC<
 						</label>
 					)
 				) : (
-					<label htmlFor="text" className="block font-medium ">
+					<label htmlFor="text" className="block font-medium text-center grow">
 						{data.name}
 					</label>
 				)}

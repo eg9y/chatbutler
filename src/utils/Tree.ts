@@ -15,6 +15,10 @@ export async function traverseTree(
 		(node) => node.type !== NodeTypesEnum.globalVariable,
 	).length;
 
+	set({
+		unlockGraph: false,
+	});
+
 	function allParentsVisited(node: CustomNode): boolean {
 		const inputNodes = get().getNodes(node.data.inputs.inputs);
 		return inputNodes.every((parent) => {
@@ -93,13 +97,26 @@ export async function traverseTree(
 			}
 		}
 	}
+
+	set({
+		unlockGraph: true,
+	});
 }
 
 export function getRootNodes(get: () => RFState, nodes: CustomNode[]): CustomNode[] {
 	const rootNodes: CustomNode[] = [];
 
 	for (const node of nodes) {
-		if (node.data.inputs.inputs.length === 0 && node.type !== NodeTypesEnum.globalVariable) {
+		// get inputs
+		const inputNodes = get().getNodes(node.data.inputs.inputs);
+		const loopInputCount = inputNodes.filter((inputNode) => inputNode.data.loopId).length;
+
+		// if loop is root, it might still have inputs from the loop end node.
+		// if node is variable, don't consider it
+		if (
+			(node.data.inputs.inputs.length === 0 || loopInputCount === inputNodes.length) &&
+			node.type !== NodeTypesEnum.globalVariable
+		) {
 			rootNodes.push(node);
 		}
 	}

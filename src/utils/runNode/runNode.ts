@@ -81,6 +81,5 @@ export async function runNode(
 	get().updateNode(node.id, node.data);
 	set({
 		selectedNode: null,
-		unlockGraph: true,
 	});
 }

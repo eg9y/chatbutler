@@ -1,4 +1,3 @@
-import { ChevronUpIcon } from '@heroicons/react/20/solid';
 import { FC, KeyboardEvent, useEffect, useRef, useState } from 'react';
 
 import { Message } from './types';
@@ -46,10 +45,10 @@ export const ChatInput: FC<Props> = ({ onSend }) => {
 	}, [content]);
 
 	return (
-		<div className="relative">
+		<div className="relative h-full">
 			<textarea
 				ref={textareaRef}
-				className="text-xs min-h-[44px] rounded-lg pl-4 pr-12 py-1 w-full focus:outline-none focus:ring-1 focus:ring-neutral-300 border-2 border-neutral-200"
+				className="h-full text-xs rounded-lg pl-4 pr-12 py-1 w-full focus:outline-none focus:ring-1 focus:ring-neutral-300 border-2 border-neutral-200"
 				style={{ resize: 'none' }}
 				placeholder="Type a message..."
 				value={content}
@@ -57,10 +56,6 @@ export const ChatInput: FC<Props> = ({ onSend }) => {
 				onChange={handleChange}
 				onKeyDown={handleKeyDown}
 			/>
-
-			<button onClick={() => handleSend()}>
-				<ChevronUpIcon className="absolute right-4 bottom-3 h-8 w-8 hover:cursor-pointer rounded-full p-1 bg-blue-500 text-white hover:opacity-80" />
-			</button>
 		</div>
 	);
 };

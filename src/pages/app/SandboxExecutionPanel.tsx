@@ -22,8 +22,9 @@ function SandboxExecutionPanel({
 				isLoading={isLoading}
 				setIsLoading={setIsLoading}
 				abortControllerRef={abortControllerRef}
+				nodes={nodes}
 			/>
-			<button
+			{/* <button
 				className="bg-red-100/50 hover:bg-red-200/50 border-2 border-red-500 text-red-800 text-md font-semibold py-1 h-full px-2  rounded flex items-center"
 				onClick={() => {
 					// Are you sure prompt
@@ -47,12 +48,11 @@ function SandboxExecutionPanel({
 						});
 						setIsLoading(false);
 						setNodes(clearedNodes);
-						setChatApp([]);
 					}
 				}}
 			>
 				<span>Clear Run</span>
-			</button>
+			</button> */}
 		</div>
 	);
 }

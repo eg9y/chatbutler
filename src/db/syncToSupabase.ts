@@ -18,11 +18,21 @@ const syncDataToSupabase = async (
 ) => {
 	if (!currentWorkflow || !session) return;
 
+	const updatedNodes = nodes.map((node) => {
+		return {
+			...node,
+			data: {
+				...node.data,
+				isLoading: false,
+			},
+		};
+	});
+
 	const { data, error } = await supabase
 		.from('workflows')
 		.update({
 			edges: JSON.parse(JSON.stringify(edges)),
-			nodes: JSON.parse(JSON.stringify(nodes)),
+			nodes: JSON.parse(JSON.stringify(updatedNodes)),
 			name: currentWorkflow.name,
 		})
 		.eq('id', currentWorkflow.id)
@@ -38,7 +48,7 @@ const syncDataToSupabase = async (
 			.insert({
 				id: currentWorkflow.id,
 				edges: JSON.parse(JSON.stringify(edges)),
-				nodes: JSON.parse(JSON.stringify(nodes)),
+				nodes: JSON.parse(JSON.stringify(updatedNodes)),
 				name: currentWorkflow.name,
 				user_id: session.user.id,
 			})
@@ -54,7 +64,7 @@ const syncDataToSupabase = async (
 			console.error({
 				id: currentWorkflow.id,
 				edges: JSON.parse(JSON.stringify(edges)),
-				nodes: JSON.parse(JSON.stringify(nodes)),
+				nodes: JSON.parse(JSON.stringify(updatedNodes)),
 				name: currentWorkflow.name,
 				user_id: session.user.id,
 			});

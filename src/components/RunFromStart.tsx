@@ -51,6 +51,7 @@ export default function RunFromStart({
 				setUiErrorMessage(error.message);
 			}
 		} finally {
+			setUnlockGraph(true);
 			setIsLoading(false);
 			// Clean up the abort controller
 			abortControllerRef.current = null;

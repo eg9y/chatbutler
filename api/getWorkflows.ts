@@ -15,7 +15,11 @@ export default async function handler(request: VercelRequest, response: VercelRe
 	const { data, error } = await supabase.from('workflows').select(`
 		id,
 		name,
-		user_id
+		user_id,
+		profiles (
+			id,
+			first_name
+		)
 	`);
 	if (error) {
 		return response.status(500).json({ error });

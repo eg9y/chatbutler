@@ -2,15 +2,19 @@ import { useEffect, useState } from 'react';
 
 import getUrl from '../../auth/getUrl';
 
+type PublicWorkflow = {
+	id: string;
+	name: string;
+	user_id: string;
+	profiles: {
+		id: string;
+		first_name: string | null;
+	} | null;
+	description: string | null;
+};
+
 export default function Gallery() {
-	const [publicWorkflows, setPublicWorkflows] = useState<
-		{
-			id: string;
-			name: string;
-			user_id: string;
-			description: string | null;
-		}[]
-	>([]);
+	const [publicWorkflows, setPublicWorkflows] = useState<PublicWorkflow[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
 
 	useEffect(() => {
@@ -26,16 +30,40 @@ export default function Gallery() {
 
 			// const mock = [
 			// 	{
-			// 		id: 'ytJrgJM3K-XrJHIo1Wfok',
-			// 		name: 'customer support workflow',
-			// 		user_id: '5f9f1c9b-8c1e-4b5c-9b1a-8c1e4b5c9b1a',
-			// 		description: 'a description ',
+			// 		id: 'EG6-bga91c5hhOe4YDsW1',
+			// 		name: 'Blog Creator',
+			// 		user_id: '7db601cb-fea3-47f9-9397-5b6f20c06c4e',
+			// 		profiles: {
+			// 			id: '7db601cb-fea3-47f9-9397-5b6f20c06c4e',
+			// 			first_name: 'egan',
+			// 		},
 			// 	},
 			// 	{
-			// 		id: 'l_vZ-onDE9kqbmv3uX-IP',
-			// 		name: 'prompterinod',
-			// 		user_id: '5f9f1c9b-8c1e-4b5c-9b1a-8c1e4b5c9b1a',
-			// 		description: 'a description ',
+			// 		id: 'UzCt7JNdfaIeffI2VLuvD',
+			// 		name: 'Story Creator',
+			// 		user_id: '7db601cb-fea3-47f9-9397-5b6f20c06c4e',
+			// 		profiles: {
+			// 			id: '7db601cb-fea3-47f9-9397-5b6f20c06c4e',
+			// 			first_name: 'egan',
+			// 		},
+			// 	},
+			// 	{
+			// 		id: '7jBsYucmH9vHKACylHgau',
+			// 		name: 'Tutorial',
+			// 		user_id: '7db601cb-fea3-47f9-9397-5b6f20c06c4e',
+			// 		profiles: {
+			// 			id: '7db601cb-fea3-47f9-9397-5b6f20c06c4e',
+			// 			first_name: 'egan',
+			// 		},
+			// 	},
+			// 	{
+			// 		id: 'mw-7tqgT4Nnlx8EVpzbZ6',
+			// 		name: 'paraphrase',
+			// 		user_id: '7db601cb-fea3-47f9-9397-5b6f20c06c4e',
+			// 		profiles: {
+			// 			id: '7db601cb-fea3-47f9-9397-5b6f20c06c4e',
+			// 			first_name: 'egan',
+			// 		},
 			// 	},
 			// ];
 			// setPublicWorkflows(mock);
@@ -53,16 +81,7 @@ export default function Gallery() {
 	);
 }
 
-const Card = ({
-	publicWorkflows,
-}: {
-	publicWorkflows: {
-		id: string;
-		name: string;
-		user_id: string;
-		description: string | null;
-	}[];
-}) => {
+const Card = ({ publicWorkflows }: { publicWorkflows: PublicWorkflow[] }) => {
 	return (
 		<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
 			{publicWorkflows.map((item, index) => (
@@ -84,12 +103,17 @@ const Card = ({
 						) : (
 							)} */}
 						<div className="w-full h-48 bg-slate-300 rounded-md"></div>
-						<h2 className="text-xl font-semibold">{item.name}</h2>
-						<p className="text-sm">
-							{item?.description}
-							-description goes here-
-						</p>
-						<a className="text-blue-600 text-sm cursor-pointer">Read more...</a>
+						<div className="flex flex-col gap-1">
+							<p className="text-xs text-slate-500">{item.profiles?.first_name}</p>
+							<h2 className="text-xl font-semibold">{item.name}</h2>
+						</div>
+						<div className="flex flex-col gap-1">
+							<p className="text-sm">
+								{item?.description}
+								-description goes here-
+							</p>
+							<a className="text-blue-600 text-sm cursor-pointer">Read more...</a>
+						</div>
 					</div>
 					<div className="flex border-t-1 border-slate-300 w-full">
 						<div className="flex w-0 flex-1 border-r-1 border-slate-300">

@@ -114,7 +114,8 @@ export function getRootNodes(get: () => RFState, nodes: CustomNode[]): CustomNod
 		// if loop is root, it might still have inputs from the loop end node.
 		// if node is variable, don't consider it
 		if (
-			(node.data.inputs.inputs.length === 0 || loopInputCount === inputNodes.length) &&
+			(node.data.inputs.inputs.length === 0 ||
+				(node.type === NodeTypesEnum.loop && loopInputCount === inputNodes.length)) &&
 			node.type !== NodeTypesEnum.globalVariable
 		) {
 			rootNodes.push(node);

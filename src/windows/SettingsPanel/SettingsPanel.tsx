@@ -74,7 +74,7 @@ export default function LeftSidePanel({
 		} else if (selectedNode.type === NodeTypesEnum.search) {
 			return ': File Search';
 		} else {
-			return `: ${selectedNode.type}`;
+			return ``;
 		}
 	}
 
@@ -206,8 +206,8 @@ export default function LeftSidePanel({
 									)}
 								/>
 							</Switch>
-							<Switch.Label as="span" className="ml-3 text-sm">
-								<span className="font-medium text-gray-900">Detail Mode</span>
+							<Switch.Label as="span" className="ml-1 text-sm">
+								<span className="font-medium text-slate-700">Detail Mode</span>
 							</Switch.Label>
 						</Switch.Group>
 					</div>
@@ -242,6 +242,20 @@ export default function LeftSidePanel({
 						>
 							Settings<span className="">{prettyPrintType(selectedNode)}</span>
 						</button>
+						<div className="w-[0.10rem] border-b-1 border-slate-500" />
+						<button
+							className={conditionalClassNames(
+								currentPage === 'Project'
+									? 'border-b-0 bg-slate-50'
+									: 'border-b-1 bg-slate-100 text-slate-600 hover:bg-slate-50',
+								'border-1  border-slate-500 px-2 pt-1 rounded-t-md text-xs',
+							)}
+							onClick={() => {
+								setCurrentPage('Project');
+							}}
+						>
+							Project
+						</button>
 						<div className="flex-grow border-b-1 border-slate-500" />
 					</div>
 				</div>
@@ -265,6 +279,12 @@ export default function LeftSidePanel({
 								</div>
 							)}
 						</>
+					)}
+					{currentPage === 'Project' && (
+						<NodesList
+							reactFlowWrapper={reactFlowWrapper}
+							reactFlowInstance={reactFlowInstance}
+						/>
 					)}
 				</div>
 			</div>

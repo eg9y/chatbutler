@@ -2,6 +2,8 @@
 
 promptsandbox.io is a node-based visual programming tool designed to help users create powerful workflows with OpenAI APIs. With an intuitive drag-and-drop interface, users can build dynamic chains of nodes, each performing a specific operation as part of the workflow. This project is built using React, focusing primarily on OpenAI APIs and providing a seamless experience for users working with these APIs.
 
+**Video:** [https://www.youtube.com/watch?v=CBPw7FXtaEU](https://www.youtube.com/watch?v=CBPw7FXtaEU)
+
 ![Promptsandbox dashboard](./public/promptsandbox.png)
 
 ## Demo

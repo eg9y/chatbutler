@@ -45,6 +45,8 @@ export type UseStoreSetType = (
 export interface RFState {
 	setIsDetailMode: (isDetailMode: boolean) => void;
 	waitingUserResponse: boolean;
+	username: string;
+	setUsername: (username: string) => void;
 	setWaitingUserResponse: (waiting: boolean) => void;
 	pauseResolver: (value: string) => void;
 	setPauseResolver: (resolver: (value: string) => void) => void;
@@ -102,6 +104,12 @@ export interface RFState {
 const useStore = create<RFState>()(
 	persist(
 		(set, get) => ({
+			username: '',
+			setUsername: (username: string) => {
+				set({
+					username,
+				});
+			},
 			setIsDetailMode: (isDetailMode: boolean) => {
 				const currentNodes = get().nodes;
 				const newNodes = currentNodes.map((node) => {

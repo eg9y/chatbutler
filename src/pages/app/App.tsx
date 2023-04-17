@@ -1,4 +1,5 @@
 import { ChevronDoubleRightIcon } from '@heroicons/react/20/solid';
+import { Session } from '@supabase/supabase-js';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import ReactFlow, {
 	MiniMap,
@@ -12,6 +13,7 @@ import { shallow } from 'zustand/shallow';
 import 'reactflow/dist/base.css';
 
 import SandboxExecutionPanel from './SandboxExecutionPanel';
+import UsernamePrompt from './UsernamePrompt';
 import useSupabase from '../../auth/supabaseClient';
 import LoadingOverlay from '../../components/LoadingOverlay';
 import Notification from '../../components/Notification';
@@ -98,10 +100,12 @@ export default function App() {
 		setWorkflows,
 		setChatApp,
 		setGlobalVariables,
+		setUsername,
 	} = useStore(selector, shallow);
 	const { session, setSession, setOpenAiKey } = useStoreSecret(selectorSecret, shallow);
 
 	const [settingsView, setSettingsView] = useState(true);
+	const [showUsernamePrompt, setShowUsernamePrompt] = useState(false);
 
 	const [isLoading, setIsLoading] = useState(true);
 
@@ -129,13 +133,44 @@ export default function App() {
 		3000,
 	);
 
+	// set profile
+	useEffect(() => {
+		// get user profile from profile tablee where user id = current user id
+		// if first_name is null and profile exists, ask user for firstname
+		const getProfile = async (session: Session) => {
+			const { data: profile, error } = await supabase
+				.from('profiles')
+				.select('*')
+				.eq('id', session?.user?.id)
+				.single();
+			if (error) {
+				setUiErrorMessage(error.message);
+			}
+			if (profile) {
+				if (!profile.first_name) {
+					setShowUsernamePrompt(true);
+				} else {
+					setUsername(profile.first_name);
+				}
+			}
+		};
+		if (session) {
+			getProfile(session);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [session]);
+
+	// init sandbox phase
 	useEffect(() => {
 		(async () => {
 			setIsLoading(true);
 			const sessionResponse = await supabase.auth.getSession();
 			const currentSession = sessionResponse.data.session;
 			setSession(currentSession);
-			setCurrentWorkflow(null);
+
+			// // TODO: don't need to null workflow.
+			// setCurrentWorkflow(null);
+
 			await populateUserWorkflows(setWorkflows, setUiErrorMessage, currentSession, supabase);
 			await populateUserDocuments(setDocuments, setUiErrorMessage, currentSession, supabase);
 			if (currentSession?.user) {
@@ -150,6 +185,19 @@ export default function App() {
 			if (params && params.id) {
 				await selectWorkflow(
 					params.id,
+					nodes,
+					edges,
+					currentWorkflow,
+					setUiErrorMessage,
+					setCurrentWorkflow,
+					setGlobalVariables,
+					setNodes,
+					setEdges,
+					supabase,
+				);
+			} else if (currentWorkflow) {
+				await selectWorkflow(
+					currentWorkflow.id,
 					nodes,
 					edges,
 					currentWorkflow,
@@ -219,6 +267,13 @@ export default function App() {
 			}}
 			className="flex"
 		>
+			<UsernamePrompt
+				open={showUsernamePrompt}
+				setShowUsernamePrompt={setShowUsernamePrompt}
+				supabase={supabase}
+				session={session}
+				setUsername={setUsername}
+			/>
 			<LoadingOverlay open={isLoading} />
 			<div className="absolute p-4 flex w-full justify-center">
 				<SandboxExecutionPanel nodes={nodes} setNodes={setNodes} setChatApp={setChatApp} />

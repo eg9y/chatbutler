@@ -171,19 +171,19 @@ const NodesList = ({
 								addNodeToCenter={addNodeToCenter}
 								Icon={ArrowRightOnRectangleIcon}
 							/>
+							{/* <NodeType
+								name="Counter"
+								nodeType={NodeTypesEnum.counter}
+								handleDrag={handleDrag}
+								addNodeToCenter={addNodeToCenter}
+								Icon={PlusIcon}
+							/> */}
 							<NodeType
 								name="Set Variable"
 								nodeType={NodeTypesEnum.setVariable}
 								handleDrag={handleDrag}
 								addNodeToCenter={addNodeToCenter}
 								Icon={ArrowRightOnRectangleIcon}
-							/>
-							<NodeType
-								name="Counter"
-								nodeType={NodeTypesEnum.counter}
-								handleDrag={handleDrag}
-								addNodeToCenter={addNodeToCenter}
-								Icon={PlusIcon}
 							/>
 						</Disclosure.Panel>
 					</>

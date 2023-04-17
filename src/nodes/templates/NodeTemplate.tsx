@@ -1,4 +1,4 @@
-import { ArrowPathIcon, ArrowsPointingOutIcon, PlusIcon } from '@heroicons/react/20/solid';
+import { ArrowPathIcon, ArrowsPointingOutIcon, PlusCircleIcon } from '@heroicons/react/20/solid';
 import { memo, FC } from 'react';
 import { NodeProps, NodeToolbar, Position } from 'reactflow';
 import { shallow } from 'zustand/shallow';
@@ -99,20 +99,22 @@ const NodeTemplate: FC<
 			<div
 				className={conditionalClassNames(
 					getBackgroundColor(color),
-					data.isDetailMode ? 'p-4' : 'pt-10 pb-5 px-8',
-					`p-4 flex gap-2 justify-between items-center border-b-1 border-slate-400 rounded-t-lg text-3xl`,
+					data.isDetailMode ? 'p-4' : 'pt-10 pb-5 px-4',
+					`p-4 flex gap-2 justify-between items-center border-b-1 border-slate-400 rounded-t-lg text-3xl `,
 				)}
 			>
-				<div className="flex gap-2 items-center">
+				<div className="flex gap-2 items-center ">
 					<h1 className={conditionalClassNames(!data.isDetailMode && 'text-4xl')}>
-						<span className="font-semibold opacity-70">{title}/</span>
+						<span className="font-semibold opacity-70">
+							{title} {data.isDetailMode && '/'}
+						</span>
 						{data.isDetailMode && ` ${data.name}`}
 					</h1>
 				</div>
 
 				<button
 					type="button"
-					className="rounded-full bg-green-600 p-1 text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+					className=" text-slate-700/70 hover:text-slate-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
 					onClick={(e) => {
 						e.preventDefault();
 						const node = getNodes([id])[0];
@@ -133,13 +135,13 @@ const NodeTemplate: FC<
 						);
 					}}
 				>
-					<PlusIcon className="h-7 w-7" aria-hidden="true" />
+					<PlusCircleIcon className="h-14 w-14" aria-hidden="true" />
 				</button>
 			</div>
 			<div
 				className={conditionalClassNames(
 					data.isDetailMode ? 'h-14 text-2xl' : 'py-10 text-5xl',
-					'px-4 gap-6 w-full flex justify-between items-center bg-slate-100',
+					'px-4 gap-6 w-full flex justify-between items-center bg-slate-100 text-slate-800',
 				)}
 			>
 				{data.isDetailMode ? (

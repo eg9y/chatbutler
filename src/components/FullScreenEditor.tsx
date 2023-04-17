@@ -40,7 +40,7 @@ export default function FullScreenEditor({
 						>
 							<Dialog.Panel
 								className="h-full relative transform overflow-hidden rounded-lg 
-								bg-white px-4 shadow-xl transition-all sm:my-2 sm:w-full sm:max-w-4xl sm:p-6 whitespace-pre-wrap
+								bg-slate-50 px-4 shadow-xl transition-all sm:my-2 sm:w-full sm:max-w-4xl sm:p-6 whitespace-pre-wrap
                             "
 							>
 								<div>

@@ -21,6 +21,7 @@ export default function AuthPage() {
 						id: nanoid(),
 						name: 'Untitled Sandbox',
 						user_id: session?.user.id,
+						description: '',
 					});
 				}
 				window.open('/', '_self');

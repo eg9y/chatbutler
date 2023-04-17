@@ -14,6 +14,7 @@ import SingleChatPromptTabs from './nodeSettings/singleChatPromptNode/tabs';
 import TabsTemplate from './nodeSettings/TabsTemplate';
 import TextTabs from './nodeSettings/textNode/tabs';
 import NodesList from './NodesList';
+import SandboxSettings from './SandboxSettings';
 import {
 	ChatPromptNodeDataType,
 	ClassifyNodeDataType,
@@ -281,9 +282,9 @@ export default function LeftSidePanel({
 						</>
 					)}
 					{currentPage === 'Project' && (
-						<NodesList
-							reactFlowWrapper={reactFlowWrapper}
-							reactFlowInstance={reactFlowInstance}
+						<SandboxSettings
+							currentWorkflow={currentWorkflow}
+							setCurrentWorkflow={setCurrentWorkflow}
 						/>
 					)}
 				</div>

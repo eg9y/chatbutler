@@ -110,6 +110,7 @@ const selectWorkflow = async (
 		id: data.id,
 		name: data.name,
 		user_id: data.user_id,
+		description: data.description || '',
 	});
 };
 

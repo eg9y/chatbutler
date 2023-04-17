@@ -34,6 +34,7 @@ const syncDataToSupabase = async (
 			edges: JSON.parse(JSON.stringify(edges)),
 			nodes: JSON.parse(JSON.stringify(updatedNodes)),
 			name: currentWorkflow.name,
+			description: currentWorkflow.description,
 		})
 		.eq('id', currentWorkflow.id)
 		.select();
@@ -49,6 +50,7 @@ const syncDataToSupabase = async (
 				id: currentWorkflow.id,
 				edges: JSON.parse(JSON.stringify(edges)),
 				nodes: JSON.parse(JSON.stringify(updatedNodes)),
+				description: currentWorkflow.description,
 				name: currentWorkflow.name,
 				user_id: session.user.id,
 			})
@@ -65,6 +67,7 @@ const syncDataToSupabase = async (
 				id: currentWorkflow.id,
 				edges: JSON.parse(JSON.stringify(edges)),
 				nodes: JSON.parse(JSON.stringify(updatedNodes)),
+				description: currentWorkflow.description,
 				name: currentWorkflow.name,
 				user_id: session.user.id,
 			});

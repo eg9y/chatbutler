@@ -16,8 +16,8 @@ export default async function handler(request: VercelRequest, response: VercelRe
 		id,
 		name,
 		user_id,
+		description, 
 		profiles (
-			id,
 			first_name
 		)
 	`);

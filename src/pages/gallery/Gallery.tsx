@@ -108,10 +108,7 @@ const Card = ({ publicWorkflows }: { publicWorkflows: PublicWorkflow[] }) => {
 							<h2 className="text-xl font-semibold">{item.name}</h2>
 						</div>
 						<div className="flex flex-col gap-1">
-							<p className="text-sm">
-								{item?.description}
-								-description goes here-
-							</p>
+							<p className="text-sm">{item?.description}</p>
 							<a className="text-blue-600 text-sm cursor-pointer">Read more...</a>
 						</div>
 					</div>

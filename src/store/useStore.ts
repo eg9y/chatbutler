@@ -62,7 +62,7 @@ export interface RFState {
 	setGlobalVariables: (variables: { [key: string]: string }) => void;
 	setWorkflows: (workflows: { id: string; name: string }[]) => void;
 	currentWorkflow: SimpleWorkflow | null;
-	setCurrentWorkflow: (workflow: { id: string; user_id: string; name: string } | null) => void;
+	setCurrentWorkflow: (workflow: SimpleWorkflow | null) => void;
 	reactFlowInstance: ReactFlowInstance | null;
 	setReactFlowInstance: (instance: ReactFlowInstance | null) => void;
 	uiErrorMessage: string | null;
@@ -168,9 +168,7 @@ const useStore = create<RFState>()(
 				});
 			},
 			currentWorkflow: null,
-			setCurrentWorkflow: (
-				workflow: { id: string; user_id: string; name: string } | null,
-			) => {
+			setCurrentWorkflow: (workflow: SimpleWorkflow | null) => {
 				set({
 					currentWorkflow: workflow,
 				});

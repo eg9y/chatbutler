@@ -5,7 +5,6 @@ import {
 	DocumentTextIcon,
 	XMarkIcon,
 } from '@heroicons/react/20/solid';
-import { nanoid } from 'nanoid';
 import { useState } from 'react';
 import { useLocation } from 'wouter';
 import { shallow } from 'zustand/shallow';
@@ -144,12 +143,6 @@ const NavBar = () => {
 								setWorkflows([]);
 								// clear graph;
 								clearGraph();
-								// set new workflowId;
-								setCurrentWorkflow({
-									id: nanoid(),
-									name: `Untitled Sandbox`,
-									user_id: session.user.id,
-								});
 							} else {
 								window.open('/auth/', '_self');
 							}

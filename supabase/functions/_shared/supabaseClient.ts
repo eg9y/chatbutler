@@ -1,4 +1,4 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.4.0';
+import { createClient } from '@supabase/supabase-js';
 
 export const supabaseClient = (req: Request) => {
 	// Create a Supabase client with the Auth context of the logged in user.

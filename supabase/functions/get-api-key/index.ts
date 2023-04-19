@@ -5,7 +5,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 
 import { corsHeaders } from '../_shared/cors.ts';
-import { hexToString } from '../_shared/hex.ts';
+import { getOpenAiKey } from '../_shared/getOpenAiKey.ts';
 import { supabaseClient } from '../_shared/supabaseClient.ts';
 
 serve(async (req) => {
@@ -24,31 +24,25 @@ serve(async (req) => {
 			status: 401,
 			headers: {
 				'content-type': 'application/json',
+				...corsHeaders,
 			},
 		});
 	}
 
-	// call supabase function
-	const { data, error } = await supabase.rpc('get_open_ai_key', {
-		p_user_id: user.id,
-		p_secret_key: Deno.env.get('PGSODIUM_SECRET_KEY') ?? '',
-	});
-
-	if (error) {
-		return new Response(JSON.stringify(error), {
+	try {
+		const openAiApiKey = await getOpenAiKey(supabase, user);
+		return new Response(JSON.stringify(openAiApiKey), {
+			headers: { 'content-type': 'application/json', ...corsHeaders },
+		});
+	} catch (err) {
+		return new Response(JSON.stringify(err), {
 			status: 500,
 			headers: {
-				...corsHeaders,
 				'content-type': 'application/json',
+				...corsHeaders,
 			},
 		});
 	}
-
-	const openAiApiKey = hexToString(data[0].open_ai_key);
-
-	return new Response(JSON.stringify(openAiApiKey), {
-		headers: { ...corsHeaders, 'content-type': 'application/json' },
-	});
 });
 
 // To invoke:

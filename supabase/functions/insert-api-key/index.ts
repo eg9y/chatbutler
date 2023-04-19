@@ -24,6 +24,7 @@ serve(async (req) => {
 			status: 401,
 			headers: {
 				'content-type': 'application/json',
+				...corsHeaders,
 			},
 		});
 	}
@@ -41,13 +42,18 @@ serve(async (req) => {
 		return new Response(JSON.stringify(error), {
 			status: 500,
 			headers: {
-				...corsHeaders,
 				'content-type': 'application/json',
+				...corsHeaders,
 			},
 		});
 	}
 
-	return new Response('OK', { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+	return new Response('OK', {
+		headers: {
+			'content-type': 'application/json',
+			...corsHeaders,
+		},
+	});
 });
 
 // To invoke:

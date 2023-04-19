@@ -35,6 +35,7 @@ const NavBar = () => {
 		workflows,
 		setWorkflows,
 		setUiErrorMessage,
+		setUsername,
 	} = useStore(selector, shallow);
 	const { session, setSession } = useStoreSecret(selectorSecret, shallow);
 
@@ -143,6 +144,7 @@ const NavBar = () => {
 								setWorkflows([]);
 								// clear graph;
 								clearGraph();
+								setUsername('');
 							} else {
 								window.open('/auth/', '_self');
 							}

@@ -154,6 +154,7 @@ export default function App() {
 				}
 			}
 		};
+
 		if (session) {
 			getProfile(session);
 		}
@@ -195,7 +196,7 @@ export default function App() {
 					setEdges,
 					supabase,
 				);
-			} else if (currentWorkflow) {
+			} else if (currentSession?.user && currentWorkflow) {
 				await selectWorkflow(
 					currentWorkflow.id,
 					nodes,

@@ -47,6 +47,11 @@ export default function AuthPage() {
 					<Auth
 						supabaseClient={supabase}
 						providers={['google']}
+						redirectTo={
+							import.meta.env.PROD
+								? 'https://promptsandbox.io'
+								: 'http://localhost:5173'
+						}
 						appearance={{
 							theme: ThemeSupa,
 							variables: {

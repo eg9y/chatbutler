@@ -48,8 +48,8 @@ export default function AuthPage() {
 						supabaseClient={supabase}
 						providers={['google']}
 						redirectTo={
-							import.meta.env.PROD
-								? 'https://promptsandbox.io'
+							!import.meta.env.PROD
+								? 'https://app.promptsandbox.io'
 								: 'http://localhost:5173'
 						}
 						appearance={{

@@ -62,7 +62,9 @@ export async function traverseTree(
 				});
 				if (!check) {
 					// TODO: Break out of loop, but continue running the rest of the tree
-					return true;
+					const loopData = node.data as LoopDataType;
+					loopData.loopCount = 2;
+					loopData.loopMax = 1;
 				}
 			}
 			await runNode(node, get, set, openAiKey);

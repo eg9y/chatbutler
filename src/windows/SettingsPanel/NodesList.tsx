@@ -71,14 +71,14 @@ const NodesList = ({
 						</Disclosure.Button>
 						<Disclosure.Panel className="flex flex-col gap-1 px-2 py-2">
 							<NodeType
-								name="Single Chat API"
+								name="Single Chat"
 								nodeType={NodeTypesEnum.singleChatPrompt}
 								handleDrag={handleDrag}
 								addNodeToCenter={addNodeToCenter}
 								Icon={ChatBubbleLeftRightIcon}
 							/>
 							<NodeType
-								name="Chat API"
+								name="Chat"
 								nodeType={NodeTypesEnum.chatPrompt}
 								handleDrag={handleDrag}
 								addNodeToCenter={addNodeToCenter}
@@ -97,7 +97,7 @@ const NodesList = ({
 								</div>
 							</div>
 							<NodeType
-								name="Complete API"
+								name="Complete"
 								nodeType={NodeTypesEnum.llmPrompt}
 								handleDrag={handleDrag}
 								addNodeToCenter={addNodeToCenter}
@@ -137,14 +137,14 @@ const NodesList = ({
 								Icon={Bars3CenterLeftIcon}
 							/>
 							<NodeType
-								name="Text Input"
+								name="User Input"
 								nodeType={NodeTypesEnum.inputText}
 								handleDrag={handleDrag}
 								addNodeToCenter={addNodeToCenter}
 								Icon={ArrowLeftOnRectangleIcon}
 							/>
 							<NodeType
-								name="Text Output"
+								name="User Output"
 								nodeType={NodeTypesEnum.outputText}
 								handleDrag={handleDrag}
 								addNodeToCenter={addNodeToCenter}
@@ -165,7 +165,7 @@ const NodesList = ({
 								Icon={ArrowRightOnRectangleIcon}
 							/>
 							<NodeType
-								name="Global Variable"
+								name="New Variable"
 								nodeType={NodeTypesEnum.globalVariable}
 								handleDrag={handleDrag}
 								addNodeToCenter={addNodeToCenter}
@@ -189,6 +189,39 @@ const NodesList = ({
 					</>
 				)}
 			</Disclosure>
+			{/* <Disclosure defaultOpen={true}>
+				{({ open }) => (
+					<>
+						<Disclosure.Button className="bg-slate-300 flex justify-between border-b-1 border-slate-400 w-full">
+							<p className="text-start text-slate-900 font-semibold text-md pr-2 pl-4">
+								Embeddings
+							</p>
+							<ChevronRightIcon
+								className={conditionalClassNames(
+									open ? 'rotate-90 transform' : '',
+									'w-5 text-slate-500',
+								)}
+							/>
+						</Disclosure.Button>
+						<Disclosure.Panel className="flex flex-col gap-1 px-2 py-2">
+							<NodeType
+								name="Index Entry"
+								nodeType={NodeTypesEnum.text}
+								handleDrag={handleDrag}
+								addNodeToCenter={addNodeToCenter}
+								Icon={Bars3CenterLeftIcon}
+							/>
+							<NodeType
+								name="Query Index"
+								nodeType={NodeTypesEnum.text}
+								handleDrag={handleDrag}
+								addNodeToCenter={addNodeToCenter}
+								Icon={Bars3CenterLeftIcon}
+							/>
+						</Disclosure.Panel>
+					</>
+				)}
+			</Disclosure> */}
 			<Disclosure defaultOpen={true}>
 				{({ open }) => (
 					<>
@@ -271,7 +304,7 @@ const NodeType: FC<{
 		nodeType === NodeTypesEnum.search && `bg-sky-200 border-1 border-sky-400`,
 		nodeType === NodeTypesEnum.combine && `bg-sky-200 border-1 border-sky-400`,
 		needAuth && !session && `opacity-50 pointer-events-none`,
-		`text-slate-600 group flex items-center justify-between rounded-sm px-2 py-1 text-sm cursor-pointer`,
+		`text-slate-600 group flex items-center justify-between rounded-sm px-2 py-1 text-xs cursor-pointer`,
 	);
 	return (
 		<div

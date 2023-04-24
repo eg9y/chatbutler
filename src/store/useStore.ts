@@ -3,11 +3,9 @@ import {
 	Edge,
 	EdgeChange,
 	Node,
-	NodeChange,
 	OnNodesChange,
 	OnEdgesChange,
 	OnConnect,
-	applyNodeChanges,
 	applyEdgeChanges,
 	OnEdgesDelete,
 	NodeMouseHandler,
@@ -21,12 +19,14 @@ import initialNodes from './initialNodes';
 import onAdd from './onAdd';
 import onConnect from './onConnect';
 import onEdgesDelete from './onEdgesDelete';
+import onNodesChange from './onNodesChange';
 import onPlaceholderAdd from './onPlaceholderAdd';
 import storage from './storage';
 import updateNode from './updateNode';
-import { DocumentDbSchema, SimpleWorkflow } from '../db/dbTypes';
+import { DocumentDbSchema, GlobalVariableType, SimpleWorkflow } from '../db/dbTypes';
 import {
 	CustomNode,
+	GlobalVariableDataType,
 	InputNode,
 	LLMPromptNodeDataType,
 	LoopDataType,
@@ -58,8 +58,8 @@ export interface RFState {
 		id: string;
 		name: string;
 	}[];
-	globalVariables: { [key: string]: string };
-	setGlobalVariables: (variables: { [key: string]: string }) => void;
+	globalVariables: GlobalVariableType;
+	setGlobalVariables: (variables: GlobalVariableType) => void;
 	setWorkflows: (workflows: { id: string; name: string }[]) => void;
 	currentWorkflow: SimpleWorkflow | null;
 	setCurrentWorkflow: (workflow: SimpleWorkflow | null) => void;
@@ -137,9 +137,9 @@ const useStore = create<RFState>()(
 				});
 			},
 			globalVariables: {},
-			setGlobalVariables: (variables: { [key: string]: string }) => {
+			setGlobalVariables: (variables: GlobalVariableType) => {
 				set({
-					globalVariables: variables,
+					globalVariables: { ...variables },
 				});
 			},
 			// eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -220,28 +220,7 @@ const useStore = create<RFState>()(
 					selectedNode: node,
 				});
 			},
-			onNodesChange: (changes: NodeChange[]) => {
-				const nodes = get().nodes;
-				const selectedNode = get().selectedNode;
-				const isSelectedNodeDeleted = changes.some(
-					(change) => change.type === 'remove' && change.id === selectedNode?.id,
-				);
-				const update: any = {
-					nodes: applyNodeChanges(changes, nodes),
-				};
-				if (isSelectedNodeDeleted) {
-					update.selectedNode = null;
-					if (selectedNode?.type === NodeTypesEnum.globalVariable) {
-						const globalVariables = get().globalVariables;
-						const newGlobalVariables = globalVariables;
-						delete newGlobalVariables[selectedNode?.id];
-						set({
-							globalVariables: newGlobalVariables,
-						});
-					}
-				}
-				set(update);
-			},
+			onNodesChange: onNodesChange(get, set),
 			onEdgesChange: (changes: EdgeChange[]) => {
 				set({
 					edges: applyEdgeChanges(changes, get().edges),
@@ -323,7 +302,16 @@ const useStore = create<RFState>()(
 				const updatedNodes = nodes.map((node) => {
 					if (node.type !== NodeTypesEnum.globalVariable) {
 						node.data.response = '';
+					} else {
+						const globalVariableData = node.data as GlobalVariableDataType;
+						if (globalVariableData.type === 'text') {
+							globalVariableData.value = '';
+						} else if (globalVariableData.type === 'list') {
+							globalVariableData.value = [];
+						}
+						node.data = { ...globalVariableData };
 					}
+
 					if (node.type === NodeTypesEnum.counter) {
 						node.data.response = '-1';
 					} else if (node.type === NodeTypesEnum.loop) {
@@ -331,6 +319,7 @@ const useStore = create<RFState>()(
 					}
 					return node;
 				});
+
 				set({
 					nodes: updatedNodes,
 				});

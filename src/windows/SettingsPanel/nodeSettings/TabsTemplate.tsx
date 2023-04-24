@@ -30,14 +30,14 @@ export default function TabsTemplate({
 	defaultTab?: string;
 	children?: (selected: string) => React.ReactNode;
 }) {
-	const allTabs = [{ name: 'Node', icon: PencilIcon }, ...tabs];
+	const allTabs = [{ name: 'Block', icon: PencilIcon }, ...tabs];
 	const [selected, setSelected] = useState(defaultTab ? defaultTab : allTabs[0].name);
 	return (
 		<div className="flex flex-col h-full">
 			<TabsNavigator tabs={allTabs} selected={selected} setSelected={setSelected} />
 			<div className="overflow-y-auto grow pr-4 pl-2 pt-4">
 				<div className="">
-					{selected === 'Node' && (
+					{selected === 'Block' && (
 						<DefaultTab
 							selectedNode={selectedNode}
 							handleChange={(e) =>

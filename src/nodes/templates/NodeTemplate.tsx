@@ -106,7 +106,8 @@ const NodeTemplate: FC<
 				<div className="flex gap-2 items-center ">
 					<h1 className={conditionalClassNames(!data.isDetailMode && 'text-4xl')}>
 						<span className="font-semibold opacity-70">
-							{title} {data.isDetailMode && '/'}
+							{title}
+							{data.isDetailMode && '/'}
 						</span>
 						{data.isDetailMode && ` ${data.name}`}
 					</h1>

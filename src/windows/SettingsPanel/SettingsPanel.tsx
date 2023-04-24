@@ -54,7 +54,7 @@ export default function LeftSidePanel({
 	const [openWorkflows, setOpenWorkflows] = useState(!currentWorkflow);
 	const [openTutorials, setOpenTutorials] = useState(false);
 
-	const [currentPage, setCurrentPage] = useState('Nodes');
+	const [currentPage, setCurrentPage] = useState('Blocks');
 
 	const [isDetailModeAll, setIsDetailModeAll] = useState(false);
 
@@ -218,16 +218,16 @@ export default function LeftSidePanel({
 						<div className="w-[0.10rem] border-b-1 border-slate-500" />
 						<button
 							className={conditionalClassNames(
-								currentPage === 'Nodes'
+								currentPage === 'Blocks'
 									? 'border-b-0 bg-slate-50'
 									: 'border-b-1 bg-slate-100 text-slate-600 hover:bg-slate-50',
 								'border-1  border-slate-500 px-2 pt-1 rounded-t-md',
 							)}
 							onClick={() => {
-								setCurrentPage('Nodes');
+								setCurrentPage('Blocks');
 							}}
 						>
-							Nodes
+							Blocks
 						</button>
 						<div className="w-[0.10rem] border-b-1 border-slate-500" />
 						<button
@@ -261,7 +261,7 @@ export default function LeftSidePanel({
 					</div>
 				</div>
 				<div className="grow flex flex-col rounded-tr-lg">
-					{currentPage === 'Nodes' && (
+					{currentPage === 'Blocks' && (
 						<NodesList
 							reactFlowWrapper={reactFlowWrapper}
 							reactFlowInstance={reactFlowInstance}

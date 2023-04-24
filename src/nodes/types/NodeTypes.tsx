@@ -112,9 +112,16 @@ export type LoopDataType = {
 	loopMax: number;
 } & DefaultNodeDataType;
 
-export type GlobalVariableDataType = DefaultNodeDataType;
+export type GlobalVariableDataType = {
+	type: 'text' | 'list';
+	initialValue: string | { id: string; value: string }[];
+	value: string | { id: string; value: string }[];
+} & DefaultNodeDataType;
+
+export type listOperation = '+ Add to end' | '+ Add to start' | '- Remove last' | '- Remove first';
 export type SetVariableDataType = {
 	variableId: string;
+	listOperation?: listOperation;
 } & DefaultNodeDataType;
 
 export enum NodeTypesEnum {

@@ -9,6 +9,8 @@ import {
 	PlaceholderDataType,
 	ClassifyNodeCategoriesDataType,
 	ConditionalBooleanOperation,
+	SetVariableDataType,
+	GlobalVariableDataType,
 } from '../nodes/types/NodeTypes';
 
 export const generateUniqueId = (type: NodeTypesEnum) => {
@@ -269,6 +271,9 @@ const onAdd = (
 				isLoading: false,
 				isBreakpoint: false,
 				isDetailMode: true,
+				initialValue: '',
+				value: '',
+				type: 'text',
 			},
 		};
 
@@ -276,11 +281,19 @@ const onAdd = (
 		// 2. insert global variable as input to all nodes
 		// 3. update all nodes
 		const globalVariables = get().globalVariables;
-		globalVariables[node.id] = node.data.name;
+		globalVariables[node.id] = {
+			name: node.data.name,
+			type: (node.data as GlobalVariableDataType).type,
+		};
 		set({
-			globalVariables,
+			globalVariables: { ...globalVariables },
 		});
 	} else if (type === NodeTypesEnum.setVariable) {
+		// get last global variablee
+		const globalVariable =
+			Object.keys(get().globalVariables).length > 0
+				? Object.keys(get().globalVariables)[0]
+				: null;
 		node = {
 			id: generateUniqueId(type),
 			type,
@@ -299,6 +312,9 @@ const onAdd = (
 				isDetailMode: true,
 			},
 		};
+		if (globalVariable) {
+			(node.data as SetVariableDataType).variableId = globalVariable;
+		}
 	} else if (type === NodeTypesEnum.counter) {
 		node = {
 			id: generateUniqueId(type),

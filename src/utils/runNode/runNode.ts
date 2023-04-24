@@ -11,7 +11,7 @@ import {
 	inputText,
 	counter,
 } from './index';
-import { CustomNode, NodeTypesEnum } from '../../nodes/types/NodeTypes';
+import { CustomNode, GlobalVariableDataType, NodeTypesEnum } from '../../nodes/types/NodeTypes';
 import { RFState } from '../../store/useStore';
 import { parsePromptInputs } from '../parsePromptInputs';
 
@@ -43,6 +43,15 @@ export async function runNode(
 			break;
 		case NodeTypesEnum.inputText:
 			await inputText(node, get);
+			break;
+		case NodeTypesEnum.globalVariable:
+			// set node.data.value to initialValue
+			(node.data as GlobalVariableDataType).value = [
+				...((node.data as GlobalVariableDataType).initialValue as {
+					id: string;
+					value: string;
+				}[]),
+			];
 			break;
 		case NodeTypesEnum.setVariable:
 			setVariable(node, get);

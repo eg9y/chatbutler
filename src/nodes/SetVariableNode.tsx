@@ -1,12 +1,12 @@
 import { memo, FC, useState, useEffect } from 'react';
-import { Handle, Position, NodeProps } from 'reactflow';
+import { Handle, Position, NodeProps, Node } from 'reactflow';
 import useUndo from 'use-undo';
 import { shallow } from 'zustand/shallow';
 
 import InputNodesList from './templates/InputNodesList';
 import NodeTemplate from './templates/NodeTemplate';
 import TextAreaTemplate from './templates/TextAreaTemplate';
-import { CustomNode, SetVariableDataType } from './types/NodeTypes';
+import { CustomNode, GlobalVariableDataType, SetVariableDataType } from './types/NodeTypes';
 import useStore, { selector } from '../store/useStore';
 import { conditionalClassNames } from '../utils/classNames';
 
@@ -20,16 +20,34 @@ const SetVariable: FC<NodeProps<SetVariableDataType>> = (props) => {
 	const [showFullScreen, setShowFullScreen] = useState(false);
 
 	const [globalVariableNodes, setGlobalVariableNodes] = useState<CustomNode[]>([]);
-	const [selectedGlobalVariable, setSelectedGlobalVariable] = useState<string>('');
+	const [selectedGlobalVariable, setSelectedGlobalVariable] =
+		useState<Node<GlobalVariableDataType>>();
+
+	const listOperations = ['+ Add to end', '+ Add to start', '- Remove last', '- Remove first'];
+	const [listOperation, setListOperation] = useState<
+		'+ Add to end' | '+ Add to start' | '- Remove last' | '- Remove first'
+	>('+ Add to end');
 
 	useEffect(() => {
 		const globalVariableIds = Object.keys(globalVariables);
-		setGlobalVariableNodes(getNodes(globalVariableIds));
+		const newGlobalVariableNodes = getNodes(
+			globalVariableIds,
+		) as Node<GlobalVariableDataType>[];
+		setGlobalVariableNodes(newGlobalVariableNodes);
 
+		const globalVariableData = getNodes([data.variableId])[0] as Node<GlobalVariableDataType>;
 		if (data.variableId && data.variableId in globalVariables) {
-			setSelectedGlobalVariable(data.variableId);
-		} else if (selectedGlobalVariable === '') {
-			setSelectedGlobalVariable(globalVariableIds[0]);
+			setSelectedGlobalVariable(globalVariableData);
+			const updateNodeObj = {
+				...data,
+				variableId: globalVariableData.id,
+			} as SetVariableDataType;
+			if (globalVariableData.data.type === 'list') {
+				updateNodeObj.listOperation = listOperation;
+			}
+			updateNode(id, updateNodeObj);
+		} else if (!selectedGlobalVariable && newGlobalVariableNodes.length > 0) {
+			setSelectedGlobalVariable(newGlobalVariableNodes[0]);
 			updateNode(id, {
 				...data,
 				variableId: globalVariableIds[0],
@@ -62,15 +80,20 @@ const SetVariable: FC<NodeProps<SetVariableDataType>> = (props) => {
 									id="model"
 									name="fileId"
 									className="block w-full rounded-md border-0 py-1.5 text-slate-900 ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-2xl sm:leading-6"
-									value={selectedGlobalVariable}
+									value={selectedGlobalVariable?.id}
 									onChange={async (e) => {
 										const selectedVariableId =
 											e.target.selectedOptions[0].value;
-										if (selectedVariableId === '') return;
-										setSelectedGlobalVariable(selectedVariableId);
+										const selectedVariable = getNodes([
+											selectedVariableId,
+										]) as Node<GlobalVariableDataType>[];
+										if (!selectedVariable || selectedVariable.length === 0) {
+											return;
+										}
+										setSelectedGlobalVariable(selectedVariable[0]);
 										updateNode(id, {
 											...data,
-											variableId: selectedVariableId,
+											variableId: selectedVariable[0].id,
 										});
 									}}
 								>
@@ -81,11 +104,85 @@ const SetVariable: FC<NodeProps<SetVariableDataType>> = (props) => {
 									))}
 								</select>
 							</div>
-							<TextAreaTemplate
-								{...props}
-								presentText={presentText}
-								setText={setText}
-							/>
+							{selectedGlobalVariable?.data.type === 'list' && (
+								<>
+									<div className="">
+										<label htmlFor="tabs" className="sr-only">
+											Select a tab
+										</label>
+										{/* Use an "onChange" listener to redirect the user to the selected tab URL. */}
+										<select
+											id="tabs"
+											name="tabs"
+											className="block text-2xl w-full rounded-md border-gray-300 focus:border-slate-500 focus:ring-slate-500"
+											defaultValue={listOperations.find(
+												(tab) => tab === listOperation,
+											)}
+											onChange={(e) => {
+												setListOperation(e.target.value as any);
+												updateNode(id, {
+													...data,
+													listOperation: e.target.value as
+														| '+ Add to end'
+														| '+ Add to start'
+														| '- Remove last'
+														| '- Remove first',
+												});
+											}}
+										>
+											{listOperations.map((operation) => (
+												<option key={operation}>{operation}</option>
+											))}
+										</select>
+
+										{data.listOperation === '- Remove last' && (
+											<div className="text-sm text-gray-500">
+												<p>Removes the last item in the list</p>
+											</div>
+										)}
+										{data.listOperation === '+ Add to end' && (
+											<div className="text-sm text-gray-500">
+												<input
+													type="text"
+													className="block w-full rounded-md border-0 py-1.5 text-slate-900 ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-2xl sm:leading-6"
+													value={presentText}
+													onChange={(e) => {
+														setText(e.target.value);
+														updateNode(id, {
+															...data,
+															text: e.target.value,
+														});
+													}}
+												/>
+											</div>
+										)}
+
+										{data.listOperation === '+ Add to start' && (
+											<div className="text-sm text-gray-500">
+												<input
+													type="text"
+													className="block w-full rounded-md border-0 py-1.5 text-slate-900 ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-2xl sm:leading-6"
+													value={presentText}
+													onChange={(e) => {
+														setText(e.target.value);
+														updateNode(id, {
+															...data,
+															text: e.target.value,
+														});
+													}}
+												/>
+											</div>
+										)}
+									</div>
+								</>
+							)}
+							{selectedGlobalVariable?.data.type === 'text' && (
+								<TextAreaTemplate
+									{...props}
+									presentText={presentText}
+									setText={setText}
+								/>
+							)}
 							<div className="flex flex-col gap-2 text-md ">
 								<InputNodesList
 									data={data}

@@ -1,6 +1,7 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 import { Edge, Node } from 'reactflow';
 
+import { GlobalVariableType } from './dbTypes';
 import { Inputs } from '../nodes/types/Input';
 import { CustomNode } from '../nodes/types/NodeTypes';
 import { Database } from '../schema';
@@ -94,15 +95,13 @@ const selectWorkflow = async (
 			id: node.id,
 			data: node.data,
 		}))
-		.reduce(
-			(acc, node) => {
-				acc[node.id] = node.data.name;
-				return acc;
-			},
-			{} as {
-				[key: string]: string;
-			},
-		);
+		.reduce((acc, node) => {
+			acc[node.id] = {
+				name: node.data.name,
+				type: node.data.type,
+			};
+			return acc;
+		}, {} as GlobalVariableType);
 
 	setGlobalVariables(globalVariables);
 

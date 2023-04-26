@@ -32,7 +32,7 @@ export default async function handler(request: VercelRequest, response: VercelRe
 		{
 			status: 200,
 			headers: {
-				'Cache-Control': 's-maxage=14400',
+				'Cache-Control': 's-maxage=120',
 				'Content-Type': 'application/json',
 			},
 		},

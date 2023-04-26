@@ -18,13 +18,14 @@ async function chatPrompt(node: CustomNode, get: () => RFState, openAiKey: strin
 			content: data.response,
 		};
 	});
+
 	const response = await getOpenAIChatResponse(
 		openAiKey,
 		node.data as ChatPromptNodeDataType,
 		chatSequence,
 	);
 
-	const completion = response.data.choices[0].message?.content;
+	const completion = response.text;
 	if (completion) {
 		node.data = {
 			...node.data,

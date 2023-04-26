@@ -28,7 +28,7 @@ async function classify(node: CustomNode, get: () => RFState, openAiKey: string)
 		},
 	] as ChatSequence;
 	const response = await getOpenAIChatResponse(openAiKey, classifyData, chatSequence);
-	const completion = response.data.choices[0].message?.content;
+	const completion = response.text;
 	// const completion = 'hackernews';
 	if (completion) {
 		node.data = {

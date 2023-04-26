@@ -1,5 +1,8 @@
-import { Configuration, OpenAIApi } from 'openai';
+import { ChatOpenAI } from 'langchain/chat_models/openai';
+import { OpenAI } from 'langchain/llms/openai';
+import { AIChatMessage, HumanChatMessage, SystemChatMessage } from 'langchain/schema';
 
+import { createSupabaseClient } from '../auth/supabaseClient';
 import {
 	ChatPromptNodeDataType,
 	ClassifyNodeDataType,
@@ -14,7 +17,7 @@ export type ChatSequence = {
 	content: string;
 }[];
 
-export async function getOpenAIResponse(
+export async function getOpenAICompleteResponse(
 	apiKey: string | null,
 	llmPrompt: LLMPromptNodeDataType,
 	inputNodeIds: string[],
@@ -30,8 +33,8 @@ export async function getOpenAIResponse(
 		const parsedPrompt = parsePromptInputs(get, llmPrompt.text, inputNodeIds);
 
 		const settings: {
+			openAIApiKey?: string;
 			model: string;
-			prompt: string;
 			max_tokens: number;
 			temperature: number;
 			top_p: number;
@@ -41,7 +44,6 @@ export async function getOpenAIResponse(
 			stop?: string[];
 		} = {
 			model: llmPrompt.model,
-			prompt: parsedPrompt,
 			max_tokens: Math.floor(llmPrompt.max_tokens),
 			temperature: llmPrompt.temperature,
 			top_p: llmPrompt.top_p,
@@ -58,11 +60,34 @@ export async function getOpenAIResponse(
 			settings.stop = llmPrompt.stop;
 		}
 
-		const config = new Configuration({
-			apiKey,
+		const supabase = createSupabaseClient();
+
+		const session = await supabase.auth.getSession();
+
+		if (session.error) {
+			throw new Error(session.error.message);
+		}
+
+		// if no sessions found, use api key set in non-user's "session"
+		if (
+			!session ||
+			!session.data ||
+			!session.data.session ||
+			!session.data.session.access_token
+		) {
+			settings.openAIApiKey = apiKey;
+			const llm = new OpenAI(settings);
+			const response = await llm.call(parsedPrompt);
+			return response;
+		}
+
+		// this is the supabase session key, the real openAI key is set in the proxy #ifitworksitworks
+		settings.openAIApiKey = session.data.session?.access_token;
+
+		const llm = new OpenAI(settings, {
+			basePath: `${import.meta.env.VITE_SUPABASE_FUNCTION_URL}/openai`,
 		});
-		const openAi = new OpenAIApi(config);
-		const response = await openAi.createCompletion(settings);
+		const response = await llm.call(parsedPrompt);
 		return response;
 	} catch (error: any) {
 		throw new Error(error.message);
@@ -83,43 +108,61 @@ export async function getOpenAIChatResponse(
 				'OpenAI API key is not set. Please set it in the settings at the bottom left panel.',
 			);
 		}
-		const settings: {
-			messages: {
-				role: 'user' | 'assistant' | 'system';
-				content: string;
-			}[];
-			model: string;
-			max_tokens: number;
-			temperature: number;
-			top_p: number;
-			presence_penalty: number;
-			frequency_penalty: number;
-			stop?: string[];
-		} = {
-			messages: chatSequence,
-			model: chatPrompt.model,
-			max_tokens: Math.floor(chatPrompt.max_tokens),
-			temperature: chatPrompt.temperature,
-			top_p: chatPrompt.top_p,
-			presence_penalty: chatPrompt.presence_penalty,
-			frequency_penalty: chatPrompt.frequency_penalty,
 
-			// TODO: make these fields configurable
+		const convertedMessages = chatSequence.map((message: any) => {
+			if (message.role === 'user') {
+				return new HumanChatMessage(message.content);
+			} else if (message.role === 'system') {
+				return new SystemChatMessage(message.content);
+			} else {
+				return new AIChatMessage(message.content);
+			}
+		});
+
+		const settings: { [key: string]: any } = {
+			modelName: chatPrompt.model,
+			maxTokens: Math.floor(chatPrompt.max_tokens),
+			temperature: chatPrompt.temperature,
+			topP: chatPrompt.top_p,
+			presencePenalty: chatPrompt.presence_penalty,
+			frequencyPenalty: chatPrompt.frequency_penalty,
 		};
 
 		if (chatPrompt.stop.length) {
 			settings.stop = chatPrompt.stop;
 		}
 
-		const config = new Configuration({
-			apiKey,
-		});
-		const openAi = new OpenAIApi(config);
-		// TODO: Other openAI APIs especially Chat
-		const response = await openAi.createChatCompletion(settings);
+		const supabase = createSupabaseClient();
 
+		const session = await supabase.auth.getSession();
+
+		if (session.error) {
+			throw new Error(session.error.message);
+		}
+
+		// if no sessions found, use api key set in non-user's "session"
+		if (
+			!session ||
+			!session.data ||
+			!session.data.session ||
+			!session.data.session.access_token
+		) {
+			settings.openAIApiKey = apiKey;
+			const llm = new ChatOpenAI(settings);
+			const response = await llm.call(convertedMessages);
+			return response;
+		}
+
+		// this is the supabase session key, the real openAI key is set in the proxy #ifitworksitworks
+		settings.openAIApiKey = session.data.session?.access_token;
+
+		const llm = new ChatOpenAI(settings, {
+			basePath: `${import.meta.env.VITE_SUPABASE_FUNCTION_URL}/openai`,
+		});
+		const response = await llm.call(convertedMessages);
 		return response;
 	} catch (error: any) {
+		console.log('oof', error);
 		throw new Error(error.message);
 	}
 }

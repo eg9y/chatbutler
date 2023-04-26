@@ -10,8 +10,9 @@ async function singleChatPrompt(openAiKey: string, node: CustomNode, get: () => 
 			content: parsePromptInputs(get, node.data.text, node.data.inputs.inputs),
 		},
 	]);
-	const completion = response.data.choices[0].message?.content;
-	// const completion = chatSequence.map((chat) => chat.content).join(', ');
+
+	const completion = response.text;
+
 	if (completion) {
 		node.data = {
 			...node.data,

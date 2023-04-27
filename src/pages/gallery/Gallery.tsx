@@ -7,7 +7,6 @@ type PublicWorkflow = {
 	name: string;
 	user_id: string;
 	profiles: {
-		id: string;
 		first_name: string | null;
 	} | null;
 	description: string | null;
@@ -30,29 +29,128 @@ export default function Gallery() {
 
 			// const mock = [
 			// 	{
-			// 		id: 'EG6-bga91c5hhOe4YDsW1',
-			// 		name: 'Blog Creator',
-			// 		user_id: '7db601cb-fea3-47f9-9397-5b6f20c06c4e',
+			// 		id: 'ojjdItyQr9U7B1_csdyM7',
+			// 		name: 'New ojjdItyQr9U7B1_csdyM7',
+			// 		user_id: 'ad1649e0-0d89-4d19-ac0d-25cb43e6504f',
+			// 		description: '',
 			// 		profiles: {
-			// 			id: '7db601cb-fea3-47f9-9397-5b6f20c06c4e',
+			// 			first_name: 'mrjtconlin',
+			// 		},
+			// 	},
+			// 	{
+			// 		id: 'NRIyEbOyZ5St0Uuco-C5c',
+			// 		name: 'New NRIyEbOyZ5St0Uuco-C5c',
+			// 		user_id: 'af06a3ac-848f-4c08-b4dd-5c769ffaf0e3',
+			// 		description: '',
+			// 		profiles: {
+			// 			first_name: 'DayDreamer',
+			// 		},
+			// 	},
+			// 	{
+			// 		id: 'y0XWK4_WaM8I8sX2wI_Gb',
+			// 		name: 'BabyAGI Draft',
+			// 		user_id: '7db601cb-fea3-47f9-9397-5b6f20c06c4e',
+			// 		description: '',
+			// 		profiles: {
 			// 			first_name: 'egan',
 			// 		},
 			// 	},
 			// 	{
-			// 		id: 'UzCt7JNdfaIeffI2VLuvD',
-			// 		name: 'Story Creator',
-			// 		user_id: '7db601cb-fea3-47f9-9397-5b6f20c06c4e',
+			// 		id: 'npKTznEXHPlGSK8QHCUR0',
+			// 		name: 'test google auth',
+			// 		user_id: '8f3507a2-32d1-425f-9b7e-a51617615d77',
+			// 		description: '',
 			// 		profiles: {
-			// 			id: '7db601cb-fea3-47f9-9397-5b6f20c06c4e',
+			// 			first_name: 'tester',
+			// 		},
+			// 	},
+			// 	{
+			// 		id: 'nLncVoavjcuxqc9I9M7v1',
+			// 		name: 'New nLncVoavjcuxqc9I9M7v1',
+			// 		user_id: '31112d55-d1cc-4a37-ae90-86140dbf199a',
+			// 		description: '',
+			// 		profiles: {
+			// 			first_name: 'BlockLm',
+			// 		},
+			// 	},
+			// 	{
+			// 		id: 'UXAq9i7nXWQpSdxpg3EFm',
+			// 		name: 'New UXAq9i7nXWQpSdxpg3EFm',
+			// 		user_id: '714656fa-dcf9-44ba-9338-3989b1fb3eb8',
+			// 		description: '',
+			// 		profiles: {
+			// 			first_name: 'zweitsprache',
+			// 		},
+			// 	},
+			// 	{
+			// 		id: 'Pp3DEkLwchGfgVOWbBV6N',
+			// 		name: 'Story Creator with Loops',
+			// 		user_id: '7db601cb-fea3-47f9-9397-5b6f20c06c4e',
+			// 		description: '',
+			// 		profiles: {
 			// 			first_name: 'egan',
+			// 		},
+			// 	},
+			// 	{
+			// 		id: 'eCrwdlAGjXdjGem69y4IR',
+			// 		name: 'Blocks fiesta',
+			// 		user_id: '7db601cb-fea3-47f9-9397-5b6f20c06c4e',
+			// 		description: '',
+			// 		profiles: {
+			// 			first_name: 'egan',
+			// 		},
+			// 	},
+			// 	{
+			// 		id: 'Umy12KfGSmXVZ5LeUGCxZ',
+			// 		name: 'New Umy12KfGSmXVZ5LeUGCxZ',
+			// 		user_id: '0569f4aa-d208-45d9-bae3-138a59d637f8',
+			// 		description: '',
+			// 		profiles: {
+			// 			first_name: 'Psoodoo',
+			// 		},
+			// 	},
+			// 	{
+			// 		id: 'Ec_x0y5Sne0rr14D9bl2V',
+			// 		name: 'Blog creator',
+			// 		user_id: '7db601cb-fea3-47f9-9397-5b6f20c06c4e',
+			// 		description: '',
+			// 		profiles: {
+			// 			first_name: 'egan',
+			// 		},
+			// 	},
+			// 	{
+			// 		id: 'WPBnCHYrBk17-gWIuSRGT',
+			// 		name: 'Story Creator Basic',
+			// 		user_id: '7db601cb-fea3-47f9-9397-5b6f20c06c4e',
+			// 		description: '',
+			// 		profiles: {
+			// 			first_name: 'egan',
+			// 		},
+			// 	},
+			// 	{
+			// 		id: 'krDNxfDO5wTrbq0-SQSup',
+			// 		name: 'New krDNxfDO5wTrbq0-SQSup',
+			// 		user_id: '31d06aa3-7b38-4f1f-a7c0-966479a55da3',
+			// 		description: '',
+			// 		profiles: {
+			// 			first_name: 'annias',
+			// 		},
+			// 	},
+			// 	{
+			// 		id: 'VvulP2qGQHe9BBQX3aWF4',
+			// 		name: 'New VvulP2qGQHe9BBQX3aWF4',
+			// 		user_id: '0ea0da66-c2e7-4c21-8bce-3bc1aefe5fdc',
+			// 		description: '',
+			// 		profiles: {
+			// 			first_name: 'richardsun',
 			// 		},
 			// 	},
 			// 	{
 			// 		id: '7jBsYucmH9vHKACylHgau',
 			// 		name: 'Tutorial',
 			// 		user_id: '7db601cb-fea3-47f9-9397-5b6f20c06c4e',
+			// 		description: '',
 			// 		profiles: {
-			// 			id: '7db601cb-fea3-47f9-9397-5b6f20c06c4e',
 			// 			first_name: 'egan',
 			// 		},
 			// 	},
@@ -60,8 +158,8 @@ export default function Gallery() {
 			// 		id: 'mw-7tqgT4Nnlx8EVpzbZ6',
 			// 		name: 'paraphrase',
 			// 		user_id: '7db601cb-fea3-47f9-9397-5b6f20c06c4e',
+			// 		description: '',
 			// 		profiles: {
-			// 			id: '7db601cb-fea3-47f9-9397-5b6f20c06c4e',
 			// 			first_name: 'egan',
 			// 		},
 			// 	},
@@ -74,7 +172,7 @@ export default function Gallery() {
 	return (
 		<div className="bg-white">
 			<div className="mx-auto max-w-2xl py-10 px-20 sm:py-4 sm:px-6 lg:max-w-7xl lg:px-20">
-				<h1 className="text-2xl font-bold mb-6">Sandbox Gallery</h1>
+				<h1 className="text-2xl font-bold mb-6">Chatbot Gallery</h1>
 				{isLoading ? <div>Loading...</div> : <Card publicWorkflows={publicWorkflows} />}
 			</div>
 		</div>
@@ -89,6 +187,7 @@ const Card = ({ publicWorkflows }: { publicWorkflows: PublicWorkflow[] }) => {
 					key={index}
 					className="border-1 border-slate-300
 					shadow-md
+					rounded-md
 					hover:shadow-lg transition-shadow duration-300 ease-in-out
 					flex flex-col
 					"
@@ -102,21 +201,22 @@ const Card = ({ publicWorkflows }: { publicWorkflows: PublicWorkflow[] }) => {
 							/>
 						) : (
 							)} */}
-						<div className="w-full h-48 bg-slate-300 rounded-md"></div>
-						<div className="flex flex-col gap-1">
+						<div className="flex flex-col gap-1 w-full truncate">
 							<p className="text-xs text-slate-500">{item.profiles?.first_name}</p>
-							<h2 className="text-xl font-semibold">{item.name}</h2>
+							<h2 className="text-md font-semibold truncate">{item.name}</h2>
 						</div>
 						<div className="flex flex-col gap-1">
 							<p className="text-sm">{item?.description}</p>
-							<a className="text-blue-600 text-sm cursor-pointer">Read more...</a>
+							{item.description && item.description.length > 0 && (
+								<a className="text-blue-600 text-sm cursor-pointer">Read more...</a>
+							)}
 						</div>
 					</div>
 					<div className="flex border-t-1 border-slate-300 w-full">
-						<div className="flex w-0 flex-1 border-r-1 border-slate-300">
+						<div className="flex w-0 flex-1 border-r-1 border-slate-300  hover:bg-slate-100">
 							<a
 								className="relative -mr-px inline-flex w-0 flex-1 items-center 
-                                        cursor-pointer hover:bg-slate-200
+                                        cursor-pointer
                                     justify-center gap-x-3 border border-transparent py-4 text-sm font-semibold text-gray-900"
 								onClick={async () => {
 									window.open(
@@ -128,10 +228,10 @@ const Card = ({ publicWorkflows }: { publicWorkflows: PublicWorkflow[] }) => {
 								<span className="truncate">Sandbox</span>
 							</a>
 						</div>
-						<div className="flex w-0 flex-1 border-r-1 border-slate-300">
+						<div className="flex w-0 flex-1  hover:bg-slate-100">
 							<a
 								className="relative -mr-px inline-flex w-0 flex-1 items-center 
-                                        cursor-pointer hover:bg-slate-200
+                                        cursor-pointer
                                     justify-center gap-x-3 border border-transparent py-4 text-sm font-semibold text-gray-900"
 								onClick={async () => {
 									window.open(

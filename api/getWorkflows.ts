@@ -12,7 +12,10 @@ export default async function handler(request: VercelRequest, response: VercelRe
 	const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE || '';
 	const supabase = createClient<Database>(supabaseUrl, supabaseServiceKey);
 
-	const { data, error } = await supabase.from('workflows').select(`
+	const { data, error } = await supabase
+		.from('workflows')
+		.select(
+			`
 		id,
 		name,
 		user_id,
@@ -20,7 +23,9 @@ export default async function handler(request: VercelRequest, response: VercelRe
 		profiles (
 			first_name
 		)
-	`);
+	`,
+		)
+		.eq('is_public', true);
 	if (error) {
 		return response.status(500).json({ error });
 	}

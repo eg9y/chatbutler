@@ -35,6 +35,7 @@ const syncDataToSupabase = async (
 			nodes: JSON.parse(JSON.stringify(updatedNodes)),
 			name: currentWorkflow.name,
 			description: currentWorkflow.description,
+			is_public: currentWorkflow.is_public,
 		})
 		.eq('id', currentWorkflow.id)
 		.select();
@@ -52,6 +53,7 @@ const syncDataToSupabase = async (
 				nodes: JSON.parse(JSON.stringify(updatedNodes)),
 				description: currentWorkflow.description,
 				name: currentWorkflow.name,
+				is_public: currentWorkflow.is_public,
 				user_id: session.user.id,
 			})
 			.select('id, name')
@@ -69,6 +71,7 @@ const syncDataToSupabase = async (
 				nodes: JSON.parse(JSON.stringify(updatedNodes)),
 				description: currentWorkflow.description,
 				name: currentWorkflow.name,
+				is_public: currentWorkflow.is_public,
 				user_id: session.user.id,
 			});
 		}

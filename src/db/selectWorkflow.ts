@@ -26,6 +26,9 @@ const selectWorkflow = async (
 			.update({
 				edges: JSON.parse(JSON.stringify(edges)),
 				nodes: JSON.parse(JSON.stringify(nodes)),
+				is_public: currentWorkflow.is_public,
+				name: currentWorkflow.name,
+				description: currentWorkflow.description,
 			})
 			.eq('id', currentWorkflow.id);
 
@@ -110,6 +113,7 @@ const selectWorkflow = async (
 		name: data.name,
 		user_id: data.user_id,
 		description: data.description || '',
+		is_public: data.is_public,
 	});
 };
 

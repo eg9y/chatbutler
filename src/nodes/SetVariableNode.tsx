@@ -144,6 +144,7 @@ const SetVariable: FC<NodeProps<SetVariableDataType>> = (props) => {
 											<div className="text-sm text-gray-500">
 												<input
 													type="text"
+													name="text"
 													className="block w-full rounded-md border-0 py-1.5 text-slate-900 ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-2xl sm:leading-6"
 													value={presentText}
 													onChange={(e) => {
@@ -161,6 +162,7 @@ const SetVariable: FC<NodeProps<SetVariableDataType>> = (props) => {
 											<div className="text-sm text-gray-500">
 												<input
 													type="text"
+													name="text"
 													className="block w-full rounded-md border-0 py-1.5 text-slate-900 ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-2xl sm:leading-6"
 													value={presentText}
 													onChange={(e) => {

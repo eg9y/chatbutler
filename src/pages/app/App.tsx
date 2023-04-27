@@ -371,6 +371,7 @@ export default function App() {
 								style={{
 									height: '30px',
 									width: '20px',
+									transform: `rotate(${settingsView ? 180 : 0}deg)`,
 								}}
 								className={
 									'text-slate-800 group-hover:text-slate-500 h-full mx-auto'

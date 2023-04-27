@@ -22,6 +22,7 @@ export default function AuthPage() {
 						name: 'Untitled Sandbox',
 						user_id: session?.user.id,
 						description: '',
+						is_public: true,
 					});
 				}
 				window.open('/', '_self');

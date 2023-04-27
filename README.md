@@ -107,3 +107,9 @@ We welcome contributions to promptsandbox.io! Please follow these steps to contr
 2. Create a new branch with a descriptive name for your feature or bugfix.
 3. Commit your changes to the new branch.
 4. Create a pull request and provide a clear description of your changes.
+
+## Credits
+
+- [Reactflow](https://github.com/wbkd/react-flow)
+- [Chatbot UI Lite](https://github.com/mckaywrigley/chatbot-ui-lite)
+- [Supabase](https://supabase.io/)

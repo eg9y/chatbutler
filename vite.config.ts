@@ -48,6 +48,7 @@ export default defineConfig({
 				main: resolve(root, 'index.html'),
 				files: resolve(root, 'files', 'index.html'),
 				gallery: resolve(root, 'gallery', 'index.html'),
+				chat: resolve(root, 'chat', 'index.html'),
 				auth: resolve(root, 'auth', 'index.html'),
 			},
 		},

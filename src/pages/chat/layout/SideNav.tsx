@@ -9,6 +9,7 @@ import { ChatSessionType } from '../../../db/dbTypes';
 import { updateWorkflowStates } from '../../../db/selectWorkflow';
 import useStore, { RFState, selector } from '../../../store/useStore';
 import { conditionalClassNames } from '../../../utils/classNames';
+import { Message } from '../../../windows/ChatPanel/Chat/types';
 
 const navigation = [
 	{
@@ -398,9 +399,7 @@ function NewChatSessionButton({
 	setChatSessions: (chatSessions: ChatSessionType[]) => void;
 	chatSessions: ChatSessionType[];
 	setCurrentChatSessionIndex: (index: number) => void;
-	setChatApp: (
-		messages: import('/Users/eganbisma/Projects/promptinator/src/windows/ChatPanel/Chat/types').Message[],
-	) => void;
+	setChatApp: (messages: Message[]) => void;
 }) {
 	return (
 		<li>

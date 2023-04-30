@@ -1,7 +1,7 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 import { Edge, Node } from 'reactflow';
 
-import { GlobalVariableType } from './dbTypes';
+import { GlobalVariableType, WorkflowDbSchema } from './dbTypes';
 import { Inputs } from '../nodes/types/Input';
 import { CustomNode } from '../nodes/types/NodeTypes';
 import { Database } from '../schema';
@@ -51,9 +51,21 @@ const selectWorkflow = async (
 	}
 
 	// set graph
+	updateWorkflowStates(data, setNodes, setEdges, setGlobalVariables, setCurrentWorkflow);
+};
+
+export default selectWorkflow;
+
+export function updateWorkflowStates(
+	workflow: WorkflowDbSchema,
+	setNodes: RFState['setNodes'],
+	setEdges: RFState['setEdges'],
+	setGlobalVariables: RFState['setGlobalVariables'],
+	setCurrentWorkflow: RFState['setCurrentWorkflow'],
+) {
 	let parsedNodes: Node[] = [];
-	if (typeof data.nodes === 'string') {
-		parsedNodes = JSON.parse(data.nodes as string).map((node: CustomNode) => {
+	if (typeof workflow.nodes === 'string') {
+		parsedNodes = JSON.parse(workflow.nodes as string).map((node: CustomNode) => {
 			if ('inputs' in node.data) {
 				return {
 					...node,
@@ -69,7 +81,7 @@ const selectWorkflow = async (
 		});
 		setNodes(parsedNodes);
 	} else {
-		parsedNodes = (data.nodes as unknown as CustomNode[]).map((node: CustomNode) => {
+		parsedNodes = (workflow.nodes as unknown as CustomNode[]).map((node: CustomNode) => {
 			if ('inputs' in node.data) {
 				return {
 					...node,
@@ -85,10 +97,10 @@ const selectWorkflow = async (
 		});
 		setNodes(parsedNodes);
 	}
-	if (typeof data.edges === 'string') {
-		setEdges(JSON.parse(data.edges as string));
+	if (typeof workflow.edges === 'string') {
+		setEdges(JSON.parse(workflow.edges as string));
 	} else {
-		setEdges(data.edges as unknown as Edge[]);
+		setEdges(workflow.edges as unknown as Edge[]);
 	}
 
 	// set global variables
@@ -109,12 +121,10 @@ const selectWorkflow = async (
 	setGlobalVariables(globalVariables);
 
 	setCurrentWorkflow({
-		id: data.id,
-		name: data.name,
-		user_id: data.user_id,
-		description: data.description || '',
-		is_public: data.is_public,
+		id: workflow.id,
+		name: workflow.name,
+		user_id: workflow.user_id,
+		description: workflow.description || '',
+		is_public: workflow.is_public,
 	});
-};
-
-export default selectWorkflow;
+}

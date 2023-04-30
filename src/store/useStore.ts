@@ -23,7 +23,12 @@ import onNodesChange from './onNodesChange';
 import onPlaceholderAdd from './onPlaceholderAdd';
 import storage from './storage';
 import updateNode from './updateNode';
-import { DocumentDbSchema, GlobalVariableType, SimpleWorkflow } from '../db/dbTypes';
+import {
+	ChatSessionType,
+	DocumentDbSchema,
+	GlobalVariableType,
+	SimpleWorkflow,
+} from '../db/dbTypes';
 import {
 	CustomNode,
 	GlobalVariableDataType,
@@ -52,6 +57,10 @@ export interface RFState {
 	setPauseResolver: (resolver: (value: string) => void) => void;
 	chatApp: Message[];
 	setChatApp: (messages: Message[]) => void;
+	chatSessions: ChatSessionType[];
+	setChatSessions: (chatSessions: ChatSessionType[]) => void;
+	currentChatSessionIndex: number;
+	setCurrentChatSessionIndex: (index: number) => void;
 	documents: DocumentDbSchema[];
 	setDocuments: (documents: DocumentDbSchema[]) => void;
 	workflows: {
@@ -130,6 +139,18 @@ const useStore = create<RFState>()(
 					chatApp: messages,
 				});
 			},
+			chatSessions: [],
+			setChatSessions: (chatSessions: RFState['chatSessions']) => {
+				set({
+					chatSessions: chatSessions,
+				});
+			},
+			currentChatSessionIndex: -1,
+			setCurrentChatSessionIndex: (index: number) => {
+				set({
+					currentChatSessionIndex: index,
+				});
+			},
 			waitingUserResponse: false,
 			setWaitingUserResponse: (waiting: boolean) => {
 				set({
@@ -183,7 +204,6 @@ const useStore = create<RFState>()(
 					chatApp: [],
 				});
 			},
-			chatSessions: {},
 			unlockGraph: true,
 			setUnlockGraph: (unlock: boolean) => {
 				set({

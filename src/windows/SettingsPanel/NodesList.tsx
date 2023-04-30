@@ -237,7 +237,7 @@ const NodesList = ({
 							/>
 						</Disclosure.Button>
 						<Disclosure.Panel className="flex flex-col gap-1 px-2 py-2">
-							<NodeType
+							{/* <NodeType
 								name="File Text"
 								nodeType={NodeTypesEnum.fileText}
 								handleDrag={handleDrag}
@@ -245,15 +245,15 @@ const NodesList = ({
 								Icon={DocumentTextIcon}
 								session={session}
 								needAuth={true}
-							/>
+							/> */}
 							<NodeType
 								name="Search"
 								nodeType={NodeTypesEnum.search}
 								handleDrag={handleDrag}
 								addNodeToCenter={addNodeToCenter}
 								Icon={MagnifyingGlassIcon}
-								session={session}
-								needAuth={true}
+								// session={session}
+								// needAuth={true}
 							/>
 							<NodeType
 								name="Combine File(s)"
@@ -261,8 +261,8 @@ const NodesList = ({
 								handleDrag={handleDrag}
 								addNodeToCenter={addNodeToCenter}
 								Icon={WrenchIcon}
-								session={session}
-								needAuth={true}
+								// session={session}
+								// needAuth={true}
 							/>
 						</Disclosure.Panel>
 					</>

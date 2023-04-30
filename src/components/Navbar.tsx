@@ -19,9 +19,10 @@ import { useQueryParams } from '../utils/useQueryParams';
 
 const NavBar = () => {
 	const navigation = [
-		{ name: 'Sandbox', href: '/' },
-		{ name: 'Files', href: '/files/' },
+		{ name: 'Editor', href: '/' },
+		// { name: 'Files', href: '/files/' },
 		{ name: 'Gallery', href: '/gallery/' },
+		{ name: 'Chat', href: '/chat/' },
 	];
 	const [location] = useLocation();
 	const params = useQueryParams();
@@ -51,13 +52,13 @@ const NavBar = () => {
 			className="bg-slate-100 border-b-1 border-slate-400 z-20"
 		>
 			<nav
-				className="mx-auto flex items-center justify-between p-2 lg:px-2 h-full"
+				className="mx-auto flex items-end justify-between p-1 lg:px-2 h-full"
 				aria-label="Global"
 			>
-				<div className="-m-1.5 p-1.5 flex-1 flex gap-2 items-center">
-					<DocumentTextIcon className="h-6 w-6 text-slate-800" />
-					<div>
-						{location === '/' && (
+				<div className=" flex-1 flex gap-2 items-center h-full">
+					{location === '/' && (
+						<>
+							<DocumentTextIcon className="h-6 w-6 text-slate-800" />
 							<div className="text-slate-800 flex gap-2 items-center">
 								{currentWorkflow ? (
 									<EditableText
@@ -73,17 +74,22 @@ const NavBar = () => {
 									<p className="text-slate-500">(Read Mode)</p>
 								)}
 							</div>
-						)}
-						<div className="flex lg:hidden">
-							<button
-								type="button"
-								className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
-								onClick={() => setMobileMenuOpen(true)}
-							>
-								<span className="sr-only">Open main menu</span>
-								<Bars3Icon className="h-6 w-6" aria-hidden="true" />
-							</button>
+						</>
+					)}
+					{location != '/' && (
+						<div className="text-slate-800 font-semibold flex items-end h-full">
+							Promtpsandbox.io
 						</div>
+					)}
+					<div className="flex lg:hidden">
+						<button
+							type="button"
+							className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+							onClick={() => setMobileMenuOpen(true)}
+						>
+							<span className="sr-only">Open main menu</span>
+							<Bars3Icon className="h-6 w-6" aria-hidden="true" />
+						</button>
 					</div>
 				</div>
 				<div>

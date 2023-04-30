@@ -305,22 +305,24 @@ export default function SideNav({
 													)}
 												>
 													{session.workflow && (
-														<span
-															className={conditionalClassNames(
-																// session.current
-																// ? 'text-blue-600 border-blue-600'
-																'text-slate-400 border-slate-200 group-hover:border-blue-600 group-hover:text-blue-600',
-																'flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white',
-															)}
-														>
-															{session.workflow.name[0]}
-														</span>
+														<>
+															<span
+																className={conditionalClassNames(
+																	// session.current
+																	// ? 'text-blue-600 border-blue-600'
+																	'text-slate-400 border-slate-200 group-hover:border-blue-600 group-hover:text-blue-600',
+																	'flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white',
+																)}
+															>
+																{session.workflow.name[0]}
+															</span>
+															<span className="truncate">
+																{session.workflow
+																	? session.workflow.name
+																	: 'New Chat'}
+															</span>
+														</>
 													)}
-													<span className="truncate">
-														{session.workflow
-															? session.workflow.name
-															: 'New Chat'}
-													</span>
 													<span>
 														<XMarkIcon
 															className={

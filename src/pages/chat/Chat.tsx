@@ -122,7 +122,7 @@ export default function ChatMain() {
 			>
 				<div className="flex-1 sm:px-10 h-full">
 					{chatSessions.length > 0 &&
-						chatSessions[currentChatSessionIndex].workflow !== null && (
+						chatSessions[currentChatSessionIndex]?.workflow !== null && (
 							<div className="flex flex-col gap-1 p-2">
 								<h1 className="text-2xl">
 									{chatSessions[currentChatSessionIndex]?.workflow?.name}

@@ -11,15 +11,6 @@ import useStore, { RFState, selector } from '../../../store/useStore';
 import { conditionalClassNames } from '../../../utils/classNames';
 import { Message } from '../../../windows/ChatPanel/Chat/types';
 
-const navigation = [
-	{
-		name: 'Chatbots',
-		href: '#',
-		icon: ChatBubbleLeftEllipsisIcon,
-		current: true,
-	},
-];
-
 export default function SideNav({
 	children,
 	abortControllerRef,
@@ -109,30 +100,23 @@ export default function SideNav({
 											>
 												<li>
 													<ul role="list" className="-mx-2 space-y-1">
-														{navigation.map((item) => (
-															<li key={item.name}>
-																<a
-																	href={item.href}
+														<li>
+															<a
+																className={conditionalClassNames(
+																	'bg-slate-50 text-blue-600',
+																	'cursor-pointer group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold',
+																)}
+															>
+																<ChatBubbleLeftEllipsisIcon
 																	className={conditionalClassNames(
-																		item.current
-																			? 'bg-slate-50 text-blue-600'
-																			: 'text-slate-700 hover:text-blue-600 hover:bg-slate-50',
-																		'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold',
+																		'text-blue-600',
+																		'h-6 w-6 shrink-0',
 																	)}
-																>
-																	<item.icon
-																		className={conditionalClassNames(
-																			item.current
-																				? 'text-blue-600'
-																				: 'text-slate-400 group-hover:text-blue-600',
-																			'h-6 w-6 shrink-0',
-																		)}
-																		aria-hidden="true"
-																	/>
-																	{item.name}
-																</a>
-															</li>
-														))}
+																	aria-hidden="true"
+																/>
+																Chatbots
+															</a>
+														</li>
 													</ul>
 												</li>
 												<li>
@@ -218,7 +202,6 @@ export default function SideNav({
 														{/* {chatbots.map((chatbot: any) => (
 															<li key={chatbot.name}>
 																<a
-																	href={chatbot.href}
 																	className={conditionalClassNames(
 																		chatbot.current
 																			? 'bg-slate-50 text-blue-600'

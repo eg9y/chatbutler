@@ -316,13 +316,13 @@ export default function SideNav({
 															>
 																{session.workflow.name[0]}
 															</span>
-															<span className="truncate">
-																{session.workflow
-																	? session.workflow.name
-																	: 'New Chat'}
-															</span>
 														</>
 													)}
+													<span className="truncate">
+														{session.workflow
+															? session.workflow.name
+															: 'New Chat'}
+													</span>
 													<span>
 														<XMarkIcon
 															className={

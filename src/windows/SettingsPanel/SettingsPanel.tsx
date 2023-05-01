@@ -113,7 +113,7 @@ export default function LeftSidePanel({
 								}
 								aria-hidden="true"
 							/>
-							<span className="truncate">My Sandboxes</span>
+							<span className="truncate">My Chatbots</span>
 						</a>
 					</div>
 					<div className="">

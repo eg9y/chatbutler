@@ -2,11 +2,14 @@ import { Dialog, Transition } from '@headlessui/react';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { nanoid } from 'nanoid';
 import { Fragment, useState } from 'react';
+import { ReactFlowInstance } from 'reactflow';
 import { shallow } from 'zustand/shallow';
 
 import { ReactComponent as Loading } from '../assets/loading.svg';
 import useSupabase from '../auth/supabaseClient';
+import { SimpleWorkflow, GlobalVariableType } from '../db/dbTypes';
 import selectWorkflow from '../db/selectWorkflow';
+import { CustomNode } from '../nodes/types/NodeTypes';
 import { useStore, useStoreSecret, selectorSecret, selector } from '../store';
 import { RFState } from '../store/useStore';
 
@@ -33,6 +36,9 @@ export default function UserWorkflows({
 
 	const [isLoading, setIsLoading] = useState(false);
 
+	const [workflowNameWindowOpen, setWorkflowNameWindowOpen] = useState(false);
+	const [newWorkflowId, setNewWorkflowId] = useState('');
+
 	const GridList = () => {
 		return (
 			<ul
@@ -45,7 +51,7 @@ export default function UserWorkflows({
 						className="col-span-1 flex flex-col divide-y divide-gray-300 rounded-lg bg-white text-center 
 					shadow border-1 border-slate-400"
 					>
-						<div className="flex flex-1 flex-col p-8">
+						<div className="flex flex-1 flex-col p-2">
 							<h3 className="mt-6 text-sm font-medium text-gray-900">
 								{workflow.name}
 							</h3>
@@ -57,10 +63,10 @@ export default function UserWorkflows({
 										className="relative -mr-px inline-flex w-0 flex-1 items-center 
                                         cursor-pointer hover:bg-slate-200
                                     justify-center gap-x-3 rounded-bl-lg border border-transparent py-4 text-sm font-semibold text-gray-900"
-										onClick={async () => {
-											setIsLoading(true);
-											await selectWorkflow(
-												workflow.id,
+										onClick={() =>
+											openWorkflow(
+												setIsLoading,
+												workflow,
 												nodes,
 												edges,
 												currentWorkflow,
@@ -70,18 +76,11 @@ export default function UserWorkflows({
 												setNodes,
 												setEdges,
 												supabase,
-											);
-											setOpen(false);
-											setIsLoading(false);
-											if (
-												!open &&
-												reactFlowInstance &&
-												'fitView' in reactFlowInstance
-											) {
-												reactFlowInstance.fitView();
-												reactFlowInstance.zoomOut();
-											}
-										}}
+												setOpen,
+												open,
+												reactFlowInstance,
+											)
+										}
 									>
 										<span className="truncate">Open</span>
 									</a>
@@ -117,7 +116,7 @@ export default function UserWorkflows({
 				as="div"
 				className="relative z-10"
 				onClose={(close) => {
-					if (currentWorkflow === null) {
+					if (currentWorkflow === null || workflowNameWindowOpen) {
 						return false;
 					}
 					setOpen(close);
@@ -148,60 +147,148 @@ export default function UserWorkflows({
 						>
 							<Dialog.Panel
 								style={{
-									height: '70vh',
+									height: workflowNameWindowOpen ? '20vh' : '70vh',
+									width: workflowNameWindowOpen ? '20vw' : '100%',
 								}}
 								className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full max-w-full sm:p-6 mx-10 flex flex-col"
 							>
-								<Dialog.Title
-									as="h3"
-									className="text-3xl font-semibold leading-6 text-gray-900 pb-4 flex gap-2"
-								>
-									My Sandboxes
-									<span>
-										{isLoading && (
-											<Loading className="animate-spin -ml-1 mr-3 h-7 w-7 text-black" />
-										)}
-									</span>
-								</Dialog.Title>
-								<GridList />
-								<div className="mt-5 sm:mt-6 flex flex-col grow items-end justify-end">
-									<a
-										className="group p-2 flex items-center rounded-md text-xl font-medium text-slate-100 
-									bg-green-500 hover:bg-green-400  cursor-pointer "
-										onClick={async () => {
-											const id = nanoid();
-											const { data, error } = await supabase
-												.from('workflows')
-												.insert({
-													name: `New ${id}`,
-													id,
-													// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-													user_id: session!.user.id,
-												})
-												.select()
-												.single();
-											if (data) {
-												setWorkflows([
-													...workflows,
+								{workflowNameWindowOpen && (
+									<>
+										<Dialog.Title
+											as="h3"
+											className="text-xl font-semibold leading-6 text-gray-900 pb-4 flex gap-2"
+										>
+											Chatbot name?
+											<span>
+												{isLoading && (
+													<Loading className="animate-spin -ml-1 mr-3 h-7 w-7 text-black" />
+												)}
+											</span>
+										</Dialog.Title>
+										<form
+											className="flex flex-col justify-between h-full items-start gap-2"
+											onSubmit={async (e) => {
+												e.preventDefault();
+												setIsLoading(true);
+												const target = e.target as typeof e.target & {
+													name: { value: string };
+												};
+												const name = target.name.value;
+												const { error: updateCurrentWorkflowError } =
+													await supabase
+														.from('workflows')
+														.update({
+															name,
+														})
+														.eq('id', newWorkflowId);
+
+												if (updateCurrentWorkflowError) {
+													setUiErrorMessage(
+														`Error updating workflow name ${updateCurrentWorkflowError}`,
+													);
+													setIsLoading(false);
+													return;
+												}
+												await openWorkflow(
+													setIsLoading,
 													{
-														id: data.id,
-														name: data.name,
+														id: newWorkflowId,
+														name,
 													},
-												]);
-											} else if (error) {
-												setUiErrorMessage(error.message);
-											}
-										}}
-									>
-										<PlusIcon
-											className={
-												'text-slate-100  -ml-1 mr-3 h-6 w-6 flex-shrink-0'
-											}
-											aria-hidden="true"
-										/>
-										<span className="truncate">Add workflow</span>
-									</a>
-								</div>
+													nodes,
+													edges,
+													currentWorkflow,
+													setUiErrorMessage,
+													setCurrentWorkflow,
+													setGlobalVariables,
+													setNodes,
+													setEdges,
+													supabase,
+													setOpen,
+													open,
+													reactFlowInstance,
+												);
+												const newWorkflows = [...workflows];
+												newWorkflows[newWorkflows.length - 1].name = name;
+												setWorkflows(newWorkflows);
+												setWorkflowNameWindowOpen(false);
+											}}
+										>
+											<input
+												type="name"
+												name="name"
+												id="name"
+												autoFocus={true}
+												autoComplete="off"
+												className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+												placeholder="chatbot name"
+											/>
+											<button
+												type="submit"
+												className="group p-2 rounded-md text-md font-medium text-slate-100 
+									bg-green-500 hover:bg-green-400  cursor-pointer w-full"
+											>
+												<span className="truncate">Set</span>
+											</button>
+										</form>
+									</>
+								)}
+								{!workflowNameWindowOpen && (
+									<>
+										<Dialog.Title
+											as="h3"
+											className="text-3xl font-semibold leading-6 text-gray-900 pb-4 flex gap-2"
+										>
+											My Chatbots
+											<span>
+												{isLoading && (
+													<Loading className="animate-spin -ml-1 mr-3 h-7 w-7 text-black" />
+												)}
+											</span>
+										</Dialog.Title>
+										<GridList />
+										<div className="mt-5 sm:mt-6 flex flex-col grow items-end justify-end">
+											<a
+												className="group p-2 flex items-center rounded-md text-xl font-medium text-slate-100 
+									bg-green-500 hover:bg-green-400  cursor-pointer "
+												onClick={async () => {
+													const id = nanoid();
+													const { data, error } = await supabase
+														.from('workflows')
+														.insert({
+															name: `New ${id}`,
+															id,
+															// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+															user_id: session!.user.id,
+														})
+														.select()
+														.single();
+													if (data) {
+														setWorkflows([
+															...workflows,
+															{
+																id: data.id,
+																name: data.name,
+															},
+														]);
+														setWorkflowNameWindowOpen(true);
+													} else if (error) {
+														setUiErrorMessage(error.message);
+													}
+													setNewWorkflowId(id);
+												}}
+											>
+												<PlusIcon
+													className={
+														'text-slate-100  -ml-1 mr-3 h-6 w-6 flex-shrink-0'
+													}
+													aria-hidden="true"
+												/>
+												<span className="truncate">Add chatbots</span>
+											</a>
+										</div>
+									</>
+								)}
 							</Dialog.Panel>
 						</Transition.Child>
 					</div>
@@ -209,4 +296,40 @@ export default function UserWorkflows({
 			</Dialog>
 		</Transition.Root>
 	);
+}
+async function openWorkflow(
+	setIsLoading: (loading: boolean) => void,
+	workflow: { id: string; name: string },
+	nodes: CustomNode[],
+	edges: RFState['edges'],
+	currentWorkflow: SimpleWorkflow | null,
+	setUiErrorMessage: (message: string | null) => void,
+	setCurrentWorkflow: (workflow: SimpleWorkflow | null) => void,
+	setGlobalVariables: (variables: GlobalVariableType) => void,
+	setNodes: (nodes: CustomNode[]) => void,
+	setEdges: RFState['setEdges'],
+	supabase: any,
+	setOpen: (open: boolean) => void,
+	open: boolean,
+	reactFlowInstance: ReactFlowInstance | null,
+) {
+	setIsLoading(true);
+	await selectWorkflow(
+		workflow.id,
+		nodes,
+		edges,
+		currentWorkflow,
+		setUiErrorMessage,
+		setCurrentWorkflow,
+		setGlobalVariables,
+		setNodes,
+		setEdges,
+		supabase,
+	);
+	setOpen(false);
+	setIsLoading(false);
+	if (!open && reactFlowInstance && 'fitView' in reactFlowInstance) {
+		reactFlowInstance.fitView();
+		reactFlowInstance.zoomOut();
+	}
 }

@@ -3,6 +3,7 @@ import { shallow } from 'zustand/shallow';
 
 import ChatbotList from './ChatbotList';
 import SideNav from './layout/SideNav';
+import { ReactComponent as Loading } from '../../assets/loading.svg';
 import useSupabase from '../../auth/supabaseClient';
 import Notification from '../../components/Notification';
 import RunFromStart from '../../components/RunFromStart';
@@ -81,6 +82,7 @@ export default function ChatMain() {
 	useEffect(() => {
 		async function getChatbots() {
 			// init supabase
+			setIsLoading(true);
 			const { data: chatbotsData, error } = await supabase
 				.from('workflows')
 				.select(
@@ -103,6 +105,7 @@ export default function ChatMain() {
 				return;
 			}
 			setChatbots(chatbotsData as any);
+			setIsLoading(false);
 		}
 
 		getChatbots();
@@ -175,6 +178,12 @@ export default function ChatMain() {
 						<div>
 							<div>
 								{/* iterate over chatbots */}
+								{isLoading && (
+									<div className="flex gap-4 items-center p-4">
+										<p>Loading chatbots</p>
+										<Loading className="animate-spin -ml-1 mr-3 h-5 w-5 text-black" />
+									</div>
+								)}
 								{chatSessions.length > 0 && (
 									<ChatbotList
 										chatbots={chatbots}

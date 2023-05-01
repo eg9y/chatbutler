@@ -37,7 +37,7 @@ export default function ChatBotList({
 			>
 				{chatbots.map((chatbot) => (
 					<li
-						key={chatbot.name}
+						key={chatbot.id}
 						onClick={() => {
 							onClick(chatbot);
 						}}
@@ -45,7 +45,7 @@ export default function ChatBotList({
 					>
 						<div
 							className={conditionalClassNames(
-								'bg-slate-300',
+								'bg-slate-500',
 								'flex w-16 flex-shrink-0 items-center justify-center rounded-l-md text-sm font-medium text-white',
 							)}
 						>

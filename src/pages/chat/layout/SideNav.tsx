@@ -237,7 +237,7 @@ export default function SideNav({
 				</Transition.Root>
 
 				{/* Static sidebar for desktop */}
-				<div className="hidden lg:sticky lg:inset-y-0 lg:z-40 lg:flex lg:w-72 lg:flex-col h-[95vh] pt-[5vh]">
+				<div className="hidden lg:sticky lg:inset-y-0 lg:z-40 lg:flex lg:w-72 lg:flex-col h-[95vh] pt-4">
 					{/* Sidebar component, swap this element with another sidebar if you like */}
 					<div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-slate-200 bg-white px-6">
 						<nav className="flex flex-1 flex-col">
@@ -257,7 +257,7 @@ export default function SideNav({
 									/>
 									Chatbots
 								</a>
-								<div className="relative mt-2">
+								{/* <div className="relative mt-2">
 									<label
 										htmlFor="name"
 										className="absolute -top-2 left-2 inline-block bg-white px-1 text-xs font-medium text-slate-900"
@@ -270,7 +270,7 @@ export default function SideNav({
 										id="name"
 										className="block w-full rounded-md border-0 py-1.5 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
 									/>
-								</div>
+								</div> */}
 								<li>
 									<ul role="list" className="-mx-2 mt-2 space-y-1">
 										<NewChatSessionButton

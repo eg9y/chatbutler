@@ -306,6 +306,8 @@ export default function App() {
 						onEdgesChange={onEdgesChange}
 						onConnect={onConnect}
 						nodeTypes={nodeTypes}
+						snapGrid={[100, 100]}
+						snapToGrid={true}
 						// edgeTypes={edgeTypes}
 						connectionLineComponent={ConnectionLine}
 						onNodeDragStart={onNodeDragStop}

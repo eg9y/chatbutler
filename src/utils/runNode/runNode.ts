@@ -53,6 +53,13 @@ export async function runNode(
 				}[]),
 			];
 			break;
+		case NodeTypesEnum.conditional:
+			node.data = {
+				...node.data,
+				response: node.data.text,
+				isLoading: false,
+			};
+			break;
 		case NodeTypesEnum.setVariable:
 			setVariable(node, get);
 			break;
@@ -60,7 +67,7 @@ export async function runNode(
 			outputText(get, node);
 			break;
 		case NodeTypesEnum.search:
-			await search(node, get);
+			// await search(node, get, openAiKey);
 			break;
 		case NodeTypesEnum.counter:
 			counter(node);

@@ -20,7 +20,7 @@ function conditional(
 
 	// get conditional result
 	let isPass = false;
-	const parsedText = parsePromptInputs(get, data.text, data.inputs.inputs);
+	const parsedText = parsePromptInputs(get, data.value, data.inputs.inputs);
 	const parsedValueToCompare = parsePromptInputs(get, data.valueToCompare, data.inputs.inputs);
 
 	if (data.booleanOperation === ConditionalBooleanOperation.EqualTo) {
@@ -64,6 +64,8 @@ function conditional(
 			edge.source === node.id && childrenNodes.map((child) => child.id).includes(edge.target),
 	);
 
+	console.log('ispass', isPass);
+
 	const passingChildrenNodes = sourceTargetEdge
 		.filter((edge) => {
 			if (isPass) {
@@ -72,6 +74,8 @@ function conditional(
 			return edge.sourceHandle === 'conditional-false-output';
 		})
 		.map((edge) => get().nodes.find((node) => node.id === edge.target) as CustomNode);
+
+	console.log(passingChildrenNodes);
 	// Update this part to store skipped nodes and their children
 	childrenNodes.forEach((child) => {
 		if (!passingChildrenNodes.includes(child)) {

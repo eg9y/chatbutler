@@ -10,7 +10,7 @@ import { conditionalClassNames } from '../utils/classNames';
 
 const Conditional: FC<NodeProps<ConditionalDataType>> = (props) => {
 	const { data, selected, id, type } = props;
-	const [textState, { set: setValue }] = useUndo(data.text);
+	const [textState, { set: setValue }] = useUndo(data.value);
 	const { present: value } = textState;
 
 	const [valueToCompareState, { set: setValueToCompare }] = useUndo(data.valueToCompare);

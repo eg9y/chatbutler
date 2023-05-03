@@ -129,8 +129,10 @@ const Conditional: FC<NodeProps<ConditionalDataType>> = (props) => {
 				id="conditional-true-output"
 				style={{
 					right: '-2.5rem',
+					top: '33.333333%',
+					backgroundColor: 'rgb(16 185 129)',
 				}}
-				className="top-1/3 h-10 flex gap-1 border-1 border-slate-700 bg-emerald-500"
+				className="h-10 flex gap-1 border-1 border-slate-700"
 			>
 				<p className="bg-transparent  border-slate-700 text-xl font-bold self-center -z-10 pointer-events-none p-1">
 					<CheckIcon className={'text-slate-50 h-full w-10'} aria-hidden="true" />
@@ -142,8 +144,10 @@ const Conditional: FC<NodeProps<ConditionalDataType>> = (props) => {
 				id="conditional-false-output"
 				style={{
 					right: '-2.5rem',
+					top: '66.666667%',
+					backgroundColor: 'rgb(239 68 68)',
 				}}
-				className="top-2/3 h-10 flex gap-1 border-1 border-slate-700 bg-red-500"
+				className="h-10 flex gap-1 border-1 border-slate-700"
 			>
 				<p className="bg-transparent  border-slate-700 text-xl font-bold self-center -z-10 pointer-events-none p-1">
 					<XMarkIcon className={'text-slate-50 h-full w-10'} aria-hidden="true" />

@@ -16,8 +16,8 @@ export default function RangeInput({
 	step?: number;
 }) {
 	return (
-		<div className="pt-4 flex justify-between gap-2 items-center">
-			<div className="w-full flex flex-col items-star">
+		<div className="flex items-center justify-between gap-2 pt-4">
+			<div className="items-star flex w-full flex-col">
 				<label htmlFor={propertyName} className="block text-sm font-medium text-slate-900 ">
 					{propertyName}
 				</label>

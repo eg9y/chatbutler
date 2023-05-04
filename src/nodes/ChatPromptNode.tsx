@@ -27,8 +27,8 @@ const ChatPrompt: FC<NodeProps<ChatPromptNodeDataType>> = (props) => {
 				setShowFullScreen={setShowFullScreen}
 				selected={selected}
 				labelComponent={() => (
-					<div className="h-14 flex justify-between items-center px-4">
-						<p className="flex gap-1 items-center text-xl">
+					<div className="flex h-14 items-center justify-between px-4">
+						<p className="flex items-center gap-1 text-xl">
 							<SignalIcon
 								className={conditionalClassNames(
 									data.response.length > 0 ? 'text-green-500' : 'text-slate-400',
@@ -57,15 +57,15 @@ const ChatPrompt: FC<NodeProps<ChatPromptNodeDataType>> = (props) => {
 					left: '-4.5rem',
 					backgroundColor: 'rgb(248 250 252)',
 				}}
-				className="top-1/2 h-10 flex gap-1 border-1 border-slate-700"
+				className="top-1/2 flex h-10 gap-1 border-1 border-slate-700"
 			>
-				<div className=" bg-purple-300 w-5 h-full pointer-events-none"></div>
-				<p className="bg-transparent  border-slate-700 text-xl font-bold self-center -z-10 pointer-events-none p-1">
+				<div className=" pointer-events-none h-full w-5 bg-purple-300"></div>
+				<p className="pointer-events-none  -z-10 self-center border-slate-700 bg-transparent p-1 text-xl font-bold">
 					Chat
 				</p>
 			</Handle>
 
-			<Handle type="source" position={Position.Right} id="chat-prompt" className="w-4 h-4" />
+			<Handle type="source" position={Position.Right} id="chat-prompt" className="h-4 w-4" />
 		</div>
 	);
 };
@@ -79,8 +79,8 @@ const Content: FC<{
 			<div
 				className={conditionalClassNames(
 					showFullScreen && 'overflow-y-scroll',
-					`nodrag px-3 rounded-b-lg
-						flex flex-col justify-between gap-4 items-end text-xl`,
+					`nodrag flex flex-col
+						items-end justify-between gap-4 rounded-b-lg px-3 text-xl`,
 				)}
 			>
 				{!showFullScreen ? (

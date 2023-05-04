@@ -20,7 +20,7 @@ export default function SearchTabs({
 
 	return (
 		<div className="pr-4">
-			<div className="overflow-y-auto hide-scrollbar pb-40 pt-4">
+			<div className="hide-scrollbar overflow-y-auto pb-40 pt-4">
 				<TabsNavigator tabs={tabs} selected={selected} setSelected={setSelected} />
 				<div className="pt-2">
 					{selected === 'Search' && (

@@ -56,7 +56,7 @@ const Dropzone: React.FC<DropZoneProps> = ({ documents, setDocuments }) => {
 	return (
 		<div
 			ref={dropzoneRef}
-			className="border-2 border-dashed bg-slate-50 border-slate-400 rounded-md h-48 flex items-center justify-center text-center cursor-pointer"
+			className="flex h-48 cursor-pointer items-center justify-center rounded-md border-2 border-dashed border-slate-400 bg-slate-50 text-center"
 			onDragOver={handleDragOver}
 			onDrop={handleDrop}
 			onClick={() => {
@@ -68,7 +68,7 @@ const Dropzone: React.FC<DropZoneProps> = ({ documents, setDocuments }) => {
 			}}
 		>
 			{uploadProgress ? (
-				<Loading className="animate-spin -ml-1 mr-3 h-7 w-7 text-black" />
+				<Loading className="-ml-1 mr-3 h-7 w-7 animate-spin text-black" />
 			) : (
 				<p>Drag and drop files here or click to upload</p>
 			)}

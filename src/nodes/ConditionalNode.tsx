@@ -41,7 +41,7 @@ const Conditional: FC<NodeProps<ConditionalDataType>> = (props) => {
 								<input
 									type="text"
 									name="value"
-									className="nodrag block h-16 w-1/2 rounded-md border-0 text-slate-900 shadow-sm ring-inset ring-slate-300 placeholder:text-slate-400 ring-2 focus:ring-inset focus:ring-slate-600 sm:py-1.5 sm:text-xl sm:leading-6"
+									className="nodrag block h-16 w-1/2 rounded-md border-0 text-slate-900 shadow-sm ring-2 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-inset focus:ring-slate-600 sm:py-1.5 sm:text-xl sm:leading-6"
 									value={value}
 									onChange={(e) => {
 										setValue(e.target.value);
@@ -52,7 +52,7 @@ const Conditional: FC<NodeProps<ConditionalDataType>> = (props) => {
 									}}
 								/>
 							</div>
-							<div className="flex flex-col gap-2 text-md ">
+							<div className="text-md flex flex-col gap-2 ">
 								<InputNodesList
 									data={data}
 									id={id}
@@ -91,7 +91,7 @@ const Conditional: FC<NodeProps<ConditionalDataType>> = (props) => {
 								<input
 									type="text"
 									name="valueToCompare"
-									className="nodrag block h-16 w-1/2 rounded-md border-0 text-slate-900 shadow-sm ring-inset ring-slate-300 placeholder:text-slate-400 ring-2 focus:ring-inset focus:ring-slate-600 sm:py-1.5 sm:text-xl sm:leading-6"
+									className="nodrag block h-16 w-1/2 rounded-md border-0 text-slate-900 shadow-sm ring-2 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-inset focus:ring-slate-600 sm:py-1.5 sm:text-xl sm:leading-6"
 									value={valueToCompare}
 									onChange={(e) => {
 										setValueToCompare(e.target.value);
@@ -102,7 +102,7 @@ const Conditional: FC<NodeProps<ConditionalDataType>> = (props) => {
 									}}
 								/>
 							</div>
-							<div className="flex flex-col gap-2 text-md ">
+							<div className="text-md flex flex-col gap-2 ">
 								<InputNodesList
 									data={data}
 									id={id}
@@ -120,7 +120,7 @@ const Conditional: FC<NodeProps<ConditionalDataType>> = (props) => {
 				type="target"
 				position={Position.Left}
 				id="text-input"
-				className="w-4 h-4"
+				className="h-4 w-4"
 			></Handle>
 
 			<Handle
@@ -132,10 +132,10 @@ const Conditional: FC<NodeProps<ConditionalDataType>> = (props) => {
 					top: '33.333333%',
 					backgroundColor: 'rgb(16 185 129)',
 				}}
-				className="h-10 flex gap-1 border-1 border-slate-700"
+				className="flex h-10 gap-1 border-1 border-slate-700"
 			>
-				<p className="bg-transparent  border-slate-700 text-xl font-bold self-center -z-10 pointer-events-none p-1">
-					<CheckIcon className={'text-slate-50 h-full w-10'} aria-hidden="true" />
+				<p className="pointer-events-none  -z-10 self-center border-slate-700 bg-transparent p-1 text-xl font-bold">
+					<CheckIcon className={'h-full w-10 text-slate-50'} aria-hidden="true" />
 				</p>
 			</Handle>
 			<Handle
@@ -147,10 +147,10 @@ const Conditional: FC<NodeProps<ConditionalDataType>> = (props) => {
 					top: '66.666667%',
 					backgroundColor: 'rgb(239 68 68)',
 				}}
-				className="h-10 flex gap-1 border-1 border-slate-700"
+				className="flex h-10 gap-1 border-1 border-slate-700"
 			>
-				<p className="bg-transparent  border-slate-700 text-xl font-bold self-center -z-10 pointer-events-none p-1">
-					<XMarkIcon className={'text-slate-50 h-full w-10'} aria-hidden="true" />
+				<p className="pointer-events-none  -z-10 self-center border-slate-700 bg-transparent p-1 text-xl font-bold">
+					<XMarkIcon className={'h-full w-10 text-slate-50'} aria-hidden="true" />
 				</p>
 			</Handle>
 		</div>

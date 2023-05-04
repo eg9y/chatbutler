@@ -33,9 +33,9 @@ export default function TabsTemplate({
 	const allTabs = [{ name: 'Block', icon: PencilIcon }, ...tabs];
 	const [selected, setSelected] = useState(defaultTab ? defaultTab : allTabs[0].name);
 	return (
-		<div className="flex flex-col h-full">
+		<div className="flex h-full flex-col">
 			<TabsNavigator tabs={allTabs} selected={selected} setSelected={setSelected} />
-			<div className="overflow-y-auto grow pr-4 pl-2 pt-4">
+			<div className="grow overflow-y-auto pr-4 pl-2 pt-4">
 				<div className="">
 					{selected === 'Block' && (
 						<DefaultTab

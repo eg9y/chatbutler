@@ -49,7 +49,7 @@ const GlobalVariable: FC<NodeProps<GlobalVariableDataType>> = (props) => {
 							<input
 								type="name"
 								name="name"
-								className="nodrag block h-16 w-full rounded-md border-0 text-slate-900 shadow-sm ring-inset ring-slate-300 placeholder:text-slate-400 ring-2 focus:ring-inset focus:ring-slate-600 sm:py-1.5 sm:text-xl sm:leading-6"
+								className="nodrag block h-16 w-full rounded-md border-0 text-slate-900 shadow-sm ring-2 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-inset focus:ring-slate-600 sm:py-1.5 sm:text-xl sm:leading-6"
 								value={presentName}
 								onChange={(e) => {
 									setName(e.target.value);
@@ -69,7 +69,7 @@ const GlobalVariable: FC<NodeProps<GlobalVariableDataType>> = (props) => {
 							<div className="py-4">
 								<label
 									htmlFor="response"
-									className="block font-medium leading-6 text-2xl"
+									className="block text-2xl font-medium leading-6"
 								>
 									Type:
 								</label>
@@ -111,11 +111,11 @@ const GlobalVariable: FC<NodeProps<GlobalVariableDataType>> = (props) => {
 															setGlobalVariables(newGlobalVariables);
 														}
 													}}
-													className="h-6 w-6 border-slate-400 text-slate-600 focus:ring-slate-600 cursor-pointer"
+													className="h-6 w-6 cursor-pointer border-slate-400 text-slate-600 focus:ring-slate-600"
 												/>
 												<label
 													htmlFor={varType}
-													className="ml-3 block text-2xl font-medium leading-6 text-slate-900 cursor-pointer"
+													className="ml-3 block cursor-pointer text-2xl font-medium leading-6 text-slate-900"
 												>
 													{varType}
 												</label>
@@ -126,7 +126,7 @@ const GlobalVariable: FC<NodeProps<GlobalVariableDataType>> = (props) => {
 							</div>
 							<label
 								htmlFor="response"
-								className="block font-medium leading-6 text-2xl"
+								className="block text-2xl font-medium leading-6"
 							>
 								Initial Value:
 							</label>
@@ -134,7 +134,7 @@ const GlobalVariable: FC<NodeProps<GlobalVariableDataType>> = (props) => {
 							{variableType === 'list' && (
 								<>
 									<div className="nodrag nowheel relative w-full grow overflow-auto">
-										<div className="absolute w-full top-0">
+										<div className="absolute top-0 w-full">
 											{Array.isArray(initialValue) &&
 												initialValue?.map(
 													(
@@ -144,11 +144,11 @@ const GlobalVariable: FC<NodeProps<GlobalVariableDataType>> = (props) => {
 														return (
 															<div
 																key={item.id}
-																className="px-1 py-2 flex items-center gap-1 h-14"
+																className="flex h-14 items-center gap-1 px-1 py-2"
 															>
 																<XCircleIcon
 																	className={
-																		'text-slate-400 hover:text-slate-500 h-10 w-10 flex-shrink-0'
+																		'h-10 w-10 flex-shrink-0 text-slate-400 hover:text-slate-500'
 																	}
 																	aria-hidden="true"
 																	onClick={() => {
@@ -172,13 +172,13 @@ const GlobalVariable: FC<NodeProps<GlobalVariableDataType>> = (props) => {
 																		// delete all edges connected to handle with sourceHandle classification.id
 																	}}
 																/>
-																<form className="w-full relative">
+																<form className="relative w-full">
 																	<div className="relative">
 																		<input
 																			type="text"
 																			name="textType"
 																			className={conditionalClassNames(
-																				'nodrag block py-2 w-full rounded-md border-0 text-slate-900 shadow-sm ring-inset ring-slate-300 placeholder:text-slate-400 ring-2 focus:ring-inset focus:ring-slate-600 sm:py-1.5 sm:text-xl sm:leading-6',
+																				'nodrag block w-full rounded-md border-0 py-2 text-slate-900 shadow-sm ring-2 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-inset focus:ring-slate-600 sm:py-1.5 sm:text-xl sm:leading-6',
 																			)}
 																			value={item.value}
 																			onChange={(e) => {
@@ -218,7 +218,7 @@ const GlobalVariable: FC<NodeProps<GlobalVariableDataType>> = (props) => {
 									</div>
 									<div className="py-4">
 										<button
-											className="w-full text-xl border-4 text-center border-dashed border-slate-400 hover:bg-slate-200 active:bg-slate-300 text-slate-400 text-md font-medium py-1 px-2 rounded"
+											className="text-md w-full rounded border-4 border-dashed border-slate-400 py-1 px-2 text-center text-xl font-medium text-slate-400 hover:bg-slate-200 active:bg-slate-300"
 											onClick={(event) => {
 												event.stopPropagation();
 												event.preventDefault();
@@ -249,7 +249,7 @@ const GlobalVariable: FC<NodeProps<GlobalVariableDataType>> = (props) => {
 									rows={4}
 									name="initialValue"
 									id={`initialValue-${id}`}
-									className="nowheel nodrag text-2xl flex-grow w-full rounded-md border-0 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-1 focus:ring-inset focus:ring-slate-400 sm:leading-10"
+									className="nowheel nodrag w-full flex-grow rounded-md border-0 text-2xl shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-1 focus:ring-inset focus:ring-slate-400 sm:leading-10"
 									value={initialValue as string}
 									onFocus={(e) => {
 										e.target.selectionStart = 0;

@@ -114,7 +114,7 @@ export default function UsernamePrompt({
 												aria-describedby="username-description"
 											/>
 											{isLoading && (
-												<Loading className="animate-spin -ml-1 mr-3 h-5 w-5 text-black" />
+												<Loading className="-ml-1 mr-3 h-5 w-5 animate-spin text-black" />
 											)}
 										</form>
 									</div>

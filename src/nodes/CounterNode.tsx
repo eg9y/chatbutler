@@ -15,7 +15,7 @@ const Counter: FC<NodeProps<CounterDataType>> = (props) => {
 					height: '15rem',
 					width: '15rem',
 				}}
-				className={`m-3 shadow-lg border-2  ${
+				className={`m-3 border-2 shadow-lg  ${
 					selected ? 'border-emerald-600' : 'border-slate-300'
 				} flex items-center justify-center bg-emerald-200`}
 			>
@@ -26,9 +26,9 @@ const Counter: FC<NodeProps<CounterDataType>> = (props) => {
 				type="target"
 				position={Position.Left}
 				id="text-input"
-				className="w-4 h-4"
+				className="h-4 w-4"
 			></Handle>
-			<Handle type="source" position={Position.Right} id="text-output" className="w-4 h-4" />
+			<Handle type="source" position={Position.Right} id="text-output" className="h-4 w-4" />
 		</div>
 	);
 };

@@ -35,7 +35,7 @@ export default function SideNav({
 
 	return (
 		<>
-			<div className="h-full flex">
+			<div className="flex h-full">
 				<Transition.Root show={sidebarOpen} as={Fragment}>
 					<Dialog as="div" className="relative z-50 lg:hidden" onClose={setSidebarOpen}>
 						<Transition.Child
@@ -104,7 +104,7 @@ export default function SideNav({
 															<a
 																className={conditionalClassNames(
 																	'bg-slate-50 text-blue-600',
-																	'cursor-pointer group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold',
+																	'group flex cursor-pointer gap-x-3 rounded-md p-2 text-sm font-semibold leading-6',
 																)}
 															>
 																<ChatBubbleLeftEllipsisIcon
@@ -137,14 +137,14 @@ export default function SideNav({
 																<li key={session.id}>
 																	<a
 																		className={conditionalClassNames(
-																			'text-slate-700 hover:text-blue-600 hover:bg-slate-50',
-																			'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold',
+																			'text-slate-700 hover:bg-slate-50 hover:text-blue-600',
+																			'group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6',
 																		)}
 																	>
 																		<span
 																			className={conditionalClassNames(
-																				'text-slate-400 border-slate-200 group-hover:border-blue-600 group-hover:text-blue-600',
-																				'flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white',
+																				'border-slate-200 text-slate-400 group-hover:border-blue-600 group-hover:text-blue-600',
+																				'flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border bg-white text-[0.625rem] font-medium',
 																			)}
 																		>
 																			{session.workflow
@@ -161,7 +161,7 @@ export default function SideNav({
 																		<span>
 																			<XMarkIcon
 																				className={
-																					'text-slate-400 hover:text-slate-700 h-5 w-5 flex-shrink-0'
+																					'h-5 w-5 flex-shrink-0 text-slate-400 hover:text-slate-700'
 																				}
 																				aria-hidden="true"
 																				onClick={() => {
@@ -237,7 +237,7 @@ export default function SideNav({
 				</Transition.Root>
 
 				{/* Static sidebar for desktop */}
-				<div className="hidden lg:sticky lg:inset-y-0 lg:z-40 lg:flex lg:w-72 lg:flex-col h-[95vh] pt-4">
+				<div className="hidden h-[95vh] pt-4 lg:sticky lg:inset-y-0 lg:z-40 lg:flex lg:w-72 lg:flex-col">
 					{/* Sidebar component, swap this element with another sidebar if you like */}
 					<div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-slate-200 bg-white px-6">
 						<nav className="flex flex-1 flex-col">
@@ -245,7 +245,7 @@ export default function SideNav({
 								<a
 									className={conditionalClassNames(
 										'bg-slate-50 text-blue-600',
-										'group flex gap-x-3 rounded-md  text-lg leading-6 font-semibold',
+										'group flex gap-x-3 rounded-md  text-lg font-semibold leading-6',
 									)}
 								>
 									<ChatBubbleLeftEllipsisIcon
@@ -300,8 +300,8 @@ export default function SideNav({
 													className={conditionalClassNames(
 														currentChatSessionIndex === index
 															? 'bg-slate-50 text-blue-600'
-															: 'text-slate-700 hover:text-blue-600 hover:bg-slate-50',
-														'cursor-pointer group flex justify-between gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold',
+															: 'text-slate-700 hover:bg-slate-50 hover:text-blue-600',
+														'group flex cursor-pointer justify-between gap-x-3 rounded-md p-2 text-sm font-semibold leading-6',
 													)}
 												>
 													{session.workflow && (
@@ -310,8 +310,8 @@ export default function SideNav({
 																className={conditionalClassNames(
 																	// session.current
 																	// ? 'text-blue-600 border-blue-600'
-																	'text-slate-400 border-slate-200 group-hover:border-blue-600 group-hover:text-blue-600',
-																	'flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white',
+																	'border-slate-200 text-slate-400 group-hover:border-blue-600 group-hover:text-blue-600',
+																	'flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border bg-white text-[0.625rem] font-medium',
 																)}
 															>
 																{session.workflow.name[0]}
@@ -326,7 +326,7 @@ export default function SideNav({
 													<span>
 														<XMarkIcon
 															className={
-																'text-slate-400 hover:text-slate-700 h-5 w-5 flex-shrink-0'
+																'h-5 w-5 flex-shrink-0 text-slate-400 hover:text-slate-700'
 															}
 															aria-hidden="true"
 															onClick={() => {
@@ -370,7 +370,7 @@ export default function SideNav({
 					</button>
 				</div>
 
-				<main className="grow lg:pl-4 px-2 sm:px-1 lg:px-8">{children}</main>
+				<main className="grow px-2 sm:px-1 lg:px-8 lg:pl-4">{children}</main>
 			</div>
 		</>
 	);
@@ -403,12 +403,12 @@ function NewChatSessionButton({
 				}}
 				className={conditionalClassNames(
 					// ? 'bg-slate-50 text-blue-600'
-					'cursor-pointer group flex items-center gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold text-slate-700 hover:text-blue-600 hover:bg-slate-50 ring-1 ring-slate-400',
+					'group flex cursor-pointer items-center gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-slate-700 ring-1 ring-slate-400 hover:bg-slate-50 hover:text-blue-600',
 				)}
 			>
 				<span>
 					<PlusIcon
-						className={'hover:text-slate-700 h-5 w-5 flex-shrink-0'}
+						className={'h-5 w-5 flex-shrink-0 hover:text-slate-700'}
 						aria-hidden="true"
 						onClick={() => {
 							// placeholder

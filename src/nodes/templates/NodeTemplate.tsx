@@ -82,28 +82,28 @@ const NodeTemplate: FC<
 		<div
 			className={conditionalClassNames(
 				data.isDetailMode && '35rem',
-				selected ? `${getRingColor(color)} ring-8` : 'ring-slate-400 ring-2',
-				'h-full flex flex-col rounded-xl bg-slate-100',
+				selected ? `${getRingColor(color)} ring-8` : 'ring-2 ring-slate-400',
+				'flex h-full flex-col rounded-xl bg-slate-100',
 			)}
 		>
 			<NodeToolbar position={Position.Top} isVisible={data.isLoading}>
-				<Loading className="animate-spin h-12 w-12 text-green-500" />
+				<Loading className="h-12 w-12 animate-spin text-green-500" />
 			</NodeToolbar>
 			<NodeToolbar
 				position={Position.Right}
 				isVisible={!!data.loopId && data.children.length === 0}
-				className="grow flex items-center"
+				className="flex grow items-center"
 			>
-				<ArrowPathIcon className="h-20 w-20 mx-auto text-slate-700/80" />
+				<ArrowPathIcon className="mx-auto h-20 w-20 text-slate-700/80" />
 			</NodeToolbar>
 			<div
 				className={conditionalClassNames(
 					getBackgroundColor(color),
-					data.isDetailMode ? 'p-4' : 'pt-10 pb-5 px-4',
-					`p-4 flex gap-2 justify-between items-center border-b-1 border-slate-400 rounded-t-lg text-3xl `,
+					data.isDetailMode ? 'p-4' : 'px-4 pt-10 pb-5',
+					`flex items-center justify-between gap-2 rounded-t-lg border-b-1 border-slate-400 p-4 text-3xl `,
 				)}
 			>
-				<div className="flex gap-2 items-center ">
+				<div className="flex items-center gap-2 ">
 					<h1 className={conditionalClassNames(!data.isDetailMode && 'text-4xl')}>
 						<span className="font-semibold opacity-70">
 							{title}
@@ -142,7 +142,7 @@ const NodeTemplate: FC<
 			<div
 				className={conditionalClassNames(
 					data.isDetailMode ? 'h-14 text-2xl' : 'py-10 text-5xl',
-					'px-4 gap-6 w-full flex justify-between items-center bg-slate-100 text-slate-800',
+					'flex w-full items-center justify-between gap-6 bg-slate-100 px-4 text-slate-800',
 				)}
 			>
 				{data.isDetailMode ? (
@@ -154,13 +154,13 @@ const NodeTemplate: FC<
 						</label>
 					)
 				) : (
-					<label htmlFor="text" className="block font-medium text-center grow">
+					<label htmlFor="text" className="block grow text-center font-medium">
 						{data.name}
 					</label>
 				)}
 
 				<ArrowsPointingOutIcon
-					className={'text-slate-500 hover:text-slate-800  h-8 w-8 flex-shrink-0'}
+					className={'h-8 w-8  flex-shrink-0 text-slate-500 hover:text-slate-800'}
 					aria-hidden="true"
 					onClick={() => {
 						setShowFullScreen(!showFullScreen);
@@ -182,7 +182,7 @@ const NodeTemplate: FC<
 const Content: FC<{
 	children: React.ReactNode;
 }> = ({ children }) => {
-	return <div className="h-full flex flex-col gap-1 px-4 pb-4 text-slate-900">{children}</div>;
+	return <div className="flex h-full flex-col gap-1 px-4 pb-4 text-slate-900">{children}</div>;
 };
 
 export default memo(NodeTemplate);

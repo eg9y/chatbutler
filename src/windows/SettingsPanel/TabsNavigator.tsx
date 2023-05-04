@@ -48,7 +48,7 @@ export default function TabsNavigator({
 									tab.name === selected
 										? 'border-slate-500 text-slate-600'
 										: 'border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700',
-									'whitespace-nowrap border-b-2 pt-1 mb-2 px-1 text-sm font-medium cursor-pointer',
+									'mb-2 cursor-pointer whitespace-nowrap border-b-2 px-1 pt-1 text-sm font-medium',
 								)}
 								onClick={() => setSelected(tab.name)}
 								aria-current={tab.name === selected ? 'page' : undefined}
@@ -58,7 +58,7 @@ export default function TabsNavigator({
 										{
 											<tab.icon
 												className={
-													'text-slate-400 group-hover:text-slate-500 -ml-1 mr-1 h-4 w-4 flex-shrink-0'
+													'-ml-1 mr-1 h-4 w-4 flex-shrink-0 text-slate-400 group-hover:text-slate-500'
 												}
 												aria-hidden="true"
 											/>

@@ -39,9 +39,9 @@ const Text: FC<NodeProps<ClassifyNodeCategoriesDataType>> = (props) => {
 				style={{
 					width: '25rem',
 				}}
-				className={`my-3 bg-rose-50 shadow-lg border-2 border-slate-400 flex flex-col rounded-lg `}
+				className={`my-3 flex flex-col rounded-lg border-2 border-slate-400 bg-rose-50 shadow-lg `}
 			>
-				<div className="h-full p-4 flex flex-col gap-2">
+				<div className="flex h-full flex-col gap-2 p-4">
 					<p className="text-2xl font-semibold">Categories</p>
 					<div className="relative">
 						{classifications?.map(
@@ -49,11 +49,11 @@ const Text: FC<NodeProps<ClassifyNodeCategoriesDataType>> = (props) => {
 								return (
 									<div
 										key={classification.id}
-										className="px-1 py-2 flex items-center gap-1 h-14"
+										className="flex h-14 items-center gap-1 px-1 py-2"
 									>
 										<XCircleIcon
 											className={
-												'text-rose-400 hover:text-red-500 h-10 w-10 flex-shrink-0'
+												'h-10 w-10 flex-shrink-0 text-rose-400 hover:text-red-500'
 											}
 											aria-hidden="true"
 											onClick={() => {
@@ -76,13 +76,13 @@ const Text: FC<NodeProps<ClassifyNodeCategoriesDataType>> = (props) => {
 												// delete all edges connected to handle with sourceHandle classification.id
 											}}
 										/>
-										<form className="w-full relative">
+										<form className="relative w-full">
 											<div className="relative">
 												<input
 													type="text"
 													name="textType"
 													className={conditionalClassNames(
-														'nodrag block py-2 w-full rounded-md border-0 text-slate-900 shadow-sm ring-inset ring-slate-300 placeholder:text-slate-400 ring-2 focus:ring-inset focus:ring-slate-600 sm:py-1.5 sm:text-xl sm:leading-6',
+														'nodrag block w-full rounded-md border-0 py-2 text-slate-900 shadow-sm ring-2 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-inset focus:ring-slate-600 sm:py-1.5 sm:text-xl sm:leading-6',
 													)}
 													value={classification.value}
 													placeholder="category A"
@@ -112,7 +112,7 @@ const Text: FC<NodeProps<ClassifyNodeCategoriesDataType>> = (props) => {
 													classification.value && (
 													<CheckCircleIcon
 														className={
-															'text-green-600 h-full w-6 absolute top-0 right-1'
+															'absolute top-0 right-1 h-full w-6 text-green-600'
 														}
 														aria-hidden="true"
 													/>
@@ -123,7 +123,7 @@ const Text: FC<NodeProps<ClassifyNodeCategoriesDataType>> = (props) => {
 													type="source"
 													position={Position.Right}
 													id={`${classification.id}::${index}`}
-													className="w-4 h-4 -right-7"
+													className="-right-7 h-4 w-4"
 												/>
 											</Fragment>
 										</form>
@@ -133,16 +133,16 @@ const Text: FC<NodeProps<ClassifyNodeCategoriesDataType>> = (props) => {
 						)}
 					</div>
 					<div className="relative">
-						<p className="text-xl text-end font-semibold">None of the above</p>
+						<p className="text-end text-xl font-semibold">None of the above</p>
 						<Handle
 							type="source"
 							position={Position.Right}
 							id={`${NodeTypesEnum.classifyCategories}::none`}
-							className="w-4 h-4 bg-red-400 -right-6"
+							className="-right-6 h-4 w-4 bg-red-400"
 						/>
 					</div>
 					<button
-						className="text-xl border-4 text-center border-dashed border-rose-400 hover:bg-rose-100 text-rose-400 text-md font-medium py-1 px-2 rounded"
+						className="text-md rounded border-4 border-dashed border-rose-400 py-1 px-2 text-center text-xl font-medium text-rose-400 hover:bg-rose-100"
 						onClick={(event) => {
 							event.stopPropagation();
 							event.preventDefault();

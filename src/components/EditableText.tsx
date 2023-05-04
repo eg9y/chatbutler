@@ -78,7 +78,7 @@ const EditableText = ({
 		'border-none outline-none focus:ring-0 focus:border-none text-gray-800 w-full';
 
 	return (
-		<div className="text-lg bg-slate-50 flex items-center">
+		<div className="flex items-center bg-slate-50 text-lg">
 			{currentWorkflow && !isEditing && (
 				<p
 					onClick={handleTextClick}
@@ -87,7 +87,7 @@ const EditableText = ({
 						whiteSpace: 'normal',
 						maxWidth: '100%',
 					}}
-					className={`font-medium text-gray-800 cursor-pointer`}
+					className={`cursor-pointer font-medium text-gray-800`}
 				>
 					{currentWorkflow.name}
 				</p>

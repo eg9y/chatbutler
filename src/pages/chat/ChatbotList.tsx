@@ -30,7 +30,7 @@ export default function ChatBotList({
 }) {
 	return (
 		<div>
-			<h2 className="text-lg font-semibold text-slate-800 pt-4">Choose your chatbot</h2>
+			<h2 className="pt-4 text-lg font-semibold text-slate-800">Choose your chatbot</h2>
 			<ul
 				role="list"
 				className="mt-3 grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4"
@@ -41,7 +41,7 @@ export default function ChatBotList({
 						onClick={() => {
 							onClick(chatbot);
 						}}
-						className="cursor-pointer col-span-1 flex rounded-md shadow-sm"
+						className="col-span-1 flex cursor-pointer rounded-md shadow-sm"
 					>
 						<div
 							className={conditionalClassNames(
@@ -51,7 +51,7 @@ export default function ChatBotList({
 						>
 							{chatbot.name[0]}
 						</div>
-						<div className="hover:bg-slate-100 flex flex-1 items-center justify-between truncate rounded-r-md border-b border-r border-t border-slate-200 bg-white">
+						<div className="flex flex-1 items-center justify-between truncate rounded-r-md border-b border-r border-t border-slate-200 bg-white hover:bg-slate-100">
 							<div className="flex-1 truncate px-4 py-2 text-sm">
 								<a className="font-medium text-slate-900 hover:text-slate-600">
 									{chatbot.name}

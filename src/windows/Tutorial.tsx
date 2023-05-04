@@ -71,11 +71,11 @@ export default function Tutorial({
 								style={{
 									height: '90vh',
 								}}
-								className="relative transform rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full max-w-full sm:p-6 mx-10 flex flex-col"
+								className="relative mx-10 flex max-w-full transform flex-col rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:p-6"
 							>
 								<Dialog.Title
 									as="div"
-									className="text-3xl pl-4  font-semibold leading-6 text-slate-900 pb-4 flex gap-12"
+									className="flex gap-12  pl-4 pb-4 text-3xl font-semibold leading-6 text-slate-900"
 								>
 									<h1>Tutorial</h1>
 									<h2>{page}</h2>
@@ -84,8 +84,8 @@ export default function Tutorial({
 									<div className="w-40">
 										<SideBar page={page} setPage={setPage} />
 									</div>
-									<div className="relative overflow-y-scroll w-full">
-										<div className="absolute px-6 w-full py-4 prose prose-h2:m-1">
+									<div className="relative w-full overflow-y-scroll">
+										<div className="prose absolute w-full px-6 py-4 prose-h2:m-1">
 											<MDXProvider>
 												{page === 'Overview' && (
 													<Overview setPage={setPage} />
@@ -123,7 +123,7 @@ function SideBar({ page, setPage }: { page: string; setPage: (page: string) => v
 												page === item.name
 													? 'bg-slate-300'
 													: 'hover:bg-slate-50',
-												'cursor-pointer block rounded-md py-2 pr-2 pl-10 text-sm leading-6 font-semibold text-slate-700',
+												'block cursor-pointer rounded-md py-2 pr-2 pl-10 text-sm font-semibold leading-6 text-slate-700',
 											)}
 											onClick={() => setPage(item.name)}
 										>
@@ -138,7 +138,7 @@ function SideBar({ page, setPage }: { page: string; setPage: (page: string) => v
 															page === item.name
 																? 'bg-slate-300'
 																: 'hover:bg-slate-50',
-															'flex items-center w-full text-left rounded-md p-2 gap-x-3 text-sm leading-6 font-semibold text-slate-700',
+															'flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm font-semibold leading-6 text-slate-700',
 														)}
 														onClick={() => setPage(item.name)}
 													>
@@ -161,7 +161,7 @@ function SideBar({ page, setPage }: { page: string; setPage: (page: string) => v
 																		page === subItem.name
 																			? 'bg-slate-300'
 																			: 'hover:bg-slate-50',
-																		'cursor-pointer block rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-slate-700',
+																		'block cursor-pointer rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-slate-700',
 																	)}
 																	onClick={() =>
 																		setPage(subItem.name)

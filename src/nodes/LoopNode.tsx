@@ -42,7 +42,7 @@ const Loop: FC<NodeProps<LoopDataType>> = (props) => {
 								<input
 									type="number"
 									name="loopMax"
-									className="nodrag block h-16 w-1/2 rounded-md border-0 text-slate-900 shadow-sm ring-inset ring-slate-300 placeholder:text-slate-400 ring-2 focus:ring-inset focus:ring-slate-600 sm:py-1.5 sm:text-xl sm:leading-6"
+									className="nodrag block h-16 w-1/2 rounded-md border-0 text-slate-900 shadow-sm ring-2 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-inset focus:ring-slate-600 sm:py-1.5 sm:text-xl sm:leading-6"
 									value={data.loopMax}
 									onChange={(e) => {
 										if (isNaN(parseInt(e.target.value))) {
@@ -56,14 +56,14 @@ const Loop: FC<NodeProps<LoopDataType>> = (props) => {
 									}}
 								/>
 							</div>
-							<div className="grow flex flex-col gap-2 text-md">
+							<div className="text-md flex grow flex-col gap-2">
 								<p className="text-2xl">Input:</p>
 								<TextAreaTemplate
 									{...props}
 									presentText={presentText}
 									setText={setText}
 								/>
-								<div className="flex flex-col gap-2 text-md ">
+								<div className="text-md flex flex-col gap-2 ">
 									<InputNodesList
 										data={data}
 										id={id}
@@ -73,7 +73,7 @@ const Loop: FC<NodeProps<LoopDataType>> = (props) => {
 									/>
 								</div>
 							</div>
-							<div className="flex justify-center items-center">
+							<div className="flex items-center justify-center">
 								<p className="text-5xl">{data.loopCount > 0 && data.loopCount}</p>
 								<ArrowPathIcon
 									className={conditionalClassNames(
@@ -92,7 +92,7 @@ const Loop: FC<NodeProps<LoopDataType>> = (props) => {
 				type="target"
 				position={Position.Left}
 				id="text-input"
-				className="w-4 h-4"
+				className="h-4 w-4"
 			></Handle>
 			<Handle
 				type="source"
@@ -103,9 +103,9 @@ const Loop: FC<NodeProps<LoopDataType>> = (props) => {
 					top: '33.333333%',
 					backgroundColor: 'rgb(209 250 229)',
 				}}
-				className="h-10 flex gap-1 border-1 border-slate-700"
+				className="flex h-10 gap-1 border-1 border-slate-700"
 			>
-				<p className="bg-transparent  border-slate-700 text-2xl font-bold self-center -z-10 pointer-events-none p-1">
+				<p className="pointer-events-none  -z-10 self-center border-slate-700 bg-transparent p-1 text-2xl font-bold">
 					Done
 				</p>
 			</Handle>
@@ -118,9 +118,9 @@ const Loop: FC<NodeProps<LoopDataType>> = (props) => {
 					top: '66.666667%',
 					backgroundColor: 'rgb(209 250 229)',
 				}}
-				className="h-10 flex gap-1 border-1 border-slate-700"
+				className="flex h-10 gap-1 border-1 border-slate-700"
 			>
-				<p className="bg-transparent  border-slate-700 text-2xl font-bold self-center -z-10 pointer-events-none p-1">
+				<p className="pointer-events-none  -z-10 self-center border-slate-700 bg-transparent p-1 text-2xl font-bold">
 					Loop
 				</p>
 			</Handle>

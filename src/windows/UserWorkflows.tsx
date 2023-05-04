@@ -48,8 +48,8 @@ export default function UserWorkflows({
 				{workflows.map((workflow) => (
 					<li
 						key={workflow.id}
-						className="col-span-1 flex flex-col divide-y divide-gray-300 rounded-lg bg-white text-center 
-					shadow border-1 border-slate-400"
+						className="col-span-1 flex flex-col divide-y divide-gray-300 rounded-lg border-1 border-slate-400 
+					bg-white text-center shadow"
 					>
 						<div className="flex flex-1 flex-col p-2">
 							<h3 className="mt-6 text-sm font-medium text-gray-900">
@@ -60,9 +60,9 @@ export default function UserWorkflows({
 							<div className="-mt-px flex divide-x divide-gray-300">
 								<div className="flex w-0 flex-1">
 									<a
-										className="relative -mr-px inline-flex w-0 flex-1 items-center 
-                                        cursor-pointer hover:bg-slate-200
-                                    justify-center gap-x-3 rounded-bl-lg border border-transparent py-4 text-sm font-semibold text-gray-900"
+										className="relative -mr-px inline-flex w-0 flex-1 cursor-pointer 
+                                        items-center justify-center
+                                    gap-x-3 rounded-bl-lg border border-transparent py-4 text-sm font-semibold text-gray-900 hover:bg-slate-200"
 										onClick={() =>
 											openWorkflow(
 												setIsLoading,
@@ -87,8 +87,8 @@ export default function UserWorkflows({
 								</div>
 								<div className="-ml-px flex w-0 flex-1">
 									<a
-										className="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border 
-                                    border-transparent py-4 text-sm font-semibold text-gray-900 cursor-pointer hover:bg-slate-200"
+										className="relative inline-flex w-0 flex-1 cursor-pointer items-center justify-center gap-x-3 rounded-br-lg 
+                                    border border-transparent py-4 text-sm font-semibold text-gray-900 hover:bg-slate-200"
 										onClick={async () => {
 											setWorkflows(
 												workflows.filter((w) => w.id !== workflow.id),
@@ -150,23 +150,23 @@ export default function UserWorkflows({
 									height: workflowNameWindowOpen ? '20vh' : '70vh',
 									width: workflowNameWindowOpen ? '20vw' : '100%',
 								}}
-								className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full max-w-full sm:p-6 mx-10 flex flex-col"
+								className="relative mx-10 flex max-w-full transform flex-col overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:p-6"
 							>
 								{workflowNameWindowOpen && (
 									<>
 										<Dialog.Title
 											as="h3"
-											className="text-xl font-semibold leading-6 text-gray-900 pb-4 flex gap-2"
+											className="flex gap-2 pb-4 text-xl font-semibold leading-6 text-gray-900"
 										>
 											Chatbot name?
 											<span>
 												{isLoading && (
-													<Loading className="animate-spin -ml-1 mr-3 h-7 w-7 text-black" />
+													<Loading className="-ml-1 mr-3 h-7 w-7 animate-spin text-black" />
 												)}
 											</span>
 										</Dialog.Title>
 										<form
-											className="flex flex-col justify-between h-full items-start gap-2"
+											className="flex h-full flex-col items-start justify-between gap-2"
 											onSubmit={async (e) => {
 												e.preventDefault();
 												setIsLoading(true);
@@ -225,8 +225,8 @@ export default function UserWorkflows({
 											/>
 											<button
 												type="submit"
-												className="group p-2 rounded-md text-md font-medium text-slate-100 
-									bg-green-500 hover:bg-green-400  cursor-pointer w-full"
+												className="text-md group w-full cursor-pointer rounded-md bg-green-500 
+									p-2 font-medium  text-slate-100 hover:bg-green-400"
 											>
 												<span className="truncate">Set</span>
 											</button>
@@ -237,20 +237,20 @@ export default function UserWorkflows({
 									<>
 										<Dialog.Title
 											as="h3"
-											className="text-3xl font-semibold leading-6 text-gray-900 pb-4 flex gap-2"
+											className="flex gap-2 pb-4 text-3xl font-semibold leading-6 text-gray-900"
 										>
 											My Chatbots
 											<span>
 												{isLoading && (
-													<Loading className="animate-spin -ml-1 mr-3 h-7 w-7 text-black" />
+													<Loading className="-ml-1 mr-3 h-7 w-7 animate-spin text-black" />
 												)}
 											</span>
 										</Dialog.Title>
 										<GridList />
-										<div className="mt-5 sm:mt-6 flex flex-col grow items-end justify-end">
+										<div className="mt-5 flex grow flex-col items-end justify-end sm:mt-6">
 											<a
-												className="group p-2 flex items-center rounded-md text-xl font-medium text-slate-100 
-									bg-green-500 hover:bg-green-400  cursor-pointer "
+												className="group flex cursor-pointer items-center rounded-md bg-green-500 p-2 text-xl 
+									font-medium text-slate-100  hover:bg-green-400 "
 												onClick={async () => {
 													const id = nanoid();
 													const { data, error } = await supabase
@@ -280,7 +280,7 @@ export default function UserWorkflows({
 											>
 												<PlusIcon
 													className={
-														'text-slate-100  -ml-1 mr-3 h-6 w-6 flex-shrink-0'
+														'-ml-1  mr-3 h-6 w-6 flex-shrink-0 text-slate-100'
 													}
 													aria-hidden="true"
 												/>

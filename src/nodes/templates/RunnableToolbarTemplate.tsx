@@ -13,13 +13,13 @@ export default function RunnableToolbarTemplate(
 	return (
 		<NodeToolbar offset={0} isVisible={data.isBreakpoint || selected}>
 			{/* TODO: Breakpoints */}
-			<div className="flex gap-2 justify-end items-center text-md">
+			<div className="text-md flex items-center justify-end gap-2">
 				<button
 					className={conditionalClassNames(
 						data.isBreakpoint
 							? 'bg-red-900 text-red-500'
-							: 'bg-yellow-20/50 text-yellow-500 font-semibold border-1 border-yellow-500',
-						'  text-md py-1 px-2 rounded flex items-center',
+							: 'bg-yellow-20/50 border-1 border-yellow-500 font-semibold text-yellow-500',
+						'  text-md flex items-center rounded py-1 px-2',
 					)}
 					onClick={() => {
 						data.isBreakpoint = !data.isBreakpoint;

@@ -54,14 +54,14 @@ const ChipsInput = ({
 			<label htmlFor={propertyName} className="block text-sm font-medium text-slate-900">
 				{propertyName}
 			</label>
-			<div className="bg-white rounded-md shadow-sm border px-1 w-full">
+			<div className="w-full rounded-md border bg-white px-1 shadow-sm">
 				<input
 					type="text"
 					name={propertyName}
 					value={inputValue}
 					onChange={(e) => setInputValue(e.target.value)}
 					onKeyDown={handleKeyDown}
-					className="h-1/2 w-full outline-none focus:outline-none form-input focus:ring-0 focus:ring-offset-0 border-0 px-0"
+					className="form-input h-1/2 w-full border-0 px-0 outline-none focus:outline-none focus:ring-0 focus:ring-offset-0"
 				/>
 			</div>
 			<div className="flex flex-wrap gap-1 pt-2">
@@ -81,7 +81,7 @@ const Chip = ({
 	removeStopword: (stopword: string) => void;
 }) => {
 	return (
-		<span className="inline-flex items-center bg-blue-200 text-blue-800 text-xs rounded-full px-3 py-1">
+		<span className="inline-flex items-center rounded-full bg-blue-200 px-3 py-1 text-xs text-blue-800">
 			<button className="" onClick={() => removeStopword(stopword)}>
 				{stopword}
 			</button>

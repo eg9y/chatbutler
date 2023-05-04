@@ -43,9 +43,9 @@ const ChatMessage: FC<NodeProps<ChatMessageNodeDataType>> = (props) => {
 					labelComponent={(
 						updateNode: (id: string, data: ChatMessageNodeDataType) => void,
 					) => (
-						<div className="font-medium leading-6 relative flex items-end p-1">
+						<div className="relative flex items-end p-1 font-medium leading-6">
 							<div
-								className="bg-purple-300 rounded-lg  p-2 rounded-br-none text-2xl cursor-pointer text-slate-700 font-semibold hover:font-bold hover:text-yellow-100"
+								className="cursor-pointer rounded-lg  rounded-br-none bg-purple-300 p-2 text-2xl font-semibold text-slate-700 hover:font-bold hover:text-yellow-100"
 								onClick={() => {
 									if (data.role === 'user') {
 										updateNode(id, {
@@ -89,7 +89,7 @@ const ChatMessage: FC<NodeProps<ChatMessageNodeDataType>> = (props) => {
 								presentText={presentText}
 								setText={setText}
 							/>
-							<div className="flex flex-col gap-2 text-md ">
+							<div className="text-md flex flex-col gap-2 ">
 								<InputNodesList
 									data={data}
 									id={id}
@@ -106,9 +106,9 @@ const ChatMessage: FC<NodeProps<ChatMessageNodeDataType>> = (props) => {
 				type="target"
 				position={Position.Left}
 				id="chat-message-input"
-				className="w-4 h-4"
+				className="h-4 w-4"
 			></Handle>
-			<Handle type="source" position={Position.Right} id="chat-message" className="w-4 h-4" />
+			<Handle type="source" position={Position.Right} id="chat-message" className="h-4 w-4" />
 		</>
 	);
 };

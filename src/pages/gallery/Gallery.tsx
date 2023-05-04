@@ -172,7 +172,7 @@ export default function Gallery() {
 	return (
 		<div className="bg-white">
 			<div className="mx-auto max-w-2xl py-10 px-20 sm:py-4 sm:px-6 lg:max-w-7xl lg:px-20">
-				<h1 className="text-2xl font-bold mb-6">Chatbot Gallery</h1>
+				<h1 className="mb-6 text-2xl font-bold">Chatbot Gallery</h1>
 				{isLoading ? <div>Loading...</div> : <Card publicWorkflows={publicWorkflows} />}
 			</div>
 		</div>
@@ -181,18 +181,18 @@ export default function Gallery() {
 
 const Card = ({ publicWorkflows }: { publicWorkflows: PublicWorkflow[] }) => {
 	return (
-		<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+		<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
 			{publicWorkflows.map((item, index) => (
 				<div
 					key={index}
-					className="border-1 border-slate-300
-					shadow-md
+					className="flex flex-col
 					rounded-md
-					hover:shadow-lg transition-shadow duration-300 ease-in-out
-					flex flex-col
+					border-1
+					border-slate-300 shadow-md transition-shadow duration-300
+					ease-in-out hover:shadow-lg
 					"
 				>
-					<div className="bg-white flex flex-col rounded-md p-4 items-start justify-center space-y-4 grow">
+					<div className="flex grow flex-col items-start justify-center space-y-4 rounded-md bg-white p-4">
 						{/* {item.image ? (
 							<img
 								src={item.image}
@@ -201,22 +201,22 @@ const Card = ({ publicWorkflows }: { publicWorkflows: PublicWorkflow[] }) => {
 							/>
 						) : (
 							)} */}
-						<div className="flex flex-col gap-1 w-full truncate">
+						<div className="flex w-full flex-col gap-1 truncate">
 							<p className="text-xs text-slate-500">{item.profiles?.first_name}</p>
-							<h2 className="text-md font-semibold truncate">{item.name}</h2>
+							<h2 className="text-md truncate font-semibold">{item.name}</h2>
 						</div>
 						<div className="flex flex-col gap-1">
 							<p className="text-sm">{item?.description}</p>
 							{item.description && item.description.length > 0 && (
-								<a className="text-blue-600 text-sm cursor-pointer">Read more...</a>
+								<a className="cursor-pointer text-sm text-blue-600">Read more...</a>
 							)}
 						</div>
 					</div>
-					<div className="flex border-t-1 border-slate-300 w-full">
+					<div className="flex w-full border-t-1 border-slate-300">
 						<div className="flex w-0 flex-1 border-r-1 border-slate-300  hover:bg-slate-100">
 							<a
-								className="relative -mr-px inline-flex w-0 flex-1 items-center 
-                                        cursor-pointer
+								className="relative -mr-px inline-flex w-0 flex-1 cursor-pointer 
+                                        items-center
                                     justify-center gap-x-3 border border-transparent py-4 text-sm font-semibold text-gray-900"
 								onClick={async () => {
 									window.open(
@@ -230,8 +230,8 @@ const Card = ({ publicWorkflows }: { publicWorkflows: PublicWorkflow[] }) => {
 						</div>
 						<div className="flex w-0 flex-1  hover:bg-slate-100">
 							<a
-								className="relative -mr-px inline-flex w-0 flex-1 items-center 
-                                        cursor-pointer
+								className="relative -mr-px inline-flex w-0 flex-1 cursor-pointer 
+                                        items-center
                                     justify-center gap-x-3 border border-transparent py-4 text-sm font-semibold text-gray-900"
 								onClick={async () => {
 									window.open(

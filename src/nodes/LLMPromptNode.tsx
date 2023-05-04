@@ -50,7 +50,7 @@ const LLMPrompt: FC<NodeProps<LLMPromptNodeDataType>> = (props) => {
 								presentText={presentText}
 								setText={setText}
 							/>
-							<div className="flex flex-col gap-2 text-md ">
+							<div className="text-md flex flex-col gap-2 ">
 								<InputNodesList
 									data={data}
 									id={id}
@@ -70,7 +70,7 @@ const LLMPrompt: FC<NodeProps<LLMPromptNodeDataType>> = (props) => {
 				}}
 				className={conditionalClassNames(
 					!data.isDetailMode && '-right-1/2',
-					'space-y-1 absolute w-full',
+					'absolute w-full space-y-1',
 				)}
 				defaultOpen={data.response.length > 0}
 			>
@@ -79,11 +79,11 @@ const LLMPrompt: FC<NodeProps<LLMPromptNodeDataType>> = (props) => {
 						<Disclosure.Button
 							className={conditionalClassNames(
 								open ? 'border-b-slate-300' : '',
-								'flex justify-between border-1 border-slate-400 bg-slate-200 text-slate-900 group px-2 w-full items-center rounded-t-md py-2 pr-2 text-left text-md font-semibold',
+								'text-md group flex w-full items-center justify-between rounded-t-md border-1 border-slate-400 bg-slate-200 px-2 py-2 pr-2 text-left font-semibold text-slate-900',
 							)}
 							disabled={data.response.length === 0}
 						>
-							<p className="flex gap-1 items-center pl-2">
+							<p className="flex items-center gap-1 pl-2">
 								<SignalIcon
 									className={conditionalClassNames(
 										data.response.length > 0
@@ -111,7 +111,7 @@ const LLMPrompt: FC<NodeProps<LLMPromptNodeDataType>> = (props) => {
 									strokeWidth={1.5}
 									stroke="currentColor"
 									className={conditionalClassNames(
-										open ? 'transform rotate-180' : '',
+										open ? 'rotate-180 transform' : '',
 										'h-6 w-6',
 									)}
 								>
@@ -123,10 +123,10 @@ const LLMPrompt: FC<NodeProps<LLMPromptNodeDataType>> = (props) => {
 								</svg>
 							)}
 						</Disclosure.Button>
-						<Disclosure.Panel className="space-y-1 mb-10">
+						<Disclosure.Panel className="mb-10 space-y-1">
 							<div
-								className="p-3 bg-slate-50 border-1 border-t-0 
-							border-slate-400 rounded-b-lg flex flex-col justify-between gap-4 items-end"
+								className="flex flex-col items-end justify-between 
+							gap-4 rounded-b-lg border-1 border-t-0 border-slate-400 bg-slate-50 p-3"
 							>
 								<p>{data.response}</p>
 								<ClipboardIcon
@@ -147,9 +147,9 @@ const LLMPrompt: FC<NodeProps<LLMPromptNodeDataType>> = (props) => {
 				type="target"
 				position={Position.Left}
 				id="text-input"
-				className="w-4 h-4"
+				className="h-4 w-4"
 			></Handle>
-			<Handle type="source" position={Position.Right} id="text-output" className="w-4 h-4" />
+			<Handle type="source" position={Position.Right} id="text-output" className="h-4 w-4" />
 		</>
 	);
 };

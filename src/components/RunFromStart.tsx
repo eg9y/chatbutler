@@ -86,7 +86,7 @@ export default function RunFromStart({
 		<button
 			className={conditionalClassNames(
 				isLoading ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-500 hover:bg-blue-600 ',
-				'text-white text-md font-semibold py-1 px-2  rounded flex items-center',
+				'text-md flex items-center rounded py-1  px-2 font-semibold text-white',
 			)}
 			onClick={async () => {
 				if (!isLoading) {
@@ -97,7 +97,7 @@ export default function RunFromStart({
 			}}
 		>
 			{isLoading ? (
-				<Loading className="animate-spin -ml-1 mr-3 h-7 w-7 text-black" />
+				<Loading className="-ml-1 mr-3 h-7 w-7 animate-spin text-black" />
 			) : (
 				<ChevronDoubleRightIcon className="h-7 w-7 text-white" />
 			)}

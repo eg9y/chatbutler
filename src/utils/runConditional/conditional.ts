@@ -64,8 +64,6 @@ function conditional(
 			edge.source === node.id && childrenNodes.map((child) => child.id).includes(edge.target),
 	);
 
-	console.log('ispass', isPass);
-
 	const passingChildrenNodes = sourceTargetEdge
 		.filter((edge) => {
 			if (isPass) {
@@ -75,7 +73,6 @@ function conditional(
 		})
 		.map((edge) => get().nodes.find((node) => node.id === edge.target) as CustomNode);
 
-	console.log(passingChildrenNodes);
 	// Update this part to store skipped nodes and their children
 	childrenNodes.forEach((child) => {
 		if (!passingChildrenNodes.includes(child)) {

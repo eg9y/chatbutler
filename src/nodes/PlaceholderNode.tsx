@@ -28,7 +28,7 @@ const PlaceholderNode: FC<NodeProps<PlaceholderDataType>> = ({ data, id }) => {
 			onClick={onPlaceholderClick}
 		>
 			<PlusIcon
-				className={'text-slate-300 group-hover:text-slate-400  h-24 w-24 flex-shrink-0'}
+				className={'h-24 w-24  flex-shrink-0 text-slate-300 group-hover:text-slate-400'}
 				aria-hidden="true"
 			/>
 			<Handle

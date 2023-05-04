@@ -64,7 +64,7 @@ const FileText: FC<NodeProps<FileTextDataType>> = (props) => {
 									))}
 								</select>
 							</div>
-							<div className="flex flex-col gap-2 text-md ">
+							<div className="text-md flex flex-col gap-2 ">
 								<InputNodesList
 									data={data}
 									id={id}
@@ -81,13 +81,13 @@ const FileText: FC<NodeProps<FileTextDataType>> = (props) => {
 				type="target"
 				position={Position.Left}
 				id="filetext-input"
-				className="w-4 h-4"
+				className="h-4 w-4"
 			></Handle>
 			<Handle
 				type="source"
 				position={Position.Right}
 				id="filetext-output"
-				className="w-4 h-4"
+				className="h-4 w-4"
 			/>
 		</div>
 	);

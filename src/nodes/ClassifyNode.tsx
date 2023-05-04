@@ -59,7 +59,7 @@ const Classify: FC<NodeProps<ClassifyNodeDataType>> = (props) => {
 			</div>
 			<Disclosure
 				as="div"
-				className="space-y-1 absolute w-full"
+				className="absolute w-full space-y-1"
 				defaultOpen={data.response.length > 0}
 			>
 				{({ open }) => (
@@ -67,11 +67,11 @@ const Classify: FC<NodeProps<ClassifyNodeDataType>> = (props) => {
 						<Disclosure.Button
 							className={conditionalClassNames(
 								open ? 'border-b-slate-300' : '',
-								'flex justify-between border-1 border-slate-400 bg-slate-200 text-slate-900 group px-2 w-full items-center rounded-t-md py-2 pr-2 text-left text-md font-semibold',
+								'text-md group flex w-full items-center justify-between rounded-t-md border-1 border-slate-400 bg-slate-200 px-2 py-2 pr-2 text-left font-semibold text-slate-900',
 							)}
 							disabled={data.response.length === 0}
 						>
-							<p className="flex gap-1 items-center pl-2">
+							<p className="flex items-center gap-1 pl-2">
 								<SignalIcon
 									className={conditionalClassNames(
 										data.response.length > 0
@@ -99,7 +99,7 @@ const Classify: FC<NodeProps<ClassifyNodeDataType>> = (props) => {
 									strokeWidth={1.5}
 									stroke="currentColor"
 									className={conditionalClassNames(
-										open ? 'transform rotate-180' : '',
+										open ? 'rotate-180 transform' : '',
 										'h-6 w-6',
 									)}
 								>
@@ -111,12 +111,12 @@ const Classify: FC<NodeProps<ClassifyNodeDataType>> = (props) => {
 								</svg>
 							)}
 						</Disclosure.Button>
-						<Disclosure.Panel className="space-y-1 mb-10">
+						<Disclosure.Panel className="mb-10 space-y-1">
 							<div
-								className="p-3 bg-slate-50 border-1 border-t-0 
-							border-slate-400 rounded-b-lg flex flex-col justify-between gap-4 items-end"
+								className="flex flex-col items-end justify-between 
+							gap-4 rounded-b-lg border-1 border-t-0 border-slate-400 bg-slate-50 p-3"
 							>
-								<p className="text-start w-full">{data.response}</p>
+								<p className="w-full text-start">{data.response}</p>
 								<ClipboardIcon
 									className={conditionalClassNames(
 										' -ml-1 mr-1 h-7 w-7 flex-shrink-0 cursor-pointer text-slate-500 hover:text-slate-900 active:scale-50',
@@ -135,7 +135,7 @@ const Classify: FC<NodeProps<ClassifyNodeDataType>> = (props) => {
 				type="target"
 				position={Position.Left}
 				id="text-input"
-				className="w-4 h-4"
+				className="h-4 w-4"
 			></Handle>
 			<Handle
 				type="source"
@@ -159,12 +159,12 @@ const Content: FC<{
 	return (
 		<div className={conditionalClassNames(data.isDetailMode && 'h-[40rem] w-[35rem]')}>
 			{/* list of data.inputs string Set */}
-			<div className="h-full flex flex-col gap-1 text-slate-900">
+			<div className="flex h-full flex-col gap-1 text-slate-900">
 				<textarea
 					rows={4}
 					name="text"
 					id={`text-${id}`}
-					className="nowheel nodrag grow text-xl w-full rounded-md border-0 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-1 focus:ring-inset focus:ring-slate-400 sm:leading-6"
+					className="nowheel nodrag w-full grow rounded-md border-0 text-xl shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-1 focus:ring-inset focus:ring-slate-400 sm:leading-6"
 					value={presentText}
 					onFocus={(e) => {
 						e.target.selectionStart = 0;
@@ -175,7 +175,7 @@ const Content: FC<{
 						handleChange(e, id, data, updateNode);
 					}}
 				/>
-				<div className="grow-0 flex flex-col gap-2 text-md ">
+				<div className="text-md flex grow-0 flex-col gap-2 ">
 					<InputNodesList
 						data={data}
 						id={id}
@@ -185,10 +185,10 @@ const Content: FC<{
 					/>
 				</div>
 				<div className="py-1">
-					<div className="h-14 flex items-center">
+					<div className="flex h-14 items-center">
 						<label
 							htmlFor="textType"
-							className="grow block font-medium leading-6 text-2xl"
+							className="block grow text-2xl font-medium leading-6"
 						>
 							Text Type:
 						</label>
@@ -196,7 +196,7 @@ const Content: FC<{
 					<input
 						type="text"
 						name="textType"
-						className="nodrag block h-16 w-full rounded-md border-0 text-slate-900 shadow-sm ring-inset ring-slate-300 placeholder:text-slate-400 ring-2 focus:ring-inset focus:ring-slate-600 sm:py-1.5 sm:text-xl sm:leading-6"
+						className="nodrag block h-16 w-full rounded-md border-0 text-slate-900 shadow-sm ring-2 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-inset focus:ring-slate-600 sm:py-1.5 sm:text-xl sm:leading-6"
 						value={presentTextType}
 						onChange={(e) => {
 							setTextType(e.target.value);

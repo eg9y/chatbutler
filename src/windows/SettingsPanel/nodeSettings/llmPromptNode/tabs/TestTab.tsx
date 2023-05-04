@@ -23,7 +23,7 @@ export default function TestTab({
 							return (
 								<div
 									key={`${inputExample.id}-${index}`}
-									className="flex flex-col text-xs gap-1"
+									className="flex flex-col gap-1 text-xs"
 								>
 									<form className="flex flex-col gap-2">
 										{Object.keys(inputExample).map((inputId) => {
@@ -54,9 +54,9 @@ export default function TestTab({
 								</div>
 							);
 						})}
-						<button className="bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold py-1 px-2 my-2 rounded flex items-center">
+						<button className="my-2 flex items-center rounded bg-blue-500 py-1 px-2 text-xs font-semibold text-white hover:bg-blue-600">
 							<PlayIcon
-								className={'text-blue-300 -ml-1 mr-1 h-5 w-5 flex-shrink-0'}
+								className={'-ml-1 mr-1 h-5 w-5 flex-shrink-0 text-blue-300'}
 								aria-hidden="true"
 							/>
 							<span>Run</span>

@@ -67,7 +67,7 @@ const InputNodesList = ({
 	}
 
 	return (
-		<div className="flex gap-2 flex-wrap text-2xl">
+		<div className="flex flex-wrap gap-2 text-2xl">
 			{inputNodes
 				.filter((inputNode) => {
 					if (
@@ -139,7 +139,7 @@ const InputNodesList = ({
 							>
 								<div className={borderClass}>
 									{inputNode.data.loopId && type === 'loop' && (
-										<ArrowPathIcon className="w-8 h-8 inline-block text-slate-50" />
+										<ArrowPathIcon className="inline-block h-8 w-8 text-slate-50" />
 									)}
 								</div>
 								<div className="p-1">{inputNode.data.name}</div>

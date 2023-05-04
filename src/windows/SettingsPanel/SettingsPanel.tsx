@@ -80,7 +80,7 @@ export default function LeftSidePanel({
 	}
 
 	return (
-		<aside className="bg-slate-50 w-full h-full overflow-auto shadow-lg border-r-1 border-slate-400">
+		<aside className="h-full w-full overflow-auto border-r-1 border-slate-400 bg-slate-50 shadow-lg">
 			{session && (
 				<UserWorkflows
 					currentWorkflow={currentWorkflow}
@@ -93,12 +93,12 @@ export default function LeftSidePanel({
 			)}
 			<Tutorial open={openTutorials} setOpen={setOpenTutorials} />
 
-			<div className="flex flex-col justify-start h-full border-1 ">
+			<div className="flex h-full flex-col justify-start border-1 ">
 				<div className="flex flex-col bg-slate-50">
 					<div className="">
 						<a
-							className="group px-2 py-1 flex items-center justify-start text-sm font-medium text-slate-700 
-											bg hover:text-slate-900 hover:font-bold cursor-pointer hover:bg-slate-100"
+							className="bg group flex cursor-pointer items-center justify-start px-2 py-1 text-sm 
+											font-medium text-slate-700 hover:bg-slate-100 hover:font-bold hover:text-slate-900"
 							onClick={async () => {
 								if (session) {
 									setOpenWorkflows(true);
@@ -109,7 +109,7 @@ export default function LeftSidePanel({
 						>
 							<BeakerIcon
 								className={
-									'text-slate-500 group-hover:text-slate-600 mr-3 h-6 w-6 flex-shrink-0'
+									'mr-3 h-6 w-6 flex-shrink-0 text-slate-500 group-hover:text-slate-600'
 								}
 								aria-hidden="true"
 							/>
@@ -118,15 +118,15 @@ export default function LeftSidePanel({
 					</div>
 					<div className="">
 						<a
-							className="group px-2 py-1 flex items-center justify-start text-sm font-medium text-slate-700 
-											bg hover:text-slate-900 hover:font-bold cursor-pointer hover:bg-slate-100"
+							className="bg group flex cursor-pointer items-center justify-start px-2 py-1 text-sm 
+											font-medium text-slate-700 hover:bg-slate-100 hover:font-bold hover:text-slate-900"
 							onClick={async () => {
 								setOpenTutorials(true);
 							}}
 						>
 							<AcademicCapIcon
 								className={
-									'text-slate-500 group-hover:text-slate-600 mr-3 h-6 w-6 flex-shrink-0'
+									'mr-3 h-6 w-6 flex-shrink-0 text-slate-500 group-hover:text-slate-600'
 								}
 								aria-hidden="true"
 							/>
@@ -135,8 +135,8 @@ export default function LeftSidePanel({
 					</div>
 					<div className="">
 						<a
-							className="group px-2 py-1 flex items-center justify-start text-sm font-medium text-slate-700 
-							bg hover:text-slate-900 hover:font-bold cursor-pointer hover:bg-slate-100"
+							className="bg group flex cursor-pointer items-center justify-start px-2 py-1 text-sm 
+							font-medium text-slate-700 hover:bg-slate-100 hover:font-bold hover:text-slate-900"
 							onClick={async () => {
 								const currentKey = openAiKey || '';
 								const newOpenAIKey = window.prompt(
@@ -164,16 +164,16 @@ export default function LeftSidePanel({
 						>
 							<Cog6ToothIcon
 								className={
-									'text-slate-500  group-hover:text-slate-900 mr-3 h-6 w-6 flex-shrink-0'
+									'mr-3  h-6 w-6 flex-shrink-0 text-slate-500 group-hover:text-slate-900'
 								}
 								aria-hidden="true"
 							/>
 							<span className="truncate">OpenAI Key</span>
 						</a>
 					</div>
-					<div className="flex items-center gap-2 justify-evenly py-2">
+					<div className="flex items-center justify-evenly gap-2 py-2">
 						<button
-							className="px-2 py-1 bg-red-500 hover:bg-red-600 text-white text-sm font-semibold rounded flex items-center"
+							className="flex items-center rounded bg-red-500 px-2 py-1 text-sm font-semibold text-white hover:bg-red-600"
 							onClick={() => {
 								// Are you sure prompt
 								if (window.confirm('Are you sure you want to clear the graph?')) {
@@ -182,7 +182,7 @@ export default function LeftSidePanel({
 							}}
 						>
 							<TrashIcon
-								className={' group-hover:text-slate-500 mx-auto h-5 w-5'}
+								className={' mx-auto h-5 w-5 group-hover:text-slate-500'}
 								aria-hidden="true"
 							/>
 							<span>Clear graph</span>
@@ -213,15 +213,15 @@ export default function LeftSidePanel({
 						</Switch.Group>
 					</div>
 				</div>
-				<div className="flex flex-col justify-start bg-slate-50 w-full">
-					<div className="w-full flex mb-1 text-sm bg-slate-100 pt-1">
+				<div className="flex w-full flex-col justify-start bg-slate-50">
+					<div className="mb-1 flex w-full bg-slate-100 pt-1 text-sm">
 						<div className="w-[0.10rem] border-b-1 border-slate-500" />
 						<button
 							className={conditionalClassNames(
 								currentPage === 'Blocks'
 									? 'border-b-0 bg-slate-50'
 									: 'border-b-1 bg-slate-100 text-slate-600 hover:bg-slate-50',
-								'border-1  border-slate-500 px-2 pt-1 rounded-t-md',
+								'rounded-t-md  border-1 border-slate-500 px-2 pt-1',
 							)}
 							onClick={() => {
 								setCurrentPage('Blocks');
@@ -235,7 +235,7 @@ export default function LeftSidePanel({
 								currentPage === 'Current'
 									? 'border-b-0 bg-slate-50'
 									: 'border-b-1 bg-slate-100 text-slate-600 hover:bg-slate-50',
-								'border-1  border-slate-500 px-2 pt-1 rounded-t-md text-xs',
+								'rounded-t-md  border-1 border-slate-500 px-2 pt-1 text-xs',
 							)}
 							onClick={() => {
 								setCurrentPage('Current');
@@ -252,7 +252,7 @@ export default function LeftSidePanel({
 										currentPage === 'Project'
 											? 'border-b-0 bg-slate-50'
 											: 'border-b-1 bg-slate-100 text-slate-600 hover:bg-slate-50',
-										'border-1  border-slate-500 px-2 pt-1 rounded-t-md text-xs',
+										'rounded-t-md  border-1 border-slate-500 px-2 pt-1 text-xs',
 									)}
 									onClick={() => {
 										setCurrentPage('Project');
@@ -265,7 +265,7 @@ export default function LeftSidePanel({
 						<div className="flex-grow border-b-1 border-slate-500" />
 					</div>
 				</div>
-				<div className="grow flex flex-col rounded-tr-lg">
+				<div className="flex grow flex-col rounded-tr-lg">
 					{currentPage === 'Blocks' && (
 						<NodesList
 							reactFlowWrapper={reactFlowWrapper}
@@ -275,8 +275,8 @@ export default function LeftSidePanel({
 					{currentPage === 'Current' && (
 						<>
 							{selectedNode && (
-								<div className="ml-2 h-full relative">
-									<div className="absolute w-full h-full">
+								<div className="relative ml-2 h-full">
+									<div className="absolute h-full w-full">
 										<NodeTabs
 											selectedNode={selectedNode}
 											updateNode={updateNode}

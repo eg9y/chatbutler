@@ -17,7 +17,7 @@ function SandboxExecutionPanel({
 	const abortControllerRef = useRef<AbortController | null>(null);
 
 	return (
-		<div className="flex gap-4 items-center z-10">
+		<div className="z-10 flex items-center gap-4">
 			<RunFromStart
 				isLoading={isLoading}
 				setIsLoading={setIsLoading}

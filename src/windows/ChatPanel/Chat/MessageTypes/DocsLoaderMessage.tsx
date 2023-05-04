@@ -100,7 +100,7 @@ function DocsLoaderMessage() {
 					? docOutput[0].metadata.pdf?.info?.Title
 					: `${docOutput[0].pageContent.slice(0, 20)}.pdf`;
 			docOutput.map((doc) => {
-				doc.metadata.file_name = fileName;
+				doc.metadata.name = fileName;
 				return doc;
 			});
 			await SupabaseVectorStoreWithFilter.fromDocuments(

@@ -1,6 +1,6 @@
-import { RetrievalQAChain } from 'langchain/chains';
+import { ConversationalRetrievalQAChain } from 'langchain/chains';
+import { ChatOpenAI } from 'langchain/chat_models/openai';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
-import { OpenAI } from 'langchain/llms/openai';
 import { Node } from 'reactflow';
 
 import { createSupabaseClient } from '../../auth/supabaseClient';
@@ -30,6 +30,11 @@ const search = async (node: Node<SearchDataType>, get: () => RFState, openAiKey:
 			throw new Error(session.error.message);
 		}
 
+		let model = new ChatOpenAI({
+			modelName: 'gpt-3.5-turbo',
+			openAIApiKey: openAiKey,
+		});
+
 		// if no sessions found, use api key set in non-user's "session"
 		if (session && session.data && session.data.session && session.data.session.access_token) {
 			embeddings = new OpenAIEmbeddings(
@@ -40,8 +45,18 @@ const search = async (node: Node<SearchDataType>, get: () => RFState, openAiKey:
 					basePath: `${import.meta.env.VITE_SUPABASE_FUNCTION_URL}/openai`,
 				},
 			);
+			model = new ChatOpenAI(
+				{
+					// TODO: need to let user set the openai settings
+					modelName: 'gpt-3.5-turbo',
+					// this is the supabase session key, the real openAI key is set in the proxy #ifitworksitworks
+					openAIApiKey: session.data.session.access_token,
+				},
+				{
+					basePath: `${import.meta.env.VITE_SUPABASE_FUNCTION_URL}/openai`,
+				},
+			);
 		}
-
 		// Load the docs into the vector store
 		const vectorStore = await SupabaseVectorStoreWithFilter.fromExistingIndex(embeddings, {
 			client: supabase,
@@ -51,16 +66,7 @@ const search = async (node: Node<SearchDataType>, get: () => RFState, openAiKey:
 		// const vectorStore = await MemoryVectorStore.fromDocuments(docOutput, embeddings);
 
 		const parsedPrompt = parsePromptInputs(get, searchNode.text, inputIds);
-		const model = new OpenAI(
-			{
-				// this is the supabase session key, the real openAI key is set in the proxy #ifitworksitworks
-				openAIApiKey: session.data.session?.access_token,
-			},
-			{
-				basePath: `${import.meta.env.VITE_SUPABASE_FUNCTION_URL}/openai`,
-			},
-		);
-		const chain = RetrievalQAChain.fromLLM(
+		const chain = ConversationalRetrievalQAChain.fromLLM(
 			model,
 			vectorStore.asRetriever(undefined, {
 				name: inputNodes[docsLoaderNodeIndex].data.response,
@@ -69,10 +75,14 @@ const search = async (node: Node<SearchDataType>, get: () => RFState, openAiKey:
 				returnSourceDocuments: true,
 			},
 		);
+
 		chain.returnSourceDocuments = true;
+		chain.verbose = true;
 		const res = await chain.call({
-			query: parsedPrompt,
+			question: parsedPrompt,
+			chat_history: [],
 		});
+
 		let answer = res.text;
 		if (searchNode.returnSource) {
 			/*

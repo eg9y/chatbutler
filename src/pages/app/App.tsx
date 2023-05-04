@@ -175,7 +175,7 @@ export default function App() {
 			// setCurrentWorkflow(null);
 
 			await populateUserWorkflows(setWorkflows, setUiErrorMessage, currentSession, supabase);
-			await populateUserDocuments(setDocuments, setUiErrorMessage, currentSession, supabase);
+			// await populateUserDocuments(setDocuments, setUiErrorMessage, currentSession, supabase);
 			if (currentSession?.user) {
 				const { data, error } = await supabase.functions.invoke('get-api-key');
 				if (error) {
@@ -278,7 +278,7 @@ export default function App() {
 				setUsername={setUsername}
 			/>
 			<LoadingOverlay open={isLoading} />
-			<div className="absolute p-4 flex w-full justify-center">
+			<div className="absolute flex w-full justify-center p-4">
 				<SandboxExecutionPanel nodes={nodes} setNodes={setNodes} setChatApp={setChatApp} />
 			</div>
 
@@ -342,7 +342,7 @@ export default function App() {
 								/>
 								<div
 									// animate on hover to show that it's resizable
-									className="absolute -right-2 top-0 bottom-0 bg-blue-200 cursor-col-resize opacity-0 hover:opacity-80 transition-opacity duration-300"
+									className="absolute -right-2 top-0 bottom-0 cursor-col-resize bg-blue-200 opacity-0 transition-opacity duration-300 hover:opacity-80"
 									style={{
 										width: '10px',
 									}}
@@ -352,7 +352,7 @@ export default function App() {
 						) : (
 							<div
 								// animate on hover to show that it's resizable
-								className="bg-slate-200 shadow-xl border-1 border-slate-300 relative z-40"
+								className="relative z-40 border-1 border-slate-300 bg-slate-200 shadow-xl"
 								style={{
 									width: '10px',
 									height: '95vh',
@@ -366,7 +366,7 @@ export default function App() {
 								margin: 0,
 								left: settingsView ? `${SettingsPanelWidth}px` : 10,
 							}}
-							className="cursor-pointer shadow-lg bg-slate-200 border-b-1 border-r-1 border-slate-300 absolute z-20"
+							className="absolute z-20 cursor-pointer border-b-1 border-r-1 border-slate-300 bg-slate-200 shadow-lg"
 							onClick={() => {
 								setSettingsView(!settingsView);
 							}}
@@ -378,7 +378,7 @@ export default function App() {
 									transform: `rotate(${settingsView ? 180 : 0}deg)`,
 								}}
 								className={
-									'text-slate-800 group-hover:text-slate-500 h-full mx-auto'
+									'mx-auto h-full text-slate-800 group-hover:text-slate-500'
 								}
 								aria-hidden="true"
 							/>
@@ -386,7 +386,7 @@ export default function App() {
 						<MiniMap
 							position="top-right"
 							pannable={true}
-							className="shadow-lg ring-1 ring-slate-200 rounded-lg"
+							className="rounded-lg shadow-lg ring-1 ring-slate-200"
 							nodeColor={(node) => {
 								if (node.type === NodeTypesEnum.classify) {
 									return 'rgb(254 205 211)';

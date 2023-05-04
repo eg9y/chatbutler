@@ -182,10 +182,15 @@ const DocsLoader: FC<NodeProps<DocsLoaderDataType>> = (props) => {
 			<Handle
 				type="target"
 				position={Position.Left}
-				id="text-input"
+				id="docs-loader-input"
 				className="h-4 w-4"
 			></Handle>
-			<Handle type="source" position={Position.Right} id="text-output" className="h-4 w-4" />
+			<Handle
+				type="source"
+				position={Position.Right}
+				id="docs-loader-output"
+				className="h-4 w-4"
+			/>
 		</div>
 	);
 };

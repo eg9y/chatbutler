@@ -152,6 +152,18 @@ const onConnect = (
 		connection.sourceHandle !== 'search-output'
 	) {
 		return;
+	} else if (
+		// combine input only accepts lists
+		connection.targetHandle === 'search-input-doc' &&
+		connection.sourceHandle !== 'docs-loader-output'
+	) {
+		return;
+	} else if (
+		// combine input only accepts lists
+		connection.targetHandle === 'search-input' &&
+		connection.sourceHandle === 'docs-loader-output'
+	) {
+		return;
 	}
 
 	// else if (

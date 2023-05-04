@@ -61,10 +61,27 @@ const Search: FC<NodeProps<SearchDataType>> = (props) => {
 				position={Position.Left}
 				id="search-input"
 				style={{
-					left: '-4.1rem',
+					left: '-5.2rem',
 					backgroundColor: 'rgb(248 250 252)',
+					top: '33.333333%',
 				}}
-				className="top-1/2 flex h-10 gap-1 border-1 border-slate-700"
+				className="flex h-10 gap-1 border-1 border-slate-700"
+			>
+				<div className=" pointer-events-none h-full w-5 bg-sky-300"></div>
+				<p className="pointer-events-none  -z-10 self-center border-slate-700 bg-transparent p-1 text-xl font-bold">
+					Inputs
+				</p>
+			</Handle>
+			<Handle
+				type="target"
+				position={Position.Left}
+				id="search-input-doc"
+				style={{
+					left: '-3.8rem',
+					backgroundColor: 'rgb(248 250 252)',
+					top: '66.666667%',
+				}}
+				className=" flex h-10 gap-1 border-1 border-slate-700"
 			>
 				<div className=" pointer-events-none h-full w-5 bg-sky-300"></div>
 				<p className="pointer-events-none  -z-10 self-center border-slate-700 bg-transparent p-1 text-xl font-bold">

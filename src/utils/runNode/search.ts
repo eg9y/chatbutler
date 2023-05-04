@@ -11,6 +11,10 @@ import { SupabaseVectorStoreWithFilter } from '../vectorStores/SupabaseVectorSto
 const search = async (node: Node<SearchDataType>, get: () => RFState, openAiKey: string) => {
 	try {
 		const inputs = node.data.inputs;
+		const inputNodes = get().getNodes(inputs.inputs);
+		const docsLoaderNodeIndex = inputNodes.findIndex((node) => node.type === 'docsLoader');
+		const inputIds = inputs.inputs.filter((input) => input !== 'docsLoader');
+
 		const searchNode = node.data as SearchDataType;
 		// const document = searchNode?.document;
 		// if (!document) {
@@ -50,12 +54,12 @@ const search = async (node: Node<SearchDataType>, get: () => RFState, openAiKey:
 			client: supabase,
 			queryName: 'match_documents_with_filters',
 			filter: {
-				name: 'user_id',
+				name: inputNodes[docsLoaderNodeIndex].data.response,
 			},
 		});
 		// const vectorStore = await MemoryVectorStore.fromDocuments(docOutput, embeddings);
 
-		const parsedPrompt = parsePromptInputs(get, searchNode.text, inputs.inputs);
+		const parsedPrompt = parsePromptInputs(get, searchNode.text, inputIds);
 		const model = new OpenAI(
 			{
 				// this is the supabase session key, the real openAI key is set in the proxy #ifitworksitworks

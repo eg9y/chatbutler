@@ -29,7 +29,9 @@ const docsLoader = async (
 	openAiKey: string,
 ) => {
 	// try {
-	await pauser(node as CustomNode, get);
+	if (!node.data.response) {
+		await pauser(node as CustomNode, get);
+	}
 	// 	const docsLoaderNode = node.data as DocsLoaderDataType;
 
 	// 	if (docsLoaderNode.text.trim() === '') {

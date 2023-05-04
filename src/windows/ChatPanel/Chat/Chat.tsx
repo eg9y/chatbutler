@@ -22,7 +22,7 @@ export const Chat = forwardRef<HTMLDivElement, Props>(function Chat({ messages, 
 	return (
 		<div className="relative h-full overflow-y-scroll" ref={scrollRef}>
 			<div className="absolute w-full">
-				<div ref={ref} className="py-2 grow gap-1 w-full h-full flex flex-col justify-end">
+				<div ref={ref} className="flex h-full w-full grow flex-col justify-end gap-1 py-2">
 					{messages.map((message, index) => (
 						<Transition
 							key={index}

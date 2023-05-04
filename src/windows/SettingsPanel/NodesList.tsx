@@ -58,8 +58,8 @@ const NodesList = ({
 			<Disclosure defaultOpen={true}>
 				{({ open }) => (
 					<>
-						<Disclosure.Button className="bg-slate-300 flex justify-between border-b-1 border-slate-400 w-full">
-							<p className="text-start text-slate-900 font-semibold text-md pr-2 pl-4">
+						<Disclosure.Button className="flex w-full justify-between border-b-1 border-slate-400 bg-slate-300">
+							<p className="text-md pr-2 pl-4 text-start font-semibold text-slate-900">
 								GPT
 							</p>
 							<ChevronRightIcon
@@ -117,8 +117,8 @@ const NodesList = ({
 			<Disclosure defaultOpen={true}>
 				{({ open }) => (
 					<>
-						<Disclosure.Button className="bg-slate-300 flex justify-between border-b-1 border-slate-400 w-full">
-							<p className="text-start text-slate-900 font-semibold text-md pr-2 pl-4">
+						<Disclosure.Button className="flex w-full justify-between border-b-1 border-slate-400 bg-slate-300">
+							<p className="text-md pr-2 pl-4 text-start font-semibold text-slate-900">
 								Helper
 							</p>
 							<ChevronRightIcon
@@ -225,9 +225,9 @@ const NodesList = ({
 			<Disclosure defaultOpen={true}>
 				{({ open }) => (
 					<>
-						<Disclosure.Button className="bg-slate-300 flex justify-between border-b-1 border-slate-400 w-full">
-							<p className="text-start text-slate-900 font-semibold text-md pr-2 pl-4">
-								File
+						<Disclosure.Button className="flex w-full justify-between border-b-1 border-slate-400 bg-slate-300">
+							<p className="text-md pr-2 pl-4 text-start font-semibold text-slate-900">
+								Docs
 							</p>
 							<ChevronRightIcon
 								className={conditionalClassNames(
@@ -247,15 +247,24 @@ const NodesList = ({
 								needAuth={true}
 							/> */}
 							<NodeType
+								name="Document Load"
+								nodeType={NodeTypesEnum.docsLoader}
+								handleDrag={handleDrag}
+								addNodeToCenter={addNodeToCenter}
+								Icon={MagnifyingGlassIcon}
+								session={session}
+								needAuth={true}
+							/>
+							<NodeType
 								name="Search"
 								nodeType={NodeTypesEnum.search}
 								handleDrag={handleDrag}
 								addNodeToCenter={addNodeToCenter}
 								Icon={MagnifyingGlassIcon}
-								// session={session}
-								// needAuth={true}
+								session={session}
+								needAuth={true}
 							/>
-							<NodeType
+							{/* <NodeType
 								name="Combine File(s)"
 								nodeType={NodeTypesEnum.combine}
 								handleDrag={handleDrag}
@@ -263,7 +272,7 @@ const NodesList = ({
 								Icon={WrenchIcon}
 								// session={session}
 								// needAuth={true}
-							/>
+							/> */}
 						</Disclosure.Panel>
 					</>
 				)}
@@ -300,6 +309,7 @@ const NodeType: FC<{
 		nodeType === NodeTypesEnum.conditional && `bg-emerald-200 border-1 border-emerald-400`,
 		nodeType === NodeTypesEnum.inputText && `bg-emerald-200 border-1 border-emerald-400`,
 		nodeType === NodeTypesEnum.outputText && `bg-emerald-200 border-1 border-emerald-400`,
+		nodeType === NodeTypesEnum.docsLoader && `bg-sky-200 border-1 border-sky-400`,
 		nodeType === NodeTypesEnum.fileText && `bg-sky-200 border-1 border-sky-400`,
 		nodeType === NodeTypesEnum.search && `bg-sky-200 border-1 border-sky-400`,
 		nodeType === NodeTypesEnum.combine && `bg-sky-200 border-1 border-sky-400`,
@@ -318,7 +328,7 @@ const NodeType: FC<{
 				<span className="truncate">{name}</span>
 				<Icon
 					className={
-						'text-slate-500 group-hover:text-slate-500 -ml-1 mr-1 h-4 w-4 flex-shrink-0'
+						'-ml-1 mr-1 h-4 w-4 flex-shrink-0 text-slate-500 group-hover:text-slate-500'
 					}
 					aria-hidden="true"
 				/>

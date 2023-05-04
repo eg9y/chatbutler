@@ -48,7 +48,7 @@ export const ChatInput: FC<Props> = ({ onSend }) => {
 		<div className="relative h-full">
 			<textarea
 				ref={textareaRef}
-				className="h-full text-xs rounded-lg pl-4 pr-12 py-1 w-full focus:outline-none focus:ring-1 focus:ring-neutral-300 border-2 border-neutral-200"
+				className="h-full w-full rounded-lg border-2 border-neutral-200 py-1 pl-4 pr-12 text-xs focus:outline-none focus:ring-1 focus:ring-neutral-300"
 				style={{ resize: 'none' }}
 				placeholder="Type a message..."
 				value={content}

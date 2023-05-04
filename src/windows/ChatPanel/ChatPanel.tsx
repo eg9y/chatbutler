@@ -58,10 +58,10 @@ const ChatPanel: React.FC = () => {
 		<>
 			<div
 				style={{ height: `${chatPanelHeight}px` }}
-				className="absolute bottom-0 right-0 z-4 max-h-[95vh] w-[30vw] min-h-0 flex flex-col justify-end"
+				className="z-4 absolute bottom-0 right-0 flex max-h-[95vh] min-h-0 w-[30vw] flex-col justify-end"
 			>
 				<div
-					className="flex cursor-row-resize items-center gap-2 active:cursor-row-resize hover:bg-slate-300/90 bg-slate-300/70 pr-2 w-full rounded-t-md text-center border-1 border-r-0 border-slate-300"
+					className="flex w-full cursor-row-resize items-center gap-2 rounded-t-md border-1 border-r-0 border-slate-300 bg-slate-300/70 pr-2 text-center hover:bg-slate-300/90 active:cursor-row-resize"
 					onMouseDown={(e) => {
 						handleMouseDown(e);
 					}}
@@ -78,20 +78,20 @@ const ChatPanel: React.FC = () => {
 						}}
 					>
 						<ChevronDoubleUpIcon
-							className={'text-slate-500 hover:text-slate-800 h-full mx-auto'}
+							className={'mx-auto h-full text-slate-500 hover:text-slate-800'}
 							aria-hidden="true"
 						/>
 					</div>
 					<ArrowsPointingOutIcon
 						className={
-							'text-slate-500 hover:text-slate-800  h-5 w-5 flex-shrink-0 cursor-pointer'
+							'h-5 w-5  flex-shrink-0 cursor-pointer text-slate-500 hover:text-slate-800'
 						}
 						aria-hidden="true"
 						onClick={() => {
 							setShowFullScreen(!showFullScreen);
 						}}
 					/>
-					<div className="grow flex justify-center gap-1 items-center">
+					<div className="flex grow items-center justify-center gap-1">
 						<span className="relative flex h-3 w-3">
 							<span
 								className={conditionalClassNames(
@@ -104,19 +104,19 @@ const ChatPanel: React.FC = () => {
 							<span
 								className={conditionalClassNames(
 									waitingUserResponse ? 'bg-green-500' : 'bg-slate-500',
-									'relative inline-flex rounded-full h-3 w-3',
+									'relative inline-flex h-3 w-3 rounded-full',
 								)}
 							></span>
 						</span>
 						<p>Chat</p>
 					</div>
 				</div>
-				<div className={`grow bg-slate-100/70 border-l-1 border-slate-300 px-2`}>
+				<div className={`grow border-l-1 border-slate-300 bg-slate-100/70 px-2`}>
 					<Chat ref={chatMessages} messages={chatApp} loading={false} />
 				</div>
 				<div className="flex flex-col gap-1">
 					{/* TODO: Clear graph logic */}
-					<div className="w-full min-h-[44px]">
+					<div className="min-h-[44px] w-full">
 						<ChatInput
 							onSend={(userMessage) => {
 								setChatApp([...chatApp, userMessage]);
@@ -132,12 +132,12 @@ const ChatPanel: React.FC = () => {
 				showFullScreen={showFullScreen}
 				setShowFullScreen={setShowFullScreen}
 			>
-				<div className={`grow bg-slate-100/70 border-l-1 border-slate-300 px-2`}>
+				<div className={`grow border-l-1 border-slate-300 bg-slate-100/70 px-2`}>
 					<Chat messages={chatApp} loading={false} />
 				</div>
 				<div className="flex flex-col gap-1">
 					{/* TODO: Clear graph logic */}
-					<div className="w-full min-h-[100px]">
+					<div className="min-h-[100px] w-full">
 						<ChatInput
 							onSend={(userMessage) => {
 								setChatApp([...chatApp, userMessage]);

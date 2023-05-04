@@ -27,7 +27,7 @@ export default function Files() {
 						<main className="flex-1 overflow-y-auto">
 							<div className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8">
 								<div className="flex w-full">
-									<div className="flex flex-col gap-2 flex-1">
+									<div className="flex flex-1 flex-col gap-2">
 										<h1 className="text-2xl font-bold text-gray-900">Files</h1>
 										<p className="max-w-md">
 											Upload files to enable semantic search and ideation
@@ -102,7 +102,7 @@ export default function Files() {
 												<div
 													className={conditionalClassNames(
 														'focus-within:ring-2 focus-within:ring-slate-500 focus-within:ring-offset-2 focus-within:ring-offset-gray-100',
-														'aspect-w-10 aspect-h-7 group block w-full overflow-hidden rounded-lg bg-gray-100',
+														'group aspect-w-10 aspect-h-7 block w-full overflow-hidden rounded-lg bg-gray-100',
 													)}
 												>
 													<img
@@ -126,32 +126,32 @@ export default function Files() {
 														<p className="pointer-events-none mt-2 block truncate text-sm font-medium text-gray-900">
 															{file.name}
 														</p>
-														<p className="pointer-events-none block text-sm font-medium text-gray-500">
+														{/* <p className="pointer-events-none block text-sm font-medium text-gray-500">
 															{file.file_format}
-														</p>
+														</p> */}
 													</div>
 													<button
-														className="bg-slate-50 p-1 rounded-md"
-														onClick={async () => {
-															await supabase.storage
-																.from('documents')
-																.remove([file.document_url]);
-															await supabase
-																.from('documents')
-																.delete()
-																.match({ id: file.id })
-																.select();
-															setDocuments(
-																documents.filter(
-																	(document) =>
-																		document.id !== file.id,
-																),
-															);
-														}}
+														className="rounded-md bg-slate-50 p-1"
+														// onClick={async () => {
+														// 	await supabase.storage
+														// 		.from('documents')
+														// 		.remove([file.document_url]);
+														// 	await supabase
+														// 		.from('documents')
+														// 		.delete()
+														// 		.match({ id: file.id })
+														// 		.select();
+														// 	setDocuments(
+														// 		documents.filter(
+														// 			(document) =>
+														// 				document.id !== file.id,
+														// 		),
+														// 	);
+														// }}
 													>
 														<TrashIcon
 															className={
-																'text-red-700 mx-0 h-6 w-6 flex-shrink-0'
+																'mx-0 h-6 w-6 flex-shrink-0 text-red-700'
 															}
 															aria-hidden="true"
 														/>

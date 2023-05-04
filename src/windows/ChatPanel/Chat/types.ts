@@ -8,14 +8,10 @@ export enum MessageType {
 export interface Message {
 	role: 'assistant' | 'user';
 	content: string;
+	assistantMessageType?: NodeTypesEnum;
 }
 
 export interface ChatMessage {
 	role: 'assistant' | 'user';
 	content: string;
-}
-
-export interface TheMessage {
-	type: MessageType;
-	data: Message | NodeTypesEnum;
 }

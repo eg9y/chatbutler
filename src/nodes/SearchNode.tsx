@@ -17,19 +17,7 @@ const Search: FC<NodeProps<SearchDataType>> = (props) => {
 
 	const [showFullScreen, setShowFullScreen] = useState(false);
 
-	const { documents, updateNode } = useStore(selector, shallow);
-
-	useEffect(() => {
-		const documentId = data.document?.id;
-		const isDocumentDeleted = documents.find((document) => document.id === documentId);
-		if (!isDocumentDeleted) {
-			updateNode(id, {
-				...data,
-				document: documents[0],
-			});
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [documents]);
+	const { updateNode } = useStore(selector, shallow);
 
 	return (
 		<div className="">

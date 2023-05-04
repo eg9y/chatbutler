@@ -1,3 +1,6 @@
+import { Node } from 'reactflow';
+
+import docsLoader from './docsLoader';
 import {
 	chatPrompt,
 	classify,
@@ -11,7 +14,13 @@ import {
 	inputText,
 	counter,
 } from './index';
-import { CustomNode, GlobalVariableDataType, NodeTypesEnum } from '../../nodes/types/NodeTypes';
+import {
+	CustomNode,
+	DocsLoaderDataType,
+	GlobalVariableDataType,
+	NodeTypesEnum,
+	SearchDataType,
+} from '../../nodes/types/NodeTypes';
 import { RFState } from '../../store/useStore';
 import { parsePromptInputs } from '../parsePromptInputs';
 
@@ -67,7 +76,10 @@ export async function runNode(
 			outputText(get, node);
 			break;
 		case NodeTypesEnum.search:
-			// await search(node, get, openAiKey);
+			await search(node as Node<SearchDataType>, get, openAiKey);
+			break;
+		case NodeTypesEnum.docsLoader:
+			await docsLoader(node as Node<DocsLoaderDataType>, get, openAiKey);
 			break;
 		case NodeTypesEnum.counter:
 			counter(node);

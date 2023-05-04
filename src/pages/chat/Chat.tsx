@@ -113,7 +113,7 @@ export default function ChatMain() {
 
 	return (
 		<>
-			<div className="absolute top-[6vh] z-5 right-5">
+			<div className="z-5 absolute top-[6vh] right-5">
 				<Notification />
 			</div>
 			<SideNav
@@ -123,7 +123,7 @@ export default function ChatMain() {
 				chatSessions={chatSessions}
 				setChatSessions={setChatSessions}
 			>
-				<div className="flex-1 sm:px-10 h-full">
+				<div className="h-full flex-1 sm:px-10">
 					{chatSessions.length > 0 &&
 						chatSessions[currentChatSessionIndex]?.workflow !== null && (
 							<div className="flex flex-col gap-1 p-2">
@@ -153,8 +153,8 @@ export default function ChatMain() {
 								<div
 									className={conditionalClassNames(
 										currentChatSessionIndex === -1 &&
-											'pointer-events-none opacity-60 border-2 border-slate-300',
-										'w-full h-40 sticky',
+											'pointer-events-none border-2 border-slate-300 opacity-60',
+										'sticky h-40 w-full',
 									)}
 								>
 									<ChatInput
@@ -179,9 +179,9 @@ export default function ChatMain() {
 							<div>
 								{/* iterate over chatbots */}
 								{isLoading && (
-									<div className="flex gap-4 items-center p-4">
+									<div className="flex items-center gap-4 p-4">
 										<p>Loading chatbots</p>
-										<Loading className="animate-spin -ml-1 mr-3 h-5 w-5 text-black" />
+										<Loading className="-ml-1 mr-3 h-5 w-5 animate-spin text-black" />
 									</div>
 								)}
 								{chatSessions.length > 0 && (

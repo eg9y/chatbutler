@@ -34,65 +34,70 @@ create_new_node_file() {
     echo "File or directory does not exist."
         cat > "$new_node_file" <<- EOM
     import { memo, FC, useState } from 'react';
-    import { Handle, Position, NodeProps } from 'react-flow';
-    import { shallow } from 'zustand/shallow';
-    import useUndo from 'use-undo';
+import { Handle, Position, NodeProps } from 'reactflow';
+import useUndo from 'use-undo';
 
-    import useStore, { selector } from '../store/useStore';
-    import { ${NEW_DATA_TYPE} } from './types/NodeTypes';
-    import TextAreaTemplate from './templates/TextAreaTemplate';
-    import InputNodesList from './templates/InputNodesList';
+import InputNodesList from './templates/InputNodesList';
+import NodeTemplate from './templates/NodeTemplate';
+import TextAreaTemplate from './templates/TextAreaTemplate';
+import { $NEW_DATA_TYPE, TextNodeDataType } from './types/NodeTypes';
+import { conditionalClassNames } from '../utils/classNames';
 
-    const $1: FC<NodeProps<${NEW_DATA_TYPE}>> = (props) => {
-        const { data, selected, id } = props;
-        const [textState, { set: setText }] = useUndo(data.text);
-        const { present: presentText } = textState;
+const $1: FC<NodeProps<$NEW_DATA_TYPE>> = (props) => {
+	const { data, selected, id, type } = props;
+	const [textState, { set: setText }] = useUndo(data.text);
+	const { present: presentText } = textState;
 
-        const { updateNode } = useStore(selector, shallow);
-        const [showPrompt, setshowPrompt] = useState(true);
+	const [showFullScreen, setShowFullScreen] = useState(false);
 
-        return (
-            <div className="">
-                <div
-                    style={{
-                        height: showPrompt ? '40rem' : '5rem',
-                        width: '35rem',
-                    }}
-                    className={\`m-3 bg-slate-100 shadow-lg border-2  \${selected ? 'border-emerald-600' : 'border-slate-300'} flex flex-col \`}
-                >
-                    {/* how to spread  */}
-                    <TextAreaTemplate
-                        {...props}
-                        title="Text"
-                        fieldName="Text"
-                        bgColor="bg-emerald-200"
-                        show={showPrompt}
-                        setShow={setshowPrompt}
-                        presentText={presentText}
-                        setText={setText}
-                    >
-                        <div className="flex flex-col gap-2 text-md ">
-                            <InputNodesList
-                                data={data}
-                                id={id}
-                                setText={setText}
-                                updateNode={updateNode}
-                            />
-                        </div>
-                    </TextAreaTemplate>
-                </div>
-                <Handle
-                    type="target"
-                    position={Position.Left}
-                    id="text-input"
-                    className="w-4 h-4"
-                ></Handle>
-                <Handle type="source" position={Position.Right} id="text-output" className="w-4 h-4" />
-            </div>
-        );
-    };
-
-    export default memo($1);
+	return (
+		<div className="">
+			<div
+				className={conditionalClassNames(
+					data.isDetailMode && 'h-[40rem] w-[35rem]',
+					`m-3 shadow-lg`
+				)}
+			>
+				<NodeTemplate
+					{...props}
+					title="Text"
+					fieldName="Text"
+					color="emerald"
+					showFullScreen={showFullScreen}
+					setShowFullScreen={setShowFullScreen}
+					selected={selected}
+				>
+					{(updateNode: (id: string, data: TextNodeDataType) => void) => (
+						<>
+							<TextAreaTemplate
+								{...props}
+								presentText={presentText}
+								setText={setText}
+							/>
+							<div className="flex flex-col gap-2 text-md ">
+								<InputNodesList
+									data={data}
+									id={id}
+									setText={setText}
+									updateNode={updateNode}
+									type={type}
+								/>
+							</div>
+						</>
+					)}
+				</NodeTemplate>
+			</div>
+			<Handle
+				type="target"
+				position={Position.Left}
+				id="text-input"
+				className="w-4 h-4"
+			></Handle>
+			<Handle type="source" position={Position.Right} id="text-output" className="w-4 h-4" />
+		</div>
+	);
+};
+export default memo($1);
 EOM
     fi
 }
@@ -138,73 +143,6 @@ create_node_settings_folder() {
         echo "Folder created at src/windows/SettingsPanel/nodeSettings/${camel_case_node}Node/tabs"
     fi
 
-    local new_tab_file="src/windows/SettingsPanel/nodeSettings/${camel_case_node}Node/tabs/$1Tab.tsx"
-    if [ -e "$new_tab_file" ]; then
-        echo "File or directory exists."
-        else
-        echo "File or directory does not exist."
-        touch $new_tab_file
-        echo "File created at src/windows/SettingsPanel/nodeSettings/${camel_case_node}Node/tabs/$1Tab.tsx"
-        cat > "$new_tab_file" <<- EOM
-        import { Node } from 'reactflow';
-        import {${NEW_NODE}NodeDataType } from '../../../../../nodes/types/NodeTypes';
-
-        export default function $1Tab({
-            selectedNode,
-            handleChange,
-        }: {
-            selectedNode: Node<${NEW_NODE}NodeDataType> | null;
-            handleChange: (
-                e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
-            ) => void;
-        }) {
-            function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-                e.preventDefault();
-            }
-
-            return (
-                <>
-                    {selectedNode && (
-                        <div className="text-sm font-medium leading-6 text-slate-900">
-                            {/* form div scrollable using tailwind */}
-                            <form onSubmit={handleSubmit} className="flex flex-col">
-                                <div className="">
-                                    <div className="">
-                                        <label htmlFor="name" className="block">
-                                            Name
-                                        </label>
-                                        <input
-                                            type="text"
-                                            name="name"
-                                            id="name"
-                                            className="block w-full rounded-md border-0 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:py-1.5 sm:text-sm sm:leading-6"
-                                            value={selectedNode.data.name}
-                                            onChange={handleChange}
-                                        />
-                                    </div>
-                                </div>
-                                <div className="">
-                                    <label htmlFor="response" className="block">
-                                        Value
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="response"
-                                        id="response"
-                                        className="block w-full rounded-md border-0 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:py-1.5 sm:text-sm sm:leading-6"
-                                        value={selectedNode.data.response}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-                            </form>
-                        </div>
-                    )}
-                </>
-            );
-        }
-EOM
-    fi
-    
     if [ -e "$new_tabs_file" ]; then
     echo "File or directory exists."
     else
@@ -212,44 +150,23 @@ EOM
     touch $new_tabs_file
     echo "File created at src/windows/SettingsPanel/nodeSettings/${camel_case_node}Node/tabs.tsx"
     cat > "$new_tabs_file" <<- EOM
-    import { useState } from 'react';
     import { Node } from 'reactflow';
-    import { PencilIcon } from '@heroicons/react/20/solid';
 
-    import TabsNavigator from '../../TabsNavigator';
-    import $1Tab from './tabs/$1Tab';
-    import { $1NodeDataType } from '../../../../nodes/types/NodeTypes';
-    import { handleChange } from '../../../../utils/handleFormChange';
-
-    const tabs = [{ name: '$(convertCamelCaseToWords $1)', icon: PencilIcon }];
+    import { AllDataTypes, TextNodeDataType } from '../../../../nodes/types/NodeTypes';
+    import TabsTemplate from '../TabsTemplate';
 
     export default function $1Tabs({
         selectedNode,
         updateNode,
     }: {
         selectedNode: Node<$1NodeDataType>;
-        updateNode: (id: string, data: any) => void;
+        updateNode: (id: string, data: AllDataTypes) => void;
     }) {
-        const [selected, setSelected] = useState(tabs[0].name);
-
         return (
-            <div className="pr-4">
-                <div className="overflow-y-auto hide-scrollbar pb-40 pt-4">
-                    <TabsNavigator tabs={tabs} selected={selected} setSelected={setSelected} />
-                    <div className="pt-2">
-                        {selected === '$(convertCamelCaseToWords $1)' && (
-                            <$1Tab
-                                selectedNode={selectedNode}
-                                handleChange={(e) => {
-                                    handleChange(e, selectedNode.id, selectedNode.data, updateNode);
-                                }}
-                            />
-                        )}
-                    </div>
-                </div>
-            </div>
+            <TabsTemplate selectedNode={selectedNode} updateNode={updateNode} tabs={[]}></TabsTemplate>
         );
     }
+
 EOM
     fi
     local panels_file="src/windows/SettingsPanel/panel.tsx"

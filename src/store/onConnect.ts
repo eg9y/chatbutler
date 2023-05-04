@@ -152,13 +152,15 @@ const onConnect = (
 		connection.sourceHandle !== 'search-output'
 	) {
 		return;
-	} else if (
-		// search can only connect to nodes that accepts lists
-		connection.sourceHandle === 'search-output' &&
-		connection.targetHandle !== 'combine-input'
-	) {
-		return;
 	}
+
+	// else if (
+	// 	// search can only connect to nodes that accepts lists
+	// 	connection.sourceHandle === 'search-output' &&
+	// 	connection.targetHandle !== 'combine-input'
+	// ) {
+	// 	return;
+	// }
 
 	// placeholder logic
 	if (connection.source) {

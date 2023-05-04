@@ -41,8 +41,8 @@ const Search: FC<NodeProps<SearchDataType>> = (props) => {
 			>
 				<NodeTemplate
 					{...props}
-					title="Search"
-					fieldName="File"
+					title="Docs Search"
+					fieldName="Search Query"
 					color="sky"
 					showFullScreen={showFullScreen}
 					setShowFullScreen={setShowFullScreen}
@@ -50,60 +50,18 @@ const Search: FC<NodeProps<SearchDataType>> = (props) => {
 				>
 					{() => (
 						<>
-							<div className="py-1">
-								<select
-									id="model"
-									name="fileId"
-									className="block w-full rounded-md border-0 py-1.5 text-slate-900 ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-2xl sm:leading-6"
-									value={data.document?.id || ''}
-									onChange={async (e) => {
-										const selectedDocumentId =
-											e.target.selectedOptions[0].value;
-										if (selectedDocumentId === '') return;
-										const selectedDocument = documents.find(
-											(document) =>
-												document.id === parseInt(selectedDocumentId),
-										);
-										updateNode(id, {
-											...data,
-											document: selectedDocument,
-										});
-									}}
-								>
-									{documents?.map((document) => (
-										<option key={document.id} value={document.id || ''}>
-											{document.name}
-										</option>
-									))}
-								</select>
-							</div>
-							<p className="text-2xl pt-4 pb-1">Search Query:</p>
 							<TextAreaTemplate
 								{...props}
 								presentText={presentText}
 								setText={setText}
 							/>
-							<div className="flex flex-col gap-2 text-md ">
+							<div className="text-md flex flex-col gap-2 ">
 								<InputNodesList
 									data={data}
 									id={id}
 									setText={setText}
 									updateNode={updateNode}
 									type={type}
-								/>
-							</div>
-							<div className="flex items-center gap-2 pt-4">
-								<p className="text-2xl">Total Results:</p>
-								<input
-									type="text"
-									value={data.results}
-									className="nodrag w-16 text-2xl text-center border-2 border-slate-400 rounded-md"
-									onChange={(e) => {
-										updateNode(id, {
-											...data,
-											results: parseInt(e.target.value),
-										});
-									}}
 								/>
 							</div>
 						</>
@@ -114,13 +72,22 @@ const Search: FC<NodeProps<SearchDataType>> = (props) => {
 				type="target"
 				position={Position.Left}
 				id="search-input"
-				className="w-4 h-4"
-			></Handle>
+				style={{
+					left: '-4.1rem',
+					backgroundColor: 'rgb(248 250 252)',
+				}}
+				className="top-1/2 flex h-10 gap-1 border-1 border-slate-700"
+			>
+				<div className=" pointer-events-none h-full w-5 bg-sky-300"></div>
+				<p className="pointer-events-none  -z-10 self-center border-slate-700 bg-transparent p-1 text-xl font-bold">
+					Doc
+				</p>
+			</Handle>
 			<Handle
 				type="source"
 				position={Position.Right}
 				id="search-output"
-				className="w-4 h-4"
+				className="h-4 w-4"
 			/>
 		</div>
 	);

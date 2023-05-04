@@ -33,6 +33,8 @@ const NavBar = () => {
 		clearGraph,
 		nodes,
 		edges,
+		setNodes,
+		setEdges,
 		workflows,
 		setWorkflows,
 		setUiErrorMessage,
@@ -49,17 +51,17 @@ const NavBar = () => {
 			style={{
 				height: '5vh',
 			}}
-			className="bg-slate-100 border-b-1 border-slate-400 z-20"
+			className="z-20 border-b-1 border-slate-400 bg-slate-100"
 		>
 			<nav
-				className="mx-auto flex items-end justify-between p-1 lg:px-2 h-full"
+				className="mx-auto flex h-full items-end justify-between p-1 lg:px-2"
 				aria-label="Global"
 			>
-				<div className=" flex-1 flex gap-2 items-center h-full">
+				<div className=" flex h-full flex-1 items-center gap-2">
 					{location === '/' && (
 						<>
 							<DocumentTextIcon className="h-6 w-6 text-slate-800" />
-							<div className="text-slate-800 flex gap-2 items-center">
+							<div className="flex items-center gap-2 text-slate-800">
 								{currentWorkflow ? (
 									<EditableText
 										currentWorkflow={currentWorkflow}
@@ -77,11 +79,11 @@ const NavBar = () => {
 						</>
 					)}
 					{location != '/' && (
-						<div className="text-slate-800 font-semibold flex items-end h-full">
+						<div className="flex h-full items-end font-semibold text-slate-800">
 							Promtpsandbox.io
 						</div>
 					)}
-					<div className="flex lg:hidden">
+					<div className="flex md:hidden">
 						<button
 							type="button"
 							className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
@@ -93,13 +95,13 @@ const NavBar = () => {
 					</div>
 				</div>
 				<div>
-					<div className="hidden lg:flex lg:gap-x-4">
+					<div className="hidden md:flex md:gap-x-4">
 						{navigation.map((item) => (
 							<a
 								key={item.name}
 								className={conditionalClassNames(
 									location === item.href && 'underline underline-offset-4',
-									`text-sm font-semibold leading-6 text-blue-900 cursor-pointer`,
+									`cursor-pointer text-sm font-semibold leading-6 text-blue-900`,
 								)}
 								onClick={async () => {
 									if (location === '/' && currentWorkflow) {
@@ -118,6 +120,10 @@ const NavBar = () => {
 												`Error saving work: ${error.message}`,
 											);
 										});
+									} else if (location === '/chat/' && currentWorkflow) {
+										setCurrentWorkflow(null);
+										setNodes([]);
+										setEdges([]);
 									}
 									window.open(item.href, '_self');
 								}}
@@ -128,9 +134,9 @@ const NavBar = () => {
 					</div>
 				</div>
 
-				<div className="flex flex-1 justify-end items-center gap-4 text-sm">
+				<div className="flex flex-1 items-center justify-end gap-4 text-sm">
 					<a
-						className="flex gap-1 items-center hover:font-semibold cursor-pointer"
+						className="flex cursor-pointer items-center gap-1 hover:font-semibold"
 						href="https://github.com/eg9y/promptsandbox.io"
 						target="_blank"
 						rel="noreferrer"
@@ -170,7 +176,7 @@ const NavBar = () => {
 			</nav>
 			<Dialog
 				as="div"
-				className="lg:hidden"
+				className="md:hidden"
 				open={mobileMenuOpen}
 				onClose={setMobileMenuOpen}
 			>

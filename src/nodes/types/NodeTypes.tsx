@@ -30,9 +30,12 @@ export type AllDataTypes =
 	| CounterDataType
 	| LoopDataType
 	| GlobalVariableDataType
+	| SetVariableDataType
+	| SingleChatPromptDataType
+	| DocsLoaderDataType
 	| FileTextDataType;
 
-export type CustomNode = Node<SingleChatPromptDataType | SetVariableDataType | AllDataTypes>;
+export type CustomNode = Node<AllDataTypes>;
 export type InputNode = Node<AllDataTypes>;
 
 type OpenAIAPIRequest = {
@@ -81,10 +84,7 @@ type DocumentDataType = {
 };
 
 export type FileTextDataType = DocumentDataType & DefaultNodeDataType;
-export type SearchDataType = {
-	results: number;
-} & DocumentDataType &
-	DefaultNodeDataType;
+export type SearchDataType = DefaultNodeDataType;
 
 export type CombineDataType = DefaultNodeDataType;
 export type InputTextDataType = DefaultNodeDataType;
@@ -124,6 +124,20 @@ export type SetVariableDataType = {
 	listOperation?: listOperation;
 } & DefaultNodeDataType;
 
+export enum DocSource {
+	url = 'URL',
+	text = '.txt file',
+	pdfUrl = 'PDF URL',
+	pdf = 'PDF upload',
+}
+
+export type DocsLoaderDataType = {
+	// text field is the path to the document
+	source: DocSource;
+	askUser: boolean;
+	fileBlob?: string | ArrayBuffer;
+} & DefaultNodeDataType;
+
 export enum NodeTypesEnum {
 	llmPrompt = 'llmPrompt',
 	text = 'text',
@@ -133,9 +147,6 @@ export enum NodeTypesEnum {
 	classify = 'classify',
 	classifyCategories = 'classifyCategories',
 	placeholder = 'placeholder',
-	fileText = 'fileText',
-	search = 'search',
-	combine = 'combine',
 	loop = 'loop',
 	conditional = 'conditional',
 	counter = 'counter',
@@ -143,4 +154,9 @@ export enum NodeTypesEnum {
 	outputText = 'outputText',
 	globalVariable = 'globalVariable',
 	setVariable = 'setVariable',
+
+	docsLoader = 'docsLoader',
+	fileText = 'fileText',
+	search = 'search',
+	combine = 'combine',
 }

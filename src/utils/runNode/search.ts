@@ -1,82 +1,80 @@
+import { RetrievalQAChain } from 'langchain/chains';
+import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
+import { OpenAI } from 'langchain/llms/openai';
+import { Node } from 'reactflow';
+
 import { createSupabaseClient } from '../../auth/supabaseClient';
-import { Document } from '../../backgroundTasks/langChainBrowser/document';
-import { OpenAIEmbeddings } from '../../backgroundTasks/langChainBrowser/embeddings';
-import { SupabaseVectorStore } from '../../backgroundTasks/langChainBrowser/vectorstores/supabase';
-import { processFile } from '../../backgroundTasks/processFile';
-import { CustomNode, SearchDataType } from '../../nodes/types/NodeTypes';
+import { SearchDataType } from '../../nodes/types/NodeTypes';
 import { RFState } from '../../store/useStore';
 import { parsePromptInputs } from '../parsePromptInputs';
-
-const search = async (node: CustomNode, get: () => RFState) => {
+import { SupabaseVectorStoreWithFilter } from '../vectorStores/SupabaseVectorStoreWithFilter';
+const search = async (node: Node<SearchDataType>, get: () => RFState, openAiKey: string) => {
 	try {
 		const inputs = node.data.inputs;
 		const searchNode = node.data as SearchDataType;
-		const document = searchNode?.document;
-		if (!document) {
-			throw new Error('Document is not defined');
-		}
-		const document_url = document.document_url;
+		// const document = searchNode?.document;
+		// if (!document) {
+		// 	throw new Error('Document is not defined');
+		// }
+
 		const supabase = createSupabaseClient();
-		const { data: isDocumentProcessed, error: isDocumentProcessedError } = await supabase
-			.from('document_contents')
-			.select('document_id')
-			.eq('document_id', document.id)
-			.limit(1);
-		if (isDocumentProcessedError) {
-			throw new Error('Error checking if document is processed');
+
+		let embeddings = new OpenAIEmbeddings({ openAIApiKey: openAiKey });
+		const session = await supabase.auth.getSession();
+
+		if (session.error) {
+			throw new Error(session.error.message);
 		}
-		let searchResults: Document[] = [];
-		if (isDocumentProcessed?.length === 0) {
-			// Document is not processed
-			// get document from store
-			const { data, error } = await supabase.storage
-				.from('documents')
-				.createSignedUrl(document_url, 60);
 
-			if (error) {
-				throw new Error('Error getting document from store');
-			}
-			if (!data) {
-				throw new Error('Error getting document from store');
-			}
-			const signedUrl = data.signedUrl;
-			// use fetch to get the document
-			const response = await fetch(signedUrl);
-			const documentContents = await response.text();
-			const chunkedUpDocuments = await processFile(documentContents, document.id);
-
-			if (!chunkedUpDocuments) {
-				throw new Error('Error processing file');
-			}
-
-			const vectorStore = await SupabaseVectorStore.fromTexts(
-				chunkedUpDocuments?.map((doc) => doc.pageContent),
-				chunkedUpDocuments?.map((doc) => doc.metadata),
-				new OpenAIEmbeddings(),
-				{
-					client: supabase,
-					tableName: 'document_contents',
-					queryName: 'match_document_contents',
-				},
-			);
-			const parsedPrompt = parsePromptInputs(get, searchNode.text, inputs.inputs);
-			searchResults = await vectorStore.similaritySearch(parsedPrompt, searchNode.results);
+		// if no sessions found, use api key set in non-user's "session"
+		if (
+			!session ||
+			!session.data ||
+			!session.data.session ||
+			!session.data.session.access_token
+		) {
+			console.log('test');
 		} else {
-			const vectorStore = await SupabaseVectorStore.fromExistingIndex(
-				new OpenAIEmbeddings(),
+			embeddings = new OpenAIEmbeddings(
 				{
-					client: supabase,
-					tableName: 'document_contents',
-					queryName: 'match_document_contents',
+					openAIApiKey: session.data.session.access_token,
+				},
+				{
+					basePath: `${import.meta.env.VITE_SUPABASE_FUNCTION_URL}/openai`,
 				},
 			);
-			const parsedPrompt = parsePromptInputs(get, searchNode.text, inputs.inputs);
-			searchResults = await vectorStore.similaritySearch(parsedPrompt, searchNode.results);
 		}
+
+		// Load the docs into the vector store
+		const vectorStore = new SupabaseVectorStoreWithFilter(embeddings, {
+			client: supabase,
+			queryName: 'match_documents_with_filters',
+			filter: {
+				name: 'user_id',
+			},
+		});
+		// const vectorStore = await MemoryVectorStore.fromDocuments(docOutput, embeddings);
+
+		const parsedPrompt = parsePromptInputs(get, searchNode.text, inputs.inputs);
+		const model = new OpenAI(
+			{
+				// this is the supabase session key, the real openAI key is set in the proxy #ifitworksitworks
+				openAIApiKey: session.data.session?.access_token,
+			},
+			{
+				basePath: `${import.meta.env.VITE_SUPABASE_FUNCTION_URL}/openai`,
+			},
+		);
+		const chain = RetrievalQAChain.fromLLM(model, vectorStore.asRetriever());
+		const res = await chain.call({
+			query: parsedPrompt,
+		});
+		console.log('search results: ', res);
+
 		node.data = {
 			...node.data,
 			// TODO: need to have a combiner node or a for loop node
-			response: JSON.stringify(searchResults),
+			response: res.text,
 			isLoading: false,
 		};
 	} catch (error) {

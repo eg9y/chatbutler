@@ -28,59 +28,30 @@ export interface Database {
 	};
 	public: {
 		Tables: {
-			document_contents: {
-				Row: {
-					content: string | null;
-					document_id: number;
-					embedding: string | null;
-					id: string;
-					token_count: number | null;
-					user_id: string;
-				};
-				Insert: {
-					content?: string | null;
-					document_id: number;
-					embedding?: string | null;
-					id?: string;
-					token_count?: number | null;
-					user_id: string;
-				};
-				Update: {
-					content?: string | null;
-					document_id?: number;
-					embedding?: string | null;
-					id?: string;
-					token_count?: number | null;
-					user_id?: string;
-				};
-			};
 			documents: {
 				Row: {
-					created_at: string | null;
-					document_url: string;
-					file_format: string | null;
+					content: string | null;
+					embedding: string | null;
 					id: number;
+					metadata: Json | null;
 					name: string | null;
-					size: number | null;
-					user_id: string | null;
+					user_id: string;
 				};
 				Insert: {
-					created_at?: string | null;
-					document_url: string;
-					file_format?: string | null;
+					content?: string | null;
+					embedding?: string | null;
 					id?: number;
+					metadata?: Json | null;
 					name?: string | null;
-					size?: number | null;
-					user_id?: string | null;
+					user_id: string;
 				};
 				Update: {
-					created_at?: string | null;
-					document_url?: string;
-					file_format?: string | null;
+					content?: string | null;
+					embedding?: string | null;
 					id?: number;
+					metadata?: Json | null;
 					name?: string | null;
-					size?: number | null;
-					user_id?: string | null;
+					user_id?: string;
 				};
 			};
 			profiles: {
@@ -175,16 +146,28 @@ export interface Database {
 				};
 				Returns: undefined;
 			};
-			match_document_contents: {
+			match_documents: {
 				Args: {
 					query_embedding: string;
 					match_count: number;
-					filter_document_ids?: number[];
 				};
 				Returns: {
-					id: string;
-					document_id: number;
+					id: number;
 					content: string;
+					metadata: Json;
+					similarity: number;
+				}[];
+			};
+			match_documents_with_filters: {
+				Args: {
+					query_embedding: string;
+					match_count: number;
+					filter?: Json;
+				};
+				Returns: {
+					id: number;
+					content: string;
+					metadata: Json;
 					similarity: number;
 				}[];
 			};

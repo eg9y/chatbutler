@@ -8,7 +8,7 @@ import { useStore, useStoreSecret, selector, selectorSecret } from '../store';
 export default function RunButton({
 	text = 'Run',
 	Icon = (
-		<PlayIcon className={'text-blue-300 -ml-1 mr-1 h-5 w-5 flex-shrink-0'} aria-hidden="true" />
+		<PlayIcon className={'-ml-1 mr-1 h-5 w-5 flex-shrink-0 text-blue-300'} aria-hidden="true" />
 	),
 	id,
 }: {
@@ -41,11 +41,11 @@ export default function RunButton({
 
 	return (
 		<button
-			className="bg-blue-500 hover:bg-blue-600 text-white text-md font-semibold py-1 px-2  rounded flex items-center"
+			className="text-md flex items-center rounded bg-blue-500 py-1 px-2  font-semibold text-white hover:bg-blue-600"
 			onClick={getResponse()}
 		>
 			{isLoading ? (
-				<Loading className="animate-spin -ml-1 mr-3 h-5 w-5 text-black" />
+				<Loading className="-ml-1 mr-3 h-5 w-5 animate-spin text-black" />
 			) : (
 				<>{Icon}</>
 			)}

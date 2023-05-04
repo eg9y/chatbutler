@@ -11,6 +11,7 @@ import {
 	ConditionalBooleanOperation,
 	SetVariableDataType,
 	GlobalVariableDataType,
+	DocSource,
 } from '../nodes/types/NodeTypes';
 
 export const generateUniqueId = (type: NodeTypesEnum) => {
@@ -120,13 +121,33 @@ const onAdd = (
 			},
 			data: {
 				name: `file ${nodeLength}`,
-				text: `This is a file text ${nodeLength}`,
+				text: `What is the capital of Indonesia?`,
 				children: [],
 				inputs: new Inputs(),
 				response: `This is a file text ${nodeLength}`,
 				isLoading: false,
 				isBreakpoint: false,
-				results: 3,
+				isDetailMode: true,
+			},
+		};
+	} else if (type === NodeTypesEnum.docsLoader) {
+		node = {
+			id: generateUniqueId(type),
+			type,
+			position: {
+				x,
+				y,
+			},
+			data: {
+				name: `Docs Loader ${nodeLength}`,
+				source: DocSource.url,
+				askUser: true,
+				text: ``,
+				children: [],
+				inputs: new Inputs(),
+				response: ``,
+				isLoading: false,
+				isBreakpoint: false,
 				isDetailMode: true,
 			},
 		};

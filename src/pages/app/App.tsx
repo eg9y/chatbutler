@@ -30,6 +30,7 @@ import ClassifyNode from '../../nodes/ClassifyNode';
 import CombineNode from '../../nodes/CombineNode';
 import ConditionalNode from '../../nodes/ConditionalNode';
 import CounterNode from '../../nodes/CounterNode';
+import DocsLoaderNode from '../../nodes/DocsLoaderNode';
 import FileNode from '../../nodes/FileTextNode';
 import GlobalVariableNode from '../../nodes/GlobalVariableNode';
 import InputTextNode from '../../nodes/InputTextNode';
@@ -63,6 +64,7 @@ const nodeTypes = {
 	loop: LoopNode,
 	fileText: FileNode,
 	search: SearchNode,
+	docsLoader: DocsLoaderNode,
 	combine: CombineNode,
 	conditional: ConditionalNode,
 	placeholder: PlaceholderNode,

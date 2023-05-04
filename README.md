@@ -99,6 +99,11 @@ Future enhancements include:
 - Improved UI and UX for managing and visualizing the conversation flow.
 - Gallery of example workflows for various use cases.
 
+## Contact
+
+- twitter: [@eggykk](https://twitter.com/eggykk)
+- newsletter: [Google Forms](https://docs.google.com/forms/d/1q60pGOj5aSUfeB7-8qjfMReELdj9tqJBnKm6rpZ8BOs/edit)
+
 ## Contributing
 
 We welcome contributions to promptsandbox.io! Please follow these steps to contribute:

@@ -125,6 +125,7 @@ const onAdd = (
 				children: [],
 				inputs: new Inputs(),
 				response: `This is a file text ${nodeLength}`,
+				returnSource: false,
 				isLoading: false,
 				isBreakpoint: false,
 				isDetailMode: true,

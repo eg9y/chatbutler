@@ -162,7 +162,6 @@ export async function getOpenAIChatResponse(
 		const response = await llm.call(convertedMessages);
 		return response;
 	} catch (error: any) {
-		console.log('oof', error);
 		throw new Error(error.message);
 	}
 }

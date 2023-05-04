@@ -31,14 +31,7 @@ const search = async (node: Node<SearchDataType>, get: () => RFState, openAiKey:
 		}
 
 		// if no sessions found, use api key set in non-user's "session"
-		if (
-			!session ||
-			!session.data ||
-			!session.data.session ||
-			!session.data.session.access_token
-		) {
-			console.log('test');
-		} else {
+		if (session && session.data && session.data.session && session.data.session.access_token) {
 			embeddings = new OpenAIEmbeddings(
 				{
 					openAIApiKey: session.data.session.access_token,
@@ -50,12 +43,10 @@ const search = async (node: Node<SearchDataType>, get: () => RFState, openAiKey:
 		}
 
 		// Load the docs into the vector store
-		const vectorStore = new SupabaseVectorStoreWithFilter(embeddings, {
+		const vectorStore = await SupabaseVectorStoreWithFilter.fromExistingIndex(embeddings, {
 			client: supabase,
+			tableName: 'documents',
 			queryName: 'match_documents_with_filters',
-			filter: {
-				name: inputNodes[docsLoaderNodeIndex].data.response,
-			},
 		});
 		// const vectorStore = await MemoryVectorStore.fromDocuments(docOutput, embeddings);
 
@@ -69,16 +60,40 @@ const search = async (node: Node<SearchDataType>, get: () => RFState, openAiKey:
 				basePath: `${import.meta.env.VITE_SUPABASE_FUNCTION_URL}/openai`,
 			},
 		);
-		const chain = RetrievalQAChain.fromLLM(model, vectorStore.asRetriever());
+		const chain = RetrievalQAChain.fromLLM(
+			model,
+			vectorStore.asRetriever(undefined, {
+				name: inputNodes[docsLoaderNodeIndex].data.response,
+			}),
+			{
+				returnSourceDocuments: true,
+			},
+		);
+		chain.returnSourceDocuments = true;
 		const res = await chain.call({
 			query: parsedPrompt,
 		});
-		console.log('search results: ', res);
+		let answer = res.text;
+		if (searchNode.returnSource) {
+			/*
+			 * append answer to add source from res.sourceDocuments, which is an array of objects with loc object field.
+			 * append the res.sourceDocument[x].metadata.loc.pageNumber and res.sourceDocument[x].pageContent like so:
+			 * `originalAnswer
+			 * page pageNumber: pageContent
+			 * page n: pageContent n
+			 * ...
+			 * `
+			 */
+			answer += '\n\n';
+			res.sourceDocuments.forEach((doc: any) => {
+				answer += `file: ${doc.metadata.file_name}, page: #${doc.metadata.loc.pageNumber}\ncontent: ${doc.pageContent}\n`;
+			});
+		}
 
 		node.data = {
 			...node.data,
 			// TODO: need to have a combiner node or a for loop node
-			response: res.text,
+			response: answer,
 			isLoading: false,
 		};
 	} catch (error) {
@@ -86,7 +101,7 @@ const search = async (node: Node<SearchDataType>, get: () => RFState, openAiKey:
 			...node.data,
 			isLoading: false,
 		};
-		throw error;
+		// TODO: set UI error
 	}
 };
 

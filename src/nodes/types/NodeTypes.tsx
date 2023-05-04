@@ -84,7 +84,9 @@ type DocumentDataType = {
 };
 
 export type FileTextDataType = DocumentDataType & DefaultNodeDataType;
-export type SearchDataType = DefaultNodeDataType;
+export type SearchDataType = {
+	returnSource: boolean;
+} & DefaultNodeDataType;
 
 export type CombineDataType = DefaultNodeDataType;
 export type InputTextDataType = DefaultNodeDataType;
@@ -135,6 +137,7 @@ export type DocsLoaderDataType = {
 	// text field is the path to the document
 	source: DocSource;
 	askUser: boolean;
+	askOnce: boolean;
 	fileBlob?: string | ArrayBuffer;
 } & DefaultNodeDataType;
 

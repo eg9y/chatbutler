@@ -1,3 +1,4 @@
+import { Switch } from '@headlessui/react';
 import { memo, FC, useState, useEffect } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
 import useUndo from 'use-undo';
@@ -18,6 +19,8 @@ const Search: FC<NodeProps<SearchDataType>> = (props) => {
 	const [showFullScreen, setShowFullScreen] = useState(false);
 
 	const { updateNode } = useStore(selector, shallow);
+
+	const [returnSource, setReturnSource] = useState<boolean>(data.returnSource);
 
 	return (
 		<div className="">
@@ -51,6 +54,37 @@ const Search: FC<NodeProps<SearchDataType>> = (props) => {
 									updateNode={updateNode}
 									type={type}
 								/>
+							</div>
+							<div className="py-4">
+								<Switch.Group as="div" className="flex items-center">
+									<Switch
+										checked={returnSource}
+										onChange={() => {
+											setReturnSource((prev) => !prev);
+											updateNode(id, {
+												...data,
+												returnSource: !returnSource,
+											});
+										}}
+										className={conditionalClassNames(
+											returnSource ? 'bg-green-600' : 'bg-gray-200',
+											'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2',
+										)}
+									>
+										<span
+											aria-hidden="true"
+											className={conditionalClassNames(
+												returnSource ? 'translate-x-5' : 'translate-x-0',
+												'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
+											)}
+										/>
+									</Switch>
+									<Switch.Label as="span" className="ml-3">
+										<span className="text-xl font-medium text-gray-900">
+											Return Source
+										</span>
+									</Switch.Label>
+								</Switch.Group>
 							</div>
 						</>
 					)}

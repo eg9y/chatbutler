@@ -94,7 +94,7 @@ const search = async (node: Node<SearchDataType>, get: () => RFState, openAiKey:
 			 * ...
 			 * `
 			 */
-			answer += '\n\n';
+			answer += '\n\nSource:\n';
 			res.sourceDocuments.forEach((doc: any) => {
 				answer += `file: ${doc.metadata.name}, page: #${
 					doc.metadata.loc.pageNumber

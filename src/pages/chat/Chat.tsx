@@ -8,6 +8,7 @@ import useSupabase from '../../auth/supabaseClient';
 import Notification from '../../components/Notification';
 import RunFromStart from '../../components/RunFromStart';
 import { WorkflowDbSchema } from '../../db/dbTypes';
+import { updateWorkflowStates } from '../../db/selectWorkflow';
 import { useStore, useStoreSecret, selector, selectorSecret } from '../../store';
 import { conditionalClassNames } from '../../utils/classNames';
 import { Chat } from '../../windows/ChatPanel/Chat/Chat';
@@ -25,6 +26,10 @@ export default function ChatMain() {
 		setUiErrorMessage,
 		setCurrentChatSessionIndex,
 		currentChatSessionIndex,
+		setNodes,
+		setEdges,
+		setGlobalVariables,
+		setCurrentWorkflow,
 	} = useStore(selector, shallow);
 	const { setSession, setOpenAiKey } = useStoreSecret(selectorSecret, shallow);
 
@@ -187,7 +192,7 @@ export default function ChatMain() {
 								{chatSessions.length > 0 && (
 									<ChatbotList
 										chatbots={chatbots}
-										onClick={(
+										onClick={async (
 											chatbot: WorkflowDbSchema & {
 												profiles:
 													| {
@@ -211,6 +216,13 @@ export default function ChatMain() {
 												created_at: '',
 											};
 											setChatSessions(newChatSessions);
+											await updateWorkflowStates(
+												newChatSessions[currentChatSessionIndex].workflow!,
+												setNodes,
+												setEdges,
+												setGlobalVariables,
+												setCurrentWorkflow,
+											);
 										}}
 									/>
 								)}

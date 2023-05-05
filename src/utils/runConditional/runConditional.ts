@@ -38,6 +38,17 @@ function runConditional(
 					return edge.target;
 				});
 			childrenNodes = get().getNodes(childrenNodeIds);
+
+			// Set all loop children that's part of the looping logic to be skipped
+			const loopChildren = getAllChildren(
+				get().getNodes([loopStartNodeId])[0],
+				get().getNodes,
+			);
+			loopChildren.forEach((child) => {
+				skipped.add(child.id);
+			});
+			skipped.add(loopStartNodeId);
+			skipped.add(node.id);
 		} else {
 			childrenNodes = get().getNodes([loopStartNodeId]);
 		}

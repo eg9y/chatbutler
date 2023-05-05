@@ -16,15 +16,15 @@ export default function AuthPage() {
 		const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
 			if (event === 'SIGNED_IN') {
 				// if user have been creating a workflow without logging in, save it
-				if (nodes.length && session) {
-					setCurrentWorkflow({
-						id: nanoid(),
-						name: 'Untitled Sandbox',
-						user_id: session?.user.id,
-						description: '',
-						is_public: true,
-					});
-				}
+				// if (nodes.length && session) {
+				// 	setCurrentWorkflow({
+				// 		id: nanoid(),
+				// 		name: 'Untitled Sandbox',
+				// 		user_id: session?.user.id,
+				// 		description: '',
+				// 		is_public: true,
+				// 	});
+				// }
 				window.open('/', '_self');
 			}
 		});

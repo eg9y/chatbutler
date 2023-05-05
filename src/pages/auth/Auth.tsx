@@ -1,6 +1,5 @@
 import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
-import { nanoid } from 'nanoid';
 import { useEffect } from 'react';
 import { shallow } from 'zustand/shallow';
 
@@ -17,13 +16,7 @@ export default function AuthPage() {
 			if (event === 'SIGNED_IN') {
 				// if user have been creating a workflow without logging in, save it
 				// if (nodes.length && session) {
-				// 	setCurrentWorkflow({
-				// 		id: nanoid(),
-				// 		name: 'Untitled Sandbox',
-				// 		user_id: session?.user.id,
-				// 		description: '',
-				// 		is_public: true,
-				// 	});
+				setCurrentWorkflow(null);
 				// }
 				window.open('/', '_self');
 			}

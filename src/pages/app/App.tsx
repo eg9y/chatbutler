@@ -302,6 +302,11 @@ export default function App() {
 						onInit={(reactFlowInstance: ReactFlowInstance) => onInit(reactFlowInstance)}
 						onDragOver={(e) => e.preventDefault()}
 						nodes={nodes}
+						panOnDrag={false}
+						panOnScroll={true}
+						selectionOnDrag={true}
+						zoomOnScroll={false}
+						zoomOnPinch={true}
 						edges={edges}
 						minZoom={0.3}
 						onNodesChange={onNodesChange}

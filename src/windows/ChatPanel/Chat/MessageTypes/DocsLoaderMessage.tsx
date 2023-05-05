@@ -1,16 +1,13 @@
-import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
-import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
 import { useEffect, useState } from 'react';
 import { shallow } from 'zustand/shallow';
 
+import loadDoc from './DocsLoaderMessage/loadDoc';
 import SavedDocs from './DocsLoaderMessage/SavedDocs';
 import { ReactComponent as Loading } from '../../../../assets/loading.svg';
 import useSupabase from '../../../../auth/supabaseClient';
 import { DocSource } from '../../../../nodes/types/NodeTypes';
 import { useStore, useStoreSecret, selectorSecret, selector } from '../../../../store';
 import { conditionalClassNames } from '../../../../utils/classNames';
-import { PdfUrlLoader } from '../../../../utils/docLoaders/pdfUrlLoader';
-import { SupabaseVectorStoreWithFilter } from '../../../../utils/vectorStores/SupabaseVectorStoreWithFilter';
 
 function isValidUrl(urlString: string): boolean {
 	try {
@@ -25,6 +22,7 @@ function DocsLoaderMessage() {
 	const [file, setFile] = useState<File | null>(null);
 	const [text, setText] = useState<string>('');
 	const [blob, setBlob] = useState<string | ArrayBuffer | null>(null);
+	const [arrayBuffer, setArrayBuffer] = useState<Uint8Array | null>(null);
 	const [source, setSource] = useState<DocSource>(DocSource.pdfUrl);
 	const [isUpload, setIsUpload] = useState<boolean>(true);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -46,7 +44,7 @@ function DocsLoaderMessage() {
 			return;
 		}
 		const file = event.target.files[0];
-		if ((file && file.type === 'text/plain') || file.type === 'application/pdf') {
+		if (file && file.type === 'text/plain') {
 			setFile(file);
 			const reader = new FileReader();
 			reader.onload = (e) => {
@@ -54,72 +52,27 @@ function DocsLoaderMessage() {
 					return;
 				}
 				setBlob(e.target.result);
-				console.log('updating node', e.target.result);
+				// console.log('updating node', e.target.result);
 			};
 			reader.readAsText(file);
+		} else if (file && file.type === 'application/pdf') {
+			setFile(file);
+			const reader = new FileReader();
+			reader.onload = (e) => {
+				if (e.target === null || e.target.result === null) {
+					return;
+				}
+				const typedarray = new Uint8Array(e.target.result as Uint8Array);
+				console.log('loaded!', typedarray);
+				setArrayBuffer(typedarray);
+				// console.log('updating node', e.target.result);
+			};
+			reader.readAsArrayBuffer(file);
 		} else {
 			setFile(null);
 			setBlob(null);
 		}
 	};
-
-	async function loadDoc() {
-		setIsLoading(true);
-
-		let embeddings = new OpenAIEmbeddings({ openAIApiKey: openAiKey });
-		const session = await supabase.auth.getSession();
-
-		if (session.error) {
-			throw new Error(session.error.message);
-		}
-
-		let fileName = '';
-
-		// if no sessions found, use api key set in non-user's "session"
-		if (session && session.data && session.data.session && session.data.session.access_token) {
-			embeddings = new OpenAIEmbeddings(
-				{
-					openAIApiKey: session.data.session.access_token,
-				},
-				{
-					basePath: `${import.meta.env.VITE_SUPABASE_FUNCTION_URL}/openai`,
-				},
-			);
-		}
-
-		if (source === DocSource.pdfUrl) {
-			const loader = new PdfUrlLoader(text);
-
-			const docs = await loader.load();
-
-			const splitter = new RecursiveCharacterTextSplitter();
-
-			const docOutput = await await splitter.splitDocuments(docs);
-			fileName =
-				docOutput[0].metadata.pdf?.info?.Title.trim().length > 0
-					? docOutput[0].metadata.pdf?.info?.Title
-					: `${docOutput[0].pageContent.slice(0, 20)}.pdf`;
-			docOutput.map((doc) => {
-				doc.metadata.name = fileName;
-				return doc;
-			});
-			await SupabaseVectorStoreWithFilter.fromDocuments(
-				docOutput,
-				embeddings,
-				{
-					client: supabase,
-				},
-				{
-					name: fileName,
-				},
-			);
-		} else if (source === DocSource.pdf) {
-			return;
-		}
-		setIsLoading(false);
-		pauseResolver(fileName);
-		setIsDone(true);
-	}
 
 	useEffect(() => {
 		async function loadSavedDocs() {
@@ -152,7 +105,18 @@ function DocsLoaderMessage() {
 						handleFileChange={handleFileChange}
 						file={file}
 						isLoading={isLoading}
-						loadDoc={loadDoc}
+						loadDoc={async () => {
+							await loadDoc(
+								source,
+								text,
+								arrayBuffer,
+								openAiKey,
+								supabase,
+								setIsDone,
+								setIsLoading,
+								pauseResolver,
+							);
+						}}
 						isDone={isDone}
 					/>
 				)}
@@ -278,25 +242,27 @@ function UploadDoc({
 				))}
 			</select>
 
-			{source === DocSource.pdfUrl && (
-				<>
-					<div className="flex items-center pt-1">
-						<label htmlFor="textType" className="block grow font-medium leading-6">
-							URL
-						</label>
-					</div>
-					<input
-						type="text"
-						name="text"
-						autoComplete="off"
-						className="nodrag sm:text-md block w-full rounded-md border-0 text-neutral-900 shadow-sm ring-2 ring-inset ring-neutral-300 placeholder:text-neutral-400 focus:ring-inset focus:ring-neutral-600 sm:py-1.5 sm:leading-6"
-						value={text}
-						onChange={(e) => {
-							setText(e.target.value);
-						}}
-					/>
-				</>
-			)}
+			{source === DocSource.pdfUrl ||
+				(source === DocSource.github && (
+					// TODO: let user add setting for recursive, branch, ignoreFiles, etc
+					<>
+						<div className="flex items-center pt-1">
+							<label htmlFor="textType" className="block grow font-medium leading-6">
+								URL
+							</label>
+						</div>
+						<input
+							type="text"
+							name="text"
+							autoComplete="off"
+							className="nodrag sm:text-md block w-full rounded-md border-0 text-neutral-900 shadow-sm ring-2 ring-inset ring-neutral-300 placeholder:text-neutral-400 focus:ring-inset focus:ring-neutral-600 sm:py-1.5 sm:leading-6"
+							value={text}
+							onChange={(e) => {
+								setText(e.target.value);
+							}}
+						/>
+					</>
+				))}
 			{source === DocSource.pdf && (
 				<>
 					{/* file select */}

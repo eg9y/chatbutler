@@ -75,6 +75,7 @@ export default function RunFromStart({
 				}
 				return newNode;
 			});
+			setChatApp([]);
 			setIsLoading(false);
 			setNodes(clearedNodes);
 			abortControllerRef.current = null;

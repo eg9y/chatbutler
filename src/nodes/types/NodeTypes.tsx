@@ -128,9 +128,10 @@ export type SetVariableDataType = {
 
 export enum DocSource {
 	url = 'URL',
-	text = '.txt file',
+	text = 'TXT file',
 	pdfUrl = 'PDF URL',
-	pdf = 'PDF upload',
+	pdf = 'PDF Upload',
+	github = 'GitHub Repo',
 }
 
 export type DocsLoaderDataType = {

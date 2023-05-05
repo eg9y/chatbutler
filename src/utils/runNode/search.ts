@@ -6,6 +6,7 @@ import { Node } from 'reactflow';
 import { createSupabaseClient } from '../../auth/supabaseClient';
 import { NodeTypesEnum, SearchDataType } from '../../nodes/types/NodeTypes';
 import { RFState } from '../../store/useStore';
+import { Message } from '../../windows/ChatPanel/Chat/types';
 import { parsePromptInputs } from '../parsePromptInputs';
 import { SupabaseVectorStoreWithFilter } from '../vectorStores/SupabaseVectorStoreWithFilter';
 const search = async (node: Node<SearchDataType>, get: () => RFState, openAiKey: string) => {
@@ -15,17 +16,18 @@ const search = async (node: Node<SearchDataType>, get: () => RFState, openAiKey:
 		const docsLoaderNodeIndex = inputNodes.findIndex((node) => node.type === 'docsLoader');
 		const inputIds = inputs.inputs.filter((input) => input !== 'docsLoader');
 		const searchNode = node.data as SearchDataType;
-		const parsedPrompt = parsePromptInputs(get, searchNode.text, inputIds);
+		const userQuestion = parsePromptInputs(get, searchNode.text, inputIds);
 
 		const chatApp = get().chatApp;
-		get().setChatApp([
+		let newChatApp: Message[] = [
 			...chatApp,
 			{
 				role: 'assistant',
-				content: `Search docs(s) ${inputNodes[docsLoaderNodeIndex].data.response} "${parsedPrompt}"...`,
+				content: `Search docs(s) ${inputNodes[docsLoaderNodeIndex].data.response} "${userQuestion}"...`,
 				assistantMessageType: NodeTypesEnum.search,
 			},
-		]);
+		];
+		get().setChatApp(newChatApp);
 
 		const supabase = createSupabaseClient();
 
@@ -84,7 +86,7 @@ const search = async (node: Node<SearchDataType>, get: () => RFState, openAiKey:
 		chain.returnSourceDocuments = true;
 		chain.verbose = true;
 		const res = await chain.call({
-			question: parsedPrompt,
+			question: userQuestion,
 			chat_history: [],
 		});
 
@@ -107,7 +109,7 @@ const search = async (node: Node<SearchDataType>, get: () => RFState, openAiKey:
 			});
 		}
 
-		const newChatApp = [...chatApp];
+		newChatApp = [...newChatApp];
 		newChatApp[newChatApp.length - 1] = {
 			content: 'Search Finished!',
 			role: 'assistant',

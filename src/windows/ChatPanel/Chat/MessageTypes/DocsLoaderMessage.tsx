@@ -38,7 +38,7 @@ function DocsLoaderMessage() {
 	>(null);
 
 	const supabase = useSupabase();
-	const { pauseResolver, setPauseResolver, setWaitingUserResponse } = useStore(selector, shallow);
+	const { pauseResolver } = useStore(selector, shallow);
 	const { openAiKey } = useStoreSecret(selectorSecret, shallow);
 
 	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {

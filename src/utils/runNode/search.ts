@@ -4,7 +4,7 @@ import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { Node } from 'reactflow';
 
 import { createSupabaseClient } from '../../auth/supabaseClient';
-import { SearchDataType } from '../../nodes/types/NodeTypes';
+import { NodeTypesEnum, SearchDataType } from '../../nodes/types/NodeTypes';
 import { RFState } from '../../store/useStore';
 import { parsePromptInputs } from '../parsePromptInputs';
 import { SupabaseVectorStoreWithFilter } from '../vectorStores/SupabaseVectorStoreWithFilter';
@@ -14,12 +14,18 @@ const search = async (node: Node<SearchDataType>, get: () => RFState, openAiKey:
 		const inputNodes = get().getNodes(inputs.inputs);
 		const docsLoaderNodeIndex = inputNodes.findIndex((node) => node.type === 'docsLoader');
 		const inputIds = inputs.inputs.filter((input) => input !== 'docsLoader');
-
 		const searchNode = node.data as SearchDataType;
-		// const document = searchNode?.document;
-		// if (!document) {
-		// 	throw new Error('Document is not defined');
-		// }
+		const parsedPrompt = parsePromptInputs(get, searchNode.text, inputIds);
+
+		const chatApp = get().chatApp;
+		get().setChatApp([
+			...chatApp,
+			{
+				role: 'assistant',
+				content: `Search docs(s) ${inputNodes[docsLoaderNodeIndex].data.response} "${parsedPrompt}"...`,
+				assistantMessageType: NodeTypesEnum.search,
+			},
+		]);
 
 		const supabase = createSupabaseClient();
 
@@ -31,6 +37,7 @@ const search = async (node: Node<SearchDataType>, get: () => RFState, openAiKey:
 		}
 
 		let model = new ChatOpenAI({
+			// TODO: need to let user set the openai settings
 			modelName: 'gpt-3.5-turbo',
 			openAIApiKey: openAiKey,
 		});
@@ -47,7 +54,6 @@ const search = async (node: Node<SearchDataType>, get: () => RFState, openAiKey:
 			);
 			model = new ChatOpenAI(
 				{
-					// TODO: need to let user set the openai settings
 					modelName: 'gpt-3.5-turbo',
 					// this is the supabase session key, the real openAI key is set in the proxy #ifitworksitworks
 					openAIApiKey: session.data.session.access_token,
@@ -65,7 +71,6 @@ const search = async (node: Node<SearchDataType>, get: () => RFState, openAiKey:
 		});
 		// const vectorStore = await MemoryVectorStore.fromDocuments(docOutput, embeddings);
 
-		const parsedPrompt = parsePromptInputs(get, searchNode.text, inputIds);
 		const chain = ConversationalRetrievalQAChain.fromLLM(
 			model,
 			vectorStore.asRetriever(undefined, {
@@ -102,6 +107,13 @@ const search = async (node: Node<SearchDataType>, get: () => RFState, openAiKey:
 			});
 		}
 
+		const newChatApp = [...chatApp];
+		newChatApp[newChatApp.length - 1] = {
+			content: 'Search Finished!',
+			role: 'assistant',
+			assistantMessageType: NodeTypesEnum.outputText,
+		};
+		get().setChatApp(newChatApp);
 		node.data = {
 			...node.data,
 			// TODO: need to have a combiner node or a for loop node

@@ -242,27 +242,26 @@ function UploadDoc({
 				))}
 			</select>
 
-			{source === DocSource.pdfUrl ||
-				(source === DocSource.github && (
-					// TODO: let user add setting for recursive, branch, ignoreFiles, etc
-					<>
-						<div className="flex items-center pt-1">
-							<label htmlFor="textType" className="block grow font-medium leading-6">
-								URL
-							</label>
-						</div>
-						<input
-							type="text"
-							name="text"
-							autoComplete="off"
-							className="nodrag sm:text-md block w-full rounded-md border-0 text-neutral-900 shadow-sm ring-2 ring-inset ring-neutral-300 placeholder:text-neutral-400 focus:ring-inset focus:ring-neutral-600 sm:py-1.5 sm:leading-6"
-							value={text}
-							onChange={(e) => {
-								setText(e.target.value);
-							}}
-						/>
-					</>
-				))}
+			{(source === DocSource.pdfUrl || source === DocSource.github) && (
+				// TODO: let user add setting for recursive, branch, ignoreFiles, etc
+				<>
+					<div className="flex items-center pt-1">
+						<label htmlFor="textType" className="block grow font-medium leading-6">
+							URL
+						</label>
+					</div>
+					<input
+						type="text"
+						name="text"
+						autoComplete="off"
+						className="nodrag sm:text-md block w-full rounded-md border-0 text-neutral-900 shadow-sm ring-2 ring-inset ring-neutral-300 placeholder:text-neutral-400 focus:ring-inset focus:ring-neutral-600 sm:py-1.5 sm:leading-6"
+						value={text}
+						onChange={(e) => {
+							setText(e.target.value);
+						}}
+					/>
+				</>
+			)}
 			{source === DocSource.pdf && (
 				<>
 					{/* file select */}

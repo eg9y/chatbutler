@@ -12,6 +12,7 @@ function runConditional(
 		node: CustomNode,
 		getNodes: (inputs: string[]) => CustomNode[],
 	) => CustomNode[],
+	visited: Set<string>,
 ) {
 	if (node.type === NodeTypesEnum.classifyCategories) {
 		// 1) get edges where source is node and target is one of children
@@ -37,25 +38,34 @@ function runConditional(
 					return edge.target;
 				});
 			childrenNodes = get().getNodes(childrenNodeIds);
-
-			// Set all loop children connected to Loop edge to be skipped
-			const loopChildren = getAllChildren(
-				get().getNodes([loopStartNodeId])[0],
-				get().getNodes,
-			);
-			loopChildren.forEach((child) => {
-				skipped.add(child.id);
-			});
-			skipped.add(loopStartNodeId);
-			skipped.add(node.id);
 		} else {
 			childrenNodes = get().getNodes([loopStartNodeId]);
 		}
 	}
 
 	if (node.data.loopId && node.data.children.length === 0) {
+		// eslint-disable-next-line no-inner-declarations
 		// if last node in the loop, go back to the loop node
+
+		// recursively assigning the parentNode and loopId for nodes in a loop
+		// eslint-disable-next-line no-inner-declarations
+		function resetLoopChildren(nodes: CustomNode[], loopNodeIndex: number) {
+			visited.delete(nodes[loopNodeIndex].id);
+			// Iterate through target node's children and call assignLoopChildren recursively
+			nodes[loopNodeIndex].data.children.forEach((childId) => {
+				const childIndex = nodes.findIndex((node) => node.id === childId);
+				if (childIndex !== -1) {
+					resetLoopChildren(nodes, childIndex);
+				}
+			});
+			return nodes;
+		}
+		const nodes = get().nodes;
+		// get loop node index
+		const loopNodeIndex = nodes.findIndex((currNode) => currNode.id === node.data.loopId);
 		childrenNodes = get().getNodes([node.data.loopId]);
+		// reset loop children
+		resetLoopChildren(nodes, loopNodeIndex);
 	}
 
 	return childrenNodes;

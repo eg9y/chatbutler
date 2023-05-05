@@ -137,11 +137,11 @@ const InputNodesList = ({
 									data,
 								)}
 							>
-								<div className={borderClass}>
+								{/* <div className={borderClass}>
 									{inputNode.data.loopId && type === 'loop' && (
 										<ArrowPathIcon className="inline-block h-8 w-8 text-slate-50" />
 									)}
-								</div>
+								</div> */}
 								<div className="p-1">{inputNode.data.name}</div>
 							</button>
 						</div>

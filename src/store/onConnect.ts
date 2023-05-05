@@ -45,12 +45,6 @@ function assignLoopChildren(nodes: CustomNode[], targetNodeIndex: number, loopNo
 			assignLoopChildren(nodes, childNodeIndex, loopNodeIndex);
 		}
 	});
-
-	// if leaf child
-	if (nodes[targetNodeIndex].data.children.length === 0) {
-		nodes[loopNodeIndex].data.inputs.addInput(nodes[targetNodeIndex].id, nodes as InputNode[]);
-	}
-
 	return nodes;
 }
 

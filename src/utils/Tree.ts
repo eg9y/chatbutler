@@ -22,9 +22,10 @@ export async function traverseTree(
 	function allParentsVisited(node: CustomNode): boolean {
 		const inputNodes = get().getNodes(node.data.inputs.inputs);
 		return inputNodes.every((parent) => {
-			return (
-				visited.has(parent.id) || parent.data.loopId || parent.type === NodeTypesEnum.loop
-			);
+			if (visited.has(parent.id)) {
+				return true;
+			}
+			return false;
 		});
 	}
 
@@ -34,11 +35,9 @@ export async function traverseTree(
 
 		// TODO: if node.data.loopId, don't run visited.add(node.id)
 
-		if (!node.data.loopId && node.type !== NodeTypesEnum.loop) {
-			visited.add(node.id);
-		}
-
 		let childrenNodes = get().getNodes(node.data.children);
+
+		visited.add(node.id);
 
 		try {
 			if (node.type === NodeTypesEnum.loop && (node.data as LoopDataType).loopCount > 0) {
@@ -66,7 +65,14 @@ export async function traverseTree(
 				}
 			}
 			await runNode(node, get, set, openAiKey);
-			childrenNodes = runConditional(node, get, childrenNodes, skipped, getAllChildren);
+			childrenNodes = runConditional(
+				node,
+				get,
+				childrenNodes,
+				skipped,
+				getAllChildren,
+				visited,
+			);
 		} catch (error: any) {
 			console.log(error);
 			throw new Error('Error running node', error.message);

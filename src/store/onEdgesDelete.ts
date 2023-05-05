@@ -1,6 +1,4 @@
 import { UseStoreSetType, RFState } from './useStore';
-import { InputNode } from '../nodes/types/NodeTypes';
-import { getAllLeafChildren } from '../utils/getChildren';
 
 const onEdgesDelete = (get: () => RFState, set: UseStoreSetType, edges: RFState['edges']) => {
 	const nodes = get().nodes;
@@ -33,29 +31,6 @@ const onEdgesDelete = (get: () => RFState, set: UseStoreSetType, edges: RFState[
 					nodes[nodeIndex].position.x += parentNode.position.x;
 					nodes[nodeIndex].position.y += parentNode.position.y;
 				}
-			}
-
-			// reassign loop node inputs
-			if (nodes[nodeIndex].data.loopId) {
-				const loopNode = nodes.find((node) => node.id === nodes[nodeIndex].data.loopId);
-				const loopInputs = getAllLeafChildren(nodes[nodeIndex], get().getNodes);
-
-				loopInputs.forEach((input) => {
-					// remove input from loop node
-					if (loopNode) {
-						loopNode.data.inputs.deleteInputs([input.id]);
-					}
-
-					// add new input(s) to loop node
-					const inputNodes = get().getNodes(nodes[nodeIndex].data.inputs.inputs);
-					inputNodes.forEach((inputNode) => {
-						if (inputNode.data.loopId && inputNode.data.children.length === 0) {
-							loopNode?.data.inputs.addInput(inputNode.id, nodes as InputNode[]);
-						}
-					});
-				});
-
-				delete nodes[nodeIndex].data.loopId;
 			}
 		});
 

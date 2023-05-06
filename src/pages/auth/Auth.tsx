@@ -42,7 +42,8 @@ export default function AuthPage() {
 						supabaseClient={supabase}
 						providers={['google']}
 						redirectTo={
-							!import.meta.env.PROD
+							!import.meta.env.VITE_VERCEL_ENV ||
+							import.meta.env.VITE_VERCEL_ENV === 'production'
 								? 'https://app.promptsandbox.io'
 								: 'http://localhost:5173'
 						}

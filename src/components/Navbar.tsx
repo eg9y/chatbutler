@@ -154,6 +154,7 @@ const NavBar = () => {
 								supabase.auth.signOut();
 								setSession(null);
 								setWorkflows([]);
+								setCurrentWorkflow(null);
 								// clear graph;
 								clearGraph();
 								setUsername('');

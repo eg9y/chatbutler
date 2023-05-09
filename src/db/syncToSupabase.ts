@@ -23,6 +23,7 @@ const syncDataToSupabase = async (
 			...node,
 			data: {
 				...node.data,
+				response: '',
 				isLoading: false,
 			},
 		};

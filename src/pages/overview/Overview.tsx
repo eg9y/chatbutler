@@ -1,18 +1,61 @@
 import { Menu, Transition } from '@headlessui/react';
 import { ChevronUpDownIcon } from '@heroicons/react/20/solid';
-import { EllipsisVerticalIcon } from '@heroicons/react/24/outline';
-import { Fragment } from 'react';
+import { Session } from '@supabase/supabase-js';
+import { Fragment, useEffect, useState } from 'react';
 import { shallow } from 'zustand/shallow';
 
+import ChatbotMenu from './components/ChatbotMenu';
+import useSupabase from '../../auth/supabaseClient';
 import { useStore, useStoreSecret, selector, selectorSecret } from '../../store';
 import { conditionalClassNames } from '../../utils/classNames';
+import UsernamePrompt from '../app/UsernamePrompt';
 
 export default function Overview() {
-	const { workflows, setWorkflows, setCurrentWorkflow } = useStore(selector, shallow);
+	const { workflows, setUiErrorMessage, setUsername, setWorkflows, setCurrentWorkflow } =
+		useStore(selector, shallow);
 	const { session } = useStoreSecret(selectorSecret, shallow);
+
+	const supabase = useSupabase();
+
+	const [showUsernamePrompt, setShowUsernamePrompt] = useState(false);
+
+	// TODO: Put this in Overview
+	useEffect(() => {
+		// get user profile from profile tablee where user id = current user id
+		// if first_name is null and profile exists, ask user for firstname
+		const getProfile = async (session: Session) => {
+			const { data: profile, error } = await supabase
+				.from('profiles')
+				.select('*')
+				.eq('id', session?.user?.id)
+				.single();
+			if (error) {
+				setUiErrorMessage(error.message);
+			}
+			if (profile) {
+				if (!profile.first_name) {
+					setShowUsernamePrompt(true);
+				} else {
+					setUsername(profile.first_name);
+				}
+			}
+		};
+
+		if (session) {
+			getProfile(session);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [session]);
 
 	return (
 		<main className="lg:mx-auto lg:max-w-[50vw]">
+			<UsernamePrompt
+				open={showUsernamePrompt}
+				setShowUsernamePrompt={setShowUsernamePrompt}
+				supabase={supabase}
+				session={session}
+				setUsername={setUsername}
+			/>
 			<header className="flex items-center justify-between border-b border-white/5 px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
 				<h1 className="text-base font-semibold leading-7 text-slate-600">Your Chatbots</h1>
 
@@ -95,7 +138,7 @@ export default function Overview() {
 						onClick={(e) => {
 							window.open(
 								`/app/?user_id=${session?.user.id}&id=${chatbot.id}`,
-								'_blank',
+								'_self',
 							);
 						}}
 						className="group relative flex flex-grow cursor-pointer items-center space-x-4 px-4 py-4 hover:bg-slate-100 sm:px-6 lg:px-8"
@@ -121,118 +164,27 @@ export default function Overview() {
 								</svg>
 							</div>
 						</div>
-						<div
-							className={conditionalClassNames(
-								'flex-none rounded-full py-1 px-2 text-xs font-medium ring-1 ring-inset',
-							)}
-						>
-							Draft
-							{/* {chatbot.environment} */}
+
+						<div className="flex flex-none items-center gap-x-4">
+							<div
+								className={conditionalClassNames(
+									'flex-none rounded-full py-1 px-2 text-xs font-medium ring-1 ring-inset',
+								)}
+							>
+								Draft
+								{/* {chatbot.environment} */}
+							</div>
+							{/* <a
+								href={'#'}
+								className="hidden rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:block"
+							>
+								Publish
+							</a> */}
+							<ChatbotMenu chatbot={chatbot} session={session as Session} />
 						</div>
-						<ChatbotMenu />
 					</li>
 				))}
 			</ul>
 		</main>
-	);
-}
-
-function ChatbotMenu() {
-	return (
-		<div
-			onClick={(e) => {
-				// Prevent the event from bubbling up to the parent
-				console.log('foo');
-				e.stopPropagation();
-				e.preventDefault();
-			}}
-			// className="cursor-pointer rounded-full p-2 hover:bg-slate-300 "
-		>
-			<Menu
-				as="div"
-				className="text-le ft relative
-		inline-block"
-			>
-				<div>
-					<Menu.Button className="flex items-center rounded-full bg-slate-100 p-2 text-slate-500 	hover:ring-2 hover:ring-slate-400 hover:ring-offset-1 group-hover:bg-slate-200 group-hover:text-slate-900">
-						<span className="sr-only">Open options</span>
-						<EllipsisVerticalIcon className="h-5 w-5" aria-hidden="true" />
-					</Menu.Button>
-				</div>
-
-				<Transition
-					as={Fragment}
-					enter="transition ease-out duration-100"
-					enterFrom="transform opacity-0 scale-95"
-					enterTo="transform opacity-100 scale-100"
-					leave="transition ease-in duration-75"
-					leaveFrom="transform opacity-100 scale-100"
-					leaveTo="transform opacity-0 scale-95"
-				>
-					<Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-						<div className="py-1">
-							<Menu.Item>
-								{({ active }) => (
-									<a
-										href="#"
-										className={conditionalClassNames(
-											active
-												? 'bg-slate-100 text-slate-900'
-												: 'text-slate-700',
-											'block px-4 py-2 text-sm',
-										)}
-									>
-										Edit
-									</a>
-								)}
-							</Menu.Item>
-							<Menu.Item>
-								{({ active }) => (
-									<a
-										href="#"
-										className={conditionalClassNames(
-											active
-												? 'bg-slate-100 text-slate-900'
-												: 'text-slate-700',
-											'block px-4 py-2 text-sm',
-										)}
-									>
-										Rename
-									</a>
-								)}
-							</Menu.Item>
-							<Menu.Item>
-								{({ active }) => (
-									<a
-										href="#"
-										className={conditionalClassNames(
-											active
-												? 'bg-slate-100 text-slate-900'
-												: 'text-slate-700',
-											'block px-4 py-2 text-sm',
-										)}
-									>
-										Publish
-									</a>
-								)}
-							</Menu.Item>
-							<Menu.Item>
-								{({ active }) => (
-									<a
-										href="#"
-										className={conditionalClassNames(
-											active ? 'bg-slate-100 text-red-900' : 'text-red-600',
-											'block px-4 py-2 text-sm',
-										)}
-									>
-										Remove
-									</a>
-								)}
-							</Menu.Item>
-						</div>
-					</Menu.Items>
-				</Transition>
-			</Menu>
-		</div>
 	);
 }

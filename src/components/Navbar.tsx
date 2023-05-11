@@ -59,7 +59,7 @@ const NavBar = () => {
 				aria-label="Global"
 			>
 				<div className=" flex h-full flex-1 items-center gap-2">
-					{location === '/editor/' && (
+					{location === '/app/' && (
 						<>
 							<DocumentTextIcon className="h-6 w-6 text-slate-800" />
 							<div className="flex items-center gap-2 text-slate-800">
@@ -79,7 +79,7 @@ const NavBar = () => {
 							</div>
 						</>
 					)}
-					{location != '/editor/' && (
+					{location != '/app/' && (
 						<div className="flex h-full items-end font-semibold text-slate-800">
 							Chatbutler.ai
 						</div>

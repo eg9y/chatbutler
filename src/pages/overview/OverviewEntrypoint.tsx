@@ -8,7 +8,7 @@ import '../index.css';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 	<React.StrictMode>
-		<Layout>
+		<Layout shouldAuthenticate={true}>
 			<Overview />
 		</Layout>
 	</React.StrictMode>,

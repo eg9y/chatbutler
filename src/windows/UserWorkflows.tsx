@@ -270,6 +270,9 @@ export default function UserWorkflows({
 																id: data.id,
 																name: data.name,
 																description: '',
+																is_public: true,
+																user_id: data.user_id,
+																updated_at: data.updated_at,
 															},
 														]);
 														setWorkflowNameWindowOpen(true);

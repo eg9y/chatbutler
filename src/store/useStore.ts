@@ -63,12 +63,8 @@ export interface RFState {
 	setCurrentChatSessionIndex: (index: number) => void;
 	documents: DocumentDbSchema[];
 	setDocuments: (documents: DocumentDbSchema[]) => void;
-	workflows: {
-		id: string;
-		name: string;
-		description: string;
-	}[];
-	setWorkflows: (workflows: { id: string; name: string; description: string }[]) => void;
+	workflows: SimpleWorkflow[];
+	setWorkflows: (workflows: SimpleWorkflow[]) => void;
 	globalVariables: GlobalVariableType;
 	setGlobalVariables: (variables: GlobalVariableType) => void;
 	currentWorkflow: SimpleWorkflow | null;
@@ -184,7 +180,7 @@ const useStore = create<RFState>()(
 				});
 			},
 			workflows: [],
-			setWorkflows: (workflows: { id: string; name: string; description: string }[]) => {
+			setWorkflows: (workflows: SimpleWorkflow[]) => {
 				set({
 					workflows,
 				});

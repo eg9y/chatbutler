@@ -15,7 +15,7 @@ const populateUserWorkflows = async (
 	}
 	const { data, error } = await supabase
 		.from('workflows')
-		.select('id, name, description')
+		.select('id, name, description, is_public, user_id, updated_at')
 		.eq('user_id', session.user.id);
 	if (data) {
 		const newData = data.map((workflow) => {

@@ -57,7 +57,7 @@ const syncDataToSupabase = async (
 				is_public: currentWorkflow.is_public,
 				user_id: session.user.id,
 			})
-			.select('id, name, description')
+			.select('id, name, description, is_public, user_id, updated_at')
 			.single();
 
 		if (insertionData) {

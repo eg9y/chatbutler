@@ -9,6 +9,7 @@ export type SimpleWorkflow = {
 	name: string;
 	description: string;
 	is_public: boolean;
+	updated_at: string;
 };
 export type GlobalVariableType = { [key: string]: { name: string; type: string } };
 

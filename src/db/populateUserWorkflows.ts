@@ -15,10 +15,16 @@ const populateUserWorkflows = async (
 	}
 	const { data, error } = await supabase
 		.from('workflows')
-		.select('id, name')
+		.select('id, name, description')
 		.eq('user_id', session.user.id);
 	if (data) {
-		setWorkflows(data);
+		const newData = data.map((workflow) => {
+			return {
+				...workflow,
+				description: workflow.description || '',
+			};
+		});
+		setWorkflows(newData);
 	} else if (error) {
 		setUiErrorMessage(error.message);
 	}

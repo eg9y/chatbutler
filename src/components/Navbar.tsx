@@ -19,10 +19,11 @@ import { useQueryParams } from '../utils/useQueryParams';
 
 const NavBar = () => {
 	const navigation = [
-		{ name: 'Editor', href: '/' },
+		{ name: 'Overview', href: '/' },
+		{ name: 'Editor', href: '/app/' },
 		// { name: 'Files', href: '/files/' },
+		// { name: 'Chat', href: '/chat/' },
 		{ name: 'Gallery', href: '/gallery/' },
-		{ name: 'Chat', href: '/chat/' },
 	];
 	const [location] = useLocation();
 	const params = useQueryParams();
@@ -58,7 +59,7 @@ const NavBar = () => {
 				aria-label="Global"
 			>
 				<div className=" flex h-full flex-1 items-center gap-2">
-					{location === '/' && (
+					{location === '/editor/' && (
 						<>
 							<DocumentTextIcon className="h-6 w-6 text-slate-800" />
 							<div className="flex items-center gap-2 text-slate-800">
@@ -78,9 +79,9 @@ const NavBar = () => {
 							</div>
 						</>
 					)}
-					{location != '/' && (
+					{location != '/editor/' && (
 						<div className="flex h-full items-end font-semibold text-slate-800">
-							Promtpsandbox.io
+							Chatbutler.ai
 						</div>
 					)}
 					<div className="flex md:hidden">
@@ -137,7 +138,7 @@ const NavBar = () => {
 				<div className="flex flex-1 items-center justify-end gap-4 text-sm">
 					<a
 						className="flex cursor-pointer items-center gap-1 hover:font-semibold"
-						href="https://github.com/eg9y/promptsandbox.io"
+						href="https://github.com/eg9y/Chatbutler.ai"
 						target="_blank"
 						rel="noreferrer"
 					>

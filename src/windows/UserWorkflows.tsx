@@ -269,6 +269,7 @@ export default function UserWorkflows({
 															{
 																id: data.id,
 																name: data.name,
+																description: '',
 															},
 														]);
 														setWorkflowNameWindowOpen(true);

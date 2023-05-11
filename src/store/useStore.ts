@@ -66,10 +66,11 @@ export interface RFState {
 	workflows: {
 		id: string;
 		name: string;
+		description: string;
 	}[];
+	setWorkflows: (workflows: { id: string; name: string; description: string }[]) => void;
 	globalVariables: GlobalVariableType;
 	setGlobalVariables: (variables: GlobalVariableType) => void;
-	setWorkflows: (workflows: { id: string; name: string }[]) => void;
 	currentWorkflow: SimpleWorkflow | null;
 	setCurrentWorkflow: (workflow: SimpleWorkflow | null) => void;
 	reactFlowInstance: ReactFlowInstance | null;
@@ -183,7 +184,7 @@ const useStore = create<RFState>()(
 				});
 			},
 			workflows: [],
-			setWorkflows: (workflows: { id: string; name: string }[]) => {
+			setWorkflows: (workflows: { id: string; name: string; description: string }[]) => {
 				set({
 					workflows,
 				});
@@ -346,7 +347,7 @@ const useStore = create<RFState>()(
 			},
 		}),
 		{
-			name: 'promptsandbox.io',
+			name: 'Chatbutler.ai',
 			storage,
 		},
 	),

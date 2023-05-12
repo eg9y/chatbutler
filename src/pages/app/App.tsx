@@ -120,7 +120,6 @@ export default function App() {
 				}
 			}
 			if (params && params.id) {
-				console.log('starting load', params);
 				await selectWorkflow(
 					params.id,
 					nodes,
@@ -133,7 +132,6 @@ export default function App() {
 					setEdges,
 					supabase,
 				);
-				console.log('loaded ');
 			} else if (currentSession?.user && currentWorkflow) {
 				await selectWorkflow(
 					currentWorkflow.id,
@@ -151,8 +149,9 @@ export default function App() {
 			setIsLoading(false);
 		}
 		if (params) {
-			console.log('called here', params);
 			init();
+		} else {
+			setIsLoading(false);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [params]);

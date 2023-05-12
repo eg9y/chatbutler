@@ -17,7 +17,7 @@ export default function ChatbotMenuPanel({
 }: {
 	showPanel: boolean;
 	setShowPanel: (x: boolean) => void;
-	chatbot: SimpleWorkflow;
+	chatbot?: SimpleWorkflow;
 	setUiErrorMessage: RFState['setUiErrorMessage'];
 	workflows: RFState['workflows'];
 	setWorkflows: RFState['setWorkflows'];
@@ -27,11 +27,22 @@ export default function ChatbotMenuPanel({
 	const [isLoading, setIsLoading] = useState(false);
 	const supabase = useSupabase();
 	const [value, setValue] = useState<string>(
-		chatbot[propertyName as keyof SimpleWorkflow] as string,
+		chatbot ? (chatbot[propertyName as keyof SimpleWorkflow] as string) : '',
 	);
+
+	useEffect(() => {
+		if (showPanel) {
+			setValue(chatbot ? (chatbot[propertyName as keyof SimpleWorkflow] as string) : '');
+		}
+	}, [chatbot, propertyName, showPanel]);
 
 	async function handleSubmit() {
 		setIsLoading(true);
+		if (!chatbot) {
+			setUiErrorMessage(`Error updating workflow name`);
+			setIsLoading(false);
+			return;
+		}
 		const { error: updateCurrentWorkflowError } = await supabase
 			.from('workflows')
 			.update({
@@ -56,6 +67,7 @@ export default function ChatbotMenuPanel({
 
 		(newWorkflows[workflowIndex] as any)[propertyName] = value;
 		setWorkflows(newWorkflows);
+		setIsLoading(false);
 	}
 
 	return (
@@ -114,9 +126,9 @@ export default function ChatbotMenuPanel({
 											onChange={(e) => {
 												setValue(e.target.value);
 											}}
-											onKeyDown={(e) => {
+											onKeyDown={async (e) => {
 												if (e.key === 'Enter') {
-													handleSubmit();
+													await handleSubmit();
 													setShowPanel(false);
 												}
 											}}
@@ -129,8 +141,8 @@ export default function ChatbotMenuPanel({
 									<button
 										type="button"
 										className="inline-flex w-full justify-center rounded-md bg-blue-600 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto"
-										onClick={() => {
-											handleSubmit();
+										onClick={async () => {
+											await handleSubmit();
 											setShowPanel(false);
 										}}
 									>

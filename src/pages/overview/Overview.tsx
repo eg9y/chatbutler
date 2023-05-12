@@ -6,7 +6,9 @@ import { Fragment, useEffect, useState } from 'react';
 import { shallow } from 'zustand/shallow';
 
 import ChatbotMenu from './components/ChatbotMenu';
+import ChatbotMenuPanel from './components/ChatbotMenuPanel';
 import useSupabase from '../../auth/supabaseClient';
+import { SimpleWorkflow } from '../../db/dbTypes';
 import { useStore, useStoreSecret, selector, selectorSecret } from '../../store';
 import { conditionalClassNames } from '../../utils/classNames';
 import UsernamePrompt from '../app/UsernamePrompt';
@@ -20,7 +22,10 @@ export default function Overview() {
 
 	const [showUsernamePrompt, setShowUsernamePrompt] = useState(false);
 
-	const [showNewChatbotPanel, setShowNewChatbotPanel] = useState(false);
+	const [showPanel, setShowPanel] = useState(false);
+	const [propertyName, setPropertyName] = useState<keyof SimpleWorkflow>('name');
+
+	const [chatbot, setChatbot] = useState<SimpleWorkflow>();
 
 	// TODO: Put this in Overview
 	useEffect(() => {
@@ -59,12 +64,21 @@ export default function Overview() {
 				session={session}
 				setUsername={setUsername}
 			/>
+			<ChatbotMenuPanel
+				showPanel={showPanel}
+				setShowPanel={setShowPanel}
+				chatbot={chatbot}
+				setUiErrorMessage={setUiErrorMessage}
+				workflows={workflows}
+				setWorkflows={setWorkflows}
+				propertyName={propertyName}
+			/>
 			<header className="flex items-center justify-between border-b border-white/5 px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
 				<h1 className="text-base font-semibold leading-7 text-slate-600">Your Chatbots</h1>
 
 				{/* Sort dropdown */}
 				<div className="flex items-center gap-2">
-					<Menu as="div" className="relative">
+					{/* <Menu as="div" className="relative">
 						<Menu.Button className="flex items-center gap-x-1 text-sm font-medium leading-6 text-slate-600">
 							Sort by
 							<ChevronUpDownIcon
@@ -123,7 +137,7 @@ export default function Overview() {
 								</Menu.Item>
 							</Menu.Items>
 						</Transition>
-					</Menu>
+					</Menu> */}
 					<button
 						type="button"
 						onClick={async () => {
@@ -139,18 +153,17 @@ export default function Overview() {
 								.select()
 								.single();
 							if (data) {
-								setWorkflows([
-									...workflows,
-									{
-										id: data.id,
-										name: data.name,
-										description: '',
-										is_public: true,
-										user_id: data.user_id,
-										updated_at: data.updated_at,
-									},
-								]);
-								setShowNewChatbotPanel(true);
+								const newChatbot = {
+									id: data.id,
+									name: data.name,
+									description: '',
+									is_public: true,
+									user_id: data.user_id,
+									updated_at: data.updated_at,
+								};
+								setWorkflows([newChatbot, ...workflows]);
+								setChatbot(newChatbot);
+								setShowPanel(true);
 							} else if (error) {
 								setUiErrorMessage(error.message);
 							}
@@ -164,12 +177,12 @@ export default function Overview() {
 
 			{/* Deployment list */}
 			<ul role="list" className="divide-y divide-white/5">
-				{workflows.map((chatbot) => (
+				{workflows.map((currentChatbot) => (
 					<li
-						key={chatbot.id}
+						key={currentChatbot.id}
 						onClick={(e) => {
 							window.open(
-								`/app/?user_id=${session?.user.id}&id=${chatbot.id}`,
+								`/app/?user_id=${session?.user.id}&id=${currentChatbot.id}`,
 								'_self',
 							);
 						}}
@@ -183,11 +196,11 @@ export default function Overview() {
 									<div className="h-2 w-2 rounded-full bg-current" />
 								</div>
 								<h2 className="flex min-w-0 gap-x-2 text-sm font-semibold leading-6 text-slate-600">
-									<span className="truncate">{chatbot.name}</span>
+									<span className="truncate">{currentChatbot.name}</span>
 								</h2>
 							</div>
 							<div className="mt-3 flex items-center gap-x-2.5 text-xs leading-5 text-slate-400">
-								<p className="truncate">{chatbot.description}</p>
+								<p className="truncate">{currentChatbot.description}</p>
 								<svg
 									viewBox="0 0 2 2"
 									className="h-0.5 w-0.5 flex-none fill-slate-300"
@@ -213,11 +226,13 @@ export default function Overview() {
 								Publish
 							</a> */}
 							<ChatbotMenu
-								chatbot={chatbot}
+								chatbot={currentChatbot}
+								setChatbot={setChatbot}
 								session={session as Session}
 								workflows={workflows}
 								setWorkflows={setWorkflows}
-								setUiErrorMessage={setUiErrorMessage}
+								setShowPanel={setShowPanel}
+								setPropertyName={setPropertyName}
 							/>
 						</div>
 					</li>

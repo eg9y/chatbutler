@@ -4,25 +4,29 @@ import { Session } from '@supabase/supabase-js';
 import { Fragment, useState } from 'react';
 
 import ChatbotMenuPanel from './ChatbotMenuPanel';
+import useSupabase from '../../../auth/supabaseClient';
 import { SimpleWorkflow } from '../../../db/dbTypes';
 import { RFState } from '../../../store/useStore';
 import { conditionalClassNames } from '../../../utils/classNames';
 
 function ChatbotMenu({
 	chatbot,
+	setChatbot,
 	session,
 	workflows,
 	setWorkflows,
-	setUiErrorMessage,
+	setShowPanel,
+	setPropertyName,
 }: {
 	chatbot: SimpleWorkflow;
+	setChatbot: (chatbot: SimpleWorkflow) => void;
 	session: Session;
 	workflows: RFState['workflows'];
 	setWorkflows: RFState['setWorkflows'];
-	setUiErrorMessage: RFState['setUiErrorMessage'];
+	setShowPanel: (show: boolean) => void;
+	setPropertyName: (name: keyof SimpleWorkflow) => void;
 }) {
-	const [showPanel, setShowPanel] = useState(false);
-	const [propertyName, setPropertyName] = useState<keyof SimpleWorkflow>('name');
+	const supabase = useSupabase();
 
 	return (
 		<div
@@ -30,18 +34,11 @@ function ChatbotMenu({
 				// Prevent the event from bubbling up to the parent
 				e.stopPropagation();
 				e.preventDefault();
+
+				setChatbot(chatbot);
 			}}
 			// className="cursor-pointer rounded-full p-2 hover:bg-slate-300 "
 		>
-			<ChatbotMenuPanel
-				showPanel={showPanel}
-				setShowPanel={setShowPanel}
-				chatbot={chatbot}
-				setUiErrorMessage={setUiErrorMessage}
-				workflows={workflows}
-				setWorkflows={setWorkflows}
-				propertyName={propertyName}
-			/>
 			<Menu
 				as="div"
 				className="text-le ft relative
@@ -103,7 +100,7 @@ function ChatbotMenu({
 									</a>
 								)}
 							</Menu.Item>
-							<Menu.Item>
+							{/* <Menu.Item>
 								{({ active }) => (
 									<a
 										href="#"
@@ -117,11 +114,21 @@ function ChatbotMenu({
 										Publish
 									</a>
 								)}
-							</Menu.Item>
+							</Menu.Item> */}
 							<Menu.Item>
 								{({ active }) => (
 									<a
 										href="#"
+										onClick={async () => {
+											// remove chatbot
+											setWorkflows(
+												workflows.filter((w) => w.id !== chatbot.id),
+											);
+											await supabase
+												.from('workflows')
+												.delete()
+												.eq('id', chatbot.id);
+										}}
 										className={conditionalClassNames(
 											active ? 'bg-slate-100 text-red-700' : 'text-red-600',
 											'block px-4 py-2 text-sm',

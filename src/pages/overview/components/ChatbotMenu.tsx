@@ -3,26 +3,44 @@ import { EllipsisVerticalIcon } from '@heroicons/react/20/solid';
 import { Session } from '@supabase/supabase-js';
 import { Fragment, useState } from 'react';
 
-import RenameChatbot from './RenameChatbot';
+import ChatbotMenuPanel from './ChatbotMenuPanel';
 import { SimpleWorkflow } from '../../../db/dbTypes';
+import { RFState } from '../../../store/useStore';
 import { conditionalClassNames } from '../../../utils/classNames';
 
-function ChatbotMenu({ chatbot, session }: { chatbot: SimpleWorkflow; session: Session }) {
-	const [showRenamePanel, setShowRenamePanel] = useState(false);
+function ChatbotMenu({
+	chatbot,
+	session,
+	workflows,
+	setWorkflows,
+	setUiErrorMessage,
+}: {
+	chatbot: SimpleWorkflow;
+	session: Session;
+	workflows: RFState['workflows'];
+	setWorkflows: RFState['setWorkflows'];
+	setUiErrorMessage: RFState['setUiErrorMessage'];
+}) {
+	const [showPanel, setShowPanel] = useState(false);
+	const [propertyName, setPropertyName] = useState<keyof SimpleWorkflow>('name');
 
 	return (
 		<div
 			onClick={(e) => {
 				// Prevent the event from bubbling up to the parent
-				console.log('foo');
 				e.stopPropagation();
 				e.preventDefault();
 			}}
 			// className="cursor-pointer rounded-full p-2 hover:bg-slate-300 "
 		>
-			<RenameChatbot
-				showRenamePanel={showRenamePanel}
-				setShowRenamePanel={setShowRenamePanel}
+			<ChatbotMenuPanel
+				showPanel={showPanel}
+				setShowPanel={setShowPanel}
+				chatbot={chatbot}
+				setUiErrorMessage={setUiErrorMessage}
+				workflows={workflows}
+				setWorkflows={setWorkflows}
+				propertyName={propertyName}
 			/>
 			<Menu
 				as="div"
@@ -71,7 +89,8 @@ function ChatbotMenu({ chatbot, session }: { chatbot: SimpleWorkflow; session: S
 								{({ active }) => (
 									<a
 										onClick={() => {
-											setShowRenamePanel(true);
+											setPropertyName('name');
+											setShowPanel(true);
 										}}
 										className={conditionalClassNames(
 											active

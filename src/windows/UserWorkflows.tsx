@@ -288,7 +288,7 @@ export default function UserWorkflows({
 													}
 													aria-hidden="true"
 												/>
-												<span className="truncate">Add chatbots</span>
+												<span className="truncate">New Chatbot</span>
 											</a>
 										</div>
 									</>

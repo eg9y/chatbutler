@@ -1,6 +1,7 @@
 import { Menu, Transition } from '@headlessui/react';
 import { ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import { Session } from '@supabase/supabase-js';
+import { nanoid } from 'nanoid';
 import { Fragment, useEffect, useState } from 'react';
 import { shallow } from 'zustand/shallow';
 
@@ -18,6 +19,8 @@ export default function Overview() {
 	const supabase = useSupabase();
 
 	const [showUsernamePrompt, setShowUsernamePrompt] = useState(false);
+
+	const [showNewChatbotPanel, setShowNewChatbotPanel] = useState(false);
 
 	// TODO: Put this in Overview
 	useEffect(() => {
@@ -123,6 +126,35 @@ export default function Overview() {
 					</Menu>
 					<button
 						type="button"
+						onClick={async () => {
+							const id = nanoid();
+							const { data, error } = await supabase
+								.from('workflows')
+								.insert({
+									name: `New ${id}`,
+									id,
+									// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+									user_id: session!.user.id,
+								})
+								.select()
+								.single();
+							if (data) {
+								setWorkflows([
+									...workflows,
+									{
+										id: data.id,
+										name: data.name,
+										description: '',
+										is_public: true,
+										user_id: data.user_id,
+										updated_at: data.updated_at,
+									},
+								]);
+								setShowNewChatbotPanel(true);
+							} else if (error) {
+								setUiErrorMessage(error.message);
+							}
+						}}
 						className="rounded-md bg-slate-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600"
 					>
 						New Chatbot
@@ -180,7 +212,13 @@ export default function Overview() {
 							>
 								Publish
 							</a> */}
-							<ChatbotMenu chatbot={chatbot} session={session as Session} />
+							<ChatbotMenu
+								chatbot={chatbot}
+								session={session as Session}
+								workflows={workflows}
+								setWorkflows={setWorkflows}
+								setUiErrorMessage={setUiErrorMessage}
+							/>
 						</div>
 					</li>
 				))}

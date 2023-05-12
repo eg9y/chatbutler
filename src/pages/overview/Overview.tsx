@@ -62,7 +62,7 @@ export default function Overview() {
 			const sessionResponse = await supabase.auth.getSession();
 			const currentSession = sessionResponse.data.session;
 			setSession(currentSession);
-			if (workflows) {
+			if (workflows.length > 0) {
 				setIsLoading(false);
 				return;
 			}

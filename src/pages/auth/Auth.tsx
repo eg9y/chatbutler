@@ -29,7 +29,7 @@ export default function AuthPage() {
 	}, [nodes.length, setCurrentWorkflow, supabase]);
 	return (
 		<>
-			<div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
+			<div className="flex min-h-full flex-col py-52 sm:px-6 lg:px-8">
 				<div className="sm:mx-auto sm:w-full sm:max-w-md">
 					<h1 className="mx-auto h-12 w-auto text-center text-5xl">Chatbutler.ai</h1>
 					<h2 className="mt-6 text-center text-2xl font-bold tracking-tight text-gray-900">

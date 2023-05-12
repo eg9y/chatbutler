@@ -81,7 +81,7 @@ export default function LeftSidePanel({
 
 	return (
 		<aside className="h-full w-full overflow-auto border-r-1 border-slate-400 bg-slate-50 shadow-lg">
-			{session && (
+			{/* {session && (
 				<UserWorkflows
 					currentWorkflow={currentWorkflow}
 					setCurrentWorkflow={setCurrentWorkflow}
@@ -90,12 +90,12 @@ export default function LeftSidePanel({
 					setOpen={setOpenWorkflows}
 					reactFlowInstance={reactFlowInstance}
 				/>
-			)}
+			)} */}
 			<Tutorial open={openTutorials} setOpen={setOpenTutorials} />
 
 			<div className="flex h-full flex-col justify-start border-1 ">
 				<div className="flex flex-col bg-slate-50">
-					<div className="">
+					{/* <div className="">
 						<a
 							className="bg group flex cursor-pointer items-center justify-start px-2 py-1 text-sm 
 											font-medium text-slate-700 hover:bg-slate-100 hover:font-bold hover:text-slate-900"
@@ -115,7 +115,7 @@ export default function LeftSidePanel({
 							/>
 							<span className="truncate">My Chatbots</span>
 						</a>
-					</div>
+					</div> */}
 					<div className="">
 						<a
 							className="bg group flex cursor-pointer items-center justify-start px-2 py-1 text-sm 

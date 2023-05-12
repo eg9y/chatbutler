@@ -9,6 +9,7 @@ import ChatbotMenu from './components/ChatbotMenu';
 import ChatbotMenuPanel from './components/ChatbotMenuPanel';
 import useSupabase from '../../auth/supabaseClient';
 import { SimpleWorkflow } from '../../db/dbTypes';
+import populateUserWorkflows from '../../db/populateUserWorkflows';
 import { useStore, useStoreSecret, selector, selectorSecret } from '../../store';
 import { conditionalClassNames } from '../../utils/classNames';
 import UsernamePrompt from '../app/UsernamePrompt';
@@ -16,10 +17,11 @@ import UsernamePrompt from '../app/UsernamePrompt';
 export default function Overview() {
 	const { workflows, setUiErrorMessage, setUsername, setWorkflows, setCurrentWorkflow } =
 		useStore(selector, shallow);
-	const { session } = useStoreSecret(selectorSecret, shallow);
+	const { session, setSession, setOpenAiKey } = useStoreSecret(selectorSecret, shallow);
 
 	const supabase = useSupabase();
 
+	const [isLoading, setIsLoading] = useState(false);
 	const [showUsernamePrompt, setShowUsernamePrompt] = useState(false);
 
 	const [showPanel, setShowPanel] = useState(false);
@@ -27,7 +29,6 @@ export default function Overview() {
 
 	const [chatbot, setChatbot] = useState<SimpleWorkflow>();
 
-	// TODO: Put this in Overview
 	useEffect(() => {
 		// get user profile from profile tablee where user id = current user id
 		// if first_name is null and profile exists, ask user for firstname
@@ -54,6 +55,36 @@ export default function Overview() {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [session]);
+
+	useEffect(() => {
+		(async () => {
+			setIsLoading(true);
+			const sessionResponse = await supabase.auth.getSession();
+			const currentSession = sessionResponse.data.session;
+			setSession(currentSession);
+			if (workflows) {
+				setIsLoading(false);
+				return;
+			}
+
+			// // TODO: don't need to null workflow.
+			// setCurrentWorkflow(null);
+
+			await populateUserWorkflows(setWorkflows, setUiErrorMessage, currentSession, supabase);
+			// await populateUserDocuments(setDocuments, setUiErrorMessage, currentSession, supabase);
+			if (currentSession?.user) {
+				const { data, error } = await supabase.functions.invoke('get-api-key');
+				if (error) {
+					setUiErrorMessage(error.message);
+				}
+				if (data) {
+					setOpenAiKey(data);
+				}
+			}
+			setIsLoading(false);
+		})();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	return (
 		<main className="lg:mx-auto lg:max-w-[50vw]">
@@ -174,7 +205,7 @@ export default function Overview() {
 					</button>
 				</div>
 			</header>
-
+			{isLoading && <div className=" px-4 sm:px-6 lg:px-8">Loading chatbots...</div>}
 			{/* Deployment list */}
 			<ul role="list" className="divide-y divide-white/5">
 				{workflows.map((currentChatbot) => (

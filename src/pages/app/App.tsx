@@ -16,7 +16,6 @@ import useSupabase from '../../auth/supabaseClient';
 import LoadingOverlay from '../../components/LoadingOverlay';
 import Notification from '../../components/Notification';
 import ConnectionLine from '../../connection/ConnectionLine';
-import populateUserWorkflows from '../../db/populateUserWorkflows';
 import selectWorkflow from '../../db/selectWorkflow';
 import syncDataToSupabase from '../../db/syncToSupabase';
 import ChatMessageNode from '../../nodes/ChatMessageNode';
@@ -104,17 +103,13 @@ export default function App() {
 
 	// init sandbox phase
 	useEffect(() => {
-		(async () => {
+		async function init() {
 			setIsLoading(true);
 			const sessionResponse = await supabase.auth.getSession();
 			const currentSession = sessionResponse.data.session;
 			setSession(currentSession);
-
 			// // TODO: don't need to null workflow.
 			// setCurrentWorkflow(null);
-
-			await populateUserWorkflows(setWorkflows, setUiErrorMessage, currentSession, supabase);
-			// await populateUserDocuments(setDocuments, setUiErrorMessage, currentSession, supabase);
 			if (currentSession?.user) {
 				const { data, error } = await supabase.functions.invoke('get-api-key');
 				if (error) {
@@ -125,6 +120,7 @@ export default function App() {
 				}
 			}
 			if (params && params.id) {
+				console.log('starting load', params);
 				await selectWorkflow(
 					params.id,
 					nodes,
@@ -137,6 +133,7 @@ export default function App() {
 					setEdges,
 					supabase,
 				);
+				console.log('loaded ');
 			} else if (currentSession?.user && currentWorkflow) {
 				await selectWorkflow(
 					currentWorkflow.id,
@@ -152,7 +149,11 @@ export default function App() {
 				);
 			}
 			setIsLoading(false);
-		})();
+		}
+		if (params) {
+			console.log('called here', params);
+			init();
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [params]);
 

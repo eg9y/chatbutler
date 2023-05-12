@@ -57,12 +57,18 @@ const syncDataToSupabase = async (
 				is_public: currentWorkflow.is_public,
 				user_id: session.user.id,
 			})
-			.select('id, name')
+			.select('id, name, description, is_public, user_id, updated_at')
 			.single();
 
 		if (insertionData) {
 			//'Data synced to Supabase:'
-			setWorkflows([...workflows, insertionData]);
+			setWorkflows([
+				...workflows,
+				{
+					...insertionData,
+					description: insertionData.description || '',
+				},
+			]);
 		}
 		if (insertionError) {
 			console.error('Error inserting data to Supabase:', insertionError);

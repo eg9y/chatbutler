@@ -126,5 +126,6 @@ export function updateWorkflowStates(
 		user_id: workflow.user_id,
 		description: workflow.description || '',
 		is_public: workflow.is_public,
+		updated_at: workflow.updated_at,
 	});
 }

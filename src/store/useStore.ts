@@ -63,13 +63,10 @@ export interface RFState {
 	setCurrentChatSessionIndex: (index: number) => void;
 	documents: DocumentDbSchema[];
 	setDocuments: (documents: DocumentDbSchema[]) => void;
-	workflows: {
-		id: string;
-		name: string;
-	}[];
+	workflows: SimpleWorkflow[];
+	setWorkflows: (workflows: SimpleWorkflow[]) => void;
 	globalVariables: GlobalVariableType;
 	setGlobalVariables: (variables: GlobalVariableType) => void;
-	setWorkflows: (workflows: { id: string; name: string }[]) => void;
 	currentWorkflow: SimpleWorkflow | null;
 	setCurrentWorkflow: (workflow: SimpleWorkflow | null) => void;
 	reactFlowInstance: ReactFlowInstance | null;
@@ -183,7 +180,7 @@ const useStore = create<RFState>()(
 				});
 			},
 			workflows: [],
-			setWorkflows: (workflows: { id: string; name: string }[]) => {
+			setWorkflows: (workflows: SimpleWorkflow[]) => {
 				set({
 					workflows,
 				});
@@ -346,7 +343,7 @@ const useStore = create<RFState>()(
 			},
 		}),
 		{
-			name: 'promptsandbox.io',
+			name: 'Chatbutler.ai',
 			storage,
 		},
 	),

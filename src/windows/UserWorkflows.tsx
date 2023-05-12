@@ -269,6 +269,10 @@ export default function UserWorkflows({
 															{
 																id: data.id,
 																name: data.name,
+																description: '',
+																is_public: true,
+																user_id: data.user_id,
+																updated_at: data.updated_at,
 															},
 														]);
 														setWorkflowNameWindowOpen(true);
@@ -284,7 +288,7 @@ export default function UserWorkflows({
 													}
 													aria-hidden="true"
 												/>
-												<span className="truncate">Add chatbots</span>
+												<span className="truncate">New Chatbot</span>
 											</a>
 										</div>
 									</>

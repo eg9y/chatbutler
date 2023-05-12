@@ -1,5 +1,4 @@
 import { ChevronDoubleRightIcon } from '@heroicons/react/20/solid';
-import { Session } from '@supabase/supabase-js';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import ReactFlow, {
 	MiniMap,
@@ -13,16 +12,13 @@ import { shallow } from 'zustand/shallow';
 import 'reactflow/dist/base.css';
 
 import SandboxExecutionPanel from './SandboxExecutionPanel';
-import UsernamePrompt from './UsernamePrompt';
 import useSupabase from '../../auth/supabaseClient';
 import LoadingOverlay from '../../components/LoadingOverlay';
 import Notification from '../../components/Notification';
 import ConnectionLine from '../../connection/ConnectionLine';
-import populateUserDocuments from '../../db/populateUserDocuments';
 import populateUserWorkflows from '../../db/populateUserWorkflows';
 import selectWorkflow from '../../db/selectWorkflow';
 import syncDataToSupabase from '../../db/syncToSupabase';
-import { CustomEdgeType } from '../../edges/CustomEdgeType';
 import ChatMessageNode from '../../nodes/ChatMessageNode';
 import ChatPromptNode from '../../nodes/ChatPromptNode';
 import ClassifyCategoriesNode from '../../nodes/ClassifyCategoriesNode';
@@ -73,15 +69,10 @@ const nodeTypes = {
 	setVariable: SetVariableNode,
 };
 
-const edgeTypes = {
-	smart: CustomEdgeType,
-};
-
 export default function App() {
 	const params = useQueryParams();
 
 	const {
-		setDocuments,
 		nodes,
 		edges,
 		onNodesChange,
@@ -102,66 +93,14 @@ export default function App() {
 		setWorkflows,
 		setChatApp,
 		setGlobalVariables,
-		setUsername,
 	} = useStore(selector, shallow);
 	const { session, setSession, setOpenAiKey } = useStoreSecret(selectorSecret, shallow);
 
 	const [settingsView, setSettingsView] = useState(true);
-	const [showUsernamePrompt, setShowUsernamePrompt] = useState(false);
 
 	const [isLoading, setIsLoading] = useState(true);
 
 	const supabase = useSupabase();
-
-	useDebouncedEffect(
-		() => {
-			(async () => {
-				if (!session) {
-					return;
-				}
-				await syncDataToSupabase(
-					nodes,
-					edges,
-					currentWorkflow,
-					workflows,
-					setWorkflows,
-					session,
-					params,
-					supabase,
-				);
-			})();
-		},
-		[session, nodes, edges, workflows],
-		3000,
-	);
-
-	// set profile
-	useEffect(() => {
-		// get user profile from profile tablee where user id = current user id
-		// if first_name is null and profile exists, ask user for firstname
-		const getProfile = async (session: Session) => {
-			const { data: profile, error } = await supabase
-				.from('profiles')
-				.select('*')
-				.eq('id', session?.user?.id)
-				.single();
-			if (error) {
-				setUiErrorMessage(error.message);
-			}
-			if (profile) {
-				if (!profile.first_name) {
-					setShowUsernamePrompt(true);
-				} else {
-					setUsername(profile.first_name);
-				}
-			}
-		};
-
-		if (session) {
-			getProfile(session);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [session]);
 
 	// init sandbox phase
 	useEffect(() => {
@@ -217,6 +156,28 @@ export default function App() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [params]);
 
+	useDebouncedEffect(
+		() => {
+			(async () => {
+				if (!session) {
+					return;
+				}
+				await syncDataToSupabase(
+					nodes,
+					edges,
+					currentWorkflow,
+					workflows,
+					setWorkflows,
+					session,
+					params,
+					supabase,
+				);
+			})();
+		},
+		[session, nodes, edges, workflows],
+		3000,
+	);
+
 	const { length: SettingsPanelWidth, handleMouseDown } = useResize(300);
 
 	const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
@@ -270,13 +231,6 @@ export default function App() {
 			}}
 			className="flex"
 		>
-			<UsernamePrompt
-				open={showUsernamePrompt}
-				setShowUsernamePrompt={setShowUsernamePrompt}
-				supabase={supabase}
-				session={session}
-				setUsername={setUsername}
-			/>
 			<LoadingOverlay open={isLoading} />
 			<div className="absolute flex w-full justify-center p-4">
 				<SandboxExecutionPanel nodes={nodes} setNodes={setNodes} setChatApp={setChatApp} />
@@ -331,7 +285,7 @@ export default function App() {
 							// },
 						}}
 					>
-						{settingsView ? (
+						{settingsView && !isLoading ? (
 							<div
 								className="z-10 bg-slate-50"
 								style={{

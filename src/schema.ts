@@ -100,6 +100,7 @@ export interface Database {
 					is_public: boolean;
 					name: string;
 					nodes: Json | null;
+					updated_at: string;
 					user_id: string;
 				};
 				Insert: {
@@ -110,6 +111,7 @@ export interface Database {
 					is_public?: boolean;
 					name: string;
 					nodes?: Json | null;
+					updated_at?: string;
 					user_id: string;
 				};
 				Update: {
@@ -120,12 +122,17 @@ export interface Database {
 					is_public?: boolean;
 					name?: string;
 					nodes?: Json | null;
+					updated_at?: string;
 					user_id?: string;
 				};
 			};
 		};
 		Views: {
-			[_ in never]: never;
+			user_documents: {
+				Row: {
+					name: string | null;
+				};
+			};
 		};
 		Functions: {
 			get_open_ai_key: {

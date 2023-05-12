@@ -138,7 +138,7 @@ const NavBar = () => {
 				<div className="flex flex-1 items-center justify-end gap-4 text-sm">
 					<a
 						className="flex cursor-pointer items-center gap-1 hover:font-semibold"
-						href="https://github.com/eg9y/Chatbutler.ai"
+						href="https://github.com/eg9y/promptsandbox.io"
 						target="_blank"
 						rel="noreferrer"
 					>

@@ -71,6 +71,7 @@ export default function Overview() {
 			// setCurrentWorkflow(null);
 
 			await populateUserWorkflows(setWorkflows, setUiErrorMessage, currentSession, supabase);
+			setIsLoading(false);
 			// await populateUserDocuments(setDocuments, setUiErrorMessage, currentSession, supabase);
 			if (currentSession?.user) {
 				const { data, error } = await supabase.functions.invoke('get-api-key');
@@ -81,7 +82,6 @@ export default function Overview() {
 					setOpenAiKey(data);
 				}
 			}
-			setIsLoading(false);
 		})();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);

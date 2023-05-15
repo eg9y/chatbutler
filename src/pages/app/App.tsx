@@ -391,7 +391,7 @@ export default function App() {
 							size={2}
 							color={'#8E8E8E'}
 						/>
-						<Panel position="top-right" className="z-12">
+						<Panel position="top-right" className="z-50">
 							<Notification />
 						</Panel>
 					</ReactFlow>

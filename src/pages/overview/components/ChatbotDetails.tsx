@@ -71,7 +71,7 @@ export default function ChatbotDetails({
 										Go to Editor
 									</button>
 								</div>
-								<div className="flex w-full">
+								{/* <div className="flex w-full">
 									<div className="flex flex-1 flex-col gap-2">
 										<h1 className="text-base font-bold text-gray-900">
 											Documents
@@ -84,9 +84,8 @@ export default function ChatbotDetails({
 									<div className="flex-1">
 										<Dropzone />
 									</div>
-								</div>
+								</div> */}
 
-								{/* Gallery */}
 								<section className="mt-8 pb-16" aria-labelledby="gallery-heading">
 									<h2 id="gallery-heading" className="sr-only">
 										All

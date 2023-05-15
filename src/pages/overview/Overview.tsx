@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { shallow } from 'zustand/shallow';
 
 import Breadcrumbs from './components/Breadcrumbs';
+import ChatbotDetails from './components/ChatbotDetails';
 import ChatbotMenu from './components/ChatbotMenu';
 import ChatbotMenuPanel from './components/ChatbotMenuPanel';
 import useSupabase from '../../auth/supabaseClient';
@@ -215,22 +216,7 @@ export default function Overview() {
 
 			{currentPage === 'chatbot' && chatbot && (
 				<div className="py-4sm:px-6 group relative flex flex-col justify-center space-x-4 px-4 leading-7 lg:px-8">
-					<h2 className="text-lg font-semibold  text-slate-600">{chatbot.name}</h2>
-					<div>
-						<button
-							type="button"
-							onClick={() => {
-								window.open(
-									`/app/?user_id=${session?.user.id}&id=${chatbot.id}`,
-									'_self',
-								);
-							}}
-							className="rounded-md bg-slate-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600"
-						>
-							Go to Editor
-						</button>
-						{/* <p>Documents</p> */}
-					</div>
+					<ChatbotDetails session={session} chatbot={chatbot} />
 				</div>
 			)}
 

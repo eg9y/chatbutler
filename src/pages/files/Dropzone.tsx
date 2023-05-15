@@ -56,7 +56,7 @@ const Dropzone: React.FC<DropZoneProps> = ({ documents, setDocuments }) => {
 	return (
 		<div
 			ref={dropzoneRef}
-			className="flex h-48 cursor-pointer items-center justify-center rounded-md border-2 border-dashed border-slate-400 bg-slate-50 text-center"
+			className="flex h-24 w-1/2 cursor-pointer items-center justify-center rounded-md border-2 border-dashed border-slate-400 bg-slate-50 text-center"
 			onDragOver={handleDragOver}
 			onDrop={handleDrop}
 			onClick={() => {

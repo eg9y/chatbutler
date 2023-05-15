@@ -13,16 +13,3 @@ export function getAllChildren(
 		return acc.concat(child, getAllChildren(child, getNodes));
 	}, []);
 }
-
-export function getAllLeafChildren(
-	node: CustomNode,
-	getNodes: (inputs: string[]) => CustomNode[],
-): CustomNode[] {
-	const children = getNodes(node.data.children);
-	if (children.length === 0) {
-		return [node];
-	}
-	return children.reduce((acc: CustomNode[], child: CustomNode) => {
-		return acc.concat(getAllLeafChildren(child, getNodes));
-	}, []);
-}

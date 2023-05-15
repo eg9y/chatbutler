@@ -215,6 +215,7 @@ export default function ChatMain() {
 												user_id: chatbot.user_id,
 												created_at: '',
 												updated_at: '',
+												usages: 0,
 											};
 											setChatSessions(newChatSessions);
 											await updateWorkflowStates(

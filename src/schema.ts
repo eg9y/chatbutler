@@ -101,6 +101,7 @@ export interface Database {
 					name: string;
 					nodes: Json | null;
 					updated_at: string;
+					usages: number;
 					user_id: string;
 				};
 				Insert: {
@@ -112,6 +113,7 @@ export interface Database {
 					name: string;
 					nodes?: Json | null;
 					updated_at?: string;
+					usages?: number;
 					user_id: string;
 				};
 				Update: {
@@ -123,6 +125,7 @@ export interface Database {
 					name?: string;
 					nodes?: Json | null;
 					updated_at?: string;
+					usages?: number;
 					user_id?: string;
 				};
 			};

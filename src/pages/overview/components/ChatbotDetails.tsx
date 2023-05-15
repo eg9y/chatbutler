@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Session } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';

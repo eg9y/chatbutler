@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Session } from '@supabase/supabase-js';
+import { useEffect, useState } from 'react';
 import { shallow } from 'zustand/shallow';
 
 import useSupabase from '../../../auth/supabaseClient';
@@ -16,9 +17,29 @@ export default function ChatbotDetails({
 	session: Session | null;
 	chatbot: SimpleWorkflow;
 }) {
-	const { documents, setDocuments } = useStore(selector, shallow);
+	const [chatbotDocuments, setChatbotDocuments] = useState<
+		| {
+				[x: string]: any;
+		  }[]
+		| null
+	>(null);
 
 	const supabase = useSupabase();
+
+	useEffect(() => {
+		async function loadSavedDocs() {
+			const userSavedDocs = await supabase
+				.from('user_documents')
+				.select('*')
+				.eq('chatbot_id', chatbot.id);
+			if (userSavedDocs.error) {
+				throw new Error(userSavedDocs.error.message);
+			}
+			setChatbotDocuments(userSavedDocs.data);
+		}
+		loadSavedDocs();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	return (
 		<>
@@ -62,10 +83,7 @@ export default function ChatbotDetails({
 										<p className="text-sm">Supported file types: txt, pdf</p>
 									</div>
 									<div className="flex-1">
-										<Dropzone
-											documents={documents}
-											setDocuments={setDocuments}
-										/>
+										<Dropzone />
 									</div>
 								</div>
 
@@ -78,7 +96,7 @@ export default function ChatbotDetails({
 										role="list"
 										className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8"
 									>
-										{documents?.map((file) => (
+										{chatbotDocuments?.map((file) => (
 											<li key={file.name} className="relative">
 												<div
 													className={conditionalClassNames(

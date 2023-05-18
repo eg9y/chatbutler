@@ -16,18 +16,9 @@ function isValidUrl(urlString: string): boolean {
 export async function uploadWebsiteUrl(
 	currentSession: Session | null,
 	source: DocSource,
-	text: string,
-	setText: React.Dispatch<React.SetStateAction<string>>,
+	url: string,
 	chatbot: SimpleWorkflow,
 	setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
-	setChatbotDocuments: React.Dispatch<
-		React.SetStateAction<
-			| {
-					[x: string]: any;
-			  }[]
-			| null
-		>
-	>,
 	setUiErrorMessage: RFState['setUiErrorMessage'],
 ) {
 	if (!currentSession || !currentSession.access_token) {
@@ -35,7 +26,7 @@ export async function uploadWebsiteUrl(
 	}
 
 	if (source === DocSource.pdfUrl || source === DocSource.websiteUrl) {
-		if (!isValidUrl(text)) {
+		if (!isValidUrl(url)) {
 			alert('Please enter a valid URL');
 			return;
 		}
@@ -47,7 +38,7 @@ export async function uploadWebsiteUrl(
 				Authorization: `Bearer ${currentSession.access_token}`,
 			},
 			body: JSON.stringify({
-				urls: [text],
+				urls: [url],
 				chatbot_id: chatbot.id,
 			}),
 		};
@@ -74,20 +65,12 @@ export async function uploadWebsiteUrl(
 			const progressInterval = setInterval(async () => {
 				try {
 					const progressResponse = await fetch(
-						`https://server.chatbutler.ai/progress/?url=${encodeURIComponent(text)}`,
+						`https://server.chatbutler.ai/progress/?url=${encodeURIComponent(url)}`,
 					).then((response) => response.json());
 
 					// If progress is 100, stop polling and set loading to false
 					if (progressResponse.progress === 100) {
 						clearInterval(progressInterval);
-						setChatbotDocuments((prev) => [
-							...(prev || []),
-							{
-								name: progressResponse.url,
-							},
-						]);
-						setIsLoading(false);
-						setText('');
 					}
 				} catch (error) {
 					console.log('Error fetching progress:', error);

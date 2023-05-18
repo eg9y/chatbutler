@@ -9,16 +9,7 @@ export async function uploadFile(
 	source: DocSource,
 	chatbot: SimpleWorkflow,
 	file: File, // New parameter for the file
-	setText: React.Dispatch<React.SetStateAction<string>>,
 	setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
-	setChatbotDocuments: React.Dispatch<
-		React.SetStateAction<
-			| {
-					[x: string]: any;
-			  }[]
-			| null
-		>
-	>,
 	setUiErrorMessage: RFState['setUiErrorMessage'],
 ) {
 	if (!currentSession || !currentSession.access_token) {
@@ -71,14 +62,6 @@ export async function uploadFile(
 					// If progress is 100, stop polling and set loading to false
 					if (progressResponse.progress === 100) {
 						clearInterval(progressInterval);
-						setChatbotDocuments((prev) => [
-							...(prev || []),
-							{
-								name: progressResponse.url,
-							},
-						]);
-						setIsLoading(false);
-						setText('');
 					}
 				} catch (error) {
 					console.log('Error fetching progress:', error);

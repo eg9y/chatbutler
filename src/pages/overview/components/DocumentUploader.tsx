@@ -33,16 +33,8 @@ function DocumentUploader({
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [isDone, setIsDone] = useState<boolean>(false);
 
-	const [userDocuments, setUserDocuments] = useState<
-		| {
-				[x: string]: any;
-		  }[]
-		| null
-	>(null);
-
-	const supabase = useSupabase();
-	const { pauseResolver, setUiErrorMessage } = useStore(selector, shallow);
-	const { openAiKey, session } = useStoreSecret(selectorSecret, shallow);
+	const { setUiErrorMessage } = useStore(selector, shallow);
+	const { session } = useStoreSecret(selectorSecret, shallow);
 
 	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		if (event.target.files === null || event.target.files.length === 0) {
@@ -152,12 +144,18 @@ function DocumentUploader({
 												session,
 												source,
 												text,
-												setText,
 												chatbot,
 												setIsLoading,
-												setChatbotDocuments,
 												setUiErrorMessage,
 											);
+											setChatbotDocuments((prev) => [
+												...(prev || []),
+												{
+													name: text,
+												},
+											]);
+											setIsLoading(false);
+											setText('');
 										}
 									}}
 								/>
@@ -217,23 +215,35 @@ function DocumentUploader({
 											session,
 											source,
 											text,
-											setText,
 											chatbot,
 											setIsLoading,
-											setChatbotDocuments,
 											setUiErrorMessage,
 										);
+										setChatbotDocuments((prev) => [
+											...(prev || []),
+											{
+												name: text,
+											},
+										]);
+										setIsLoading(false);
+										setText('');
 									} else if (source === DocSource.pdf && file) {
 										await uploadFile(
 											session,
 											source,
 											chatbot,
 											file,
-											setText,
 											setIsLoading,
-											setChatbotDocuments,
 											setUiErrorMessage,
 										);
+										setChatbotDocuments((prev) => [
+											...(prev || []),
+											{
+												name: file,
+											},
+										]);
+										setIsLoading(false);
+										setText('');
 									}
 								}}
 							>

@@ -4,7 +4,7 @@ import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { Node } from 'reactflow';
 
 import { createSupabaseClient } from '../../auth/supabaseClient';
-import { NodeTypesEnum, SearchDataType } from '../../nodes/types/NodeTypes';
+import { DocsLoaderDataType, NodeTypesEnum, SearchDataType } from '../../nodes/types/NodeTypes';
 import { RFState } from '../../store/useStore';
 import { Message } from '../../windows/ChatPanel/Chat/types';
 import { parsePromptInputs } from '../parsePromptInputs';
@@ -77,13 +77,16 @@ const search = async (node: Node<SearchDataType>, get: () => RFState, openAiKey:
 		const documents = inputNodes[docsLoaderNodeIndex].data.response
 			.split(',')
 			.map((document) => {
-				return {
+				const filter: any = {
 					name: document,
-					chatbot_id: currentWorkflow?.id,
 				};
+				if ((inputNodes[docsLoaderNodeIndex].data as DocsLoaderDataType).askUser) {
+					filter.user_id = session.data.session?.user.id;
+				} else {
+					filter.chatbot_id = currentWorkflow?.id;
+				}
+				return filter;
 			});
-
-		console.log('yaya', documents);
 
 		const chain = ConversationalRetrievalQAChain.fromLLM(
 			model,

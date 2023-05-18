@@ -79,7 +79,7 @@ export async function runNode(
 			await search(node as Node<SearchDataType>, get, openAiKey);
 			break;
 		case NodeTypesEnum.docsLoader:
-			await docsLoader(node as Node<DocsLoaderDataType>, get, openAiKey);
+			await docsLoader(node as Node<DocsLoaderDataType>, get);
 			break;
 		case NodeTypesEnum.counter:
 			counter(node);

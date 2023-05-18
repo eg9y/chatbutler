@@ -158,6 +158,13 @@ const onConnect = (
 		connection.sourceHandle === 'docs-loader-output'
 	) {
 		return;
+	} else if (
+		// combine input only accepts lists
+		connection.targetHandle !== 'search-input-doc' &&
+		connection.sourceHandle === 'docs-loader-output'
+	) {
+		setUiErrorMessage("Document Load Block can only be connected to Search Input 'Doc' handle");
+		return;
 	}
 
 	// else if (

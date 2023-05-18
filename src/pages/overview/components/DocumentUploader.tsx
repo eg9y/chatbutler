@@ -2,24 +2,16 @@ import { Session } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
 import { shallow } from 'zustand/shallow';
 
-import { ReactComponent as Loading } from '../../assets/loading.svg';
-import useSupabase from '../../auth/supabaseClient';
-import { SimpleWorkflow } from '../../db/dbTypes';
-import { DocSource } from '../../nodes/types/NodeTypes';
-import { useStore, selector, useStoreSecret, selectorSecret } from '../../store';
-import { conditionalClassNames } from '../../utils/classNames';
-import loadDoc from '../../windows/ChatPanel/Chat/MessageTypes/DocsLoaderMessage/loadDoc';
+import { ReactComponent as Loading } from '../../../assets/loading.svg';
+import useSupabase from '../../../auth/supabaseClient';
+import { SimpleWorkflow } from '../../../db/dbTypes';
+import { DocSource } from '../../../nodes/types/NodeTypes';
+import { useStore, selector, useStoreSecret, selectorSecret } from '../../../store';
+import { conditionalClassNames } from '../../../utils/classNames';
+import { uploadFile } from '../utils/uploadFile';
+import { uploadWebsiteUrl } from '../utils/uploadWebsiteUrl';
 
-function isValidUrl(urlString: string): boolean {
-	try {
-		new URL(urlString);
-		return true;
-	} catch (error) {
-		return false;
-	}
-}
-
-function Dropzone({
+function DocumentUploader({
 	chatbot,
 	setChatbotDocuments,
 }: {
@@ -87,92 +79,6 @@ function Dropzone({
 		}
 	};
 
-	async function uploadDocument(
-		currentSession: Session | null,
-		source: DocSource,
-		text: string,
-		setText: React.Dispatch<React.SetStateAction<string>>,
-		chatbot: SimpleWorkflow,
-		setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
-		setChatbotDocuments: React.Dispatch<
-			React.SetStateAction<
-				| {
-						[x: string]: any;
-				  }[]
-				| null
-			>
-		>,
-	) {
-		if (!currentSession || !currentSession.access_token) {
-			throw new Error('No session');
-		}
-
-		if (source === DocSource.pdfUrl || source === DocSource.websiteUrl) {
-			if (!isValidUrl(text)) {
-				alert('Please enter a valid URL');
-				return;
-			}
-		}
-
-		const options = {
-			method: 'POST',
-			headers: {
-				accept: 'application/json',
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${currentSession.access_token}`,
-			},
-			body: JSON.stringify({
-				urls: [text],
-				chatbot_id: chatbot.id,
-			}),
-		};
-
-		const fileName = '';
-
-		console.log('session', currentSession);
-
-		try {
-			setIsLoading(true);
-			let response = await fetch('https://server.chatbutler.ai/upload-url/', options);
-
-			// check if response is ok
-			if (!response.ok) {
-				setIsLoading(false);
-				setUiErrorMessage('Error uploading document');
-				throw new Error('Error uploading document');
-			}
-
-			response = await response.json();
-			console.log('hi', response);
-
-			// Start polling progress endpoint every X interval
-			const progressInterval = setInterval(async () => {
-				try {
-					const progressResponse = await fetch(
-						`https://server.chatbutler.ai/progress/?url=${encodeURIComponent(text)}`,
-					).then((response) => response.json());
-
-					// If progress is 100, stop polling and set loading to false
-					if (progressResponse.progress === 100) {
-						clearInterval(progressInterval);
-						setChatbotDocuments((prev) => [
-							...(prev || []),
-							{
-								name: progressResponse.url,
-							},
-						]);
-						setIsLoading(false);
-						setText('');
-					}
-				} catch (error) {
-					console.log('Error fetching progress:', error);
-				}
-			}, 5000); // replace 5000 (5 seconds) with your desired interval
-		} catch (error) {
-			console.log(error);
-		}
-	}
-
 	return (
 		<div
 			className={conditionalClassNames(
@@ -235,15 +141,14 @@ function Dropzone({
 									type="text"
 									name="text"
 									autoComplete="off"
-									className="nodrag sm:text-md block w-full rounded-md border-0 text-neutral-900 shadow-sm ring-2 ring-inset ring-neutral-300 placeholder:text-neutral-400 focus:ring-inset focus:ring-neutral-600 sm:py-1.5 sm:leading-6"
+									className="sm:text-md block w-full rounded-md border-0 text-neutral-900 shadow-sm ring-2 ring-inset ring-neutral-300 placeholder:text-neutral-400 focus:ring-inset focus:ring-neutral-600 sm:py-1.5 sm:leading-6"
 									value={text}
 									onChange={(e) => {
 										setText(e.target.value);
 									}}
 									onKeyDown={async (e) => {
-										console.log('hi');
 										if (e.key === 'Enter') {
-											await uploadDocument(
+											await uploadWebsiteUrl(
 												session,
 												source,
 												text,
@@ -251,13 +156,14 @@ function Dropzone({
 												chatbot,
 												setIsLoading,
 												setChatbotDocuments,
+												setUiErrorMessage,
 											);
 										}
 									}}
 								/>
 							</>
 						)}
-						{(source === DocSource.pdfUrl || source === DocSource.websiteUrl) && (
+						{source === DocSource.pdfUrl && (
 							// TODO: let user add setting for recursive, branch, ignoreFiles, etc
 							<>
 								<div className="flex items-center pt-1">
@@ -283,7 +189,12 @@ function Dropzone({
 						{source === DocSource.pdf && (
 							<>
 								{/* file select */}
-								<input type="file" accept=".txt,.pdf" onChange={handleFileChange} />
+								<input
+									type="file"
+									accept=".txt,.pdf"
+									className="py-4"
+									onChange={handleFileChange}
+								/>
 								{file && (
 									<p>
 										File: <strong>{file.name}</strong>
@@ -297,17 +208,34 @@ function Dropzone({
 									isLoading && 'pointer-events-none opacity-50',
 									'group grow cursor-pointer items-center rounded-md border-2 border-neutral-400 bg-neutral-200 p-2 text-center font-medium text-neutral-800 hover:bg-neutral-300',
 								)}
-								onClick={() =>
-									uploadDocument(
-										session,
-										source,
-										text,
-										setText,
-										chatbot,
-										setIsLoading,
-										setChatbotDocuments,
-									)
-								}
+								onClick={async () => {
+									if (
+										source === DocSource.websiteUrl ||
+										source === DocSource.pdfUrl
+									) {
+										await uploadWebsiteUrl(
+											session,
+											source,
+											text,
+											setText,
+											chatbot,
+											setIsLoading,
+											setChatbotDocuments,
+											setUiErrorMessage,
+										);
+									} else if (source === DocSource.pdf && file) {
+										await uploadFile(
+											session,
+											source,
+											chatbot,
+											file,
+											setText,
+											setIsLoading,
+											setChatbotDocuments,
+											setUiErrorMessage,
+										);
+									}
+								}}
 							>
 								{isDone ? 'Done loading!' : 'Upload Doc'}
 							</a>
@@ -320,4 +248,4 @@ function Dropzone({
 	);
 }
 
-export default Dropzone;
+export default DocumentUploader;

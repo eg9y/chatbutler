@@ -230,7 +230,7 @@ const useStore = create<RFState>()(
 					set({
 						uiErrorMessage: null,
 					});
-				}, 3000);
+				}, 6000);
 			},
 			onNodeDragStop: (_: React.MouseEvent<Element, MouseEvent>, node: CustomNode) => {
 				set({

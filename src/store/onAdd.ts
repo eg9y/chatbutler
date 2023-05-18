@@ -141,7 +141,7 @@ const onAdd = (
 			},
 			data: {
 				name: `Docs Loader ${nodeLength}`,
-				source: DocSource.url,
+				source: DocSource.websiteUrl,
 				askUser: true,
 				text: ``,
 				children: [],

@@ -127,11 +127,9 @@ export type SetVariableDataType = {
 } & DefaultNodeDataType;
 
 export enum DocSource {
-	url = 'URL',
-	text = 'TXT file',
+	websiteUrl = 'Website URL',
 	pdfUrl = 'PDF URL',
 	pdf = 'PDF Upload',
-	github = 'GitHub Repo',
 }
 
 export type DocsLoaderDataType = {

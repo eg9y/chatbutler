@@ -36,37 +36,35 @@ export default function RunFromStart({
 		setIsLoading(true);
 		try {
 			setChatApp([]);
-			clearAllNodeResponses();
-			// Create a new AbortController and set it to the ref
-			abortControllerRef.current = new AbortController();
-			const signal = abortControllerRef.current.signal;
+			// eslint-disable-next-line no-constant-condition
+			while (true) {
+				clearAllNodeResponses();
+				// Create a new AbortController and set it to the ref
+				abortControllerRef.current = new AbortController();
+				const signal = abortControllerRef.current.signal;
 
-			await traverseTree(openAiKey, signal);
+				await traverseTree(openAiKey, signal);
+				break;
+			}
 
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} catch (error: any) {
 			if (error.message === 'Operation cancelled') {
-				console.log('traverseTree operation cancelled');
+				setUiErrorMessage('traverseTree operation cancelled');
 			} else {
+				console.log('error message', error.message);
 				setUiErrorMessage(error.message);
 			}
 		} finally {
-			setUnlockGraph(true);
-			setIsLoading(false);
-			// Clean up the abort controller
-			abortControllerRef.current = null;
-		}
-	}
-
-	function stopRun() {
-		if (abortControllerRef.current) {
-			abortControllerRef.current.abort();
+			if (abortControllerRef.current) {
+				abortControllerRef.current.abort();
+				abortControllerRef.current = null;
+			}
 			const clearedNodes = nodes.map((node) => {
 				const newNode = {
 					...node,
 					data: {
 						...node.data,
-						response: '',
 						isLoading: false,
 					},
 				};
@@ -75,11 +73,34 @@ export default function RunFromStart({
 				}
 				return newNode;
 			});
-			setChatApp([]);
-			setIsLoading(false);
 			setNodes(clearedNodes);
+			setIsLoading(false);
+			setUnlockGraph(true);
+		}
+	}
+
+	function stopRun() {
+		if (abortControllerRef.current) {
+			abortControllerRef.current.abort();
 			abortControllerRef.current = null;
 		}
+		const clearedNodes = nodes.map((node) => {
+			const newNode = {
+				...node,
+				data: {
+					...node.data,
+					response: '',
+					isLoading: false,
+				},
+			};
+			if (node.type === NodeTypesEnum.loop) {
+				(newNode.data as LoopDataType).loopCount = 0;
+			}
+			return newNode;
+		});
+		setChatApp([]);
+		setIsLoading(false);
+		setNodes(clearedNodes);
 		setUnlockGraph(true);
 	}
 

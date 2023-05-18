@@ -28,9 +28,7 @@ function Layout({
 	return (
 		<div>
 			<NavBar />
-			{(!shouldAuthenticate || (shouldAuthenticate && session)) && (
-				<div className="h-[95vh] overflow-y-scroll">{children}</div>
-			)}
+			{(!shouldAuthenticate || (shouldAuthenticate && session)) && <>{children}</>}
 			{shouldAuthenticate && !session && (
 				<div className="mx-auto max-w-7xl px-4 pt-10 sm:px-6 lg:px-8">
 					{/* We've used 3xl here, but feel free to try other max-widths based on your needs */}

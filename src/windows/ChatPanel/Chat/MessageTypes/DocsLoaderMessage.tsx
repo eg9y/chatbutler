@@ -230,7 +230,7 @@ function UploadDoc({
 				id="tabs"
 				name="tabs"
 				className="block w-full rounded-md border-slate-300 text-xs focus:border-neutral-500 focus:ring-neutral-500"
-				defaultValue={source || DocSource.url}
+				defaultValue={source || DocSource.websiteUrl}
 				onChange={(e) => {
 					setSource(e.target.value as DocSource);
 				}}
@@ -242,7 +242,7 @@ function UploadDoc({
 				))}
 			</select>
 
-			{(source === DocSource.pdfUrl || source === DocSource.github) && (
+			{source === DocSource.pdfUrl && (
 				// TODO: let user add setting for recursive, branch, ignoreFiles, etc
 				<>
 					<div className="flex items-center pt-1">

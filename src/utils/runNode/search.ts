@@ -13,6 +13,7 @@ const search = async (node: Node<SearchDataType>, get: () => RFState, openAiKey:
 	try {
 		const inputs = node.data.inputs;
 		const inputNodes = get().getNodes(inputs.inputs);
+		const currentWorkflow = get().currentWorkflow;
 		const docsLoaderNodeIndex = inputNodes.findIndex((node) => node.type === 'docsLoader');
 		const inputIds = inputs.inputs.filter((input) => input !== 'docsLoader');
 		const searchNode = node.data as SearchDataType;
@@ -73,11 +74,20 @@ const search = async (node: Node<SearchDataType>, get: () => RFState, openAiKey:
 		});
 		// const vectorStore = await MemoryVectorStore.fromDocuments(docOutput, embeddings);
 
+		const documents = inputNodes[docsLoaderNodeIndex].data.response
+			.split(',')
+			.map((document) => {
+				return {
+					name: document,
+					chatbot_id: currentWorkflow?.id,
+				};
+			});
+
+		console.log('yaya', documents);
+
 		const chain = ConversationalRetrievalQAChain.fromLLM(
 			model,
-			vectorStore.asRetriever(undefined, {
-				name: inputNodes[docsLoaderNodeIndex].data.response,
-			}),
+			vectorStore.asRetriever(undefined, documents),
 			{
 				returnSourceDocuments: true,
 			},
@@ -91,6 +101,7 @@ const search = async (node: Node<SearchDataType>, get: () => RFState, openAiKey:
 		});
 
 		let answer = res.text;
+		console.log('answer', answer);
 		if (searchNode.returnSource) {
 			/*
 			 * append answer to add source from res.sourceDocuments, which is an array of objects with loc object field.

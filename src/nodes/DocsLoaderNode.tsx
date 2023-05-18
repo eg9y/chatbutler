@@ -1,59 +1,43 @@
 import { Switch } from '@headlessui/react';
 import { memo, FC, useState } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
-import useUndo from 'use-undo';
 import { shallow } from 'zustand/shallow';
 
-import InputNodesList from './templates/InputNodesList';
 import NodeTemplate from './templates/NodeTemplate';
-import { DocSource, DocsLoaderDataType } from './types/NodeTypes';
+import { DocsLoaderDataType } from './types/NodeTypes';
+import DocumentSelector from '../components/DocumentSelector';
 import useStore, { selector } from '../store/useStore';
 import { conditionalClassNames } from '../utils/classNames';
 
 const DocsLoader: FC<NodeProps<DocsLoaderDataType>> = (props) => {
-	const { data, selected, id, type } = props;
-	const [textState, { set: setText }] = useUndo(data.text);
-	const { present: presentText } = textState;
+	const { data, selected, id } = props;
 
 	const [showFullScreen, setShowFullScreen] = useState(false);
 
-	const [source, setSource] = useState<DocSource>(data.source);
 	const [askUser, setAskUser] = useState<boolean>(data.askUser);
 
-	const [file, setFile] = useState<File | null>(null);
-	const [blob, setBlob] = useState<string | ArrayBuffer | null>(data.fileBlob || null);
+	const { updateNode } = useStore(selector, shallow);
 
-	const { documents, updateNode } = useStore(selector, shallow);
-
-	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		if (event.target.files === null || event.target.files.length === 0) {
-			return;
-		}
-		const file = event.target.files[0];
-		if ((file && file.type === 'text/plain') || file.type === 'application/pdf') {
-			setFile(file);
-			const reader = new FileReader();
-			reader.onload = (e) => {
-				if (e.target === null || e.target.result === null) {
-					return;
-				}
-				setBlob(e.target.result);
-				console.log('updating node', e.target.result);
-				updateNode(id, {
-					...data,
-					fileBlob: blob,
-				});
-			};
-			reader.readAsText(file);
-		} else {
-			setFile(null);
-			setBlob(null);
-		}
-	};
+	const [openSelector, setOpenSelector] = useState(false);
+	const [selectedDocuments, setSelectedDocuments] = useState<Set<string>>(new Set());
 
 	return (
 		<div className="">
-			<div className={conditionalClassNames(data.isDetailMode && 'h-[40rem] w-[35rem]')}>
+			<DocumentSelector
+				open={openSelector}
+				setOpen={setOpenSelector}
+				selectedDocuments={selectedDocuments}
+				setSelectedDocuments={setSelectedDocuments}
+				updateNode={updateNode}
+				data={data}
+				id={id}
+			/>
+			<div
+				className={conditionalClassNames(
+					data.isDetailMode && 'h-[40rem] w-[35rem]',
+					`m-3 shadow-lg`,
+				)}
+			>
 				<NodeTemplate
 					{...props}
 					title="Docs Loader"
@@ -68,7 +52,6 @@ const DocsLoader: FC<NodeProps<DocsLoaderDataType>> = (props) => {
 							<div className="py-4">
 								<Switch.Group as="div" className="flex items-center">
 									<Switch
-										disabled={true}
 										checked={askUser}
 										onChange={() => {
 											setAskUser((prev) => !prev);
@@ -76,12 +59,10 @@ const DocsLoader: FC<NodeProps<DocsLoaderDataType>> = (props) => {
 												...data,
 												askUser: !askUser,
 											});
-											console.log('changed', askUser);
 										}}
 										className={conditionalClassNames(
-											askUser ? 'bg-neutral-600/50' : 'bg-gray-200',
-											// askUser ? 'bg-green-600' : 'bg-gray-200',
-											'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2',
+											askUser ? 'bg-green-600' : 'bg-gray-300',
+											'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-sky-600 focus:ring-offset-2',
 										)}
 									>
 										<span
@@ -95,85 +76,47 @@ const DocsLoader: FC<NodeProps<DocsLoaderDataType>> = (props) => {
 								</Switch.Group>
 							</div>
 							{!askUser && (
-								<>
-									<div className="flex items-center pt-4">
-										<label
-											htmlFor="textType"
-											className="block grow text-2xl font-medium leading-6"
+								<div className="flex flex-col gap-5">
+									<div className="flex items-center justify-start pt-4">
+										<button
+											type="button"
+											onClick={() => setOpenSelector(true)}
+											className="w-2/3 rounded-md bg-sky-600 px-2.5 py-1.5 text-2xl font-semibold text-white shadow-sm hover:bg-sky-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600"
 										>
-											Source
-										</label>
+											Select Docs
+										</button>
 									</div>
-									<select
-										id="tabs"
-										name="tabs"
-										className="block w-full rounded-md border-gray-300 text-2xl focus:border-slate-500 focus:ring-slate-500"
-										defaultValue={source || DocSource.url}
-										onChange={(e) => {
-											setSource(e.target.value as DocSource);
-											updateNode(id, {
-												...data,
-												source: e.target.value as DocSource,
-											});
-										}}
-									>
-										{Object.entries(DocSource).map(([key, value]) => (
-											<option key={key} value={value}>
-												{value}
-											</option>
-										))}
-									</select>
-
-									{source === DocSource.pdfUrl && (
-										<>
-											<div className="flex items-center pt-4">
-												<label
-													htmlFor="textType"
-													className="block grow text-2xl font-medium leading-6"
+									<div className="flex flex-col">
+										<p className="text-2xl">Docs to load</p>
+										<ul role="list" className="divide-y divide-white/5">
+											{Array.from(selectedDocuments).map((doc) => (
+												<li
+													key={doc}
+													className={conditionalClassNames(
+														'group relative flex flex-grow cursor-pointer items-center space-x-4 px-4 py-4  sm:px-6 lg:px-8',
+													)}
 												>
-													URL
-												</label>
-											</div>
-											<input
-												type="text"
-												name="text"
-												className="nodrag block h-16 w-full rounded-md border-0 text-slate-900 shadow-sm ring-2 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-inset focus:ring-slate-600 sm:py-1.5 sm:text-xl sm:leading-6"
-												value={presentText}
-												onChange={(e) => {
-													setText(e.target.value);
-													updateNode(id, {
-														...data,
-														text: e.target.value,
-													});
-												}}
-											/>
-											<div className="text-md flex flex-col gap-2 ">
-												<InputNodesList
-													data={data}
-													id={id}
-													setText={setText}
-													updateNode={updateNode}
-													type={type}
-												/>
-											</div>
-										</>
-									)}
-									{source === DocSource.pdf && (
-										<>
-											{/* file select */}
-											<input
-												type="file"
-												accept=".txt,.pdf"
-												onChange={handleFileChange}
-											/>
-											{file && (
-												<p>
-													File: <strong>{file.name}</strong>
-												</p>
-											)}
-										</>
-									)}
-								</>
+													<div className="min-w-0 grow">
+														<div className="flex items-center gap-x-3">
+															<div
+																className={conditionalClassNames(
+																	'flex-none rounded-full p-1',
+																)}
+															>
+																<div className="h-2 w-2 rounded-full bg-current" />
+															</div>
+															<h2 className="flex min-w-0 gap-x-2 text-xl font-semibold leading-6 text-slate-600">
+																<span className="truncate">
+																	{doc}
+																</span>
+															</h2>
+														</div>
+													</div>
+												</li>
+											))}
+										</ul>
+									</div>
+								</div>
 							)}
 						</>
 					)}

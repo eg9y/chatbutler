@@ -8,6 +8,7 @@ import ChatbotDetails from './components/ChatbotDetails';
 import ChatbotMenu from './components/ChatbotMenu';
 import ChatbotMenuPanel from './components/ChatbotMenuPanel';
 import useSupabase from '../../auth/supabaseClient';
+import Notification from '../../components/Notification';
 import { SimpleWorkflow } from '../../db/dbTypes';
 import populateUserWorkflows from '../../db/populateUserWorkflows';
 import { useStore, useStoreSecret, selector, selectorSecret } from '../../store';
@@ -90,6 +91,9 @@ export default function Overview() {
 
 	return (
 		<main className="lg:mx-auto lg:max-w-[50vw]">
+			<div className="z-5 absolute top-[6vh] right-5">
+				<Notification />
+			</div>
 			<UsernamePrompt
 				open={showUsernamePrompt}
 				setShowUsernamePrompt={setShowUsernamePrompt}

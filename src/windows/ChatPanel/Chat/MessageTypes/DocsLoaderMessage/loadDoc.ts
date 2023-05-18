@@ -1,10 +1,9 @@
 import { SupabaseClient } from '@supabase/supabase-js';
-import { GithubRepoLoader } from 'langchain/document_loaders/web/github';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
 
 import { DocSource } from '../../../../../nodes/types/NodeTypes';
-import { PdfLoader } from '../../../../../utils/docLoaders/pdfLoader';
+import { PdfWebBaseLoader } from '../../../../../utils/docLoaders/pdfLoader';
 import { PdfUrlLoader } from '../../../../../utils/docLoaders/pdfUrlLoader';
 import { SupabaseVectorStoreWithFilter } from '../../../../../utils/vectorStores/SupabaseVectorStoreWithFilter';
 
@@ -67,42 +66,8 @@ export default async function loadDoc(
 				name: fileName,
 			},
 		);
-	} else if (source === DocSource.github) {
-		const loader = new GithubRepoLoader(text, {
-			branch: 'main',
-			recursive: true,
-			ignoreFiles: [
-				'package-lock.json',
-				'.vercel',
-				'.vscode',
-				'dist',
-				'yarn.lock',
-				'LICENSE.md',
-			],
-			unknown: 'warn',
-		});
-		const docs = await loader.load();
-
-		const splitter = new RecursiveCharacterTextSplitter();
-
-		const docOutput = await await splitter.splitDocuments(docs);
-		fileName = text.split('/').slice(-2).join('_');
-		docOutput.map((doc) => {
-			doc.metadata.name = fileName;
-			return doc;
-		});
-		await SupabaseVectorStoreWithFilter.fromDocuments(
-			docOutput,
-			embeddings,
-			{
-				client: supabase,
-			},
-			{
-				name: fileName,
-			},
-		);
 	} else if (source === DocSource.pdf && arrayBuffer) {
-		const loader = new PdfLoader(arrayBuffer);
+		const loader = new PdfWebBaseLoader(arrayBuffer);
 		const docs = await loader.load();
 		const splitter = new RecursiveCharacterTextSplitter();
 		const docOutput = await await splitter.splitDocuments(docs);

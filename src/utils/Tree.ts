@@ -39,44 +39,8 @@ export async function traverseTree(
 
 		visited.add(node.id);
 
-		try {
-			if (node.type === NodeTypesEnum.loop && (node.data as LoopDataType).loopCount > 0) {
-				const check = await new Promise<boolean>((resolve) => {
-					const chatApp = get().chatApp;
-					get().setChatApp([
-						...chatApp,
-						{
-							role: 'assistant',
-							content: 'Continue loop? (y/N)',
-						},
-					]);
-					get().setWaitingUserResponse(true);
-					get().setPauseResolver((message) => {
-						node.data.response = message;
-						if (message === 'y') {
-							return resolve(true);
-						}
-						return resolve(false);
-					});
-				});
-				if (!check) {
-					const loopData = node.data as LoopDataType;
-					loopData.loopCount = loopData.loopMax + 1;
-				}
-			}
-			await runNode(node, get, set, openAiKey);
-			childrenNodes = runConditional(
-				node,
-				get,
-				childrenNodes,
-				skipped,
-				getAllChildren,
-				visited,
-			);
-		} catch (error: any) {
-			console.log(error);
-			throw new Error('Error running node', error.message);
-		}
+		await runNode(node, get, set, openAiKey);
+		childrenNodes = runConditional(node, get, childrenNodes, skipped, getAllChildren, visited);
 
 		if (node.data.isBreakpoint) {
 			// TODO: breakpoint notification and step through

@@ -47,7 +47,6 @@ export default defineConfig({
 			input: {
 				main: resolve(root, 'index.html'),
 				editor: resolve(root, 'app', 'index.html'),
-				files: resolve(root, 'files', 'index.html'),
 				gallery: resolve(root, 'gallery', 'index.html'),
 				chat: resolve(root, 'chat', 'index.html'),
 				auth: resolve(root, 'auth', 'index.html'),

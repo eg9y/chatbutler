@@ -13,8 +13,5 @@
     "langchain": "^0.0.78",
     "nodemon": "^2.0.22",
     "supabase": "^1.62.3"
-  },
-  "devDependencies": {
-    "typescript": "^5.0.4"
   }
 }

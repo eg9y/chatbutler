@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "postinstall": "yarn workspace shared install && yarn workspace shared build",
+    "postinstall": "yarn workspace shared build",
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",

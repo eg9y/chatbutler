@@ -9,7 +9,7 @@
     ],
     "eslint.lintTask.enable": true,
     "prettier.enable": false, // Disable built-in Prettier extension if you have it installed
-    "deno.enable": true,
+    "deno.enablePaths": ["./prod-supabase"],
     "deno.unstable": true,
-    "deno.importMap": "./supabase/functions/import_map.json"
+    "deno.importMap": "./prod-supabase/functions/import_map.json"
 }

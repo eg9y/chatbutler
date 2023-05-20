@@ -1,10 +1,10 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 import { Edge, Node } from 'reactflow';
+import { Database } from 'shared';
 
 import { GlobalVariableType, WorkflowDbSchema } from './dbTypes';
 import { Inputs } from '../nodes/types/Input';
 import { CustomNode } from '../nodes/types/NodeTypes';
-import { Database } from '../schema';
 import { RFState } from '../store/useStore';
 
 const selectWorkflow = async (

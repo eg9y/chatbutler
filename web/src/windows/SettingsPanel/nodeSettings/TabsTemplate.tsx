@@ -10,10 +10,10 @@ import TabsNavigator from '../TabsNavigator';
 interface TabsInterface {
 	name: string;
 	icon?: React.ForwardRefExoticComponent<
-		React.SVGProps<SVGSVGElement> & {
+		Omit<React.SVGProps<SVGSVGElement>, 'ref'> & {
 			title?: string | undefined;
 			titleId?: string | undefined;
-		}
+		} & React.RefAttributes<SVGSVGElement>
 	>;
 }
 
@@ -30,7 +30,7 @@ export default function TabsTemplate({
 	defaultTab?: string;
 	children?: (selected: string) => React.ReactNode;
 }) {
-	const allTabs = [{ name: 'Block', icon: PencilIcon }, ...tabs];
+	const allTabs = [{ name: 'Block', icon: PencilIcon }, ...tabs] as TabsInterface[];
 	const [selected, setSelected] = useState(defaultTab ? defaultTab : allTabs[0].name);
 	return (
 		<div className="flex h-full flex-col">

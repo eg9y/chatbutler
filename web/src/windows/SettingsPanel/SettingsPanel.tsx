@@ -3,6 +3,7 @@ import { Cog6ToothIcon, BeakerIcon, AcademicCapIcon, TrashIcon } from '@heroicon
 import { SupabaseClient } from '@supabase/supabase-js';
 import { useState } from 'react';
 import { ReactFlowInstance, Node } from 'reactflow';
+import { Database } from 'shared';
 import { shallow } from 'zustand/shallow';
 
 import ChatMessageTabs from './nodeSettings/chatMessage/tabs';
@@ -24,7 +25,6 @@ import {
 	SearchDataType,
 	SingleChatPromptDataType,
 } from '../../nodes/types/NodeTypes';
-import { Database } from '../../schema';
 import { useStore, useStoreSecret, selector, selectorSecret } from '../../store';
 import { conditionalClassNames } from '../../utils/classNames';
 import Tutorial from '../Tutorial';

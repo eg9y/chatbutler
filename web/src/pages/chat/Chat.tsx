@@ -118,7 +118,7 @@ export default function ChatMain() {
 
 	return (
 		<>
-			<div className="z-5 absolute top-[6vh] right-5">
+			<div className="z-5 absolute right-5 top-[6vh]">
 				<Notification />
 			</div>
 			<SideNav

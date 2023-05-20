@@ -6,5 +6,5 @@
   "repository": "https://github.com/eg9y/promptsandbox.io.git",
   "author": "Egan Bisma <brickkace@gmail.com>",
   "private": true,
-  "workspaces": ["web", "server", "shared"]
+  "workspaces": ["web", "server", "shared", "prod-supabase"]
 }

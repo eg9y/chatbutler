@@ -1,14 +1,12 @@
-import { PencilIcon } from '@heroicons/react/20/solid';
-
 import { conditionalClassNames } from '../../utils/classNames';
 
 interface TabsInterface {
 	name: string;
 	icon?: React.ForwardRefExoticComponent<
-		React.SVGProps<SVGSVGElement> & {
+		Omit<React.SVGProps<SVGSVGElement>, 'ref'> & {
 			title?: string | undefined;
 			titleId?: string | undefined;
-		}
+		} & React.RefAttributes<SVGSVGElement>
 	>;
 }
 

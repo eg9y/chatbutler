@@ -289,10 +289,10 @@ const NodeType: FC<{
 	session?: RFStateSecret['session'];
 	needAuth?: boolean;
 	Icon: React.ForwardRefExoticComponent<
-		React.SVGProps<SVGSVGElement> & {
+		Omit<React.SVGProps<SVGSVGElement>, 'ref'> & {
 			title?: string | undefined;
 			titleId?: string | undefined;
-		}
+		} & React.RefAttributes<SVGSVGElement>
 	>;
 }> = ({ name, handleDrag, addNodeToCenter, nodeType, session, Icon, needAuth = false }) => {
 	const colorClassName = conditionalClassNames(

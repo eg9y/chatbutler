@@ -1,8 +1,7 @@
 // src/supabaseClient.js
 import { createClient } from '@supabase/supabase-js';
 import { useMemo } from 'react';
-
-import { Database } from '../schema';
+import { Database } from 'shared';
 
 export const createSupabaseClient = () => {
 	const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;

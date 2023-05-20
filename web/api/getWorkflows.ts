@@ -1,7 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-
-import { Database } from '../src/schema';
+import { Database } from 'shared';
 
 export const config = {
 	runtime: 'experimental-edge',

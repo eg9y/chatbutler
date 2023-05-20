@@ -38,7 +38,7 @@ import {
 	NodeTypesEnum,
 	TextNodeDataType,
 } from '../nodes/types/NodeTypes';
-import { runFlow } from '../utils/new/runFlow';
+import { runFlow } from '../utils/runFlow';
 import { Message } from '../windows/ChatPanel/Chat/types';
 
 export type UseStoreSetType = (

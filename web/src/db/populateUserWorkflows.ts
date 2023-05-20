@@ -1,6 +1,6 @@
 import { SupabaseClient } from '@supabase/supabase-js';
+import { Database } from 'shared';
 
-import { Database } from '../schema';
 import { RFState } from '../store/useStore';
 import { RFStateSecret } from '../store/useStoreSecret';
 

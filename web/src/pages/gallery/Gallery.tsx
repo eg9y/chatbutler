@@ -34,7 +34,7 @@ export default function Gallery() {
 		})();
 	}, []);
 	return (
-		<div className="mx-auto max-h-[95vh] max-w-2xl py-10 px-20 sm:py-4 sm:px-6 lg:max-w-7xl lg:px-20">
+		<div className="mx-auto max-h-[95vh] max-w-2xl px-20 py-10 sm:px-6 sm:py-4 lg:max-w-7xl lg:px-20">
 			<h1 className="mb-6 text-2xl font-bold">Chatbot Gallery</h1>
 			{isLoading ? <div>Loading...</div> : <Card publicWorkflows={publicWorkflows} />}
 		</div>

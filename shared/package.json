@@ -1,6 +1,16 @@
 {
   "name": "shared",
   "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT"
+  "main": "/build/index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "rimraf ./build && tsc",
+    "start:dev": "npx nodemon",
+    "start": "yarn run build && node build/index.js"
+  },
+  "dependencies": {
+    "langchain": "^0.0.78",
+    "nodemon": "^2.0.22",
+    "supabase": "^1.62.3"
+  }
 }

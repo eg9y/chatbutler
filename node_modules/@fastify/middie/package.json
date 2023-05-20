@@ -1,0 +1,63 @@
+{
+  "name": "@fastify/middie",
+  "version": "8.3.0",
+  "description": "Middleware engine for Fastify",
+  "main": "index.js",
+  "types": "types/index.d.ts",
+  "scripts": {
+    "coverage": "tap --cov --coverage-report=html test.js",
+    "lint": "standard",
+    "lint:fix": "standard --fix",
+    "test": "standard && tap test/*.test.js && tsd",
+    "test:unit": "tap",
+    "test:typescript": "tsd"
+  },
+  "keywords": [
+    "fastify",
+    "middleware",
+    "webframework",
+    "performances"
+  ],
+  "author": "Matteo Collina <hello@matteocollina.com>",
+  "contributors": [
+    {
+      "name": "Tomas Della Vedova",
+      "url": "http://delved.org"
+    }
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fastify/middie.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fastify/middie/issues"
+  },
+  "homepage": "https://github.com/fastify/middie#readme",
+  "devDependencies": {
+    "@fastify/pre-commit": "^2.0.2",
+    "@types/connect": "^3.4.33",
+    "@types/node": "^20.1.0",
+    "cors": "^2.8.5",
+    "fastify": "^4.0.0-rc.2",
+    "helmet": "^7.0.0",
+    "serve-static": "^1.14.1",
+    "simple-get": "^4.0.0",
+    "standard": "^17.0.0",
+    "tap": "^16.0.0",
+    "tsd": "^0.28.0"
+  },
+  "dependencies": {
+    "@fastify/error": "^3.2.0",
+    "fastify-plugin": "^4.0.0",
+    "path-to-regexp": "^6.1.0",
+    "reusify": "^1.0.4"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "pre-commit": [
+    "lint",
+    "test"
+  ]
+}

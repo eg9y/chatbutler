@@ -1,0 +1,15 @@
+{
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    },
+    "eslint.validate": [
+      "typescript",
+      "typescriptreact"
+    ],
+    "eslint.lintTask.enable": true,
+    "prettier.enable": false, // Disable built-in Prettier extension if you have it installed
+    "deno.enable": true,
+    "deno.unstable": true,
+    "deno.importMap": "./supabase/functions/import_map.json"
+}

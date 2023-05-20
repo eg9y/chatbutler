@@ -1,4 +1,19 @@
 {
+  "builds": [
+    {
+      "src": "web/package.json",
+      "use": "@vercel/node",
+      "config": {
+        "zeroConfig": false
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "web/$1"
+    }
+  ],
     "headers": [
         {
           "source": "/(.*)",

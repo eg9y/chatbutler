@@ -4,7 +4,7 @@
   "main": "/build/index.js",
   "license": "MIT",
   "scripts": {
-    "build": "rimraf ./build && tsc",
+    "build": "tsc --build --verbose",
     "start:dev": "npx nodemon",
     "start": "yarn run build && node build/index.js"
   },

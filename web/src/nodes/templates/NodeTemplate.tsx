@@ -143,7 +143,7 @@ const NodeTemplate: FC<
 					className={conditionalClassNames(
 						getBackgroundColor(color),
 
-						data.isDetailMode ? 'p-4' : 'px-10 pt-10 pb-5',
+						data.isDetailMode ? 'p-4' : 'px-10 pb-5 pt-10',
 						`flex items-center justify-between gap-2 rounded-t-lg border-b-0 border-slate-400 p-4 text-3xl `,
 					)}
 				>

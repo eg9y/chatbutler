@@ -59,7 +59,7 @@ const NodesList = ({
 				{({ open }) => (
 					<>
 						<Disclosure.Button className="flex w-full justify-between border-b-1 border-slate-400 bg-slate-300">
-							<p className="text-md pr-2 pl-4 text-start font-semibold text-slate-900">
+							<p className="text-md pl-4 pr-2 text-start font-semibold text-slate-900">
 								GPT
 							</p>
 							<ChevronRightIcon
@@ -118,7 +118,7 @@ const NodesList = ({
 				{({ open }) => (
 					<>
 						<Disclosure.Button className="flex w-full justify-between border-b-1 border-slate-400 bg-slate-300">
-							<p className="text-md pr-2 pl-4 text-start font-semibold text-slate-900">
+							<p className="text-md pl-4 pr-2 text-start font-semibold text-slate-900">
 								Helper
 							</p>
 							<ChevronRightIcon
@@ -226,7 +226,7 @@ const NodesList = ({
 				{({ open }) => (
 					<>
 						<Disclosure.Button className="flex w-full justify-between border-b-1 border-slate-400 bg-slate-300">
-							<p className="text-md pr-2 pl-4 text-start font-semibold text-slate-900">
+							<p className="text-md pl-4 pr-2 text-start font-semibold text-slate-900">
 								Docs
 							</p>
 							<ChevronRightIcon

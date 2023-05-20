@@ -112,7 +112,7 @@ const Text: FC<NodeProps<ClassifyNodeCategoriesDataType>> = (props) => {
 													classification.value && (
 													<CheckCircleIcon
 														className={
-															'absolute top-0 right-1 h-full w-6 text-green-600'
+															'absolute right-1 top-0 h-full w-6 text-green-600'
 														}
 														aria-hidden="true"
 													/>
@@ -142,7 +142,7 @@ const Text: FC<NodeProps<ClassifyNodeCategoriesDataType>> = (props) => {
 						/>
 					</div>
 					<button
-						className="text-md rounded border-4 border-dashed border-rose-400 py-1 px-2 text-center text-xl font-medium text-rose-400 hover:bg-rose-100"
+						className="text-md rounded border-4 border-dashed border-rose-400 px-2 py-1 text-center text-xl font-medium text-rose-400 hover:bg-rose-100"
 						onClick={(event) => {
 							event.stopPropagation();
 							event.preventDefault();

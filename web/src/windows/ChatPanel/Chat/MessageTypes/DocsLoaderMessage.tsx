@@ -257,7 +257,7 @@ function FileUploadOptions({
 										(isUpload === false && tab === 'Saved')
 										? 'border-neutral-500 text-neutral-600'
 										: 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
-									'cursor-pointer whitespace-nowrap border-b-2 py-1 px-1 text-sm font-medium',
+									'cursor-pointer whitespace-nowrap border-b-2 px-1 py-1 text-sm font-medium',
 								)}
 								aria-current={
 									isUpload === true && tab === 'Upload' ? 'page' : undefined

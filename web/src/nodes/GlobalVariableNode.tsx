@@ -218,7 +218,7 @@ const GlobalVariable: FC<NodeProps<GlobalVariableDataType>> = (props) => {
 									</div>
 									<div className="py-4">
 										<button
-											className="text-md w-full rounded border-4 border-dashed border-slate-400 py-1 px-2 text-center text-xl font-medium text-slate-400 hover:bg-slate-200 active:bg-slate-300"
+											className="text-md w-full rounded border-4 border-dashed border-slate-400 px-2 py-1 text-center text-xl font-medium text-slate-400 hover:bg-slate-200 active:bg-slate-300"
 											onClick={(event) => {
 												event.stopPropagation();
 												event.preventDefault();

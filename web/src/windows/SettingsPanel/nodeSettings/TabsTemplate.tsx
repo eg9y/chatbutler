@@ -35,7 +35,7 @@ export default function TabsTemplate({
 	return (
 		<div className="flex h-full flex-col">
 			<TabsNavigator tabs={allTabs} selected={selected} setSelected={setSelected} />
-			<div className="grow overflow-y-auto pr-4 pl-2 pt-4">
+			<div className="grow overflow-y-auto pl-2 pr-4 pt-4">
 				<div className="">
 					{selected === 'Block' && (
 						<DefaultTab

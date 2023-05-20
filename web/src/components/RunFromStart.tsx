@@ -106,7 +106,7 @@ export default function RunFromStart({
 		<button
 			className={conditionalClassNames(
 				isLoading ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-500 hover:bg-blue-600 ',
-				'text-md flex items-center rounded py-1  px-2 font-semibold text-white',
+				'text-md flex items-center rounded px-2  py-1 font-semibold text-white',
 			)}
 			onClick={async () => {
 				if (!isLoading) {

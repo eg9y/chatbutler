@@ -19,7 +19,7 @@ export default function RunnableToolbarTemplate(
 						data.isBreakpoint
 							? 'bg-red-900 text-red-500'
 							: 'bg-yellow-20/50 border-1 border-yellow-500 font-semibold text-yellow-500',
-						'  text-md flex items-center rounded py-1 px-2',
+						'  text-md flex items-center rounded px-2 py-1',
 					)}
 					onClick={() => {
 						data.isBreakpoint = !data.isBreakpoint;

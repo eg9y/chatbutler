@@ -27,7 +27,7 @@ export default function SandboxSettings({
 
 	return (
 		<>
-			<div className="pr-4 pl-2 pt-4 text-sm font-medium leading-6 text-slate-900">
+			<div className="pl-2 pr-4 pt-4 text-sm font-medium leading-6 text-slate-900">
 				{/* form div scrollable using tailwind */}
 				<form onSubmit={handleSubmit} className="flex flex-col">
 					<div className="">

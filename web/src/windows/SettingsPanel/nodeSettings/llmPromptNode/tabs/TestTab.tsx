@@ -54,7 +54,7 @@ export default function TestTab({
 								</div>
 							);
 						})}
-						<button className="my-2 flex items-center rounded bg-blue-500 py-1 px-2 text-xs font-semibold text-white hover:bg-blue-600">
+						<button className="my-2 flex items-center rounded bg-blue-500 px-2 py-1 text-xs font-semibold text-white hover:bg-blue-600">
 							<PlayIcon
 								className={'-ml-1 mr-1 h-5 w-5 flex-shrink-0 text-blue-300'}
 								aria-hidden="true"

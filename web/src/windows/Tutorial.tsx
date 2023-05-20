@@ -71,11 +71,11 @@ export default function Tutorial({
 								style={{
 									height: '90vh',
 								}}
-								className="relative mx-10 flex max-w-full transform flex-col rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:p-6"
+								className="relative mx-10 flex max-w-full transform flex-col rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:p-6"
 							>
 								<Dialog.Title
 									as="div"
-									className="flex gap-12  pl-4 pb-4 text-3xl font-semibold leading-6 text-slate-900"
+									className="flex gap-12  pb-4 pl-4 text-3xl font-semibold leading-6 text-slate-900"
 								>
 									<h1>Tutorial</h1>
 									<h2>{page}</h2>
@@ -123,7 +123,7 @@ function SideBar({ page, setPage }: { page: string; setPage: (page: string) => v
 												page === item.name
 													? 'bg-slate-300'
 													: 'hover:bg-slate-50',
-												'block cursor-pointer rounded-md py-2 pr-2 pl-10 text-sm font-semibold leading-6 text-slate-700',
+												'block cursor-pointer rounded-md py-2 pl-10 pr-2 text-sm font-semibold leading-6 text-slate-700',
 											)}
 											onClick={() => setPage(item.name)}
 										>
@@ -161,7 +161,7 @@ function SideBar({ page, setPage }: { page: string; setPage: (page: string) => v
 																		page === subItem.name
 																			? 'bg-slate-300'
 																			: 'hover:bg-slate-50',
-																		'block cursor-pointer rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-slate-700',
+																		'block cursor-pointer rounded-md py-2 pl-9 pr-2 text-sm leading-6 text-slate-700',
 																	)}
 																	onClick={() =>
 																		setPage(subItem.name)

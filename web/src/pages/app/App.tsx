@@ -301,7 +301,7 @@ export default function App() {
 								/>
 								<div
 									// animate on hover to show that it's resizable
-									className="absolute -right-2 top-0 bottom-0 cursor-col-resize bg-blue-200 opacity-0 transition-opacity duration-300 hover:opacity-80"
+									className="absolute -right-2 bottom-0 top-0 cursor-col-resize bg-blue-200 opacity-0 transition-opacity duration-300 hover:opacity-80"
 									style={{
 										width: '10px',
 									}}

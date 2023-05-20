@@ -16,7 +16,7 @@ export default function RunButton({
 	Icon?: JSX.Element;
 	id: string;
 }) {
-	const { setUiErrorMessage, getNodes, runNode } = useStore(selector, shallow);
+	const { setUiErrorMessage, getNodes } = useStore(selector, shallow);
 	const { openAiKey } = useStoreSecret(selectorSecret, shallow);
 
 	const [isLoading, setIsLoading] = useState(false);
@@ -28,7 +28,7 @@ export default function RunButton({
 			try {
 				// get current node
 				const currentNode = getNodes([id])[0];
-				await runNode(currentNode, openAiKey);
+				// await runNode(currentNode, openAiKey);
 
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			} catch (error: any) {
@@ -41,7 +41,7 @@ export default function RunButton({
 
 	return (
 		<button
-			className="text-md flex items-center rounded bg-blue-500 py-1 px-2  font-semibold text-white hover:bg-blue-600"
+			className="text-md flex items-center rounded bg-blue-500 px-2 py-1  font-semibold text-white hover:bg-blue-600"
 			onClick={getResponse()}
 		>
 			{isLoading ? (

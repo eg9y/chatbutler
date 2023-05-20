@@ -3,6 +3,7 @@ import { Edge } from 'reactflow';
 import { TraversalStateType } from './traversalStateType';
 import { CustomNode } from '../../nodes/types/NodeTypes';
 import { Message } from '../../windows/ChatPanel/Chat/types';
+import { getRootNodes } from '../getRootNodes';
 
 export function initializeFlowState(nodes: CustomNode[], edges: Edge[]): TraversalStateType {
 	const stack: string[] = [];

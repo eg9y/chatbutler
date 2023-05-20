@@ -4,6 +4,7 @@
   "main": "/build/index.js",
   "license": "MIT",
   "scripts": {
+    "postinstall": "tsc",
     "build": "tsc --build --verbose",
     "start:dev": "npx nodemon",
     "start": "yarn run build && node build/index.js"
@@ -12,5 +13,8 @@
     "langchain": "^0.0.78",
     "nodemon": "^2.0.22",
     "supabase": "^1.62.3"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.4"
   }
 }

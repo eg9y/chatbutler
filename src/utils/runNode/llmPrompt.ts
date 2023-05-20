@@ -1,15 +1,14 @@
 import { CustomNode, LLMPromptNodeDataType } from '../../nodes/types/NodeTypes';
 import { getOpenAICompleteResponse } from '../../openai/openai';
-import { RFState } from '../../store/useStore';
 
-async function llmPrompt(node: CustomNode, openAiKey: string, get: () => RFState) {
+async function llmPrompt(nodes: CustomNode[], node: CustomNode, openAiKey: string) {
 	const inputs = node.data.inputs;
 	if (inputs) {
 		const response = await getOpenAICompleteResponse(
 			openAiKey,
 			node.data as LLMPromptNodeDataType,
 			inputs.inputs,
-			get,
+			nodes,
 		);
 		// const mockResponse = {
 		// 	data: {
@@ -28,7 +27,6 @@ async function llmPrompt(node: CustomNode, openAiKey: string, get: () => RFState
 			node.data = {
 				...node.data,
 				response: completion,
-				isLoading: false,
 			};
 		}
 	}

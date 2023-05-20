@@ -2,23 +2,25 @@ import classifyCategories from './classifyCategories';
 import conditional from './conditional';
 import { CustomNode, NodeTypesEnum, LoopDataType } from '../../nodes/types/NodeTypes';
 import { RFState } from '../../store/useStore';
+import { getAllChildren } from '../getChildren';
+import { getNodes } from '../getNodes';
+import { TraversalStateType } from '../new/traversalStateType';
 
 function runConditional(
-	node: CustomNode,
+	nodes: CustomNode[],
+	nodeId: string,
+	state: TraversalStateType,
 	get: () => RFState,
-	childrenNodes: CustomNode[],
-	skipped: Set<string>,
-	getAllChildren: (
-		node: CustomNode,
-		getNodes: (inputs: string[]) => CustomNode[],
-	) => CustomNode[],
-	visited: Set<string>,
 ) {
+	const node = getNodes(nodes, [nodeId])[0];
+
+	let childrenNodes = getNodes(nodes, node.data.children);
+
 	if (node.type === NodeTypesEnum.classifyCategories) {
 		// 1) get edges where source is node and target is one of children
-		childrenNodes = classifyCategories(get, node, childrenNodes, skipped, getAllChildren);
+		childrenNodes = classifyCategories(get, node, childrenNodes, state.skipped);
 	} else if (node.type === NodeTypesEnum.conditional) {
-		childrenNodes = conditional(node, get, childrenNodes, skipped, getAllChildren);
+		childrenNodes = conditional(node, get, childrenNodes, state.skipped);
 	} else if (node.type === NodeTypesEnum.loop) {
 		// if loop node, check if the loop condition is met
 		const loopData = node.data as LoopDataType;
@@ -45,10 +47,10 @@ function runConditional(
 				get().getNodes,
 			);
 			loopChildren.forEach((child) => {
-				skipped.add(child.id);
+				state.skipped.add(child.id);
 			});
-			skipped.add(loopStartNodeId);
-			skipped.add(node.id);
+			state.skipped.add(loopStartNodeId);
+			state.skipped.add(node.id);
 		} else {
 			childrenNodes = get().getNodes([loopStartNodeId]);
 		}
@@ -61,7 +63,7 @@ function runConditional(
 		// recursively assigning the parentNode and loopId for nodes in a loop
 		// eslint-disable-next-line no-inner-declarations
 		function resetLoopChildren(nodes: CustomNode[], loopNodeIndex: number) {
-			visited.delete(nodes[loopNodeIndex].id);
+			state.visited.delete(nodes[loopNodeIndex].id);
 			// Iterate through target node's children and call assignLoopChildren recursively
 			nodes[loopNodeIndex].data.children.forEach((childId) => {
 				const childIndex = nodes.findIndex((node) => node.id === childId);
@@ -79,7 +81,10 @@ function runConditional(
 		resetLoopChildren(nodes, loopNodeIndex);
 	}
 
-	return childrenNodes;
+	// push children nodes to stack
+	childrenNodes.forEach((childNode) => {
+		state.stack.push(childNode.id);
+	});
 }
 
 export default runConditional;

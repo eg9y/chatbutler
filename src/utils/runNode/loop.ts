@@ -1,16 +1,14 @@
 import { CustomNode, LoopDataType } from '../../nodes/types/NodeTypes';
-import { RFState } from '../../store/useStore';
-import { parsePromptInputs } from '../parsePromptInputs';
+import { parsePromptInputsNoState } from '../parsePromptInputs';
 
-function loop(node: CustomNode, get: () => RFState) {
+function loop(nodes: CustomNode[], node: CustomNode) {
 	const loopData = node.data as LoopDataType;
 	loopData.loopCount += 1;
-	const parsedText = parsePromptInputs(get, loopData.text, loopData.inputs.inputs);
+	const parsedText = parsePromptInputsNoState(nodes, loopData.inputs.inputs, loopData.text);
 	node.data = {
 		...node.data,
 		response: parsedText,
 		loopCount: loopData.loopCount,
-		isLoading: false,
 	};
 }
 

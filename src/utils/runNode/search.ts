@@ -4,31 +4,31 @@ import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { Node } from 'reactflow';
 
 import { createSupabaseClient } from '../../auth/supabaseClient';
-import { DocsLoaderDataType, NodeTypesEnum, SearchDataType } from '../../nodes/types/NodeTypes';
-import { RFState } from '../../store/useStore';
-import { Message } from '../../windows/ChatPanel/Chat/types';
-import { parsePromptInputs } from '../parsePromptInputs';
+import {
+	CustomNode,
+	DocsLoaderDataType,
+	NodeTypesEnum,
+	SearchDataType,
+} from '../../nodes/types/NodeTypes';
+import { getNodes } from '../getNodes';
+import { TraversalStateType } from '../new/traversalStateType';
+import { parsePromptInputsNoState } from '../parsePromptInputs';
 import { SupabaseVectorStoreWithFilter } from '../vectorStores/SupabaseVectorStoreWithFilter';
-const search = async (node: Node<SearchDataType>, get: () => RFState, openAiKey: string) => {
+
+const search = async (
+	state: TraversalStateType,
+	chatbotId: string | undefined,
+	nodes: CustomNode[],
+	node: Node<SearchDataType>,
+	openAiKey: string,
+) => {
 	try {
 		const inputs = node.data.inputs;
-		const inputNodes = get().getNodes(inputs.inputs);
-		const currentWorkflow = get().currentWorkflow;
+		const inputNodes = getNodes(nodes, inputs.inputs);
 		const docsLoaderNodeIndex = inputNodes.findIndex((node) => node.type === 'docsLoader');
 		const inputIds = inputs.inputs.filter((input) => input !== 'docsLoader');
 		const searchNode = node.data as SearchDataType;
-		const userQuestion = parsePromptInputs(get, searchNode.text, inputIds);
-
-		const chatApp = get().chatApp;
-		let newChatApp: Message[] = [
-			...chatApp,
-			{
-				role: 'assistant',
-				content: `Search docs(s) ${inputNodes[docsLoaderNodeIndex].data.response} "${userQuestion}"...`,
-				assistantMessageType: NodeTypesEnum.search,
-			},
-		];
-		get().setChatApp(newChatApp);
+		const userQuestion = parsePromptInputsNoState(nodes, inputIds, searchNode.text);
 
 		const supabase = createSupabaseClient();
 
@@ -83,7 +83,7 @@ const search = async (node: Node<SearchDataType>, get: () => RFState, openAiKey:
 				if ((inputNodes[docsLoaderNodeIndex].data as DocsLoaderDataType).askUser) {
 					filter.user_id = session.data.session?.user.id;
 				} else {
-					filter.chatbot_id = currentWorkflow?.id;
+					filter.chatbot_id = chatbotId;
 				}
 				return filter;
 			});
@@ -104,7 +104,6 @@ const search = async (node: Node<SearchDataType>, get: () => RFState, openAiKey:
 		});
 
 		let answer = res.text;
-		console.log('answer', answer);
 		if (searchNode.returnSource) {
 			/*
 			 * append answer to add source from res.sourceDocuments, which is an array of objects with loc object field.
@@ -123,25 +122,24 @@ const search = async (node: Node<SearchDataType>, get: () => RFState, openAiKey:
 			});
 		}
 
-		newChatApp = [...newChatApp];
-		newChatApp[newChatApp.length - 1] = {
-			content: 'Search Finished!',
-			role: 'assistant',
-			assistantMessageType: NodeTypesEnum.outputText,
-		};
-		get().setChatApp(newChatApp);
+		state.chatHistory = [
+			...state.chatHistory,
+			{
+				content: 'Search Finished!',
+				role: 'assistant',
+				assistantMessageType: NodeTypesEnum.outputText,
+			},
+		];
+
 		node.data = {
 			...node.data,
 			// TODO: need to have a combiner node or a for loop node
 			response: answer,
 			isLoading: false,
 		};
-	} catch (error) {
-		node.data = {
-			...node.data,
-			isLoading: false,
-		};
-		// TODO: set UI error
+	} catch (error: any) {
+		console.log('error', error);
+		throw new Error(error);
 	}
 };
 

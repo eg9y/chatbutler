@@ -4,7 +4,7 @@ import docsLoader from './docsLoader';
 import {
 	chatPrompt,
 	classify,
-	combine,
+	// combine,
 	llmPrompt,
 	loop,
 	outputText,
@@ -21,37 +21,25 @@ import {
 	NodeTypesEnum,
 	SearchDataType,
 } from '../../nodes/types/NodeTypes';
-import { RFState } from '../../store/useStore';
-import { parsePromptInputs } from '../parsePromptInputs';
+import { getNodes } from '../getNodes';
+import { TraversalStateType } from '../new/traversalStateType';
+import { parsePromptInputsNoState } from '../parsePromptInputs';
 
 export async function runNode(
-	node: CustomNode,
-	get: () => RFState,
-	set: (state: Partial<RFState>) => void,
+	state: TraversalStateType,
+	chatbotId: string | undefined,
+	nodes: CustomNode[],
+	nodeId: string,
 	openAiKey: string,
 ) {
-	if (
-		node.type === NodeTypesEnum.llmPrompt ||
-		node.type === NodeTypesEnum.chatPrompt ||
-		node.type === NodeTypesEnum.classify ||
-		node.type === NodeTypesEnum.search ||
-		node.type === NodeTypesEnum.singleChatPrompt ||
-		node.type === NodeTypesEnum.inputText
-	) {
-		node.data = {
-			...node.data,
-			isLoading: true,
-			response: '',
-		};
-		get().updateNode(node.id, node.data);
-	}
+	const node = getNodes(nodes, [nodeId])[0];
 
 	switch (node.type) {
 		case NodeTypesEnum.llmPrompt:
-			await llmPrompt(node, openAiKey, get);
+			await llmPrompt(nodes, node, openAiKey);
 			break;
 		case NodeTypesEnum.inputText:
-			await inputText(node, get);
+			await inputText(state, nodes, node);
 			break;
 		case NodeTypesEnum.globalVariable:
 			// set node.data.value to initialValue
@@ -66,48 +54,48 @@ export async function runNode(
 			node.data = {
 				...node.data,
 				response: node.data.text,
-				isLoading: false,
 			};
 			break;
 		case NodeTypesEnum.setVariable:
-			setVariable(node, get);
+			setVariable(nodes, node);
 			break;
 		case NodeTypesEnum.outputText:
-			outputText(get, node);
+			outputText(state, nodes, node);
 			break;
 		case NodeTypesEnum.search:
-			await search(node as Node<SearchDataType>, get, openAiKey);
+			await search(state, chatbotId, nodes, node as Node<SearchDataType>, openAiKey);
 			break;
 		case NodeTypesEnum.docsLoader:
-			await docsLoader(node as Node<DocsLoaderDataType>, get);
+			await docsLoader(node as Node<DocsLoaderDataType>);
 			break;
 		case NodeTypesEnum.counter:
 			counter(node);
 			break;
-		case NodeTypesEnum.combine:
-			combine(node, get);
-			break;
+		// case NodeTypesEnum.combine:
+		// 	combine(node, get);
+		// 	break;
 		case NodeTypesEnum.chatPrompt:
-			await chatPrompt(node, get, openAiKey);
+			await chatPrompt(nodes, node, openAiKey);
 			break;
 		case NodeTypesEnum.singleChatPrompt:
-			await singleChatPrompt(openAiKey, node, get);
+			await singleChatPrompt(nodes, node, openAiKey);
 			break;
 		case NodeTypesEnum.classify:
-			await classify(node, get, openAiKey);
+			await classify(nodes, node, openAiKey);
 			break;
 		case NodeTypesEnum.text:
-			node.data.response = parsePromptInputs(get, node.data.text, node.data.inputs.inputs);
+			node.data.response = parsePromptInputsNoState(
+				nodes,
+				node.data.inputs.inputs,
+				node.data.text,
+			);
 			break;
 		case NodeTypesEnum.loop:
-			loop(node, get);
+			loop(nodes, node);
 			break;
 		default:
 		// do nothing
 	}
 
-	get().updateNode(node.id, node.data);
-	set({
-		selectedNode: null,
-	});
+	return node;
 }

@@ -6,24 +6,23 @@ import {
 	GlobalVariableDataType,
 	SetVariableDataType,
 } from '../../nodes/types/NodeTypes';
-import { RFState } from '../../store/useStore';
-import { parsePromptInputs } from '../parsePromptInputs';
+import { getNodes } from '../getNodes';
+import { parsePromptInputs, parsePromptInputsNoState } from '../parsePromptInputs';
 
-function setVariable(node: CustomNode, get: () => RFState) {
-	node.data.response = parsePromptInputs(get, node.data.text, node.data.inputs.inputs);
+function setVariable(nodes: CustomNode[], node: CustomNode) {
+	node.data.response = parsePromptInputsNoState(nodes, node.data.inputs.inputs, node.data.text);
 	node.data = {
 		...node.data,
 		isLoading: false,
 	};
 
 	// get node from node.data.variableId
-	const globalVariableNode = get().getNodes([
+	const globalVariableNode = getNodes(nodes, [
 		(node.data as SetVariableDataType).variableId,
 	])[0] as Node<GlobalVariableDataType>;
 
 	if (globalVariableNode.data.type === 'text') {
 		globalVariableNode.data.value = node.data.response;
-		get().updateNode(globalVariableNode.id, globalVariableNode.data);
 	} else if (globalVariableNode.data.type === 'list') {
 		const globalVariableValue = globalVariableNode.data.value as {
 			id: string;
@@ -53,10 +52,7 @@ function setVariable(node: CustomNode, get: () => RFState) {
 			default:
 				break;
 		}
-		get().updateNode(globalVariableNode.id, {
-			...globalVariableNode.data,
-			value: [...globalVariableValue],
-		});
+		globalVariableNode.data.value = [...globalVariableValue];
 	}
 }
 

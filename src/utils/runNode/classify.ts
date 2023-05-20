@@ -4,22 +4,19 @@ import {
 	ClassifyNodeCategoriesDataType,
 } from '../../nodes/types/NodeTypes';
 import { ChatSequence, getOpenAIChatResponse } from '../../openai/openai';
-import { RFState } from '../../store/useStore';
-import { parsePromptInputs } from '../parsePromptInputs';
+import { parsePromptInputsNoState } from '../parsePromptInputs';
 
-async function classify(node: CustomNode, get: () => RFState, openAiKey: string) {
+async function classify(nodes: CustomNode[], node: CustomNode, openAiKey: string) {
 	const classifyData = node.data as ClassifyNodeDataType;
 	// get node with id data.categoryNodeId
-	const categoryNode = get().nodes.find(
-		(node) => node.id === classifyData.children[0],
-	) as CustomNode;
+	const categoryNode = nodes.find((node) => node.id === classifyData.children[0]) as CustomNode;
 	const categoryData = categoryNode.data as ClassifyNodeCategoriesDataType;
 	// convert categoryData.classifications to comma separated strings of the value fields only
 	const categories = categoryData.classifications
 		.map((classification) => classification.value)
 		.join(', ');
 
-	const parsedText = parsePromptInputs(get, node.data.text, node.data.inputs.inputs);
+	const parsedText = parsePromptInputsNoState(nodes, node.data.inputs.inputs, node.data.text);
 	const chatSequence = [
 		{
 			role: 'user',
@@ -34,7 +31,6 @@ async function classify(node: CustomNode, get: () => RFState, openAiKey: string)
 		node.data = {
 			...node.data,
 			response: completion,
-			isLoading: false,
 		};
 	}
 }

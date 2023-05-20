@@ -2,16 +2,13 @@ import { Edge } from 'reactflow';
 
 import { CustomNode, ClassifyNodeCategoriesDataType } from '../../nodes/types/NodeTypes';
 import { RFState } from '../../store/useStore';
+import { getAllChildren } from '../getChildren';
 
 function classifyCategories(
 	get: () => RFState,
 	node: CustomNode,
 	childrenNodes: CustomNode[],
 	skipped: Set<string>,
-	getAllChildren: (
-		node: CustomNode,
-		getNodes: (inputs: string[]) => CustomNode[],
-	) => CustomNode[],
 ) {
 	const sourceTargetEdge = get()
 		.edges.filter(

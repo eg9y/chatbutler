@@ -4,6 +4,7 @@ import {
 	ConditionalBooleanOperation,
 } from '../../nodes/types/NodeTypes';
 import { RFState } from '../../store/useStore';
+import { getAllChildren } from '../getChildren';
 import { parsePromptInputs } from '../parsePromptInputs';
 
 function conditional(
@@ -11,10 +12,6 @@ function conditional(
 	get: () => RFState,
 	childrenNodes: CustomNode[],
 	skipped: Set<string>,
-	getAllChildren: (
-		node: CustomNode,
-		getNodes: (inputs: string[]) => CustomNode[],
-	) => CustomNode[],
 ) {
 	const data = node.data as ConditionalDataType;
 

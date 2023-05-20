@@ -6,11 +6,11 @@ import {
 } from '../../nodes/types/NodeTypes';
 import { getOpenAIChatResponse } from '../../openai/openai';
 import { RFState } from '../../store/useStore';
-import { parsePromptInputs } from '../parsePromptInputs';
+import { getNodes } from '../getNodes';
+import { parsePromptInputs, parsePromptInputsNoState } from '../parsePromptInputs';
 
-async function chatPrompt(node: CustomNode, get: () => RFState, openAiKey: string) {
-	const chatMessageNodes = collectChatMessages(node, get);
-	console.log('Chat sequence:', chatMessageNodes.map((n) => n.data.name).concat(node.data.name));
+async function chatPrompt(nodes: CustomNode[], node: CustomNode, openAiKey: string) {
+	const chatMessageNodes = collectChatMessages(nodes, node);
 	const chatSequence = chatMessageNodes.map((node) => {
 		const data = node.data as ChatMessageNodeDataType;
 		return {
@@ -32,9 +32,8 @@ async function chatPrompt(node: CustomNode, get: () => RFState, openAiKey: strin
 			response: completion,
 		};
 	}
-	node.data.isLoading = false;
 }
-function collectChatMessages(node: CustomNode, get: () => RFState): CustomNode[] {
+function collectChatMessages(nodes: CustomNode[], node: CustomNode): CustomNode[] {
 	const queue: CustomNode[] = [node];
 	const chatMessageNodes: CustomNode[] = [];
 
@@ -42,15 +41,15 @@ function collectChatMessages(node: CustomNode, get: () => RFState): CustomNode[]
 		const currentNode = queue.shift();
 		if (!currentNode) continue;
 
-		const inputNodes = get().getNodes(currentNode.data.inputs.inputs);
+		const inputNodes = getNodes(nodes, currentNode.data.inputs.inputs);
 
 		let isAnyParentMessage = false;
 		for (const parent of inputNodes) {
 			if (parent.type === NodeTypesEnum.chatMessage && !chatMessageNodes.includes(parent)) {
-				parent.data.response = parsePromptInputs(
-					get,
-					parent.data.text,
+				parent.data.response = parsePromptInputsNoState(
+					nodes,
 					parent.data.inputs.inputs,
+					parent.data.text,
 				);
 				chatMessageNodes.push(parent);
 				isAnyParentMessage = true;

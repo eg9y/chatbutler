@@ -38,8 +38,7 @@ import {
 	NodeTypesEnum,
 	TextNodeDataType,
 } from '../nodes/types/NodeTypes';
-import { runNode } from '../utils/runNode/runNode';
-import { traverseTree } from '../utils/Tree';
+import { runFlow } from '../utils/new/runFlow';
 import { Message } from '../windows/ChatPanel/Chat/types';
 
 export type UseStoreSetType = (
@@ -101,8 +100,12 @@ export interface RFState {
 	// TODO: type this
 	updateNode: any;
 	updateInputExample: any;
-	traverseTree: (openAiKey: string, signal: AbortSignal) => Promise<void>;
-	runNode: (node: CustomNode, openAiKey: string) => Promise<void>;
+	runFlow: (
+		nodes: CustomNode[],
+		edges: Edge[],
+		openAiKey: string,
+		signal: AbortSignal,
+	) => Promise<void>;
 	clearAllNodeResponses: () => void;
 }
 
@@ -302,17 +305,13 @@ const useStore = create<RFState>()(
 					selectedNode,
 				});
 			},
-			traverseTree: (openAiKey: string, signal: AbortSignal): Promise<void> => {
-				return new Promise((resolve, reject) => {
-					signal.addEventListener('abort', () => {
-						reject(new Error('Operation cancelled'));
-					});
-
-					traverseTree(get, set, openAiKey).then(resolve, reject);
-				});
-			},
-			runNode: (node: CustomNode, openAiKey: string): Promise<void> => {
-				return runNode(node, get, set, openAiKey);
+			runFlow: async (
+				nodes: CustomNode[],
+				edges: Edge[],
+				openAiKey: string,
+				signal: AbortSignal,
+			): Promise<void> => {
+				await runFlow(get, nodes, edges, openAiKey);
 			},
 			clearAllNodeResponses: () => {
 				const nodes = get().nodes;

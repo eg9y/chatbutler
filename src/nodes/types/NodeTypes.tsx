@@ -137,7 +137,6 @@ export type DocsLoaderDataType = {
 	source: DocSource;
 	askUser: boolean;
 	askOnce: boolean;
-	fileBlob?: string | ArrayBuffer;
 } & DefaultNodeDataType;
 
 export enum NodeTypesEnum {

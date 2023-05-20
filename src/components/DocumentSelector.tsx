@@ -21,8 +21,8 @@ export default function DocumentSelector({
 }: {
 	open: boolean;
 	setOpen: (open: boolean) => void;
-	selectedDocuments: Set<string>;
-	setSelectedDocuments: React.Dispatch<React.SetStateAction<Set<string>>>;
+	selectedDocuments: string[];
+	setSelectedDocuments: React.Dispatch<React.SetStateAction<string[]>>;
 	id: string;
 	data: DocsLoaderDataType;
 	updateNode: RFState['updateNode'];
@@ -59,21 +59,19 @@ export default function DocumentSelector({
 	}, [open, currentWorkflow]);
 
 	const handleDocumentClick = (docId: string) => {
-		if (selectedDocuments.has(docId)) {
-			const newSelectedDocuments = new Set(selectedDocuments);
-			newSelectedDocuments.delete(docId);
+		if (selectedDocuments.includes(docId)) {
+			const newSelectedDocuments = [...selectedDocuments].filter((id) => id !== docId);
 			setSelectedDocuments(newSelectedDocuments);
 			updateNode(id, {
 				...data,
-				text: Array.from(newSelectedDocuments).join(','),
+				text: newSelectedDocuments.join(','),
 			});
 		} else {
-			const newSelectedDocuments = new Set(selectedDocuments);
-			newSelectedDocuments.add(docId);
+			const newSelectedDocuments = [...selectedDocuments, docId];
 			setSelectedDocuments(newSelectedDocuments);
 			updateNode(id, {
 				...data,
-				text: Array.from(newSelectedDocuments).join(','),
+				text: newSelectedDocuments.join(','),
 			});
 		}
 	};
@@ -139,8 +137,9 @@ export default function DocumentSelector({
 															}
 															className={conditionalClassNames(
 																'group relative flex flex-grow cursor-pointer items-center space-x-4 px-4 py-4  sm:px-6 lg:px-8',
-																selectedDocuments.has(doc.name) &&
-																	'bg-green-200', // conditional class for selected document
+																selectedDocuments.includes(
+																	doc.name,
+																) && 'bg-green-200', // conditional class for selected document
 															)}
 														>
 															<div className="min-w-0 grow">

@@ -1,13 +1,12 @@
 import { CustomNode, SingleChatPromptDataType } from '../../nodes/types/NodeTypes';
 import { getOpenAIChatResponse } from '../../openai/openai';
-import { RFState } from '../../store/useStore';
-import { parsePromptInputs } from '../parsePromptInputs';
+import { parsePromptInputsNoState } from '../parsePromptInputs';
 
-async function singleChatPrompt(openAiKey: string, node: CustomNode, get: () => RFState) {
+async function singleChatPrompt(nodes: CustomNode[], node: CustomNode, openAiKey: string) {
 	const response = await getOpenAIChatResponse(openAiKey, node.data as SingleChatPromptDataType, [
 		{
 			role: 'user',
-			content: parsePromptInputs(get, node.data.text, node.data.inputs.inputs),
+			content: parsePromptInputsNoState(nodes, node.data.inputs.inputs, node.data.text),
 		},
 	]);
 
@@ -17,7 +16,6 @@ async function singleChatPrompt(openAiKey: string, node: CustomNode, get: () => 
 		node.data = {
 			...node.data,
 			response: completion,
-			isLoading: false,
 		};
 	}
 }

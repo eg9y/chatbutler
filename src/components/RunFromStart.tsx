@@ -19,11 +19,12 @@ export default function RunFromStart({
 }) {
 	const {
 		setUiErrorMessage,
-		traverseTree,
 		clearAllNodeResponses,
 		setChatApp,
 		setNodes,
 		setUnlockGraph,
+		runFlow,
+		edges,
 	} = useStore(selector, shallow);
 	const { openAiKey } = useStoreSecret(selectorSecret, shallow);
 
@@ -37,16 +38,13 @@ export default function RunFromStart({
 		try {
 			setChatApp([]);
 			// eslint-disable-next-line no-constant-condition
-			while (true) {
-				clearAllNodeResponses();
-				// Create a new AbortController and set it to the ref
-				abortControllerRef.current = new AbortController();
-				const signal = abortControllerRef.current.signal;
-
-				await traverseTree(openAiKey, signal);
-				break;
-			}
-
+			clearAllNodeResponses();
+			// Create a new AbortController and set it to the ref
+			abortControllerRef.current = new AbortController();
+			const signal = abortControllerRef.current.signal;
+			setUnlockGraph(false);
+			await runFlow(nodes, edges, openAiKey, signal);
+			setUnlockGraph(true);
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} catch (error: any) {
 			if (error.message === 'Operation cancelled') {

@@ -1,21 +1,19 @@
 import { CustomNode } from '../../nodes/types/NodeTypes';
-import { RFState } from '../../store/useStore';
-import { parsePromptInputs } from '../parsePromptInputs';
+import { TraversalStateType } from '../new/traversalStateType';
+import { parsePromptInputsNoState } from '../parsePromptInputs';
 
-function outputText(get: () => RFState, node: CustomNode) {
-	const chatApp = get().chatApp;
-	const parsedText = parsePromptInputs(get, node.data.text, node.data.inputs.inputs);
-	get().setChatApp([
-		...chatApp,
+function outputText(state: TraversalStateType, nodes: CustomNode[], node: CustomNode) {
+	const parsedText = parsePromptInputsNoState(nodes, node.data.inputs.inputs, node.data.text);
+	state.chatHistory = [
+		...state.chatHistory,
 		{
 			role: 'assistant',
 			content: parsedText,
 		},
-	]);
+	];
 	node.data = {
 		...node.data,
 		response: parsedText,
-		isLoading: false,
 	};
 }
 

@@ -6,11 +6,12 @@ import { createSupabaseClient } from '../auth/supabaseClient';
 import {
 	ChatPromptNodeDataType,
 	ClassifyNodeDataType,
+	CustomNode,
 	LLMPromptNodeDataType,
 	SingleChatPromptDataType,
 } from '../nodes/types/NodeTypes';
 import { RFState } from '../store/useStore';
-import { parsePromptInputs } from '../utils/parsePromptInputs';
+import { parsePromptInputs, parsePromptInputsNoState } from '../utils/parsePromptInputs';
 
 export type ChatSequence = {
 	role: 'user' | 'assistant' | 'system';
@@ -21,7 +22,7 @@ export async function getOpenAICompleteResponse(
 	apiKey: string | null,
 	llmPrompt: LLMPromptNodeDataType,
 	inputNodeIds: string[],
-	get: () => RFState,
+	nodes: CustomNode[],
 ) {
 	try {
 		if (!apiKey) {
@@ -30,7 +31,7 @@ export async function getOpenAICompleteResponse(
 			);
 		}
 
-		const parsedPrompt = parsePromptInputs(get, llmPrompt.text, inputNodeIds);
+		const parsedPrompt = parsePromptInputsNoState(nodes, inputNodeIds, llmPrompt.text);
 
 		const settings: {
 			openAIApiKey?: string;

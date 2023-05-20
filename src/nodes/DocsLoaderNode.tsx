@@ -19,7 +19,9 @@ const DocsLoader: FC<NodeProps<DocsLoaderDataType>> = (props) => {
 	const { updateNode } = useStore(selector, shallow);
 
 	const [openSelector, setOpenSelector] = useState(false);
-	const [selectedDocuments, setSelectedDocuments] = useState<Set<string>>(new Set());
+	const [selectedDocuments, setSelectedDocuments] = useState<string[]>(
+		data.text.trim().length > 0 ? data.text.split(',') : [],
+	);
 
 	return (
 		<div className="">

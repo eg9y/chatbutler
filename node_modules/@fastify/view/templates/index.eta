@@ -1,8 +1,0 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head></head>
-  <body>
-    <p><%= it.text.toString() %></p>
-    <br/>
-  </body>
-</html>

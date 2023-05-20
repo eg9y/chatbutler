@@ -1,3 +1,0 @@
-header: {{! it.text }}
-{{= it.body }}
-footer

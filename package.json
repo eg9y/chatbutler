@@ -2,12 +2,15 @@
   "name": "chatbutler",
   "version": "1.0.0",
   "description": "No Code AI Chatbot builder",
-  "main": "index.js", 
+  "main": "index.js",
   "repository": "https://github.com/eg9y/promptsandbox.io.git",
   "author": "Egan Bisma <brickkace@gmail.com>",
   "private": true,
-  "workspaces": ["web", "server", "shared", "prod-supabase"],
+  "workspaces": [
+    "packages/*"
+  ],
   "devDependencies": {
     "typescript": "^5.0.4"
-  }
+  },
+  "packageManager": "yarn@3.5.1"
 }

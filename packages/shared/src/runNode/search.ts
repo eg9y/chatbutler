@@ -1,0 +1,178 @@
+import { ConversationalRetrievalQAChain } from "langchain/chains";
+import { ChatOpenAI } from "langchain/chat_models/openai";
+import { OpenAIEmbeddings } from "langchain/embeddings/openai";
+import { Node } from "reactflow";
+import { getNodes } from "../getNodes";
+import { TraversalStateType } from "../traversalStateType";
+import {
+  CustomNode,
+  SearchDataType,
+  DocsLoaderDataType,
+  NodeTypesEnum,
+} from "../types/NodeTypes";
+import { parsePromptInputs } from "../utils/parsePromptInput";
+import { createSupabaseClient } from "../utils/createSupabaseClient";
+import { SupabaseVectorStoreWithFilter } from "../utils/vectorStores/SupabaseVectorStoreWithFilter";
+import { getRuntimeEnvironment } from "../utils/env";
+
+const search = async (
+  state: TraversalStateType,
+  chatbotId: string | undefined,
+  nodes: CustomNode[],
+  node: Node<SearchDataType>,
+  openAiKey: string
+) => {
+  try {
+    const inputs = node.data.inputs;
+    const inputNodes = getNodes(nodes, inputs.inputs);
+    const docsLoaderNodeIndex = inputNodes.findIndex(
+      (node) => node.type === "docsLoader"
+    );
+    const inputIds = inputs.inputs.filter((input) => input !== "docsLoader");
+    const searchNode = node.data as SearchDataType;
+    const userQuestion = parsePromptInputs(nodes, inputIds, searchNode.text);
+
+    const supabase = await createSupabaseClient();
+
+    let embeddings = new OpenAIEmbeddings({ openAIApiKey: openAiKey });
+    const session = await supabase.auth.getSession();
+
+    if (session.error) {
+      throw new Error(session.error.message);
+    }
+
+    let model = new ChatOpenAI({
+      // TODO: need to let user set the openai settings
+      modelName: "gpt-3.5-turbo",
+      openAIApiKey: openAiKey,
+    });
+
+    const { runtime } = await getRuntimeEnvironment();
+
+    // if no sessions found, use api key set in non-user's "session"
+    if (
+      session &&
+      session.data &&
+      session.data.session &&
+      session.data.session.access_token
+    ) {
+      if (runtime === "browser") { 
+        embeddings = new OpenAIEmbeddings(
+          {
+            openAIApiKey: session.data.session.access_token,
+          },
+          {
+            basePath: `${process.env.SUPABASE_FUNCTION_URL}/openai`,
+          }
+        );
+        model = new ChatOpenAI(
+          {
+            modelName: "gpt-3.5-turbo",
+            // this is the supabase session key, the real openAI key is set in the proxy #ifitworksitworks
+            openAIApiKey: session.data.session.access_token,
+          },
+          {
+            basePath: `${process.env.SUPABASE_FUNCTION_URL}/openai`,
+          }
+        );
+      } else {
+        embeddings = new OpenAIEmbeddings(
+          {
+            openAIApiKey: session.data.session.access_token,
+          }
+        );
+        model = new ChatOpenAI(
+          {
+            modelName: "gpt-3.5-turbo",
+            // this is the supabase session key, the real openAI key is set in the proxy #ifitworksitworks
+            openAIApiKey: session.data.session.access_token,
+          }
+        );
+      }
+    }
+    const test = await supabase.from("workflows").select("*").limit(1);
+    console.log('testOOO', test);
+    // Load the docs into the vector store
+    const vectorStore = await SupabaseVectorStoreWithFilter.fromExistingIndex(
+      embeddings,
+      {
+        client: supabase,
+        tableName: "documents",
+        queryName: "match_documents_with_filters",
+      }
+    );
+
+    const documents = inputNodes[docsLoaderNodeIndex].data.response
+      .split(",")
+      .map((document) => {
+        const filter: any = {
+          name: document,
+        };
+        if (
+          (inputNodes[docsLoaderNodeIndex].data as DocsLoaderDataType).askUser
+        ) {
+          filter.user_id = session.data.session?.user.id;
+        } else {
+          filter.chatbot_id = chatbotId;
+        }
+        return filter;
+      });
+
+
+    const chain = ConversationalRetrievalQAChain.fromLLM(
+      model,
+      vectorStore.asRetriever(undefined, documents),
+      {
+        returnSourceDocuments: true,
+      }
+    );
+
+    chain.returnSourceDocuments = true;
+    chain.verbose = true;
+    const res = await chain.call({
+      question: userQuestion,
+      chat_history: [],
+    });
+
+    let answer = res.text;
+
+    if (searchNode.returnSource) {
+      /*
+       * append answer to add source from res.sourceDocuments, which is an array of objects with loc object field.
+       * append the res.sourceDocument[x].metadata.loc.pageNumber and res.sourceDocument[x].pageContent like so:
+       * `originalAnswer
+       * page pageNumber: pageContent
+       * page n: pageContent n
+       * ...
+       * `
+       */
+      answer += "\n\nSource:\n";
+      res.sourceDocuments.forEach((doc: any) => {
+        answer += `file: ${doc.metadata.name}, page: #${
+          doc.metadata.loc.pageNumber
+        }\ncontent: ${doc.pageContent.slice(0, 190)}\n`;
+      });
+    }
+
+    state.chatHistory = [
+      ...state.chatHistory,
+      {
+        content: "Search Finished!",
+        role: "assistant",
+        assistantMessageType: NodeTypesEnum.outputText,
+      },
+    ];
+
+    node.data = {
+      ...node.data,
+      // TODO: need to have a combiner node or a for loop node
+      response: answer,
+      isLoading: false,
+    };
+  } catch (error: any) {
+    console.log("error", error);
+    throw new Error(error);
+  }
+};
+
+export default search;

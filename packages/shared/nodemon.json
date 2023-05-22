@@ -1,0 +1,6 @@
+{
+  "watch": ["src"],
+  "ext": ".ts,.js",
+  "ignore": [],
+  "exec": "yarn run build && npx ts-node -p tsconfig.shared.json ./src/index.ts"
+}

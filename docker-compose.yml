@@ -1,0 +1,31 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    command: yarn workspace @chatbutler/server start:dev
+    environment:
+      - SUPABASE_PUBLIC_KEY=${SUPABASE_PUBLIC_KEY}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - SUPABASE_URL=${SUPABASE_URL}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    ports:
+      - 3000:3000
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - 6379:6379
+    volumes:
+      - redis-data:/data
+
+volumes:
+  redis-data:

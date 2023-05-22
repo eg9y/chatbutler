@@ -1,0 +1,61 @@
+{
+  "extends": [
+    "../../.eslintrc.json",  // adjust this to the relative path of your root `.eslintrc.js`
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:react/jsx-runtime",
+    "plugin:prettier/recommended"
+  ],
+  "env": {
+    "browser": true
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 2018,
+    "sourceType": "module"
+  },
+  "plugins": [
+    "react",
+    "eslint-plugin-react-hooks",
+    "import"
+  ],
+  "rules": {
+    "react-hooks/exhaustive-deps": "error",
+    "no-var": "error",
+    "brace-style": "error",
+    "prefer-template": "error",
+    "space-before-blocks": "error",
+    "import/prefer-default-export": "off",
+    "prettier/prettier": ["error", { "endOfLine": "auto" }],
+    "@typescript-eslint/ban-ts-comment": "warn",
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          ["builtin", "external"],
+          "internal",
+          ["parent", "sibling", "index"]
+        ],
+        "pathGroups": [
+          {
+            "pattern": "~/**",
+            "group": "internal"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": ["builtin"],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
+      }
+    ]
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  }
+}

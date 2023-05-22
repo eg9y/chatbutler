@@ -1,0 +1,7 @@
+{
+  "extends": "../../.eslintrc.json",  // adjust this to the relative path of your root `.eslintrc.js`
+  "env": {
+    "browser": true,
+    "node": true
+  }
+}

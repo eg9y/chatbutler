@@ -6,7 +6,7 @@ import {
   initializeFlowState,
   Inputs,
   NodeTypesEnum,
-} from 'shared';
+} from '@chatbutler/shared';
 import { RedisService } from 'src/redis/redis.service';
 import { SupabaseService } from 'src/supabase/supabase.service';
 import { TraversalStateType } from '../../../shared/src/traversalStateType';

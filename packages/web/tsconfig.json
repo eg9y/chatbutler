@@ -18,7 +18,7 @@
     "types": ["vite-plugin-svgr/client"],
     "baseUrl": ".",
     "paths": {
-      "shared": ["../shared/src/index"]
+      "@chatbutler/shared": ["../shared/src/index"]
     }
   },
   "include": ["src", "api", "src/vite-env.d.ts"],

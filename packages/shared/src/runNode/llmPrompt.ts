@@ -1,10 +1,12 @@
 import { CustomNode, LLMPromptNodeDataType } from "../types/NodeTypes";
+import { SupabaseSettingsType } from "../types/SupabaseSettingsType";
 import { getOpenAICompleteResponse } from "../utils/openai/openai";
 
 async function llmPrompt(
   nodes: CustomNode[],
   node: CustomNode,
-  openAiKey: string
+  openAiKey: string,
+  supabaseSettings: SupabaseSettingsType
 ) {
   const inputs = node.data.inputs;
   if (inputs) {
@@ -12,7 +14,8 @@ async function llmPrompt(
       openAiKey,
       node.data as LLMPromptNodeDataType,
       inputs.inputs,
-      nodes
+      nodes,
+      supabaseSettings
     );
     // const mockResponse = {
     // 	data: {

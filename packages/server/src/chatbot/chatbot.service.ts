@@ -9,7 +9,7 @@ import {
   runConditional,
   getNodes,
   NodeTypesEnum,
-} from 'shared';
+} from '@chatbutler/shared';
 
 import { CreateChatbotDto } from './dto/create-chatbot.dto';
 import { UpdateChatbotDto } from './dto/update-chatbot.dto';
@@ -59,7 +59,11 @@ export class ChatbotService {
 
       // 3. run next node in chat session
       const openAiKey = this.configService.get<string>('OPENAI_API_KEY');
-      await runNode(state, id, state.nodes, nodeId, openAiKey);
+      await runNode(state, id, state.nodes, nodeId, openAiKey, {
+        url: this.configService.get<string>('SUPABASE_URL'), 
+        key: this.configService.get<string>('SUPABASE_SERVICE_ROLE_KEY'),
+        functionUrl: ''
+      });
 
       // 4. set executed node as visited
       state.visited.add(nodeId);

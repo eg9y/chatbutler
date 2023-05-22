@@ -5,13 +5,15 @@ import {
   ChatPromptNodeDataType,
   NodeTypesEnum,
 } from "../types/NodeTypes";
+import { SupabaseSettingsType } from "../types/SupabaseSettingsType";
 import { getOpenAIChatResponse } from "../utils/openai/openai";
 import { parsePromptInputs } from "../utils/parsePromptInput";
 
 async function chatPrompt(
   nodes: CustomNode[],
   node: CustomNode,
-  openAiKey: string
+  openAiKey: string,
+  supabaseSettings: SupabaseSettingsType
 ) {
   const chatMessageNodes = collectChatMessages(nodes, node);
   const chatSequence = chatMessageNodes.map((node) => {
@@ -25,7 +27,8 @@ async function chatPrompt(
   const response = await getOpenAIChatResponse(
     openAiKey,
     node.data as ChatPromptNodeDataType,
-    chatSequence
+    chatSequence,
+    supabaseSettings
   );
 
   const completion = response.text;

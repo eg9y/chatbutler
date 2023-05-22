@@ -6,7 +6,7 @@ function allParentsVisited(
   nodes: CustomNode[],
   node: CustomNode,
   visited: Set<string>
-): boolean {
+): boolean { 
   const inputNodes = getNodes(nodes, node.data.inputs.inputs);
   return inputNodes.every((parent) => visited.has(parent.id));
 }

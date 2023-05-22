@@ -1,6 +1,6 @@
+import { Database } from '@chatbutler/shared';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { Edge, Node } from 'reactflow';
-import { Database } from 'shared';
 
 import { GlobalVariableType, WorkflowDbSchema } from './dbTypes';
 import { Inputs } from '../nodes/types/Input';

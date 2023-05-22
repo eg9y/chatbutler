@@ -1,11 +1,13 @@
 import { CustomNode, SingleChatPromptDataType } from "../types/NodeTypes";
+import { SupabaseSettingsType } from "../types/SupabaseSettingsType";
 import { getOpenAIChatResponse } from "../utils/openai/openai";
 import { parsePromptInputs } from "../utils/parsePromptInput";
 
 async function singleChatPrompt(
   nodes: CustomNode[],
   node: CustomNode,
-  openAiKey: string
+  openAiKey: string,
+  supabaseSettings: SupabaseSettingsType
 ) {
   const response = await getOpenAIChatResponse(
     openAiKey,
@@ -19,7 +21,8 @@ async function singleChatPrompt(
           node.data.text
         ),
       },
-    ]
+    ],
+    supabaseSettings
   );
 
   const completion = response.text;

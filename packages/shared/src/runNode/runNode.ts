@@ -24,6 +24,7 @@ import {
   DocsLoaderDataType,
 } from "../types/NodeTypes";
 import { parsePromptInputs } from "../utils/parsePromptInput";
+import { SupabaseSettingsType } from "../types/SupabaseSettingsType";
 
 export async function runNode(
   state: TraversalStateType,
@@ -31,12 +32,13 @@ export async function runNode(
   nodes: CustomNode[],
   nodeId: string,
   openAiKey: string,
+  supabaseSettings: SupabaseSettingsType
 ) {
   const node = getNodes(nodes, [nodeId])[0];
 
   switch (node.type) {
     case NodeTypesEnum.llmPrompt:
-      await llmPrompt(nodes, node, openAiKey);
+      await llmPrompt(nodes, node, openAiKey, supabaseSettings);
       break;
     case NodeTypesEnum.inputText:
       await inputText(state, nodes, node);
@@ -68,7 +70,8 @@ export async function runNode(
         chatbotId,
         nodes,
         node as Node<SearchDataType>,
-        openAiKey
+        openAiKey,
+        supabaseSettings
       );
       break;
     case NodeTypesEnum.docsLoader:
@@ -81,13 +84,13 @@ export async function runNode(
     // 	combine(node, get);
     // 	break;
     case NodeTypesEnum.chatPrompt:
-      await chatPrompt(nodes, node, openAiKey);
+      await chatPrompt(nodes, node, openAiKey, supabaseSettings);
       break;
     case NodeTypesEnum.singleChatPrompt:
-      await singleChatPrompt(nodes, node, openAiKey);
+      await singleChatPrompt(nodes, node, openAiKey, supabaseSettings);
       break;
     case NodeTypesEnum.classify:
-      await classify(nodes, node, openAiKey);
+      await classify(nodes, node, openAiKey, supabaseSettings);
       break;
     case NodeTypesEnum.text:
       node.data.response = parsePromptInputs(

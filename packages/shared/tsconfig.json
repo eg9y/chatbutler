@@ -1,14 +1,16 @@
 {
   "compilerOptions": {
-    "target": "es2017",
-    "module": "es2020",
+    "target": "ESNEXT",
+    "module": "ESNEXT",
     "lib": ["dom", "es6", "es2017", "esnext"],
     "outDir": "build",
     "rootDir": "src",
     "strict": true,
-    "esModuleInterop": true,
+    "esModuleInterop": false,
+    "composite": true,
     "moduleResolution": "node",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
   },
   "include": ["src/**/*", "vite-env.d.ts"],
   "exclude": ["node_modules", "src/**/*.spec.ts"]

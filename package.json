@@ -6,9 +6,11 @@
   "repository": "https://github.com/eg9y/promptsandbox.io.git",
   "author": "Egan Bisma <brickkace@gmail.com>",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  },
   "devDependencies": {
     "typescript": "^5.0.4"
   },

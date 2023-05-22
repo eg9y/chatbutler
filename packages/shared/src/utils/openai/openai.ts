@@ -17,7 +17,8 @@ import {
 import { parsePromptInputs } from "../parsePromptInput";
 import { getRuntimeEnvironment } from "../env";
 import { Database } from "../../types/schema";
-import { createSupabaseClient } from "../createSupabaseClient";
+import { setupSupabaseClient } from "../setupSupabaseClient";
+import { SupabaseSettingsType } from "../../types/SupabaseSettingsType";
 
 export type ChatSequence = {
   role: "user" | "assistant" | "system";
@@ -28,7 +29,8 @@ export async function getOpenAICompleteResponse(
   apiKey: string | null,
   llmPrompt: LLMPromptNodeDataType,
   inputNodeIds: string[],
-  nodes: CustomNode[]
+  nodes: CustomNode[],
+  supabaseSettings: SupabaseSettingsType
 ) {
   try {
     if (!apiKey) {
@@ -67,7 +69,7 @@ export async function getOpenAICompleteResponse(
       settings.stop = llmPrompt.stop;
     }
 
-    const supabase = await createSupabaseClient();
+    const supabase = await setupSupabaseClient(supabaseSettings.url, supabaseSettings.key);
 
     const session = await supabase.auth.getSession();
 
@@ -96,7 +98,7 @@ export async function getOpenAICompleteResponse(
     let llm = new OpenAI(settings);
     if (runtime === "browser") {
       llm = new OpenAI(settings, {
-        basePath: `${process.env.SUPABASE_FUNCTION_URL}/openai`,
+        basePath: `${supabaseSettings.functionUrl}/openai`,
       });
     }
     const response = await llm.call(parsedPrompt);
@@ -115,7 +117,8 @@ export async function getOpenAIChatResponse(
   chatSequence: {
     role: "user" | "assistant" | "system";
     content: string;
-  }[]
+  }[],
+  supabaseSettings: SupabaseSettingsType
 ) {
   try {
     if (!apiKey) {
@@ -147,7 +150,7 @@ export async function getOpenAIChatResponse(
       settings.stop = chatPrompt.stop;
     }
 
-    const supabase = await createSupabaseClient();
+    const supabase = await setupSupabaseClient(supabaseSettings.url, supabaseSettings.key);
 
     const session = await supabase.auth.getSession();
 
@@ -176,7 +179,7 @@ export async function getOpenAIChatResponse(
     let llm = new ChatOpenAI(settings);
     if (runtime === "browser") {
       llm = new ChatOpenAI(settings, {
-        basePath: `${process.env.SUPABASE_FUNCTION_URL}/openai`,
+        basePath: `${supabaseSettings.functionUrl}/openai`,
       });
     }
     const response = await llm.call(convertedMessages);

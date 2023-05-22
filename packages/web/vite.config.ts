@@ -2,8 +2,7 @@ import mdx from '@mdx-js/rollup';
 import react from '@vitejs/plugin-react-swc';
 import { resolve } from 'path';
 import remarkPlugin from 'remark-gfm';
-import { defineConfig } from 'vite';
-import EnvironmentPlugin from 'vite-plugin-environment';
+import { defineConfig, loadEnv } from 'vite';
 import eslint from 'vite-plugin-eslint';
 import svgr from 'vite-plugin-svgr';
 import topLevelAwait from 'vite-plugin-top-level-await';
@@ -15,45 +14,46 @@ const root = resolve(__dirname, 'src/pages/');
 const outDir = resolve(__dirname, 'dist');
 
 // https://vitejs.dev/config/
-export default defineConfig({
-	plugins: [
-		eslint({
-			fix: true,
-			exclude: '**/shared/**',
-		}),
-		{
-			enforce: 'pre',
-			...mdx({
-				providerImportSource: '@mdx-js/react',
-				remarkPlugins: [remarkPlugin],
+export default ({ mode }) => {
+	return defineConfig({
+		plugins: [
+			eslint({
+				fix: true,
+				exclude: ['**/shared/**', '**/node_modules/**'],
 			}),
-		},
-		wasm(),
-		topLevelAwait(),
-		react(),
-		svgr({
-			esbuildOptions: { loader: 'tsx' },
-		}),
-		vercel(),
-		EnvironmentPlugin(['SUPABASE_URL', 'SUPABASE_PUBLIC_API', 'SUPABASE_FUNCTION_URL']),
-		{
-			...tscPlugin(),
-			enforce: 'post',
-		},
-	],
-
-	root,
-	build: {
-		outDir,
-		emptyOutDir: true,
-		rollupOptions: {
-			input: {
-				main: resolve(root, 'index.html'),
-				editor: resolve(root, 'app', 'index.html'),
-				gallery: resolve(root, 'gallery', 'index.html'),
-				chat: resolve(root, 'chat', 'index.html'),
-				auth: resolve(root, 'auth', 'index.html'),
+			{
+				enforce: 'pre',
+				...mdx({
+					providerImportSource: '@mdx-js/react',
+					remarkPlugins: [remarkPlugin],
+				}),
+			},
+			wasm(),
+			topLevelAwait(),
+			react(),
+			svgr({
+				esbuildOptions: { loader: 'tsx' },
+			}),
+			vercel(),
+			{
+				...tscPlugin(),
+				enforce: 'post',
+			},
+		],
+		root,
+		build: {
+			outDir,
+			emptyOutDir: true,
+			rollupOptions: {
+				input: {
+					main: resolve(root, 'index.html'),
+					editor: resolve(root, 'app', 'index.html'),
+					gallery: resolve(root, 'gallery', 'index.html'),
+					chat: resolve(root, 'chat', 'index.html'),
+					auth: resolve(root, 'auth', 'index.html'),
+				},
+				external: ['node-fetch', 'isomorphic-fetch'],
 			},
 		},
-	},
-});
+	});
+};

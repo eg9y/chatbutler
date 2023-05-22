@@ -3,13 +3,15 @@ import {
   ClassifyNodeDataType,
   ClassifyNodeCategoriesDataType,
 } from "../types/NodeTypes";
+import { SupabaseSettingsType } from "../types/SupabaseSettingsType";
 import { ChatSequence, getOpenAIChatResponse } from "../utils/openai/openai";
 import { parsePromptInputs } from "../utils/parsePromptInput";
 
 async function classify(
   nodes: CustomNode[],
   node: CustomNode,
-  openAiKey: string
+  openAiKey: string,
+  supabaseSettings: SupabaseSettingsType
 ) {
   const classifyData = node.data as ClassifyNodeDataType;
   // get node with id data.categoryNodeId
@@ -37,7 +39,8 @@ async function classify(
   const response = await getOpenAIChatResponse(
     openAiKey,
     classifyData,
-    chatSequence
+    chatSequence,
+    supabaseSettings
   );
   const completion = response.text;
   // const completion = 'hackernews';

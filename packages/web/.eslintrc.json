@@ -1,17 +1,14 @@
 {
-  "env": {
-    "browser": true,
-    "es6": true
-  },
   "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
+    "../../.eslintrc.json",  // adjust this to the relative path of your root `.eslintrc.js`
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
     "plugin:react/jsx-runtime",
     "plugin:prettier/recommended"
   ],
-  "parser": "@typescript-eslint/parser",
+  "env": {
+    "browser": true
+  },
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
@@ -19,9 +16,11 @@
     "ecmaVersion": 2018,
     "sourceType": "module"
   },
-  // disalbe reac
-"plugins": ["react", "@typescript-eslint", "eslint-plugin-react-hooks", "import"],
-  "root": true,
+  "plugins": [
+    "react",
+    "eslint-plugin-react-hooks",
+    "import"
+  ],
   "rules": {
     "react-hooks/exhaustive-deps": "error",
     "no-var": "error",
@@ -53,7 +52,6 @@
         }
       }
     ]
-    
   },
   "settings": {
     "react": {

@@ -1,5 +1,5 @@
 {
-  "name": "server",
+  "name": "@chatbutler/server",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -22,6 +22,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@chatbutler/shared": "workspace:^",
     "@fastify/static": "^6.10.1",
     "@fastify/view": "^7.4.1",
     "@nestjs/common": "^9.0.0",
@@ -37,8 +38,7 @@
     "langchain": "^0.0.75",
     "nanoid": "^4.0.2",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.2.0",
-    "shared": "workspace:^"
+    "rxjs": "^7.2.0"
   },
   "devDependencies": {
     "@fastify/helmet": "^10.1.1",

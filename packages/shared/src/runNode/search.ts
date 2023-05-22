@@ -11,16 +11,18 @@ import {
   NodeTypesEnum,
 } from "../types/NodeTypes";
 import { parsePromptInputs } from "../utils/parsePromptInput";
-import { createSupabaseClient } from "../utils/createSupabaseClient";
+import { setupSupabaseClient } from "../utils/setupSupabaseClient";
 import { SupabaseVectorStoreWithFilter } from "../utils/vectorStores/SupabaseVectorStoreWithFilter";
 import { getRuntimeEnvironment } from "../utils/env";
+import { SupabaseSettingsType } from "../types/SupabaseSettingsType";
 
 const search = async (
   state: TraversalStateType,
   chatbotId: string | undefined,
   nodes: CustomNode[],
   node: Node<SearchDataType>,
-  openAiKey: string
+  openAiKey: string,
+  supabaseSettings: SupabaseSettingsType
 ) => {
   try {
     const inputs = node.data.inputs;
@@ -32,7 +34,7 @@ const search = async (
     const searchNode = node.data as SearchDataType;
     const userQuestion = parsePromptInputs(nodes, inputIds, searchNode.text);
 
-    const supabase = await createSupabaseClient();
+    const supabase = await setupSupabaseClient(supabaseSettings.url, supabaseSettings.key);
 
     let embeddings = new OpenAIEmbeddings({ openAIApiKey: openAiKey });
     const session = await supabase.auth.getSession();
@@ -62,7 +64,7 @@ const search = async (
             openAIApiKey: session.data.session.access_token,
           },
           {
-            basePath: `${process.env.SUPABASE_FUNCTION_URL}/openai`,
+            basePath: `${supabaseSettings.functionUrl}/openai`,
           }
         );
         model = new ChatOpenAI(
@@ -72,7 +74,7 @@ const search = async (
             openAIApiKey: session.data.session.access_token,
           },
           {
-            basePath: `${process.env.SUPABASE_FUNCTION_URL}/openai`,
+            basePath: `${supabaseSettings.functionUrl}/openai`,
           }
         );
       } else {
@@ -90,8 +92,6 @@ const search = async (
         );
       }
     }
-    const test = await supabase.from("workflows").select("*").limit(1);
-    console.log('testOOO', test);
     // Load the docs into the vector store
     const vectorStore = await SupabaseVectorStoreWithFilter.fromExistingIndex(
       embeddings,

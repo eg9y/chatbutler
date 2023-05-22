@@ -1,4 +1,3 @@
-import { Edge } from 'reactflow';
 import {
 	runNode,
 	runConditional,
@@ -6,7 +5,8 @@ import {
 	getNextNode,
 	initializeFlowState,
 	getNodes,
-} from 'shared';
+} from '@chatbutler/shared';
+import { Edge } from 'reactflow';
 
 import { CustomNode, DocsLoaderDataType, NodeTypesEnum } from '../nodes/types/NodeTypes';
 import { RFState } from '../store/useStore';
@@ -76,8 +76,11 @@ export async function runFlow(
 				get().setUiErrorMessage('Search block can only be used in existing chatbots');
 				return;
 			}
-
-			await runNode(state, get().currentWorkflow?.id, nodes, nodeId, openAiKey);
+			await runNode(state, get().currentWorkflow?.id, nodes, nodeId, openAiKey, {
+				url: import.meta.env.VITE_SUPABASE_URL,
+				key: import.meta.env.VITE_SUPABASE_PUBLIC_API,
+				functionUrl: import.meta.env.VITE_SUPABASE_FUNCTION_URL,
+			});
 			get().setChatApp([...state.chatHistory]);
 			if (node.type === NodeTypesEnum.inputText) {
 				await inputTextPauser(node, get);

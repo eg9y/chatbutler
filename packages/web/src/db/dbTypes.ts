@@ -1,4 +1,4 @@
-import { Database } from 'shared'
+import { Database } from '@chatbutler/shared'
 import { Message } from '../windows/ChatPanel/Chat/types';
 
 export type WorkflowDbSchema = Database['public']['Tables']['workflows']['Row'];

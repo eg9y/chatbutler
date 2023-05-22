@@ -1,17 +1,7 @@
 {
-    "root": true,
-    "env": {
+  "extends": "../../.eslintrc.json",  // adjust this to the relative path of your root `.eslintrc.js`
+  "env": {
     "browser": true,
-      "node": true,
-      "es6": true,
-      "es2020": true
-    },
-    "parser": "@typescript-eslint/parser",
-    "plugins": [
-      "@typescript-eslint"
-    ],
-    "extends": [
-      "eslint:recommended",
-      "plugin:@typescript-eslint/recommended"
-    ]
+    "node": true
   }
+}

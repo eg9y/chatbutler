@@ -59,8 +59,6 @@ export async function uploadWebsiteUrl(
 			}
 
 			response = await response.json();
-			console.log('hi', response);
-
 			// Start polling progress endpoint every X interval
 			const progressInterval = setInterval(async () => {
 				try {

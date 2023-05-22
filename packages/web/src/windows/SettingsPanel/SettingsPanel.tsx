@@ -1,9 +1,9 @@
+import { Database } from '@chatbutler/shared';
 import { Switch } from '@headlessui/react';
 import { Cog6ToothIcon, BeakerIcon, AcademicCapIcon, TrashIcon } from '@heroicons/react/20/solid';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { useState } from 'react';
 import { ReactFlowInstance, Node } from 'reactflow';
-import { Database } from 'shared';
 import { shallow } from 'zustand/shallow';
 
 import ChatMessageTabs from './nodeSettings/chatMessage/tabs';

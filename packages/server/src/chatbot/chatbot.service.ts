@@ -63,9 +63,9 @@ export class ChatbotService {
       // 3. run next node in chat session
       const openAiKey = this.configService.get<string>('OPENAI_API_KEY');
       await runNode(state, id, state.nodes, nodeId, openAiKey, {
-        url: this.configService.get<string>('SUPABASE_URL'), 
+        url: this.configService.get<string>('SUPABASE_URL'),
         key: this.configService.get<string>('SUPABASE_SERVICE_ROLE'),
-        functionUrl: ''
+        functionUrl: '',
       });
 
       // 4. set executed node as visited
@@ -79,8 +79,11 @@ export class ChatbotService {
         ...state,
         visited: Array.from(state.visited),
         skipped: Array.from(state.skipped),
-      }
-      await this.redisService.redisClient.set(redisKey, JSON.stringify(compatibleState));
+      };
+      await this.redisService.redisClient.set(
+        redisKey,
+        JSON.stringify(compatibleState),
+      );
 
       // 7. define message to send
       const node = getNodes(state.nodes, [nodeId])[0];
@@ -90,9 +93,9 @@ export class ChatbotService {
       } else if (node.type === NodeTypesEnum.outputText) {
         message = node.data.response;
       } else if (node.type === NodeTypesEnum.search) {
-        message = node.data.response
+        message = node.data.response;
       } else if (node.type === NodeTypesEnum.docsLoader) {
-        message = node.data.response
+        message = node.data.response;
       }
 
       return {
@@ -139,7 +142,7 @@ export class ChatbotService {
     } catch (error) {
       console.error(error);
       throw new HttpException(
-        `Unable to delete chat session: ${ sessionId }`,
+        `Unable to delete chat session: ${sessionId}`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

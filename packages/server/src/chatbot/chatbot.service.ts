@@ -43,16 +43,18 @@ export class ChatbotService {
         redisKey,
       );
 
-      const state: TraversalStateType | null = null;
+      console.log('isSessionExists', isSessionExists);
+
+      const state: TraversalStateType = initializeFlowState([], []);
 
       // 1a. if sessionId in Redis, load the chat session
       // 1b. if sessionId not in Redis, create a new chat session
-      if (isSessionExists) {
+      if (isSessionExists === 1) {
         // 1.2a load chat session from Redis
         await this.stateService.loadExistingChatSession(sessionId, state, body);
       } else {
         // 1.2b fetch chatbot from Supabase
-        await this.stateService.loadNewChatSession(sessionId, state);
+        await this.stateService.loadNewChatSession(id, state);
       }
 
       // 2. get next node in chat session
@@ -73,7 +75,12 @@ export class ChatbotService {
       runConditional(state.nodes, state.edges as FlowEdgeType[], nodeId, state);
 
       // 6.set new chat session in Redis
-      await this.redisService.redisClient.set(redisKey, JSON.stringify(state));
+      const compatibleState = {
+        ...state,
+        visited: Array.from(state.visited),
+        skipped: Array.from(state.skipped),
+      }
+      await this.redisService.redisClient.set(redisKey, JSON.stringify(compatibleState));
 
       // 7. define message to send
       const node = getNodes(state.nodes, [nodeId])[0];
@@ -82,6 +89,10 @@ export class ChatbotService {
         message = node.data.text;
       } else if (node.type === NodeTypesEnum.outputText) {
         message = node.data.response;
+      } else if (node.type === NodeTypesEnum.search) {
+        message = node.data.response
+      } else if (node.type === NodeTypesEnum.docsLoader) {
+        message = node.data.response
       }
 
       return {
@@ -89,6 +100,8 @@ export class ChatbotService {
         nextNodeId: nodeId,
         nextNodeType: node.type,
       };
+
+      // return "OK"
     } catch (error) {
       console.error(error);
       throw new HttpException(
@@ -119,7 +132,16 @@ export class ChatbotService {
     return `This action updates a #${id} chatbot`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} chatbot`;
+  async remove(sessionId: string) {
+    try {
+      await this.redisService.redisClient.del(`chat_session:${sessionId}`);
+      return `Deleted chat session ${sessionId}`;
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(
+        `Unable to delete chat session: ${ sessionId }`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }

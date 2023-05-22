@@ -57,8 +57,8 @@ export class ChatbotController {
     return this.chatbotService.update(+id, updateChatbotDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.chatbotService.remove(+id);
+  @Delete(':sessionId')
+  remove(@Param('sessionId') sessionId: string) {
+    return this.chatbotService.remove(sessionId);
   }
 }

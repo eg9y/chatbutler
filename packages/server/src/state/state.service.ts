@@ -27,12 +27,12 @@ export class StateService {
     const redisKey = `chat_session:${sessionId}`;
     const chatSessionData = await this.redisService.redisClient.get(redisKey);
     const parsedChatSessionData = JSON.parse(chatSessionData);
-    state.stack = parsedChatSessionData.chatbot.stack;
-    state.nodes = parsedChatSessionData.chatbot.nodes;
-    state.edges = parsedChatSessionData.chatbot.edges;
-    state.visited = new Set(parsedChatSessionData.chatbot.visited);
-    state.skipped = new Set(parsedChatSessionData.chatbot.skipped);
-    state.chatHistory = parsedChatSessionData.chatbot.chatHistory;
+    state.stack = parsedChatSessionData.stack;
+    state.nodes = parsedChatSessionData.nodes;
+    state.edges = parsedChatSessionData.edges;
+    state.visited = new Set(parsedChatSessionData.visited);
+    state.skipped = new Set(parsedChatSessionData.skipped);
+    state.chatHistory = parsedChatSessionData.chatHistory;
 
     // 1.3a if previous block is input, then update the input response value
     const previousNode = getNodes(state.nodes, [body.previousBlockId])[0];
@@ -47,22 +47,22 @@ export class StateService {
     return state;
   }
 
-  async loadNewChatSession(sessionId: string, state: TraversalStateType) {
+  async loadNewChatSession(chatbotId: string, state: TraversalStateType) {
     const supabase = this.supabaseService.getSupabaseClient();
     const { data, error } = await supabase
       .from('workflows')
       .select('*')
-      .eq('id', sessionId)
+      .eq('id', chatbotId)
       .single<WorkflowDbSchema>();
 
     if (error) {
+      console.log('off', error);
       throw error;
     }
 
     if (!data) {
       throw new Error('Chatbot not found.');
     }
-    console.log('chatbot', data);
 
     // 1.3b create new chat session in Redis
     const { parsedNodes, parsedEdges } = this.loadGraph(data);

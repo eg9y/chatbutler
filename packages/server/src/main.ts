@@ -4,7 +4,6 @@ import {
   FastifyAdapter,
 } from '@nestjs/platform-fastify';
 import { AppModule } from './app.module';
-import { AllExceptionsFilter } from './filters/all-exceptions.filter';
 
 import { join } from 'path';
 
@@ -23,7 +22,6 @@ async function bootstrap() {
     },
     templates: join(__dirname, '..', 'views'),
   });
-  app.useGlobalFilters(new AllExceptionsFilter());
   app.listen(3000, '0.0.0.0', function () {
     console.log('Listening on port 3000');
   });

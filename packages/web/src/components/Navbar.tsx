@@ -82,10 +82,7 @@ const NavBar = () => {
 					)}
 					{location != '/app/' && (
 						<div className="flex h-full items-center gap-2 font-semibold text-slate-800">
-							<img
-								src={iconImage}
-								className="h-12 w-12 rounded-md border-2 border-slate-400"
-							/>
+							<img src={iconImage} className="h-14 w-14" />
 							<p className="text-xl">Chatbutler.ai</p>
 						</div>
 					)}

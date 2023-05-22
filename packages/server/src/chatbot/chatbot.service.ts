@@ -51,6 +51,7 @@ export class ChatbotService {
         // 1.2a load chat session from Redis
         await this.stateService.loadExistingChatSession(sessionId, state, body);
       } else {
+        // 1.2b fetch chatbot from Supabase
         await this.stateService.loadNewChatSession(sessionId, state);
       }
 
@@ -61,7 +62,7 @@ export class ChatbotService {
       const openAiKey = this.configService.get<string>('OPENAI_API_KEY');
       await runNode(state, id, state.nodes, nodeId, openAiKey, {
         url: this.configService.get<string>('SUPABASE_URL'), 
-        key: this.configService.get<string>('SUPABASE_SERVICE_ROLE_KEY'),
+        key: this.configService.get<string>('SUPABASE_SERVICE_ROLE'),
         functionUrl: ''
       });
 

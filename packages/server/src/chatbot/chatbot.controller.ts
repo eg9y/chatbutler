@@ -19,14 +19,14 @@ export class ChatbotController {
   @Post(':id')
   async startChat(
     @Param('id') id: string,
-    @Query('session-id') sessionId: string,
     @Body()
     body: {
+      sessionId: string;
       userResponse: string;
       previousBlockId: string;
     },
   ) {
-    return this.chatbotService.startChat(id, sessionId, body);
+    return this.chatbotService.startChat(id, body.sessionId, body);
   }
 
   @Post(':id/heartbeat')

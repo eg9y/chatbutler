@@ -550,12 +550,14 @@ __metadata:
   dependencies:
     "@supabase/supabase-js": ^2.12.1
     "@types/isomorphic-fetch": ^0.0.36
+    "@types/uuid": ^9.0.1
     "@typescript-eslint/eslint-plugin": ^5.59.6
     "@typescript-eslint/parser": ^5.59.6
     isomorphic-fetch: ^3.0.0
     langchain: 0.0.78
     nodemon: ^2.0.22
     typescript: ^5.0.4
+    uuid: ^9.0.0
   languageName: unknown
   linkType: soft
 
@@ -601,7 +603,7 @@ __metadata:
     eslint-plugin-react-hooks: ^4.6.0
     exponential-backoff: ^3.1.1
     langchain: 0.0.78
-    nanoid: ^4.0.1
+    nanoid: 3
     openai: ^3.2.1
     p-queue: ^7.3.4
     pdfjs-dist: ^3.5.141
@@ -3223,6 +3225,13 @@ __metadata:
   version: 2.0.6
   resolution: "@types/unist@npm:2.0.6"
   checksum: 25cb860ff10dde48b54622d58b23e66214211a61c84c0f15f88d38b61aa1b53d4d46e42b557924a93178c501c166aa37e28d7f6d994aba13d24685326272d5db
+  languageName: node
+  linkType: hard
+
+"@types/uuid@npm:^9.0.1":
+  version: 9.0.1
+  resolution: "@types/uuid@npm:9.0.1"
+  checksum: c472b8a77cbeded4bc529220b8611afa39bd64677f507838f8083d8aac8033b1f88cb9ddaa2f8589e0dcd2317291d0f6e1379f82d5ceebd6f74f3b4825288e00
   languageName: node
   linkType: hard
 
@@ -10254,7 +10263,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nanoid@npm:^3.3.6":
+"nanoid@npm:3, nanoid@npm:^3.3.6":
   version: 3.3.6
   resolution: "nanoid@npm:3.3.6"
   bin:
@@ -10263,7 +10272,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nanoid@npm:^4.0.1, nanoid@npm:^4.0.2":
+"nanoid@npm:^4.0.2":
   version: 4.0.2
   resolution: "nanoid@npm:4.0.2"
   bin:

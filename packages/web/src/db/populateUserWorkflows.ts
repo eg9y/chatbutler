@@ -1,5 +1,5 @@
-import { SupabaseClient } from '@supabase/supabase-js';
 import { Database } from '@chatbutler/shared';
+import { SupabaseClient } from '@supabase/supabase-js';
 
 import { RFState } from '../store/useStore';
 import { RFStateSecret } from '../store/useStoreSecret';

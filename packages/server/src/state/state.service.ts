@@ -48,7 +48,6 @@ export class StateService {
   }
 
   async loadNewChatSession(sessionId: string, state: TraversalStateType) {
-    // 1.2b fetch chatbot from Supabase
     const supabase = this.supabaseService.getSupabaseClient();
     const { data, error } = await supabase
       .from('workflows')

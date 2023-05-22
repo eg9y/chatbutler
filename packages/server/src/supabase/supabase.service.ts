@@ -12,7 +12,7 @@ export class SupabaseService implements OnModuleInit {
   onModuleInit() {
     this.client = createClient<Database>(
       this.configService.get<string>('SUPABASE_URL'),
-      this.configService.get<string>('SUPABASE_SERVICE_ROLE_KEY'),
+      this.configService.get<string>('SUPABASE_SERVICE_ROLE'),
     );
   }
 

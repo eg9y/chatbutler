@@ -13,8 +13,8 @@ COPY . .
 RUN yarn install
 
 # Build shared and server packages
-RUN yarn workspace shared build
-RUN yarn workspace server build
+RUN yarn workspace @chatbutler/shared build
+RUN yarn workspace @chatbutler/server build
 
 # Second stage: runtime
 FROM node:18-buster
@@ -24,4 +24,4 @@ WORKDIR /app
 # Copy over built application and production dependencies from the build stage
 COPY --from=builder /app .
 
-CMD [ "yarn", "workspace", "server", "start:dev" ]
+CMD [ "yarn", "workspace", "@chatbutler/server", "start:dev" ]

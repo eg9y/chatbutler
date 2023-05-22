@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - .:/app
-    command: yarn workspace server start:dev
+    command: yarn workspace @chatbutler/server start:dev
     environment:
       - SUPABASE_PUBLIC_KEY=${SUPABASE_PUBLIC_KEY}
       - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}

@@ -1,5 +1,5 @@
-import { nanoid } from "nanoid";
-import { Node } from "reactflow";
+import { v4 as uuidv4 } from 'uuid';
+import { Node } from 'reactflow';
 import { getNodes } from "../getNodes";
 import {
   CustomNode,
@@ -37,7 +37,7 @@ function setVariable(nodes: CustomNode[], node: CustomNode) {
     switch (operation) {
       case "+ Add to end":
         globalVariableValue.push({
-          id: nanoid(),
+          id: uuidv4(),
           value: node.data.response,
         });
         break;
@@ -46,7 +46,7 @@ function setVariable(nodes: CustomNode[], node: CustomNode) {
         break;
       case "+ Add to start":
         globalVariableValue.unshift({
-          id: nanoid(),
+          id: uuidv4(),
           value: node.data.response,
         });
         break;

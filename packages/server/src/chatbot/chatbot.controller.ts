@@ -6,7 +6,6 @@ import {
   Patch,
   Param,
   Delete,
-  Query,
 } from '@nestjs/common';
 import { ChatbotService } from './chatbot.service';
 import { CreateChatbotDto } from './dto/create-chatbot.dto';
@@ -17,7 +16,7 @@ export class ChatbotController {
   constructor(private readonly chatbotService: ChatbotService) {}
 
   @Post(':id')
-  async startChat(
+  async triggerChatSequence(
     @Param('id') id: string,
     @Body()
     body: {
@@ -26,15 +25,8 @@ export class ChatbotController {
       previousBlockId: string;
     },
   ) {
-    return this.chatbotService.startChat(id, body.sessionId, body);
-  }
-
-  @Post(':id/heartbeat')
-  async heartbeat(
-    @Param('id') id: string,
-    @Query('session-id') sessionId: string,
-  ) {
-    return this.chatbotService.heartbeat(id, sessionId);
+    await this.chatbotService.triggerChatSequence(id, body.sessionId, body);
+    return { message: 'Chat sequence triggered' };
   }
 
   @Post()

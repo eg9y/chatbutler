@@ -34,7 +34,10 @@ const search = async (
     const searchNode = node.data as SearchDataType;
     const userQuestion = parsePromptInputs(nodes, inputIds, searchNode.text);
 
-    const supabase = await setupSupabaseClient(supabaseSettings.url, supabaseSettings.key);
+    const supabase = await setupSupabaseClient(
+      supabaseSettings.url,
+      supabaseSettings.key
+    );
 
     let embeddings = new OpenAIEmbeddings({ openAIApiKey: openAiKey });
     const session = await supabase.auth.getSession();
@@ -58,7 +61,7 @@ const search = async (
       session.data.session &&
       session.data.session.access_token
     ) {
-      if (runtime === "browser") { 
+      if (runtime === "browser") {
         embeddings = new OpenAIEmbeddings(
           {
             openAIApiKey: session.data.session.access_token,
@@ -78,18 +81,14 @@ const search = async (
           }
         );
       } else {
-        embeddings = new OpenAIEmbeddings(
-          {
-            openAIApiKey: session.data.session.access_token,
-          }
-        );
-        model = new ChatOpenAI(
-          {
-            modelName: "gpt-3.5-turbo",
-            // this is the supabase session key, the real openAI key is set in the proxy #ifitworksitworks
-            openAIApiKey: session.data.session.access_token,
-          }
-        );
+        embeddings = new OpenAIEmbeddings({
+          openAIApiKey: session.data.session.access_token,
+        });
+        model = new ChatOpenAI({
+          modelName: "gpt-3.5-turbo",
+          // this is the supabase session key, the real openAI key is set in the proxy #ifitworksitworks
+          openAIApiKey: session.data.session.access_token,
+        });
       }
     }
     // Load the docs into the vector store
@@ -118,7 +117,6 @@ const search = async (
         return filter;
       });
 
-
     const chain = ConversationalRetrievalQAChain.fromLLM(
       model,
       vectorStore.asRetriever(undefined, documents),
@@ -128,7 +126,7 @@ const search = async (
     );
 
     chain.returnSourceDocuments = true;
-    chain.verbose = true;
+    // chain.verbose = true;
     const res = await chain.call({
       question: userQuestion,
       chat_history: [],

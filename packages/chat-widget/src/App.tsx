@@ -59,11 +59,7 @@ function App() {
           }]);
           setIsLoading(false);
         } else {
-          const res: {
-            message: string;
-            nextNodeId: string;
-            nextNodeType: string;
-          } = await runNextNode(sessionId, '', nextNodeId, chatBotId);
+         await runNextNode(sessionId, '', nextNodeId, chatBotId);
         } 
       }
     };

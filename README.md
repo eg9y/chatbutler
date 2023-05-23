@@ -1,5 +1,5 @@
 # ChatButler
 
-💁‍♂️ Previously Promptsandbox.io, renamed to Chatbutler because it sounds cooler.
+💁‍♂️ Previously Promptsandbox.io.
 
 -- README WIP --

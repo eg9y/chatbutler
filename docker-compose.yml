@@ -12,6 +12,7 @@ services:
       - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
       - SUPABASE_URL=${SUPABASE_URL}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ENV=dev
       - REDIS_HOST=redis
       - REDIS_PORT=6379
     ports:

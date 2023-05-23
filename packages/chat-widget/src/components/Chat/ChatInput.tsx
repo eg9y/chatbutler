@@ -21,13 +21,13 @@ export const ChatInput: FC<Props> = ({ onSend }) => {
     setContent(value);
   };
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!content) {
       alert("Please enter a message");
       return;
     }
-    onSend({ role: "user", content });
     setContent("");
+    await onSend({ role: "user", content });
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {

@@ -92,10 +92,6 @@ export class ChatbotService {
         message = node.data.text;
       } else if (node.type === NodeTypesEnum.outputText) {
         message = node.data.response;
-      } else if (node.type === NodeTypesEnum.search) {
-        message = node.data.response;
-      } else if (node.type === NodeTypesEnum.docsLoader) {
-        message = node.data.response;
       }
 
       return {
@@ -138,7 +134,7 @@ export class ChatbotService {
   async remove(sessionId: string) {
     try {
       await this.redisService.redisClient.del(`chat_session:${sessionId}`);
-      return `Deleted chat session ${sessionId}`;
+      return sessionId;
     } catch (error) {
       console.error(error);
       throw new HttpException(

@@ -13,9 +13,11 @@
     "@headlessui/react": "^1.7.13",
     "@heroicons/react": "^2.0.16",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@chatbutler/shared": "1.0.0",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
     "@typescript-eslint/eslint-plugin": "^5.57.1",

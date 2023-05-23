@@ -516,6 +516,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@chatbutler/chat-widget@workspace:packages/chat-widget"
   dependencies:
+    "@chatbutler/shared": 1.0.0
     "@headlessui/react": ^1.7.13
     "@heroicons/react": ^2.0.16
     "@types/react": ^18.0.28
@@ -533,6 +534,7 @@ __metadata:
     react-dom: ^18.2.0
     tailwindcss: ^3.2.7
     typescript: ^5.0.2
+    uuid: ^9.0.0
     vite: ^4.3.2
   languageName: unknown
   linkType: soft
@@ -547,7 +549,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@chatbutler/server@workspace:packages/server"
   dependencies:
-    "@chatbutler/shared": "workspace:^"
+    "@chatbutler/shared": 1.0.0
     "@fastify/helmet": ^10.1.1
     "@fastify/static": ^6.10.1
     "@fastify/view": ^7.4.1
@@ -591,7 +593,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@chatbutler/shared@1.0.0, @chatbutler/shared@workspace:^, @chatbutler/shared@workspace:packages/shared":
+"@chatbutler/shared@1.0.0, @chatbutler/shared@workspace:packages/shared":
   version: 0.0.0-use.local
   resolution: "@chatbutler/shared@workspace:packages/shared"
   dependencies:

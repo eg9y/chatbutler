@@ -15,7 +15,9 @@ import { StateModule } from './state/state.module';
   imports: [
     ScheduleModule.forRoot(),
     ConfigModule.forRoot({
+      isGlobal: true, // This makes the ConfigModule global
       cache: true,
+      envFilePath: '.env',
     }),
     ChatbotModule,
     RedisModule,

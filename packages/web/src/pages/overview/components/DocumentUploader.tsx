@@ -194,7 +194,6 @@ function DocumentUploader({
 								)}
 							</>
 						)}
-						isloading: {isLoading ? 'true' : 'false'}
 						<div className="mt-4 flex items-center gap-2 pt-1 ">
 							<a
 								className={conditionalClassNames(

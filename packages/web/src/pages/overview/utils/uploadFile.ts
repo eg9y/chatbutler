@@ -33,10 +33,6 @@ export async function uploadFile(
 			body: formData, // Use formData as the request body
 		};
 
-		const fileName = '';
-
-		console.log('session', currentSession);
-
 		try {
 			setIsLoading(true);
 			let response = await fetch('https://server.chatbutler.ai/upload/', options);
@@ -61,6 +57,7 @@ export async function uploadFile(
 
 					// If progress is 100, stop polling and set loading to false
 					if (progressResponse.progress === 100) {
+						setIsLoading(false);
 						clearInterval(progressInterval);
 					}
 				} catch (error) {

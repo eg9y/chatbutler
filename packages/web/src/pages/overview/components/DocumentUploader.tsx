@@ -1,9 +1,7 @@
-import { Session } from '@supabase/supabase-js';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { shallow } from 'zustand/shallow';
 
 import { ReactComponent as Loading } from '../../../assets/loading.svg';
-import useSupabase from '../../../auth/supabaseClient';
 import { SimpleWorkflow } from '../../../db/dbTypes';
 import { DocSource } from '../../../nodes/types/NodeTypes';
 import { useStore, selector, useStoreSecret, selectorSecret } from '../../../store';
@@ -27,7 +25,6 @@ function DocumentUploader({
 }) {
 	const [file, setFile] = useState<File | null>(null);
 	const [text, setText] = useState<string>('');
-	const [blob, setBlob] = useState<string | ArrayBuffer | null>(null);
 	const [arrayBuffer, setArrayBuffer] = useState<Uint8Array | null>(null);
 	const [source, setSource] = useState<DocSource>(DocSource.pdfUrl);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -48,7 +45,6 @@ function DocumentUploader({
 				if (e.target === null || e.target.result === null) {
 					return;
 				}
-				setBlob(e.target.result);
 				// console.log('updating node', e.target.result);
 			};
 			reader.readAsText(file);
@@ -67,7 +63,6 @@ function DocumentUploader({
 			reader.readAsArrayBuffer(file);
 		} else {
 			setFile(null);
-			setBlob(null);
 		}
 	};
 
@@ -154,7 +149,6 @@ function DocumentUploader({
 													name: text,
 												},
 											]);
-											setIsLoading(false);
 											setText('');
 										}
 									}}
@@ -200,6 +194,7 @@ function DocumentUploader({
 								)}
 							</>
 						)}
+						isloading: {isLoading ? 'true' : 'false'}
 						<div className="mt-4 flex items-center gap-2 pt-1 ">
 							<a
 								className={conditionalClassNames(
@@ -225,7 +220,6 @@ function DocumentUploader({
 												name: text,
 											},
 										]);
-										setIsLoading(false);
 										setText('');
 									} else if (source === DocSource.pdf && file) {
 										await uploadFile(
@@ -242,7 +236,6 @@ function DocumentUploader({
 												name: file,
 											},
 										]);
-										setIsLoading(false);
 										setText('');
 									}
 								}}

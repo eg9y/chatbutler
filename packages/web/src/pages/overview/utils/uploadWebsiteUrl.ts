@@ -43,10 +43,6 @@ export async function uploadWebsiteUrl(
 			}),
 		};
 
-		const fileName = '';
-
-		console.log('session', currentSession);
-
 		try {
 			setIsLoading(true);
 			let response = await fetch('https://server.chatbutler.ai/upload-url/', options);
@@ -66,8 +62,10 @@ export async function uploadWebsiteUrl(
 						`https://server.chatbutler.ai/progress/?url=${encodeURIComponent(url)}`,
 					).then((response) => response.json());
 
+					console.log('progressResponse', progressResponse);
 					// If progress is 100, stop polling and set loading to false
 					if (progressResponse.progress === 100) {
+						setIsLoading(false);
 						clearInterval(progressInterval);
 					}
 				} catch (error) {

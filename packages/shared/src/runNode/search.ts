@@ -48,7 +48,10 @@ const search = async (
 
     let model = new ChatOpenAI({
       // TODO: need to let user set the openai settings
-      modelName: "gpt-3.5-turbo",
+      modelName: node.data.model,
+      maxTokens: node.data.max_tokens,
+      temperature: node.data.temperature,
+      stop: node.data.stop,
       openAIApiKey: openAiKey,
     });
 
@@ -85,7 +88,10 @@ const search = async (
           openAIApiKey: session.data.session.access_token,
         });
         model = new ChatOpenAI({
-          modelName: "gpt-3.5-turbo",
+          modelName: node.data.model,
+          maxTokens: node.data.max_tokens,
+          temperature: node.data.temperature,
+          stop: node.data.stop,
           // this is the supabase session key, the real openAI key is set in the proxy #ifitworksitworks
           openAIApiKey: session.data.session.access_token,
         });

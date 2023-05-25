@@ -1,13 +1,13 @@
-import { PencilIcon } from '@heroicons/react/20/solid';
+import { GlobeAltIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
 import { Node } from 'reactflow';
 
-import SearchTab from './tabs/SearchTab';
+import ApiTab from './tabs/ApiTab';
 import { AllDataTypes, SearchDataType } from '../../../../nodes/types/NodeTypes';
 import { handleChange } from '../../../../utils/handleFormChange';
-import TabsNavigator from '../../TabsNavigator';
+import TabsTemplate from '../TabsTemplate';
 
-const tabs = [{ name: 'Search', icon: PencilIcon }];
+const tabs = [{ name: 'API', icon: GlobeAltIcon }];
 
 export default function SearchTabs({
 	selectedNode,
@@ -16,23 +16,25 @@ export default function SearchTabs({
 	selectedNode: Node<SearchDataType>;
 	updateNode: (id: string, data: AllDataTypes) => void;
 }) {
-	const [selected, setSelected] = useState(tabs[0].name);
-
 	return (
-		<div className="pr-4">
-			<div className="hide-scrollbar overflow-y-auto pb-40 pt-4">
-				<TabsNavigator tabs={tabs} selected={selected} setSelected={setSelected} />
-				<div className="pt-2">
-					{selected === 'Search' && (
-						<SearchTab
+		<TabsTemplate
+			selectedNode={selectedNode}
+			updateNode={updateNode}
+			tabs={tabs}
+			defaultTab="API"
+		>
+			{(selected) => (
+				<>
+					{selected === 'API' && (
+						<ApiTab
 							selectedNode={selectedNode}
-							handleChange={(e) => {
-								handleChange(e, selectedNode.id, selectedNode.data, updateNode);
-							}}
+							handleChange={(e) =>
+								handleChange(e, selectedNode.id, selectedNode.data, updateNode)
+							}
 						/>
 					)}
-				</div>
-			</div>
-		</div>
+				</>
+			)}
+		</TabsTemplate>
 	);
 }

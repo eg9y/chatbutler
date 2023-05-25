@@ -8,11 +8,8 @@ import {
 	ArrowLeftOnRectangleIcon,
 	ArrowRightOnRectangleIcon,
 	ShareIcon,
-	DocumentTextIcon,
 	MagnifyingGlassIcon,
-	WrenchIcon,
 	ArrowPathIcon,
-	PlusIcon,
 } from '@heroicons/react/20/solid';
 import { FC, useState } from 'react';
 import { ReactFlowInstance } from 'reactflow';
@@ -29,7 +26,7 @@ const NodesList = ({
 	reactFlowInstance,
 }: {
 	reactFlowWrapper: React.MutableRefObject<HTMLDivElement | null>;
-	reactFlowInstance: ReactFlowInstance<any, any> | null;
+	reactFlowInstance: ReactFlowInstance | null;
 }) => {
 	const { onAdd } = useStore(selector, shallow);
 	const { session } = useStoreSecret(selectorSecret, shallow);
@@ -296,23 +293,40 @@ const NodeType: FC<{
 	>;
 }> = ({ name, handleDrag, addNodeToCenter, nodeType, session, Icon, needAuth = false }) => {
 	const colorClassName = conditionalClassNames(
-		nodeType === NodeTypesEnum.singleChatPrompt && `bg-indigo-200 border-1 border-indigo-400`,
-		nodeType === NodeTypesEnum.chatMessage && `bg-indigo-200 border-1 border-indigo-400`,
-		nodeType === NodeTypesEnum.chatPrompt && `bg-indigo-200 border-1 border-indigo-400`,
-		nodeType === NodeTypesEnum.llmPrompt && `bg-amber-200 border-1 border-amber-400`,
-		nodeType === NodeTypesEnum.classify && `bg-rose-200 border-1 border-rose-400`,
-		nodeType === NodeTypesEnum.loop && `bg-emerald-200 border-1 border-emerald-400`,
-		nodeType === NodeTypesEnum.globalVariable && `bg-slate-200 border-1 border-slate-400`,
-		nodeType === NodeTypesEnum.setVariable && `bg-slate-200 border-1 border-slate-400`,
-		nodeType === NodeTypesEnum.counter && `bg-emerald-200 border-1 border-emerald-400`,
-		nodeType === NodeTypesEnum.text && `bg-emerald-200 border-1 border-emerald-400`,
-		nodeType === NodeTypesEnum.conditional && `bg-emerald-200 border-1 border-emerald-400`,
-		nodeType === NodeTypesEnum.inputText && `bg-emerald-200 border-1 border-emerald-400`,
-		nodeType === NodeTypesEnum.outputText && `bg-emerald-200 border-1 border-emerald-400`,
-		nodeType === NodeTypesEnum.docsLoader && `bg-sky-200 border-1 border-sky-400`,
-		nodeType === NodeTypesEnum.fileText && `bg-sky-200 border-1 border-sky-400`,
-		nodeType === NodeTypesEnum.search && `bg-sky-200 border-1 border-sky-400`,
-		nodeType === NodeTypesEnum.combine && `bg-sky-200 border-1 border-sky-400`,
+		nodeType === NodeTypesEnum.singleChatPrompt &&
+			`bg-indigo-200 border-1 border-indigo-400 hover:border-indigo-500 hover:bg-indigo-300/70`,
+		nodeType === NodeTypesEnum.chatMessage &&
+			`bg-indigo-200 border-1 border-indigo-400 hover:border-indigo-500 hover:bg-indigo-300/70`,
+		nodeType === NodeTypesEnum.chatPrompt &&
+			`bg-indigo-200 border-1 border-indigo-400 hover:border-indigo-500 hover:bg-indigo-300/70`,
+		nodeType === NodeTypesEnum.llmPrompt &&
+			`bg-amber-200 border-1 border-amber-400 hover:border-amber-500 hover:bg-amber-300/70`,
+		nodeType === NodeTypesEnum.classify &&
+			`bg-rose-200 border-1 border-rose-400 hover:border-rose-500 hover:bg-rose-300/70`,
+		nodeType === NodeTypesEnum.loop &&
+			`bg-emerald-200 border-1 border-emerald-400 hover:border-emerald-500 hover:bg-emerald-300/70`,
+		nodeType === NodeTypesEnum.globalVariable &&
+			`bg-slate-200 border-1 border-slate-400 hover:border-slate-500 hover:bg-slate-300/70`,
+		nodeType === NodeTypesEnum.setVariable &&
+			`bg-slate-200 border-1 border-slate-400 hover:border-slate-500 hover:bg-slate-300/70`,
+		nodeType === NodeTypesEnum.counter &&
+			`bg-emerald-200 border-1 border-emerald-400 hover:border-emerald-500 hover:bg-emerald-300/70`,
+		nodeType === NodeTypesEnum.text &&
+			`bg-emerald-200 border-1 border-emerald-400 hover:border-emerald-500 hover:bg-emerald-300/70`,
+		nodeType === NodeTypesEnum.conditional &&
+			`bg-emerald-200 border-1 border-emerald-400 hover:border-emerald-500 hover:bg-emerald-300/70`,
+		nodeType === NodeTypesEnum.inputText &&
+			`bg-emerald-200 border-1 border-emerald-400 hover:border-emerald-500 hover:bg-emerald-300/70`,
+		nodeType === NodeTypesEnum.outputText &&
+			`bg-emerald-200 border-1 border-emerald-400 hover:border-emerald-500 hover:bg-emerald-300/70`,
+		nodeType === NodeTypesEnum.docsLoader &&
+			`bg-sky-200 border-1 border-sky-400 hover:border-sky-500 hover:bg-sky-300/70`,
+		nodeType === NodeTypesEnum.fileText &&
+			`bg-sky-200 border-1 border-sky-400 hover:border-sky-500 hover:bg-sky-300/70`,
+		nodeType === NodeTypesEnum.search &&
+			`bg-sky-200 border-1 border-sky-400 hover:border-sky-500 hover:bg-sky-300/70`,
+		nodeType === NodeTypesEnum.combine &&
+			`bg-sky-200 border-1 border-sky-400 hover:border-sky-500 hover:bg-sky-300/70`,
 		needAuth && !session && `opacity-50 pointer-events-none`,
 		`text-slate-600 group flex items-center justify-between rounded-sm px-2 py-1 text-xs cursor-pointer`,
 	);

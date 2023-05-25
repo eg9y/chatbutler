@@ -87,7 +87,8 @@ type DocumentDataType = {
 export type FileTextDataType = DocumentDataType & DefaultNodeDataType;
 export type SearchDataType = {
   returnSource: boolean;
-} & DefaultNodeDataType;
+} & OpenAIAPIRequest &
+  DefaultNodeDataType;
 
 export type CombineDataType = DefaultNodeDataType;
 export type InputTextDataType = DefaultNodeDataType;

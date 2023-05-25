@@ -20,7 +20,8 @@ export async function uploadWebsiteUrl(
 	chatbot: SimpleWorkflow,
 	setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
 	setUiErrorMessage: RFState['setUiErrorMessage'],
-) {
+): Promise<void> {
+	// <-- Add Promise<void> here
 	if (!currentSession || !currentSession.access_token) {
 		throw new Error('No session');
 	}
@@ -45,7 +46,7 @@ export async function uploadWebsiteUrl(
 
 		try {
 			setIsLoading(true);
-			let response = await fetch('https://server.chatbutler.ai/upload-url/', options);
+			let response = await fetch(`${import.meta.env.VITE_DOC_SERVER}/upload-url/`, options);
 
 			// check if response is ok
 			if (!response.ok) {
@@ -56,22 +57,29 @@ export async function uploadWebsiteUrl(
 
 			response = await response.json();
 			// Start polling progress endpoint every X interval
-			const progressInterval = setInterval(async () => {
-				try {
-					const progressResponse = await fetch(
-						`https://server.chatbutler.ai/progress/?url=${encodeURIComponent(url)}`,
-					).then((response) => response.json());
+			return new Promise<void>((resolve, reject) => {
+				// <-- Add void here
+				const progressInterval = setInterval(async () => {
+					try {
+						const progressResponse = await fetch(
+							`${import.meta.env.VITE_DOC_SERVER}/progress/?url=${encodeURIComponent(
+								url,
+							)}`,
+						).then((response) => response.json());
 
-					console.log('progressResponse', progressResponse);
-					// If progress is 100, stop polling and set loading to false
-					if (progressResponse.progress === 100) {
-						setIsLoading(false);
-						clearInterval(progressInterval);
+						console.log('progressResponse', progressResponse);
+						// If progress is 100, stop polling, set loading to false, and resolve the promise
+						if (progressResponse.progress === 100) {
+							setIsLoading(false);
+							clearInterval(progressInterval);
+							resolve();
+						}
+					} catch (error) {
+						console.log('Error fetching progress:', error);
+						reject(error);
 					}
-				} catch (error) {
-					console.log('Error fetching progress:', error);
-				}
-			}, 5000); // replace 5000 (5 seconds) with your desired interval
+				}, 5000); // replace 5000 (5 seconds) with your desired interval
+			});
 		} catch (error) {
 			console.log(error);
 		}

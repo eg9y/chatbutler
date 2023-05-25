@@ -11,7 +11,8 @@ export async function uploadFile(
 	file: File, // New parameter for the file
 	setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
 	setUiErrorMessage: RFState['setUiErrorMessage'],
-) {
+): Promise<void> {
+	// <-- Add Promise<void> here
 	if (!currentSession || !currentSession.access_token) {
 		throw new Error('No session');
 	}
@@ -35,7 +36,7 @@ export async function uploadFile(
 
 		try {
 			setIsLoading(true);
-			let response = await fetch('https://server.chatbutler.ai/upload/', options);
+			let response = await fetch(`${import.meta.env.VITE_DOC_SERVER}/upload/`, options);
 
 			// check if response is ok
 			if (!response.ok) {
@@ -47,23 +48,28 @@ export async function uploadFile(
 			response = await response.json();
 
 			// Start polling progress endpoint every X interval
-			const progressInterval = setInterval(async () => {
-				try {
-					const progressResponse = await fetch(
-						`https://server.chatbutler.ai/progress/?url=${encodeURIComponent(
-							file.name,
-						)}`,
-					).then((response) => response.json());
+			return new Promise<void>((resolve, reject) => {
+				// <-- Add void here
+				const progressInterval = setInterval(async () => {
+					try {
+						const progressResponse = await fetch(
+							`${import.meta.env.VITE_DOC_SERVER}/progress/?url=${encodeURIComponent(
+								file.name,
+							)}`,
+						).then((response) => response.json());
 
-					// If progress is 100, stop polling and set loading to false
-					if (progressResponse.progress === 100) {
-						setIsLoading(false);
-						clearInterval(progressInterval);
+						// If progress is 100, stop polling, set loading to false, and resolve the promise
+						if (progressResponse.progress === 100) {
+							setIsLoading(false);
+							clearInterval(progressInterval);
+							resolve();
+						}
+					} catch (error) {
+						console.log('Error fetching progress:', error);
+						reject(error);
 					}
-				} catch (error) {
-					console.log('Error fetching progress:', error);
-				}
-			}, 5000); // replace 5000 (5 seconds) with your desired interval
+				}, 5000); // replace 5000 (5 seconds) with your desired interval
+			});
 		} catch (error) {
 			console.log(error);
 		}

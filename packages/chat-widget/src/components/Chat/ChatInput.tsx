@@ -1,18 +1,19 @@
+import { JSX } from 'preact';
+import { useRef, useState, useEffect } from 'preact/hooks';
 import { ArrowUpIcon } from "@heroicons/react/20/solid";
 import { Message } from "../../types";
-import { FC, KeyboardEvent, useEffect, useRef, useState } from "react";
 
 interface Props {
   onSend: (message: Message) => void;
 }
 
-export const ChatInput: FC<Props> = ({ onSend }) => {
+export const ChatInput = ({ onSend }: Props) => {
   const [content, setContent] = useState<string>();
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const value = e.target.value;
+  const handleChange = (e: JSX.TargetedEvent<HTMLTextAreaElement, Event>) => {
+    const value = e.currentTarget.value;
     if (value.length > 4000) {
       alert("Message limit is 4000 characters");
       return;
@@ -30,7 +31,7 @@ export const ChatInput: FC<Props> = ({ onSend }) => {
     await onSend({ role: "user", content });
   };
 
-  const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+  const handleKeyDown = (e: JSX.TargetedKeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSend();
@@ -53,7 +54,7 @@ export const ChatInput: FC<Props> = ({ onSend }) => {
         placeholder="Type a message..."
         value={content}
         rows={1}
-        onChange={handleChange}
+        onInput={handleChange}
         onKeyDown={handleKeyDown}
       />
 
@@ -63,3 +64,4 @@ export const ChatInput: FC<Props> = ({ onSend }) => {
     </div>
   );
 };
+

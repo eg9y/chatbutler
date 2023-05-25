@@ -1,12 +1,14 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'preact/hooks';
 
-import './App.css'
 import { Chat } from './components/Chat/Chat'
 import { Message } from './types';
 import { v4 as uuidv4 } from 'uuid';
 
-function App() {
-  const chatBotId = '_22OfvjjdezTmyD6aH-gM';
+function App({
+  chatbotId
+}: {
+  chatbotId: string
+}) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [nextNodeId, setNextNodeId] = useState<string>("");
@@ -22,7 +24,7 @@ function App() {
   useEffect(() => {
     // Create WebSocket connection
     if (!ws.current) {
-      ws.current = new WebSocket('ws://localhost:3000');
+      ws.current = new WebSocket(import.meta.env.VITE_CHAT_SERVER_WS || 'ws://localhost:3000');
     }
     
     ws.current.onopen = () => {
@@ -58,12 +60,13 @@ function App() {
             content: message,
           }]);
           setIsLoading(false);
-        } else {
-         await runNextNode(sessionId, '', nextNodeId, chatBotId);
         } 
+
+        if (data.nextNodeType !== "inputText") {
+          await runNextNode(sessionId, '', nextNodeId, chatbotId);
+        }
       }
     };
-    
 
     return () => {
       // Close WebSocket when component unmounts
@@ -86,7 +89,7 @@ function App() {
         message: string;
         nextNodeId: string;
         nextNodeType: string;
-      } = await runNextNode(sessionId, userMessage, nextNodeId, chatBotId);
+      } = await runNextNode(sessionId, userMessage, nextNodeId, chatbotId);
       userMessage = '';
       console.log(res);
     } catch (error) {
@@ -96,12 +99,13 @@ function App() {
   }
 
   async function onReset() {
+    setIsLoading(true);
     console.log('placeholder');
     // call remove
     const options = {
       method: 'DELETE',
     };
-    const res = await fetch(`http://localhost:3000/chatbot/${sessionId}`, options)
+    const res = await fetch(`${import.meta.env.VITE_CHAT_SERVER}/chatbot/${sessionId}`, options)
       .then(response => response.text())
       .catch(err => {
         console.error(err);
@@ -112,9 +116,11 @@ function App() {
     if (res === sessionId) {
       setMessages([]);
       setSessionId(uuidv4());
+      ws.current?.send(JSON.stringify({ event: 'message', sessionId }));
     } else {
       console.error('error resetting session');
     }
+    setIsLoading(false);
   }
 
   useEffect(() => {
@@ -122,20 +128,18 @@ function App() {
   }, [messages]);
 
   return (
-    <>
       <div className="fixed bottom-0 right-0 overflow-auto sm:px-10 pb-4 sm:pb-10">
           <div className="max-w-[800px] mx-auto mt-4 sm:mt-12">
         <Chat messages={messages} loading={isLoading} onSend={onUserSendMessage} onReset={onReset} />
             <div ref={messagesEndRef} />
           </div>
         </div>
-    </>
   )
 }
 
 export default App
 
-async function runNextNode(sessionId: string, userMessage: string, nextNodeId: string, chatBotId: string) {
+async function runNextNode(sessionId: string, userMessage: string, nextNodeId: string, chatbotId: string) {
   const body = {
     sessionId,
     userResponse: userMessage,
@@ -150,7 +154,7 @@ async function runNextNode(sessionId: string, userMessage: string, nextNodeId: s
     message: string;
     nextNodeId: string;
     nextNodeType: string;
-  } = await fetch(`http://localhost:3000/chatbot/${chatBotId}`, options)
+  } = await fetch(`${import.meta.env.VITE_CHAT_SERVER}/chatbot/${chatbotId}`, options)
     .then(response => response.json())
   return res;
 }

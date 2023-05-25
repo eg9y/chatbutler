@@ -6,6 +6,7 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
+.DS_Store
 
 .yarn
 .yarnrc.yml
@@ -77,6 +78,7 @@ web_modules/
 
 # dotenv environment variable files
 .env
+.env.production
 .env.development.local
 .env.test.local
 .env.production.local

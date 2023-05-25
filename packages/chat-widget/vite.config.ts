@@ -1,7 +1,23 @@
+import { preact } from '@preact/preset-vite'
 import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [preact()],
+  esbuild: {
+    jsxFactory: 'h',
+    jsxFragment: 'Fragment',
+  },
+  build: {
+    // existing build configuration
+    lib: {
+      entry: 'src/main.tsx',
+      name: 'ChatBot',
+      formats: ['iife'], // iife or umd
+    },
+  },
+  css: {
+    preprocessorOptions: {
+      includePaths: ["./src"],
+    },
+  },
 })

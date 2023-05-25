@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --port 5174",
+    "prod": "vite --port 5174 --mode production",
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
@@ -12,6 +13,9 @@
   "dependencies": {
     "@headlessui/react": "^1.7.13",
     "@heroicons/react": "^2.0.16",
+    "@preact/preset-vite": "^2.5.0",
+    "preact": "^10.15.0",
+    "preact-compat": "^3.19.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "uuid": "^9.0.0"
@@ -28,6 +32,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.3.4",
     "postcss": "^8.4.21",
+    "postcss-scope": "^1.5.0",
     "prettier-plugin-tailwindcss": "^0.2.8",
     "tailwindcss": "^3.2.7",
     "typescript": "^5.0.2",

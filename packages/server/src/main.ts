@@ -7,6 +7,13 @@ import { AppModule } from './app.module';
 import { WsAdapter } from '@nestjs/platform-ws';
 
 import { join } from 'path';
+import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
+
+const corsOptions: CorsOptions = {
+  origin: true, // Reflect the request origin
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+  credentials: true,
+};
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -24,7 +31,7 @@ async function bootstrap() {
     },
     templates: join(__dirname, '..', 'views'),
   });
-  app.enableCors();
+  app.enableCors(corsOptions);
   app.listen(3000, '0.0.0.0', function () {
     console.log('Listening on port 3000');
   });

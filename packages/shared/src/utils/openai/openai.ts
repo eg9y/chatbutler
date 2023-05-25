@@ -16,7 +16,6 @@ import {
 } from "../../types/NodeTypes";
 import { parsePromptInputs } from "../parsePromptInput";
 import { getRuntimeEnvironment } from "../env";
-import { Database } from "../../types/schema";
 import { setupSupabaseClient } from "../setupSupabaseClient";
 import { SupabaseSettingsType } from "../../types/SupabaseSettingsType";
 
@@ -69,7 +68,10 @@ export async function getOpenAICompleteResponse(
       settings.stop = llmPrompt.stop;
     }
 
-    const supabase = await setupSupabaseClient(supabaseSettings.url, supabaseSettings.key);
+    const supabase = await setupSupabaseClient(
+      supabaseSettings.url,
+      supabaseSettings.key
+    );
 
     const session = await supabase.auth.getSession();
 
@@ -150,7 +152,10 @@ export async function getOpenAIChatResponse(
       settings.stop = chatPrompt.stop;
     }
 
-    const supabase = await setupSupabaseClient(supabaseSettings.url, supabaseSettings.key);
+    const supabase = await setupSupabaseClient(
+      supabaseSettings.url,
+      supabaseSettings.key
+    );
 
     const session = await supabase.auth.getSession();
 

@@ -18,6 +18,7 @@ function isCycle(nodes: CustomNode[], targetNodeIndex: number): boolean {
 		visited[currentNodeIndex] = true;
 		recursionStack[currentNodeIndex] = true;
 
+		console.log(nodes[currentNodeIndex]);
 		for (const childId of nodes[currentNodeIndex].data.children) {
 			const childNodeIndex = nodes.findIndex((node) => node.id === childId);
 			if (dfs(childNodeIndex, visited, recursionStack)) {
@@ -46,6 +47,35 @@ function assignLoopChildren(nodes: CustomNode[], targetNodeIndex: number, loopNo
 		}
 	});
 	return nodes;
+}
+
+function isNodePartOfHandle(
+	nodes: CustomNode[],
+	edges: Edge[],
+	currentIndex: number,
+	handle: string,
+): boolean {
+	console.log(nodes[currentIndex]);
+	const sourceParentHandles = edges.filter((edge) => {
+		return edge.target === nodes[currentIndex].id;
+	});
+
+	if (sourceParentHandles.length === 0) {
+		return false;
+	}
+
+	for (const edge of sourceParentHandles) {
+		console.log('edge.sourceHandle', edge.sourceHandle);
+		if (edge.sourceHandle === handle) {
+			return true;
+		}
+		const parentNodeIndex = nodes.findIndex((node) => node.id === edge.source);
+		if (parentNodeIndex !== -1 && isNodePartOfHandle(nodes, edges, parentNodeIndex, handle)) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 const onConnect = (
@@ -167,6 +197,30 @@ const onConnect = (
 			"Document Load Block can only be connected to Search Input 'Doc' handle",
 		);
 		return;
+	} else if (nodes[targetNodeIndex].data.loopId) {
+		// get source parent handle
+		const partOfLoopDone = isNodePartOfHandle(
+			nodes,
+			edges,
+			sourceNodeIndex,
+			'loop-finished-output',
+		);
+		if (partOfLoopDone) {
+			setNotificationMessage('nodes after loop cannot be connected to nodes inside loop');
+			return;
+		}
+	} else if (nodes[sourceNodeIndex].data.loopId) {
+		// get source parent handle
+		const partOfLoopDone = isNodePartOfHandle(
+			nodes,
+			edges,
+			targetNodeIndex,
+			'loop-finished-output',
+		);
+		if (partOfLoopDone) {
+			setNotificationMessage('nodes after loop cannot be connected to nodes inside loop');
+			return;
+		}
 	}
 
 	// else if (

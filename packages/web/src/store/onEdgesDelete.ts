@@ -1,3 +1,5 @@
+import { getAllChildren } from '@chatbutler/shared/src/utils/getAllChildren';
+
 import { UseStoreSetType, RFState } from './useStore';
 
 const onEdgesDelete = (get: () => RFState, set: UseStoreSetType, edges: RFState['edges']) => {
@@ -31,6 +33,13 @@ const onEdgesDelete = (get: () => RFState, set: UseStoreSetType, edges: RFState[
 					nodes[nodeIndex].position.x += parentNode.position.x;
 					nodes[nodeIndex].position.y += parentNode.position.y;
 				}
+			}
+
+			if (nodes[nodeIndex].data.loopId) {
+				delete nodes[nodeIndex].data.loopId;
+				getAllChildren(nodes, nodes[nodeIndex]).forEach((child) => {
+					delete child.data.loopId;
+				});
 			}
 		});
 

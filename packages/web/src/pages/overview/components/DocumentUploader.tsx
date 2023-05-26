@@ -156,14 +156,13 @@ function DocumentUploader({
 								type="file"
 							/>
 							<p className="mt-1 text-sm text-gray-500 " id="file_input_help">
-								MAX. 5MB
+								MAX. 5MB{' '}
+								{file && (
+									<span>
+										File: <strong>{file.name}</strong>
+									</span>
+								)}
 							</p>
-
-							{file && (
-								<p>
-									File: <strong>{file.name}</strong>
-								</p>
-							)}
 						</>
 					)}
 				</div>

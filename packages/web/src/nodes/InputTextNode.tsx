@@ -1,3 +1,4 @@
+import { InputTextDataType } from '@chatbutler/shared';
 import { memo, FC, useState } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
 import useUndo from 'use-undo';
@@ -5,7 +6,6 @@ import useUndo from 'use-undo';
 import InputNodesList from './templates/InputNodesList';
 import NodeTemplate from './templates/NodeTemplate';
 import TextAreaTemplate from './templates/TextAreaTemplate';
-import { InputTextDataType } from './types/NodeTypes';
 import { conditionalClassNames } from '../utils/classNames';
 
 const InputText: FC<NodeProps<InputTextDataType>> = (props) => {

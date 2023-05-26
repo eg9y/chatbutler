@@ -1,6 +1,5 @@
+import { AllDataTypes } from '@chatbutler/shared';
 import { Node } from 'reactflow';
-
-import { AllDataTypes } from '../../../nodes/types/NodeTypes';
 
 export default function DefaultTab({
 	selectedNode,

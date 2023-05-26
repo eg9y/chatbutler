@@ -1,9 +1,9 @@
+import { ChatPromptNodeDataType } from '@chatbutler/shared';
 import { SignalIcon, ClipboardIcon } from '@heroicons/react/20/solid';
 import { memo, FC, useState } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
 
 import NodeTemplate from './templates/NodeTemplate';
-import { ChatPromptNodeDataType } from './types/NodeTypes';
 import { conditionalClassNames } from '../utils/classNames';
 
 const ChatPrompt: FC<NodeProps<ChatPromptNodeDataType>> = (props) => {

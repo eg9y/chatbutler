@@ -1,3 +1,4 @@
+import { SetVariableDataType, CustomNode, GlobalVariableDataType } from '@chatbutler/shared';
 import { memo, FC, useState, useEffect } from 'react';
 import { Handle, Position, NodeProps, Node } from 'reactflow';
 import useUndo from 'use-undo';
@@ -6,7 +7,6 @@ import { shallow } from 'zustand/shallow';
 import InputNodesList from './templates/InputNodesList';
 import NodeTemplate from './templates/NodeTemplate';
 import TextAreaTemplate from './templates/TextAreaTemplate';
-import { CustomNode, GlobalVariableDataType, SetVariableDataType } from './types/NodeTypes';
 import useStore, { selector } from '../store/useStore';
 import { conditionalClassNames } from '../utils/classNames';
 

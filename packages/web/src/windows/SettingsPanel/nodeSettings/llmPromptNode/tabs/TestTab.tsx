@@ -1,8 +1,8 @@
+import { LLMPromptNodeDataType, TextNodeDataType } from '@chatbutler/shared';
 import { PlayIcon } from '@heroicons/react/20/solid';
 import { Node } from 'reactflow';
 import { shallow } from 'zustand/shallow';
 
-import { LLMPromptNodeDataType, TextNodeDataType } from '../../../../../nodes/types/NodeTypes';
 import useStore, { selector } from '../../../../../store/useStore';
 
 export default function TestTab({

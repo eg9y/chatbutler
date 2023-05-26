@@ -1,4 +1,13 @@
 import { Database } from '@chatbutler/shared';
+import {
+	ChatPromptNodeDataType,
+	ClassifyNodeDataType,
+	CustomNode,
+	LLMPromptNodeDataType,
+	NodeTypesEnum,
+	SearchDataType,
+	SingleChatPromptDataType,
+} from '@chatbutler/shared';
 import { Switch } from '@headlessui/react';
 import { Cog6ToothIcon, BeakerIcon, AcademicCapIcon, TrashIcon } from '@heroicons/react/20/solid';
 import { SupabaseClient } from '@supabase/supabase-js';
@@ -16,15 +25,6 @@ import TabsTemplate from './nodeSettings/TabsTemplate';
 import TextTabs from './nodeSettings/textNode/tabs';
 import NodesList from './NodesList';
 import SandboxSettings from './SandboxSettings';
-import {
-	ChatPromptNodeDataType,
-	ClassifyNodeDataType,
-	CustomNode,
-	LLMPromptNodeDataType,
-	NodeTypesEnum,
-	SearchDataType,
-	SingleChatPromptDataType,
-} from '../../nodes/types/NodeTypes';
 import { useStore, useStoreSecret, selector, selectorSecret } from '../../store';
 import { conditionalClassNames } from '../../utils/classNames';
 import Tutorial from '../Tutorial';

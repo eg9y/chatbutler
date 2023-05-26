@@ -1,4 +1,13 @@
 import {
+	CustomNode,
+	GlobalVariableDataType,
+	InputNode,
+	LLMPromptNodeDataType,
+	LoopDataType,
+	NodeTypesEnum,
+	TextNodeDataType,
+} from '@chatbutler/shared';
+import {
 	Connection,
 	Edge,
 	EdgeChange,
@@ -29,15 +38,6 @@ import {
 	GlobalVariableType,
 	SimpleWorkflow,
 } from '../db/dbTypes';
-import {
-	CustomNode,
-	GlobalVariableDataType,
-	InputNode,
-	LLMPromptNodeDataType,
-	LoopDataType,
-	NodeTypesEnum,
-	TextNodeDataType,
-} from '../nodes/types/NodeTypes';
 import { runFlow } from '../utils/runFlow';
 import { Message } from '../windows/ChatPanel/Chat/types';
 

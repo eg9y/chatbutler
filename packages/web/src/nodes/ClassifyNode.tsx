@@ -1,6 +1,4 @@
-import { Disclosure } from '@headlessui/react';
-import { SignalIcon } from '@heroicons/react/20/solid';
-import { ClipboardIcon } from '@heroicons/react/24/outline';
+import { ClassifyNodeDataType, NodeTypesEnum } from '@chatbutler/shared';
 import { memo, FC, useState } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
 import useUndo from 'use-undo';
@@ -9,7 +7,6 @@ import { shallow } from 'zustand/shallow';
 import InputNodesList from './templates/InputNodesList';
 import NodeTemplate from './templates/NodeTemplate';
 import RunnableToolbarTemplate from './templates/RunnableToolbarTemplate';
-import { ClassifyNodeDataType, NodeTypesEnum } from './types/NodeTypes';
 import useStore, { RFState, selector } from '../store/useStore';
 import { conditionalClassNames } from '../utils/classNames';
 import { handleChange } from '../utils/handleFormChange';

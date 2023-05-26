@@ -1,8 +1,8 @@
+import { CustomNode, NodeTypesEnum, LoopDataType } from '@chatbutler/shared';
 import { ChevronDoubleRightIcon } from '@heroicons/react/20/solid';
 import { shallow } from 'zustand/shallow';
 
 import { ReactComponent as Loading } from '../assets/loading.svg';
-import { NodeTypesEnum, LoopDataType, CustomNode } from '../nodes/types/NodeTypes';
 import { useStore, useStoreSecret, selector, selectorSecret } from '../store';
 import { conditionalClassNames } from '../utils/classNames';
 

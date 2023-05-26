@@ -1,3 +1,4 @@
+import { GlobalVariableDataType } from '@chatbutler/shared';
 import { XCircleIcon } from '@heroicons/react/20/solid';
 import { nanoid } from 'nanoid';
 import { memo, FC, useState } from 'react';
@@ -6,7 +7,6 @@ import useUndo from 'use-undo';
 import { shallow } from 'zustand/shallow';
 
 import NodeTemplate from './templates/NodeTemplate';
-import { GlobalVariableDataType } from './types/NodeTypes';
 import useStore, { selector } from '../store/useStore';
 import { conditionalClassNames } from '../utils/classNames';
 import { handleChange } from '../utils/handleFormChange';

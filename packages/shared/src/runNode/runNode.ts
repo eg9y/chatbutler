@@ -1,6 +1,5 @@
 import { Node } from "reactflow";
 
-import docsLoader from "./docsLoader";
 import {
   chatPrompt,
   classify,
@@ -21,7 +20,6 @@ import {
   NodeTypesEnum,
   GlobalVariableDataType,
   SearchDataType,
-  DocsLoaderDataType,
 } from "../types/NodeTypes";
 import { parsePromptInputs } from "../utils/parsePromptInput";
 import { SupabaseSettingsType } from "../types/SupabaseSettingsType";
@@ -73,9 +71,6 @@ export async function runNode(
         openAiKey,
         supabaseSettings
       );
-      break;
-    case NodeTypesEnum.docsLoader:
-      await docsLoader(node as Node<DocsLoaderDataType>);
       break;
     case NodeTypesEnum.counter:
       counter(node);

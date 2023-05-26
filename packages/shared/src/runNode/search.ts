@@ -7,7 +7,6 @@ import { TraversalStateType } from "../traversalStateType";
 import {
   CustomNode,
   SearchDataType,
-  DocsLoaderDataType,
   NodeTypesEnum,
 } from "../types/NodeTypes";
 import { parsePromptInputs } from "../utils/parsePromptInput";
@@ -107,14 +106,14 @@ const search = async (
       }
     );
 
-    const documents = inputNodes[docsLoaderNodeIndex].data.response
+    const documents = node.data.docs
       .split(",")
       .map((document) => {
         const filter: any = {
           name: document,
         };
         if (
-          (inputNodes[docsLoaderNodeIndex].data as DocsLoaderDataType).askUser
+          node.data.askUser
         ) {
           filter.user_id = session.data.session?.user.id;
         } else {

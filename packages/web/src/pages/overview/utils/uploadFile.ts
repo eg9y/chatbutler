@@ -1,7 +1,7 @@
+import { DocSource } from '@chatbutler/shared';
 import { Session } from '@supabase/supabase-js';
 
 import { SimpleWorkflow } from '../../../db/dbTypes';
-import { DocSource } from '../../../nodes/types/NodeTypes';
 import { RFState } from '../../../store/useStore';
 
 export async function uploadFile(

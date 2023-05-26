@@ -1,7 +1,7 @@
+import { ChatMessageNodeDataType, NodeTypesEnum } from '@chatbutler/shared';
 import { MarkerType } from 'reactflow';
 
 import { RFState, UseStoreSetType } from './useStore';
-import { ChatMessageNodeDataType, NodeTypesEnum } from '../nodes/types/NodeTypes';
 
 const onPlaceholderAdd = (
 	get: () => RFState,

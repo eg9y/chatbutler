@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { CustomNode, InputNode } from '@chatbutler/shared';
 import { Connection, addEdge, MarkerType, Edge, Node } from 'reactflow';
 
 import { RFState, UseStoreSetType } from './useStore';
-import { CustomNode, InputNode } from '../nodes/types/NodeTypes';
 
 // recursively assigning the parentNode and loopId for nodes in a loop
 function isCycle(nodes: CustomNode[], targetNodeIndex: number): boolean {

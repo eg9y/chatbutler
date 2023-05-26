@@ -1,3 +1,4 @@
+import { CombineDataType } from '@chatbutler/shared';
 import { Disclosure } from '@headlessui/react';
 import { SignalIcon, ClipboardIcon } from '@heroicons/react/20/solid';
 import { memo, FC, useState } from 'react';
@@ -6,7 +7,6 @@ import useUndo from 'use-undo';
 
 import InputNodesList from './templates/InputNodesList';
 import NodeTemplate from './templates/NodeTemplate';
-import { CombineDataType } from './types/NodeTypes';
 import { conditionalClassNames } from '../utils/classNames';
 
 const Combine: FC<NodeProps<CombineDataType>> = (props) => {

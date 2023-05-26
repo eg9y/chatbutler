@@ -5,10 +5,11 @@ import {
 	getNextNode,
 	initializeFlowState,
 	getNodes,
+	SearchDataType,
 } from '@chatbutler/shared';
+import { CustomNode, NodeTypesEnum } from '@chatbutler/shared';
 import { Edge } from 'reactflow';
 
-import { CustomNode, DocsLoaderDataType, NodeTypesEnum } from '../nodes/types/NodeTypes';
 import { RFState } from '../store/useStore';
 
 function inputTextPauser(node: CustomNode, get: () => RFState): Promise<string> {
@@ -29,7 +30,7 @@ function docsLoaderPauser(node: CustomNode, get: () => RFState): Promise<string>
 			{
 				role: 'assistant',
 				content: 'Upload the document you want to search for',
-				assistantMessageType: NodeTypesEnum.docsLoader,
+				assistantMessageType: NodeTypesEnum.search,
 			},
 		]);
 		get().setWaitingUserResponse(true);
@@ -86,8 +87,8 @@ export async function runFlow(
 				await inputTextPauser(node, get);
 				state.chatHistory = [...get().chatApp];
 			} else if (
-				node.type === NodeTypesEnum.docsLoader &&
-				(node.data as DocsLoaderDataType).askUser
+				node.type === NodeTypesEnum.search &&
+				(node.data as SearchDataType).askUser
 			) {
 				await docsLoaderPauser(node, get);
 				state.chatHistory = [...get().chatApp];

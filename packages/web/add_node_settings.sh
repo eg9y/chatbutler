@@ -30,7 +30,7 @@ create_node_settings_folder() {
         echo "File created at src/windows/SettingsPanel/nodeSettings/${camel_case_node}Node/tabs/$1Tab.tsx"
         cat > "$new_tab_file" <<- EOM
         import { Node } from 'reactflow';
-        import {${1}NodeDataType } from '../../../../../nodes/types/NodeTypes';
+        import {${1}NodeDataType } from '@chatbutler/shared';
 
         export default function $1Tab({
             selectedNode,
@@ -101,7 +101,7 @@ EOM
 
     import TabsNavigator from '../../TabsNavigator';
     import $1Tab from './tabs/$1Tab';
-    import { $1NodeDataType } from '../../../../nodes/types/NodeTypes';
+    import { $1NodeDataType } from '@chatbutler/shared';
     import { handleChange } from '../../../../utils/handleFormChange';
 
     const tabs = [{ name: '$(convertCamelCaseToWords $1)', icon: PencilIcon }];

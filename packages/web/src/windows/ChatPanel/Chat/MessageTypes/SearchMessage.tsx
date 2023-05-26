@@ -1,10 +1,10 @@
+import { DocSource } from '@chatbutler/shared';
 import { useEffect, useState } from 'react';
 import { shallow } from 'zustand/shallow';
 
-import SavedDocs from './DocsLoaderMessage/SavedDocs';
+import SavedDocs from './SearchMessage/SavedDocs';
 import { ReactComponent as Loading } from '../../../../assets/loading.svg';
 import useSupabase from '../../../../auth/supabaseClient';
-import { DocSource } from '../../../../nodes/types/NodeTypes';
 import { uploadFile } from '../../../../pages/overview/utils/uploadFile';
 import { useStore, useStoreSecret, selectorSecret, selector } from '../../../../store';
 import { conditionalClassNames } from '../../../../utils/classNames';
@@ -18,7 +18,7 @@ function isValidUrl(urlString: string): boolean {
 	}
 }
 
-function DocsLoaderMessage() {
+function SearchMessage() {
 	const [file, setFile] = useState<File | null>(null);
 	const [text, setText] = useState<string>('');
 	const [blob, setBlob] = useState<string | ArrayBuffer | null>(null);
@@ -272,4 +272,4 @@ function FileUploadOptions({
 	);
 }
 
-export default DocsLoaderMessage;
+export default SearchMessage;

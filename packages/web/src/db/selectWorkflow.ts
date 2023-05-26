@@ -1,10 +1,9 @@
-import { Database } from '@chatbutler/shared';
+import { CustomNode, Database } from '@chatbutler/shared';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { Edge, Node } from 'reactflow';
 
 import { GlobalVariableType, WorkflowDbSchema } from './dbTypes';
 import { Inputs } from '../nodes/types/Input';
-import { CustomNode } from '../nodes/types/NodeTypes';
 import { RFState } from '../store/useStore';
 
 const selectWorkflow = async (

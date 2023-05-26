@@ -1,9 +1,9 @@
+import { AllDataTypes, LLMPromptNodeDataType } from '@chatbutler/shared';
 import { GlobeAltIcon, BeakerIcon } from '@heroicons/react/20/solid';
 import { Node } from 'reactflow';
 
 import ApiTab from './tabs/ApiTab';
 import TestTab from './tabs/TestTab';
-import { AllDataTypes, LLMPromptNodeDataType } from '../../../../nodes/types/NodeTypes';
 import { handleChange } from '../../../../utils/handleFormChange';
 import TabsTemplate from '../TabsTemplate';
 

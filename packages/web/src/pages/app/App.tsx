@@ -1,3 +1,4 @@
+import { NodeTypesEnum } from '@chatbutler/shared';
 import { ChevronDoubleRightIcon } from '@heroicons/react/20/solid';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import ReactFlow, {
@@ -25,7 +26,6 @@ import ClassifyNode from '../../nodes/ClassifyNode';
 import CombineNode from '../../nodes/CombineNode';
 import ConditionalNode from '../../nodes/ConditionalNode';
 import CounterNode from '../../nodes/CounterNode';
-import DocsLoaderNode from '../../nodes/DocsLoaderNode';
 import FileNode from '../../nodes/FileTextNode';
 import GlobalVariableNode from '../../nodes/GlobalVariableNode';
 import InputTextNode from '../../nodes/InputTextNode';
@@ -37,7 +37,6 @@ import SearchNode from '../../nodes/SearchNode';
 import SetVariableNode from '../../nodes/SetVariableNode';
 import SingleChatPromptNode from '../../nodes/SingleChatPromptNode';
 import TextNode from '../../nodes/TextNode';
-import { NodeTypesEnum } from '../../nodes/types/NodeTypes';
 import { useStore, useStoreSecret, selector, selectorSecret } from '../../store';
 import isWorkflowOwnedByUser from '../../utils/isWorkflowOwnedByUser';
 import { useDebouncedEffect } from '../../utils/useDebouncedEffect';
@@ -59,7 +58,6 @@ const nodeTypes = {
 	loop: LoopNode,
 	fileText: FileNode,
 	search: SearchNode,
-	docsLoader: DocsLoaderNode,
 	combine: CombineNode,
 	conditional: ConditionalNode,
 	placeholder: PlaceholderNode,

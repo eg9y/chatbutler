@@ -1,18 +1,19 @@
+import {
+	ClassifyNodeCategoriesDataType,
+	ConditionalBooleanOperation,
+	CustomNode,
+	DocSource,
+	GlobalVariableDataType,
+	NodeTypesEnum,
+	PlaceholderDataType,
+	SearchDataType,
+	SetVariableDataType,
+} from '@chatbutler/shared';
 import { nanoid } from 'nanoid';
 import { addEdge, MarkerType, Node } from 'reactflow';
 
 import { RFState, UseStoreSetType } from './useStore';
 import { Inputs } from '../nodes/types/Input';
-import {
-	NodeTypesEnum,
-	CustomNode,
-	PlaceholderDataType,
-	ClassifyNodeCategoriesDataType,
-	ConditionalBooleanOperation,
-	SetVariableDataType,
-	GlobalVariableDataType,
-	DocSource,
-} from '../nodes/types/NodeTypes';
 
 export const generateUniqueId = (type: NodeTypesEnum) => {
 	return `${type}-${nanoid()}`;
@@ -137,28 +138,9 @@ const onAdd = (
 				presence_penalty: 0.0,
 				best_of: 1,
 				stop: [],
-			},
-		};
-	} else if (type === NodeTypesEnum.docsLoader) {
-		node = {
-			id: generateUniqueId(type),
-			type,
-			position: {
-				x,
-				y,
-			},
-			data: {
-				name: `Docs Loader ${nodeLength}`,
-				source: DocSource.websiteUrl,
-				askUser: true,
-				text: ``,
-				children: [],
-				inputs: new Inputs(),
-				response: ``,
-				isLoading: false,
-				isBreakpoint: false,
-				isDetailMode: true,
-			},
+				docs: '',
+				askUser: false,
+			} as SearchDataType,
 		};
 	} else if (type === NodeTypesEnum.combine) {
 		node = {

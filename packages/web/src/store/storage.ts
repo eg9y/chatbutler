@@ -1,8 +1,8 @@
+import { CustomNode } from '@chatbutler/shared';
 import { PersistStorage } from 'zustand/middleware';
 
 import { RFState } from './useStore';
 import { Inputs } from '../nodes/types/Input';
-import { CustomNode } from '../nodes/types/NodeTypes';
 
 const storage: PersistStorage<RFState> = {
 	getItem: (name) => {

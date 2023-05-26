@@ -1,3 +1,4 @@
+import { ConditionalDataType, ConditionalBooleanOperation } from '@chatbutler/shared';
 import { CheckIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { memo, FC, useState } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
@@ -5,7 +6,6 @@ import useUndo from 'use-undo';
 
 import InputNodesList from './templates/InputNodesList';
 import NodeTemplate from './templates/NodeTemplate';
-import { ConditionalBooleanOperation, ConditionalDataType } from './types/NodeTypes';
 import { conditionalClassNames } from '../utils/classNames';
 
 const Conditional: FC<NodeProps<ConditionalDataType>> = (props) => {

@@ -40,7 +40,7 @@ import useUndo from 'use-undo';
 import InputNodesList from './templates/InputNodesList';
 import NodeTemplate from './templates/NodeTemplate';
 import TextAreaTemplate from './templates/TextAreaTemplate';
-import { $NEW_DATA_TYPE, TextNodeDataType } from './types/NodeTypes';
+import { $NEW_DATA_TYPE, TextNodeDataType } from '@chatbutler/shared';
 import { conditionalClassNames } from '../utils/classNames';
 
 const $1: FC<NodeProps<$NEW_DATA_TYPE>> = (props) => {
@@ -152,7 +152,7 @@ create_node_settings_folder() {
     cat > "$new_tabs_file" <<- EOM
     import { Node } from 'reactflow';
 
-    import { AllDataTypes, TextNodeDataType } from '../../../../nodes/types/NodeTypes';
+    import { AllDataTypes, TextNodeDataType } from '@chatbutler/shared';
     import TabsTemplate from '../TabsTemplate';
 
     export default function $1Tabs({

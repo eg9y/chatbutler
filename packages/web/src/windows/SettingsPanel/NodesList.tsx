@@ -1,3 +1,4 @@
+import { NodeTypesEnum } from '@chatbutler/shared';
 import { Disclosure } from '@headlessui/react';
 import {
 	ChevronRightIcon,
@@ -15,7 +16,6 @@ import { FC, useState } from 'react';
 import { ReactFlowInstance } from 'reactflow';
 import { shallow } from 'zustand/shallow';
 
-import { NodeTypesEnum } from '../../nodes/types/NodeTypes';
 import { useStore, useStoreSecret, selector, selectorSecret } from '../../store';
 import { RFStateSecret } from '../../store/useStoreSecret';
 import { conditionalClassNames } from '../../utils/classNames';
@@ -244,15 +244,6 @@ const NodesList = ({
 								needAuth={true}
 							/> */}
 							<NodeType
-								name="Document Load"
-								nodeType={NodeTypesEnum.docsLoader}
-								handleDrag={handleDrag}
-								addNodeToCenter={addNodeToCenter}
-								Icon={MagnifyingGlassIcon}
-								session={session}
-								needAuth={true}
-							/>
-							<NodeType
 								name="Search"
 								nodeType={NodeTypesEnum.search}
 								handleDrag={handleDrag}
@@ -319,8 +310,6 @@ const NodeType: FC<{
 			`bg-emerald-200 border-1 border-emerald-400 hover:border-emerald-500 hover:bg-emerald-300/70`,
 		nodeType === NodeTypesEnum.outputText &&
 			`bg-emerald-200 border-1 border-emerald-400 hover:border-emerald-500 hover:bg-emerald-300/70`,
-		nodeType === NodeTypesEnum.docsLoader &&
-			`bg-sky-200 border-1 border-sky-400 hover:border-sky-500 hover:bg-sky-300/70`,
 		nodeType === NodeTypesEnum.fileText &&
 			`bg-sky-200 border-1 border-sky-400 hover:border-sky-500 hover:bg-sky-300/70`,
 		nodeType === NodeTypesEnum.search &&

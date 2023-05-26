@@ -1,3 +1,4 @@
+import { SearchDataType } from '@chatbutler/shared';
 import { Dialog, Transition } from '@headlessui/react';
 import { CheckIcon } from '@heroicons/react/24/outline';
 import { Fragment, useEffect, useRef, useState } from 'react';
@@ -5,7 +6,6 @@ import { shallow } from 'zustand/shallow';
 
 import { ReactComponent as Loading } from '../assets/loading.svg';
 import useSupabase from '../auth/supabaseClient';
-import { DocsLoaderDataType } from '../nodes/types/NodeTypes';
 import { useStore, selector } from '../store';
 import { RFState } from '../store/useStore';
 import { conditionalClassNames } from '../utils/classNames';
@@ -24,7 +24,7 @@ export default function DocumentSelector({
 	selectedDocuments: string[];
 	setSelectedDocuments: React.Dispatch<React.SetStateAction<string[]>>;
 	id: string;
-	data: DocsLoaderDataType;
+	data: SearchDataType;
 	updateNode: RFState['updateNode'];
 }) {
 	const cancelButtonRef = useRef(null);
@@ -64,14 +64,14 @@ export default function DocumentSelector({
 			setSelectedDocuments(newSelectedDocuments);
 			updateNode(id, {
 				...data,
-				text: newSelectedDocuments.join(','),
+				docs: newSelectedDocuments.join(','),
 			});
 		} else {
 			const newSelectedDocuments = [...selectedDocuments, docId];
 			setSelectedDocuments(newSelectedDocuments);
 			updateNode(id, {
 				...data,
-				text: newSelectedDocuments.join(','),
+				docs: newSelectedDocuments.join(','),
 			});
 		}
 	};

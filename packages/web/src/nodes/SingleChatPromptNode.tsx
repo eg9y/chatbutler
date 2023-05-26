@@ -1,5 +1,4 @@
-import { Disclosure } from '@headlessui/react';
-import { ArrowsPointingOutIcon, ClipboardIcon, SignalIcon } from '@heroicons/react/20/solid';
+import { SingleChatPromptDataType, ChatMessageNodeDataType } from '@chatbutler/shared';
 import { memo, FC, useState } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
 import useUndo from 'use-undo';
@@ -7,7 +6,6 @@ import useUndo from 'use-undo';
 import InputNodesList from './templates/InputNodesList';
 import NodeTemplate from './templates/NodeTemplate';
 import TextAreaTemplate from './templates/TextAreaTemplate';
-import { ChatMessageNodeDataType, SingleChatPromptDataType } from './types/NodeTypes';
 import FullScreenEditor from '../components/FullScreenEditor';
 import { conditionalClassNames } from '../utils/classNames';
 

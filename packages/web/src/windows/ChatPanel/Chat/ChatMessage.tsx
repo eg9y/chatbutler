@@ -1,8 +1,8 @@
+import { NodeTypesEnum } from '@chatbutler/shared';
 import { FC } from 'react';
 
-import DocsLoaderMessage from './MessageTypes/DocsLoaderMessage';
+import SearchMessage from './MessageTypes/SearchMessage';
 import { Message } from './types';
-import { NodeTypesEnum } from '../../../nodes/types/NodeTypes';
 
 interface Props {
 	message: Message;
@@ -15,7 +15,7 @@ export const ChatMessage: FC<Props> = ({ message }) => {
 				message.role === 'assistant' ? 'items-start' : 'items-end'
 			}`}
 		>
-			{message.assistantMessageType === NodeTypesEnum.docsLoader && <DocsLoaderMessage />}
+			{message.assistantMessageType === NodeTypesEnum.search && <SearchMessage />}
 			{message.assistantMessageType === NodeTypesEnum.search && (
 				<div className="flex-start flex flex-col">
 					<p>{message.content}</p>

@@ -1,7 +1,7 @@
+import { NodeTypesEnum } from '@chatbutler/shared';
 import { OnNodesChange, NodeChange, applyNodeChanges } from 'reactflow';
 
 import { RFState } from './useStore';
-import { NodeTypesEnum } from '../nodes/types/NodeTypes';
 
 function onNodesChange(
 	get: () => RFState,

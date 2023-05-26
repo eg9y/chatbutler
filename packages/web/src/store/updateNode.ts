@@ -1,7 +1,7 @@
+import { InputNode, LLMPromptNodeDataType, TextNodeDataType } from '@chatbutler/shared';
 import { Node } from 'reactflow';
 
 import { RFState, UseStoreSetType } from './useStore';
-import { InputNode, LLMPromptNodeDataType, TextNodeDataType } from '../nodes/types/NodeTypes';
 
 const updateNode = (
 	get: () => RFState,

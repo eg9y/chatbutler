@@ -1,8 +1,8 @@
+import { ClassifyNodeDataType } from '@chatbutler/shared';
 import { GlobeAltIcon } from '@heroicons/react/20/solid';
 import { Node } from 'reactflow';
 
 import ApiTab from './tabs/ApiTab';
-import { ClassifyNodeDataType } from '../../../../nodes/types/NodeTypes';
 import { handleChange } from '../../../../utils/handleFormChange';
 import TabsTemplate from '../TabsTemplate';
 

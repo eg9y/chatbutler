@@ -1,7 +1,7 @@
+import { LoopDataType, NodeTypesEnum } from '@chatbutler/shared';
 import { useRef, useState } from 'react';
 
 import RunFromStart from '../../components/RunFromStart';
-import { LoopDataType, NodeTypesEnum } from '../../nodes/types/NodeTypes';
 import { RFState } from '../../store/useStore';
 
 function SandboxExecutionPanel({

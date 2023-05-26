@@ -1,4 +1,4 @@
-import { CustomNode, GlobalVariableDataType } from '../nodes/types/NodeTypes';
+import { CustomNode, GlobalVariableDataType } from '@chatbutler/shared';
 import { RFState } from '../store/useStore';
 
 export function parsePromptInputs(get: () => RFState, prompt: string, nodeIds: string[]): string {

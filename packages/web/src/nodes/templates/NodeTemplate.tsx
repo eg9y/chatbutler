@@ -1,3 +1,4 @@
+import { NodeTypesEnum, DefaultNodeDataType } from '@chatbutler/shared';
 import {
 	ArrowPathIcon,
 	ArrowsPointingOutIcon,
@@ -13,7 +14,6 @@ import { ReactComponent as Loading } from '../../assets/loading.svg';
 import FullScreenEditor from '../../components/FullScreenEditor';
 import useStore, { selector } from '../../store/useStore';
 import { conditionalClassNames } from '../../utils/classNames';
-import { DefaultNodeDataType, NodeTypesEnum } from '../types/NodeTypes';
 
 interface NodeTemplateInterface {
 	title: string;
@@ -281,7 +281,7 @@ function Tabs({
 					setCurrentPage('Block');
 				}}
 			>
-				<span className="font-semibold opacity-70">{title} Block</span>
+				<span className="font-semibold opacity-70">{title}</span>
 			</button>
 			<div className="w-[0.15rem] border-b-0 border-slate-500" />
 			<button

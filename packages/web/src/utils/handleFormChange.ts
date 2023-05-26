@@ -1,4 +1,4 @@
-import { DefaultNodeDataType } from '../nodes/types/NodeTypes';
+import { DefaultNodeDataType } from '@chatbutler/shared';
 
 export function handleChange(
 	event:

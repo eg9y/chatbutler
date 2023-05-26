@@ -1,9 +1,9 @@
+import { ClassifyNodeCategoriesDataType, NodeTypesEnum } from '@chatbutler/shared';
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/20/solid';
 import { Fragment, memo, FC, useState, useEffect } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
 import { shallow } from 'zustand/shallow';
 
-import { ClassifyNodeCategoriesDataType, NodeTypesEnum } from './types/NodeTypes';
 import { generateUniqueId } from '../store/onAdd';
 import useStore, { selector } from '../store/useStore';
 import { conditionalClassNames } from '../utils/classNames';

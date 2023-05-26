@@ -1,3 +1,4 @@
+import { LoopDataType } from '@chatbutler/shared';
 import { ArrowPathIcon } from '@heroicons/react/20/solid';
 import { memo, FC, useState } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
@@ -7,7 +8,6 @@ import { shallow } from 'zustand/shallow';
 import InputNodesList from './templates/InputNodesList';
 import NodeTemplate from './templates/NodeTemplate';
 import TextAreaTemplate from './templates/TextAreaTemplate';
-import { LoopDataType } from './types/NodeTypes';
 import useStore, { selector } from '../store/useStore';
 import { conditionalClassNames } from '../utils/classNames';
 

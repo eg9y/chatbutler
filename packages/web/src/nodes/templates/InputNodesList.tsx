@@ -1,9 +1,8 @@
-import { ArrowPathIcon } from '@heroicons/react/20/solid';
+import { DefaultNodeDataType, InputNode, NodeTypesEnum, CustomNode } from '@chatbutler/shared';
 import { shallow } from 'zustand/shallow';
 
 import useStore, { selector } from '../../store/useStore';
 import { conditionalClassNames } from '../../utils/classNames';
-import { CustomNode, DefaultNodeDataType, InputNode, NodeTypesEnum } from '../types/NodeTypes';
 
 const InputNodesList = ({
 	id,

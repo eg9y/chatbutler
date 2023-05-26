@@ -1,6 +1,6 @@
+import { AllDataTypes, TextNodeDataType } from '@chatbutler/shared';
 import { Node } from 'reactflow';
 
-import { AllDataTypes, TextNodeDataType } from '../../../../nodes/types/NodeTypes';
 import TabsTemplate from '../TabsTemplate';
 
 export default function TextTabs({

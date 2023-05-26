@@ -1,3 +1,4 @@
+import { FileTextDataType } from '@chatbutler/shared';
 import { memo, FC, useState } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
 import useUndo from 'use-undo';
@@ -5,7 +6,6 @@ import { shallow } from 'zustand/shallow';
 
 import InputNodesList from './templates/InputNodesList';
 import NodeTemplate from './templates/NodeTemplate';
-import { FileTextDataType } from './types/NodeTypes';
 import { db } from '../backgroundTasks/dexieDb/db';
 import useStore, { selector } from '../store/useStore';
 import { conditionalClassNames } from '../utils/classNames';

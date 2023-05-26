@@ -1,10 +1,10 @@
+import { DefaultNodeDataType } from '@chatbutler/shared';
 import { memo, FC } from 'react';
 import { NodeProps } from 'reactflow';
 import { shallow } from 'zustand/shallow';
 
 import useStore, { selector } from '../../store/useStore';
 import { handleChange } from '../../utils/handleFormChange';
-import { DefaultNodeDataType } from '../types/NodeTypes';
 
 const TextAreaTemplate: FC<
 	NodeProps<DefaultNodeDataType> & {

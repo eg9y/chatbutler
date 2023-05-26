@@ -1,9 +1,9 @@
+import { AllDataTypes } from '@chatbutler/shared';
 import { PencilIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
 import { Node } from 'reactflow';
 
 import DefaultTab from './DefaultTab';
-import { AllDataTypes } from '../../../nodes/types/NodeTypes';
 import { handleChange } from '../../../utils/handleFormChange';
 import TabsNavigator from '../TabsNavigator';
 

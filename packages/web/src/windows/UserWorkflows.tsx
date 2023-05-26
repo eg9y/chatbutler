@@ -9,7 +9,7 @@ import { ReactComponent as Loading } from '../assets/loading.svg';
 import useSupabase from '../auth/supabaseClient';
 import { SimpleWorkflow, GlobalVariableType } from '../db/dbTypes';
 import selectWorkflow from '../db/selectWorkflow';
-import { CustomNode } from '../nodes/types/NodeTypes';
+import { CustomNode } from '@chatbutler/shared';
 import { useStore, useStoreSecret, selectorSecret, selector } from '../store';
 import { RFState } from '../store/useStore';
 

@@ -1,9 +1,9 @@
+import { NodeTypesEnum, PlaceholderDataType } from '@chatbutler/shared';
 import { PlusIcon } from '@heroicons/react/20/solid';
 import { FC } from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
 import { shallow } from 'zustand/shallow';
 
-import { NodeTypesEnum, PlaceholderDataType } from './types/NodeTypes';
 import useStore, { selector } from '../store/useStore';
 
 const PlaceholderNode: FC<NodeProps<PlaceholderDataType>> = ({ data, id }) => {

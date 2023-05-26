@@ -1,9 +1,9 @@
+import { CounterDataType } from '@chatbutler/shared';
 import { PlusIcon } from '@heroicons/react/20/solid';
 import { memo, FC, useState } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
 
 import NodeTemplate from './templates/NodeTemplate';
-import { CounterDataType } from './types/NodeTypes';
 
 const Counter: FC<NodeProps<CounterDataType>> = (props) => {
 	const { selected } = props;

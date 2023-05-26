@@ -1,9 +1,9 @@
+import { DocSource } from '@chatbutler/shared';
 import { useState } from 'react';
 import { shallow } from 'zustand/shallow';
 
 import { ReactComponent as Loading } from '../../../assets/loading.svg';
 import { SimpleWorkflow } from '../../../db/dbTypes';
-import { DocSource } from '../../../nodes/types/NodeTypes';
 import { useStore, selector, useStoreSecret, selectorSecret } from '../../../store';
 import { conditionalClassNames } from '../../../utils/classNames';
 import { uploadFile } from '../utils/uploadFile';

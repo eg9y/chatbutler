@@ -33,7 +33,6 @@ export type AllDataTypes =
   | GlobalVariableDataType
   | SetVariableDataType
   | SingleChatPromptDataType
-  | DocsLoaderDataType
   | FileTextDataType;
 
 export type CustomNode = Node<AllDataTypes>;
@@ -86,7 +85,9 @@ type DocumentDataType = {
 
 export type FileTextDataType = DocumentDataType & DefaultNodeDataType;
 export type SearchDataType = {
+  askUser: boolean;
   returnSource: boolean;
+  docs: string;
 } & OpenAIAPIRequest &
   DefaultNodeDataType;
 
@@ -138,13 +139,6 @@ export enum DocSource {
   pdf = "PDF File",
 }
 
-export type DocsLoaderDataType = {
-  // text field is the path to the document
-  source: DocSource;
-  askUser: boolean;
-  askOnce: boolean;
-} & DefaultNodeDataType;
-
 export enum NodeTypesEnum {
   llmPrompt = "llmPrompt",
   text = "text",
@@ -161,8 +155,6 @@ export enum NodeTypesEnum {
   outputText = "outputText",
   globalVariable = "globalVariable",
   setVariable = "setVariable",
-
-  docsLoader = "docsLoader",
   fileText = "fileText",
   search = "search",
   combine = "combine",

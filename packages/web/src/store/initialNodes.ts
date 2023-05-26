@@ -1,5 +1,6 @@
+import { CustomNode, NodeTypesEnum } from '@chatbutler/shared';
+
 import { Inputs } from '../nodes/types/Input';
-import { CustomNode, NodeTypesEnum } from '../nodes/types/NodeTypes';
 
 const textNode = {
 	id: 'text-input',

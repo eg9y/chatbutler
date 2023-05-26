@@ -30,7 +30,7 @@ function DocumentUploader({
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [isDone, setIsDone] = useState<boolean>(false);
 
-	const { setUiErrorMessage } = useStore(selector, shallow);
+	const { setNotificationMessage } = useStore(selector, shallow);
 	const { session } = useStoreSecret(selectorSecret, shallow);
 
 	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,7 +56,6 @@ function DocumentUploader({
 					return;
 				}
 				const typedarray = new Uint8Array(e.target.result as Uint8Array);
-				console.log('loaded!', typedarray);
 				setArrayBuffer(typedarray);
 				// console.log('updating node', e.target.result);
 			};
@@ -70,148 +69,58 @@ function DocumentUploader({
 		<div
 			className={conditionalClassNames(
 				(isLoading || isDone) && 'pointer-events-none opacity-50',
-				'py-4 text-xs ',
+				'flex grow flex-col gap-2 px-4 text-xs',
 			)}
 		>
-			<div>
-				<>
-					<div>
-						<div className="sm:hidden">
-							<label htmlFor="tabs" className="sr-only">
-								Select a tab
+			<div className="">
+				<label
+					htmlFor="location"
+					className="block text-sm font-medium leading-6 text-gray-900"
+				>
+					File Type
+				</label>
+				<select
+					id="tabs"
+					name="tabs"
+					className="block w-full rounded-md border-gray-300 focus:border-neutral-500 focus:ring-neutral-500"
+					defaultValue={source || DocSource.websiteUrl}
+					onChange={async (e) => {
+						setSource(e.target.value as DocSource);
+					}}
+				>
+					{Object.entries(DocSource).map((tab) => (
+						<option key={tab[0]}>{tab[1]}</option>
+					))}
+				</select>
+			</div>
+			<div className="flex items-center gap-1">
+				<div className="grow">
+					{(source === DocSource.websiteUrl || source === DocSource.pdfUrl) && (
+						// TODO: let user add setting for recursive, branch, ignoreFiles, etc
+						<>
+							<label htmlFor="url" className="sr-only">
+								URL
 							</label>
-							{/* Use an "onChange" listener to redirect the user to the selected tab URL. */}
-							<select
-								id="tabs"
-								name="tabs"
-								className="block w-full rounded-md border-gray-300 focus:border-neutral-500 focus:ring-neutral-500"
-								defaultValue={source || DocSource.websiteUrl}
-							>
-								{Object.entries(DocSource).map((tab) => (
-									<option key={tab[0]}>{tab}</option>
-								))}
-							</select>
-						</div>
-						<div className="hidden sm:block">
-							<nav className="flex space-x-4" aria-label="Tabs">
-								{Object.entries(DocSource).map((tab) => (
-									<a
-										key={tab[0]}
-										className={conditionalClassNames(
-											source === tab[1]
-												? 'bg-neutral-200 text-neutral-700'
-												: 'cursor-pointer text-gray-500 hover:text-gray-700',
-											'rounded-md px-3 py-2 text-sm font-medium',
-										)}
-										onClick={() => setSource(tab[1])}
-										aria-current={'page'}
-									>
-										{tab[1]}
-									</a>
-								))}
-							</nav>
-						</div>
-					</div>
-					<div className="flex flex-col gap-1">
-						{source === DocSource.websiteUrl && (
-							// TODO: let user add setting for recursive, branch, ignoreFiles, etc
-							<>
-								<div className="flex items-center pt-1">
-									<label
-										htmlFor="textType"
-										className="block grow font-medium leading-6"
-									>
-										URL
-									</label>
-								</div>
-								<input
-									type="text"
-									name="text"
-									autoComplete="off"
-									className="sm:text-md block w-full rounded-md border-0 text-neutral-900 shadow-sm ring-2 ring-inset ring-neutral-300 placeholder:text-neutral-400 focus:ring-inset focus:ring-neutral-600 sm:py-1.5 sm:leading-6"
-									value={text}
-									onChange={(e) => {
-										setText(e.target.value);
-									}}
-									onKeyDown={async (e) => {
-										if (e.key === 'Enter') {
-											await uploadWebsiteUrl(
-												session,
-												source,
-												text,
-												chatbot,
-												setIsLoading,
-												setUiErrorMessage,
-											);
-											setChatbotDocuments((prev) => [
-												...(prev || []),
-												{
-													name: text,
-												},
-											]);
-											setText('');
-										}
-									}}
-								/>
-							</>
-						)}
-						{source === DocSource.pdfUrl && (
-							// TODO: let user add setting for recursive, branch, ignoreFiles, etc
-							<>
-								<div className="flex items-center pt-1">
-									<label
-										htmlFor="textType"
-										className="block grow font-medium leading-6"
-									>
-										URL
-									</label>
-								</div>
-								<input
-									type="text"
-									name="text"
-									autoComplete="off"
-									className="nodrag sm:text-md block w-full rounded-md border-0 text-neutral-900 shadow-sm ring-2 ring-inset ring-neutral-300 placeholder:text-neutral-400 focus:ring-inset focus:ring-neutral-600 sm:py-1.5 sm:leading-6"
-									value={text}
-									onChange={(e) => {
-										setText(e.target.value);
-									}}
-								/>
-							</>
-						)}
-						{source === DocSource.pdf && (
-							<>
-								{/* file select */}
-								<input
-									type="file"
-									accept=".txt,.pdf"
-									className="py-4"
-									onChange={handleFileChange}
-								/>
-								{file && (
-									<p>
-										File: <strong>{file.name}</strong>
-									</p>
-								)}
-							</>
-						)}
-						<div className="mt-4 flex items-center gap-2 pt-1 ">
-							<a
-								className={conditionalClassNames(
-									isLoading && 'pointer-events-none opacity-50',
-									'group grow cursor-pointer items-center rounded-md border-2 border-neutral-400 bg-neutral-200 p-2 text-center font-medium text-neutral-800 hover:bg-neutral-300',
-								)}
-								onClick={async () => {
-									if (
-										source === DocSource.websiteUrl ||
-										source === DocSource.pdfUrl
-									) {
+							<input
+								type="url"
+								name="url"
+								id="url"
+								className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+								placeholder="URL"
+								value={text}
+								autoComplete="off"
+								onChange={(e) => {
+									setText(e.target.value);
+								}}
+								onKeyDown={async (e) => {
+									if (e.key === 'Enter') {
 										await uploadWebsiteUrl(
 											session,
 											source,
 											text,
 											chatbot,
 											setIsLoading,
-											setUiErrorMessage,
+											setNotificationMessage,
 										);
 										setChatbotDocuments((prev) => [
 											...(prev || []),
@@ -220,31 +129,99 @@ function DocumentUploader({
 											},
 										]);
 										setText('');
-									} else if (source === DocSource.pdf && file) {
-										await uploadFile(
-											session,
-											source,
-											chatbot,
-											file,
-											setIsLoading,
-											setUiErrorMessage,
+										setNotificationMessage(
+											'Successfully uploaded website url',
+											'success',
 										);
-										setChatbotDocuments((prev) => [
-											...(prev || []),
-											{
-												name: file,
-											},
-										]);
-										setText('');
 									}
 								}}
+							/>
+						</>
+					)}
+					{source === DocSource.pdf && (
+						<>
+							{/* file select */}
+							<label
+								className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+								htmlFor="file_input"
 							>
-								{isDone ? 'Done loading!' : 'Upload Doc'}
-							</a>
-							{isLoading && <Loading className="h-5 w-5 animate-spin text-black" />}
-						</div>
-					</div>
-				</>
+								Upload file
+							</label>
+							<input
+								accept=".txt,.pdf"
+								onChange={handleFileChange}
+								className="block w-full cursor-pointer rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900 focus:outline-none "
+								aria-describedby="file_input_help"
+								id="file_input"
+								type="file"
+							/>
+							<p className="mt-1 text-sm text-gray-500 " id="file_input_help">
+								MAX. 5MB
+							</p>
+
+							{file && (
+								<p>
+									File: <strong>{file.name}</strong>
+								</p>
+							)}
+						</>
+					)}
+				</div>
+
+				<div className=" flex items-center gap-2">
+					<a
+						className={conditionalClassNames(
+							isLoading && 'pointer-events-none opacity-50',
+							'group grow cursor-pointer items-center rounded-md border-2 border-neutral-400 bg-neutral-200 p-2 text-center font-medium text-neutral-800 hover:bg-neutral-300',
+						)}
+						onClick={async () => {
+							if (source === DocSource.websiteUrl || source === DocSource.pdfUrl) {
+								await uploadWebsiteUrl(
+									session,
+									source,
+									text,
+									chatbot,
+									setIsLoading,
+									setNotificationMessage,
+								);
+								setChatbotDocuments((prev) => [
+									...(prev || []),
+									{
+										name: text,
+									},
+								]);
+								setText('');
+								setNotificationMessage(
+									'Successfully uploaded website url',
+									'success',
+								);
+							} else if (source === DocSource.pdf && file) {
+								await uploadFile(
+									session,
+									source,
+									chatbot,
+									file,
+									setIsLoading,
+									setNotificationMessage,
+								);
+								setChatbotDocuments((prev) => [
+									...(prev || []),
+									{
+										name: file,
+									},
+								]);
+								setText('');
+								setNotificationMessage(
+									'Successfully uploaded website url',
+									'success',
+								);
+							}
+						}}
+					>
+						{isDone ? 'Done loading!' : 'Upload Doc'}
+					</a>
+					{isLoading && <Loading className="h-5 w-5 animate-spin text-black" />}
+				</div>
 			</div>
 		</div>
 	);

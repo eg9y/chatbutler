@@ -16,7 +16,7 @@ export default function RunButton({
 	Icon?: JSX.Element;
 	id: string;
 }) {
-	const { setUiErrorMessage, getNodes } = useStore(selector, shallow);
+	const { setNotificationMessage, getNodes } = useStore(selector, shallow);
 	const { openAiKey } = useStoreSecret(selectorSecret, shallow);
 
 	const [isLoading, setIsLoading] = useState(false);
@@ -32,7 +32,7 @@ export default function RunButton({
 
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			} catch (error: any) {
-				setUiErrorMessage(error.message);
+				setNotificationMessage(error.message);
 			} finally {
 				setIsLoading(false);
 			}

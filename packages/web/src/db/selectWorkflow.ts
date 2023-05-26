@@ -12,7 +12,7 @@ const selectWorkflow = async (
 	nodes: RFState['nodes'],
 	edges: RFState['edges'],
 	currentWorkflow: RFState['currentWorkflow'],
-	setUiErrorMessage: RFState['setUiErrorMessage'],
+	setNotificationMessage: RFState['setNotificationMessage'],
 	setCurrentWorkflow: RFState['setCurrentWorkflow'],
 	setGlobalVariables: RFState['setGlobalVariables'],
 	setNodes: RFState['setNodes'],
@@ -33,7 +33,7 @@ const selectWorkflow = async (
 			.eq('id', currentWorkflow.id);
 
 		if (updateCurrentWorkflowError) {
-			setUiErrorMessage(updateCurrentWorkflowError.message);
+			setNotificationMessage(updateCurrentWorkflowError.message);
 			return;
 		}
 	}
@@ -44,7 +44,7 @@ const selectWorkflow = async (
 		.eq('id', newWorkflowId)
 		.single();
 	if (error) {
-		setUiErrorMessage(error.message);
+		setNotificationMessage(error.message);
 	}
 	if (!data) {
 		return;

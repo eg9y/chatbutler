@@ -39,7 +39,7 @@ const NavBar = () => {
 		setEdges,
 		workflows,
 		setWorkflows,
-		setUiErrorMessage,
+		setNotificationMessage,
 		setUsername,
 	} = useStore(selector, shallow);
 	const { session, setSession } = useStoreSecret(selectorSecret, shallow);
@@ -53,10 +53,10 @@ const NavBar = () => {
 			style={{
 				height: '5vh',
 			}}
-			className="z-20 border-b-1 border-slate-400 bg-slate-200"
+			className="z-20 border-b-1 border-slate-400/50 bg-slate-200/50"
 		>
 			<nav
-				className="mx-auto flex h-full items-center justify-between p-1 text-xl lg:px-2"
+				className="mx-auto flex h-full items-center justify-between p-1 lg:px-2"
 				aria-label="Global"
 			>
 				<div className="flex h-full flex-1 items-center gap-2">
@@ -81,7 +81,7 @@ const NavBar = () => {
 						</>
 					)}
 					{location != '/app/' && (
-						<div className="flex h-full items-center gap-2 font-semibold text-slate-800">
+						<div className="flex h-full items-center gap-1 font-medium text-slate-800">
 							<img src={iconImage} className="h-14 w-14" />
 							<p className="text-xl">Chatbutler.ai</p>
 						</div>
@@ -106,7 +106,7 @@ const NavBar = () => {
 									location === item.href
 										? 'underline underline-offset-4'
 										: 'font-normal',
-									`cursor-pointer font-semibold leading-6 text-slate-900`,
+									`text-md cursor-pointer leading-6 text-slate-900`,
 								)}
 								onClick={async () => {
 									if (location === '/' && currentWorkflow) {
@@ -121,7 +121,7 @@ const NavBar = () => {
 											params,
 											supabase,
 										).catch((error) => {
-											setUiErrorMessage(
+											setNotificationMessage(
 												`Error saving work: ${error.message}`,
 											);
 										});

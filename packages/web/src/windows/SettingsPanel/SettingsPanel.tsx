@@ -40,7 +40,7 @@ export default function LeftSidePanel({
 	supabase: SupabaseClient<Database>;
 }) {
 	const {
-		setUiErrorMessage,
+		setNotificationMessage,
 		setWorkflows,
 		currentWorkflow,
 		setCurrentWorkflow,
@@ -103,7 +103,7 @@ export default function LeftSidePanel({
 								if (session) {
 									setOpenWorkflows(true);
 								} else {
-									setUiErrorMessage('Please login to save sandboxes');
+									setNotificationMessage('Please login to save sandboxes');
 								}
 							}}
 						>

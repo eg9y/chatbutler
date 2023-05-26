@@ -10,7 +10,7 @@ export default function ChatbotMenuPanel({
 	showPanel,
 	setShowPanel,
 	chatbot,
-	setUiErrorMessage,
+	setNotificationMessage,
 	workflows,
 	setWorkflows,
 	propertyName,
@@ -18,7 +18,7 @@ export default function ChatbotMenuPanel({
 	showPanel: boolean;
 	setShowPanel: (x: boolean) => void;
 	chatbot?: SimpleWorkflow;
-	setUiErrorMessage: RFState['setUiErrorMessage'];
+	setNotificationMessage: RFState['setNotificationMessage'];
 	workflows: RFState['workflows'];
 	setWorkflows: RFState['setWorkflows'];
 	propertyName: string;
@@ -39,7 +39,7 @@ export default function ChatbotMenuPanel({
 	async function handleSubmit() {
 		setIsLoading(true);
 		if (!chatbot) {
-			setUiErrorMessage(`Error updating workflow name`);
+			setNotificationMessage(`Error updating workflow name`);
 			setIsLoading(false);
 			return;
 		}
@@ -51,7 +51,7 @@ export default function ChatbotMenuPanel({
 			.eq('id', chatbot.id);
 
 		if (updateCurrentWorkflowError) {
-			setUiErrorMessage(`Error updating workflow name ${updateCurrentWorkflowError}`);
+			setNotificationMessage(`Error updating workflow name ${updateCurrentWorkflowError}`);
 			setIsLoading(false);
 			return;
 		}
@@ -60,7 +60,7 @@ export default function ChatbotMenuPanel({
 		const workflowIndex = newWorkflows.findIndex((workflow) => workflow.id === chatbot.id);
 
 		if (workflowIndex === -1) {
-			setUiErrorMessage(`Error updating workflow name`);
+			setNotificationMessage(`Error updating workflow name`);
 			setIsLoading(false);
 			return;
 		}

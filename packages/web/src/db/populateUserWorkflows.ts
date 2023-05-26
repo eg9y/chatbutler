@@ -6,7 +6,7 @@ import { RFStateSecret } from '../store/useStoreSecret';
 
 const populateUserWorkflows = async (
 	setWorkflows: RFState['setWorkflows'],
-	setUiErrorMessage: RFState['setUiErrorMessage'],
+	setNotificationMessage: RFState['setNotificationMessage'],
 	session: RFStateSecret['session'],
 	supabase: SupabaseClient<Database>,
 ) => {
@@ -26,7 +26,7 @@ const populateUserWorkflows = async (
 		});
 		setWorkflows(newData);
 	} else if (error) {
-		setUiErrorMessage(error.message);
+		setNotificationMessage(error.message);
 	}
 };
 

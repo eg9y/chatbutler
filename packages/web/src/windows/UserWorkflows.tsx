@@ -28,7 +28,7 @@ export default function UserWorkflows({
 	setOpen: (open: boolean) => void;
 	reactFlowInstance: RFState['reactFlowInstance'];
 }) {
-	const { setUiErrorMessage, setGlobalVariables, workflows, setNodes, setEdges, nodes, edges } =
+	const { setNotificationMessage, setGlobalVariables, workflows, setNodes, setEdges, nodes, edges } =
 		useStore(selector, shallow);
 	const { session } = useStoreSecret(selectorSecret, shallow);
 
@@ -70,7 +70,7 @@ export default function UserWorkflows({
 												nodes,
 												edges,
 												currentWorkflow,
-												setUiErrorMessage,
+												setNotificationMessage,
 												setCurrentWorkflow,
 												setGlobalVariables,
 												setNodes,
@@ -183,7 +183,7 @@ export default function UserWorkflows({
 														.eq('id', newWorkflowId);
 
 												if (updateCurrentWorkflowError) {
-													setUiErrorMessage(
+													setNotificationMessage(
 														`Error updating workflow name ${updateCurrentWorkflowError}`,
 													);
 													setIsLoading(false);
@@ -198,7 +198,7 @@ export default function UserWorkflows({
 													nodes,
 													edges,
 													currentWorkflow,
-													setUiErrorMessage,
+													setNotificationMessage,
 													setCurrentWorkflow,
 													setGlobalVariables,
 													setNodes,
@@ -277,7 +277,7 @@ export default function UserWorkflows({
 														]);
 														setWorkflowNameWindowOpen(true);
 													} else if (error) {
-														setUiErrorMessage(error.message);
+														setNotificationMessage(error.message);
 													}
 													setNewWorkflowId(id);
 												}}
@@ -307,7 +307,7 @@ async function openWorkflow(
 	nodes: CustomNode[],
 	edges: RFState['edges'],
 	currentWorkflow: SimpleWorkflow | null,
-	setUiErrorMessage: (message: string | null) => void,
+	setNotificationMessage: (message: string | null) => void,
 	setCurrentWorkflow: (workflow: SimpleWorkflow | null) => void,
 	setGlobalVariables: (variables: GlobalVariableType) => void,
 	setNodes: (nodes: CustomNode[]) => void,
@@ -323,7 +323,7 @@ async function openWorkflow(
 		nodes,
 		edges,
 		currentWorkflow,
-		setUiErrorMessage,
+		setNotificationMessage,
 		setCurrentWorkflow,
 		setGlobalVariables,
 		setNodes,

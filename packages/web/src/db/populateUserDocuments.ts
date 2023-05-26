@@ -1,12 +1,12 @@
+import { Database } from '@chatbutler/shared';
 import { SupabaseClient } from '@supabase/supabase-js';
 
-import { Database } from '@chatbutler/shared'
 import { RFState } from '../store/useStore';
 import { RFStateSecret } from '../store/useStoreSecret';
 
 const populateUserDocuments = async (
 	setDocuments: RFState['setDocuments'],
-	setUiErrorMessage: RFState['setUiErrorMessage'],
+	setNotificationMessage: RFState['setNotificationMessage'],
 	session: RFStateSecret['session'],
 	supabase: SupabaseClient<Database>,
 ) => {
@@ -21,7 +21,7 @@ const populateUserDocuments = async (
 	if (data) {
 		setDocuments(data);
 	} else if (error) {
-		setUiErrorMessage(error.message);
+		setNotificationMessage(error.message);
 	}
 };
 

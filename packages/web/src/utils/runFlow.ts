@@ -73,7 +73,7 @@ export async function runFlow(
 			}
 
 			if (node.type === NodeTypesEnum.search && !get().currentWorkflow) {
-				get().setUiErrorMessage('Search block can only be used in existing chatbots');
+				get().setNotificationMessage('Search block can only be used in existing chatbots');
 				return;
 			}
 			await runNode(state, get().currentWorkflow?.id, nodes, nodeId, openAiKey, {

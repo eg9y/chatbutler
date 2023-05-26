@@ -52,7 +52,7 @@ const onConnect = (
 	get: () => RFState,
 	set: UseStoreSetType,
 	connection: Connection,
-	setUiErrorMessage: RFState['setUiErrorMessage'],
+	setNotificationMessage: RFState['setNotificationMessage'],
 ) => {
 	let nodes = get().nodes;
 	let edges = get().edges;
@@ -163,7 +163,9 @@ const onConnect = (
 		connection.targetHandle !== 'search-input-doc' &&
 		connection.sourceHandle === 'docs-loader-output'
 	) {
-		setUiErrorMessage("Document Load Block can only be connected to Search Input 'Doc' handle");
+		setNotificationMessage(
+			"Document Load Block can only be connected to Search Input 'Doc' handle",
+		);
 		return;
 	}
 
@@ -232,7 +234,7 @@ const onConnect = (
 
 	// don't allow cycles
 	if (isCycle(nodes, sourceNodeIndex)) {
-		setUiErrorMessage('Creating cycles are not allowed');
+		setNotificationMessage('Creating cycles are not allowed');
 		sourceNode.data.children.pop();
 		return false;
 	}
@@ -247,7 +249,7 @@ const onConnect = (
 		});
 
 		if (alreadyConnectedToLoop) {
-			setUiErrorMessage('Loop can only have one target');
+			setNotificationMessage('Loop can only have one target');
 			return false;
 		}
 		nodes[targetNodeIndex].data.loopId = nodes[sourceNodeIndex].id;

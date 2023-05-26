@@ -70,11 +70,17 @@ export interface RFState {
 	setCurrentWorkflow: (workflow: SimpleWorkflow | null) => void;
 	reactFlowInstance: ReactFlowInstance | null;
 	setReactFlowInstance: (instance: ReactFlowInstance | null) => void;
-	uiErrorMessage: string | null;
 	unlockGraph: boolean;
 	setUnlockGraph: (unlock: boolean) => void;
 	clearGraph: () => void;
-	setUiErrorMessage: (message: string | null) => void;
+	notificationMessage: {
+		message: string | null;
+		status: 'success' | 'error' | 'warning' | 'info';
+	} | null;
+	setNotificationMessage: (
+		message: string | null,
+		status?: 'success' | 'error' | 'warning' | 'info',
+	) => void;
 	nodes: CustomNode[];
 	edges: Edge[];
 	setNodes: (nodes: CustomNode[]) => void;
@@ -194,7 +200,7 @@ const useStore = create<RFState>()(
 					currentWorkflow: workflow,
 				});
 			},
-			uiErrorMessage: null,
+			notificationMessage: null,
 			clearGraph: () => {
 				set({
 					nodes: [],
@@ -225,13 +231,25 @@ const useStore = create<RFState>()(
 				});
 			},
 			selectedNode: null,
-			setUiErrorMessage: (message: string | null) => {
+			setNotificationMessage: (
+				message: string | null,
+				status: 'success' | 'error' | 'warning' | 'info' = 'error',
+			) => {
+				if (message === null) {
+					set({
+						notificationMessage: null,
+					});
+					return;
+				}
 				set({
-					uiErrorMessage: message,
+					notificationMessage: {
+						message,
+						status,
+					},
 				});
 				setTimeout(() => {
 					set({
-						uiErrorMessage: null,
+						notificationMessage: null,
 					});
 				}, 6000);
 			},
@@ -254,7 +272,7 @@ const useStore = create<RFState>()(
 				});
 			},
 			onConnect: (connection: Connection) => {
-				return onConnect(get, set, connection, get().setUiErrorMessage);
+				return onConnect(get, set, connection, get().setNotificationMessage);
 			},
 			onEdgesDelete: (edges: Edge[]) => {
 				return onEdgesDelete(get, set, edges);

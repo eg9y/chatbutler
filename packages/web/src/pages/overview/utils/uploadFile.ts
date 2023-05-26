@@ -10,11 +10,20 @@ export async function uploadFile(
 	chatbot: SimpleWorkflow,
 	file: File, // New parameter for the file
 	setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
-	setUiErrorMessage: RFState['setUiErrorMessage'],
+	setNotificationMessage: RFState['setNotificationMessage'],
 ): Promise<void> {
+	// Maximum file size (5MB)
+	const MAX_FILE_SIZE = 5 * 1024 * 1024;
+
 	// <-- Add Promise<void> here
 	if (!currentSession || !currentSession.access_token) {
 		throw new Error('No session');
+	}
+
+	// Check file size
+	if (file.size > MAX_FILE_SIZE) {
+		setNotificationMessage('File size exceeds the limit of 5MB');
+		throw new Error('File size exceeds the limit of 5MB');
 	}
 
 	if (source === DocSource.pdf) {
@@ -41,7 +50,7 @@ export async function uploadFile(
 			// check if response is ok
 			if (!response.ok) {
 				setIsLoading(false);
-				setUiErrorMessage('Error uploading document');
+				setNotificationMessage('Error uploading document');
 				throw new Error('Error uploading document');
 			}
 

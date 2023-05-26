@@ -15,7 +15,7 @@ const Loop: FC<NodeProps<LoopDataType>> = (props) => {
 	const { data, selected, id, type } = props;
 	const [textState, { set: setText }] = useUndo(data.text);
 	const { present: presentText } = textState;
-	const { setUiErrorMessage } = useStore(selector, shallow);
+	const { setNotificationMessage } = useStore(selector, shallow);
 
 	const [showFullScreen, setShowFullScreen] = useState(false);
 	return (
@@ -46,7 +46,7 @@ const Loop: FC<NodeProps<LoopDataType>> = (props) => {
 									value={data.loopMax}
 									onChange={(e) => {
 										if (isNaN(parseInt(e.target.value))) {
-											setUiErrorMessage('loopMax must be a number');
+											setNotificationMessage('loopMax must be a number');
 											return;
 										}
 										updateNode(id, {

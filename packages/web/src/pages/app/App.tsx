@@ -85,7 +85,7 @@ export default function App() {
 		setReactFlowInstance,
 		currentWorkflow,
 		setCurrentWorkflow,
-		setUiErrorMessage,
+		setNotificationMessage,
 		setNodes,
 		setEdges,
 		workflows,
@@ -113,7 +113,7 @@ export default function App() {
 			if (currentSession?.user) {
 				const { data, error } = await supabase.functions.invoke('get-api-key');
 				if (error) {
-					setUiErrorMessage(error.message);
+					setNotificationMessage(error.message);
 				}
 				if (data) {
 					setOpenAiKey(data);
@@ -125,7 +125,7 @@ export default function App() {
 					nodes,
 					edges,
 					currentWorkflow,
-					setUiErrorMessage,
+					setNotificationMessage,
 					setCurrentWorkflow,
 					setGlobalVariables,
 					setNodes,
@@ -138,7 +138,7 @@ export default function App() {
 					nodes,
 					edges,
 					currentWorkflow,
-					setUiErrorMessage,
+					setNotificationMessage,
 					setCurrentWorkflow,
 					setGlobalVariables,
 					setNodes,

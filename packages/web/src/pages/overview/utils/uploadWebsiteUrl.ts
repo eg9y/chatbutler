@@ -19,7 +19,7 @@ export async function uploadWebsiteUrl(
 	url: string,
 	chatbot: SimpleWorkflow,
 	setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
-	setUiErrorMessage: RFState['setUiErrorMessage'],
+	setNotificationMessage: RFState['setNotificationMessage'],
 ): Promise<void> {
 	// <-- Add Promise<void> here
 	if (!currentSession || !currentSession.access_token) {
@@ -51,11 +51,12 @@ export async function uploadWebsiteUrl(
 			// check if response is ok
 			if (!response.ok) {
 				setIsLoading(false);
-				setUiErrorMessage('Error uploading document');
+				setNotificationMessage('Error uploading document');
 				throw new Error('Error uploading document');
 			}
 
 			response = await response.json();
+
 			// Start polling progress endpoint every X interval
 			return new Promise<void>((resolve, reject) => {
 				// <-- Add void here

@@ -17,7 +17,7 @@ const EditableText = ({
 	setWorkflows: RFState['setWorkflows'];
 	session: RFStateSecret['session'];
 }) => {
-	const { workflows, setUiErrorMessage } = useStore(selector, shallow);
+	const { workflows, setNotificationMessage } = useStore(selector, shallow);
 	const [isEditing, setIsEditing] = useState(false);
 	const [acceptableText, setAcceptableText] = useState(
 		currentWorkflow ? currentWorkflow.name : '',
@@ -50,9 +50,9 @@ const EditableText = ({
 		setIsEditing(false);
 
 		if (currentWorkflow && currentWorkflow.name.length > 30) {
-			setUiErrorMessage('Workflow name cannot be longer than 30 characters');
+			setNotificationMessage('Workflow name cannot be longer than 30 characters');
 		} else if (currentWorkflow && currentWorkflow.name.length < 5) {
-			setUiErrorMessage('Workflow name must be at least 5 characters');
+			setNotificationMessage('Workflow name must be at least 5 characters');
 		}
 
 		// update workflows to edit the name field

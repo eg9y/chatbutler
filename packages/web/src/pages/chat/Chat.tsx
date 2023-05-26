@@ -23,7 +23,7 @@ export default function ChatMain() {
 		chatSessions,
 		setChatSessions,
 		nodes,
-		setUiErrorMessage,
+		setNotificationMessage,
 		setCurrentChatSessionIndex,
 		currentChatSessionIndex,
 		setNodes,
@@ -59,7 +59,7 @@ export default function ChatMain() {
 			if (currentSession?.user) {
 				const { data, error } = await supabase.functions.invoke('get-api-key');
 				if (error) {
-					setUiErrorMessage(error.message);
+					setNotificationMessage(error.message);
 				}
 				if (data) {
 					setOpenAiKey(data);

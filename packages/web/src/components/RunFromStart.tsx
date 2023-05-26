@@ -18,7 +18,7 @@ export default function RunFromStart({
 	nodes: CustomNode[];
 }) {
 	const {
-		setUiErrorMessage,
+		setNotificationMessage,
 		clearAllNodeResponses,
 		setChatApp,
 		setNodes,
@@ -30,7 +30,7 @@ export default function RunFromStart({
 
 	async function runFromStart() {
 		if (openAiKey.trim() === '') {
-			setUiErrorMessage('Please enter an OpenAI API key in the left panel.');
+			setNotificationMessage('Please enter an OpenAI API key in the left panel.');
 			return;
 		}
 
@@ -48,10 +48,10 @@ export default function RunFromStart({
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} catch (error: any) {
 			if (error.message === 'Operation cancelled') {
-				setUiErrorMessage('traverseTree operation cancelled');
+				setNotificationMessage('traverseTree operation cancelled');
 			} else {
 				console.log('error message', error.message);
-				setUiErrorMessage(error.message);
+				setNotificationMessage(error.message);
 			}
 		} finally {
 			if (abortControllerRef.current) {

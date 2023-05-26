@@ -36,7 +36,7 @@ function DocsLoaderMessage() {
 	>(null);
 
 	const supabase = useSupabase();
-	const { pauseResolver, currentWorkflow, setUiErrorMessage } = useStore(selector, shallow);
+	const { pauseResolver, currentWorkflow, setNotificationMessage } = useStore(selector, shallow);
 	const { openAiKey, session } = useStoreSecret(selectorSecret, shallow);
 
 	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,7 +63,6 @@ function DocsLoaderMessage() {
 					return;
 				}
 				const typedarray = new Uint8Array(e.target.result as Uint8Array);
-				console.log('loaded!', typedarray);
 				setArrayBuffer(typedarray);
 				// console.log('updating node', e.target.result);
 			};
@@ -184,7 +183,7 @@ function DocsLoaderMessage() {
 											currentWorkflow,
 											file,
 											setIsLoading,
-											setUiErrorMessage,
+											setNotificationMessage,
 										);
 									}
 								}}

@@ -1,14 +1,12 @@
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Session } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
-import { shallow } from 'zustand/shallow';
 
 import ChatbotDetailsTabs from './ChatbotDetailsTabs';
 import DocumentUploader from './DocumentUploader';
 import { ReactComponent as Loading } from '../../../assets/loading.svg';
 import useSupabase from '../../../auth/supabaseClient';
 import { SimpleWorkflow } from '../../../db/dbTypes';
-import { useStore, selector } from '../../../store';
 import { conditionalClassNames } from '../../../utils/classNames';
 
 export default function ChatbotDetails({
@@ -84,6 +82,7 @@ export default function ChatbotDetails({
 										isLoading={isLoading}
 									/>
 								)}
+								{currentTab === 'Publish' && <PublishComponent chatbot={chatbot} />}
 							</div>
 						</div>
 					</main>
@@ -92,6 +91,59 @@ export default function ChatbotDetails({
 		</>
 	);
 }
+function PublishComponent({ chatbot }: { chatbot: SimpleWorkflow }) {
+	const codeSnippets = [
+		'<link rel="stylesheet" href="https://dd8pg4gc3k1pj.cloudfront.net/style.css">',
+		'<script src="https://dd8pg4gc3k1pj.cloudfront.net/chat-widget.iife.js"></script>',
+		`<script>
+		  document.addEventListener("DOMContentLoaded", function() {
+			  if (window.initializeChatbot) {
+				  window.initializeChatbot({
+					  chatBotId: '${chatbot.id}',
+				  });
+			  }
+		  });
+		  </script>
+		`,
+	];
+
+	const [copied, setCopied] = useState(false);
+
+	const copyToClipboard = () => {
+		navigator.clipboard.writeText(codeSnippets.join(''));
+		setCopied(true);
+	};
+
+	useEffect(() => {
+		if (copied) {
+			const timer = setTimeout(() => setCopied(false), 2000);
+			return () => clearTimeout(timer);
+		}
+	}, [copied]);
+
+	return (
+		<div className="flex  flex-col  pb-10">
+			<div className="flex grow flex-col gap-2">
+				<h1 className="text-base font-bold text-gray-900">Publish</h1>
+				<p className="max-w-md">Embed your chatbot on your website</p>
+			</div>
+			<div className="rounded-lg bg-slate-700 shadow">
+				<div className="flex flex-col px-4 py-5 sm:p-6">
+					<div className="flex items-center justify-between rounded-lg bg-gray-800 p-4 shadow-inner">
+						<code className="text-sm text-yellow-100">{codeSnippets.join('\n')}</code>
+						<button
+							onClick={copyToClipboard}
+							className="max-w-[200px] self-start rounded bg-yellow-400 px-2 py-1 text-xs font-semibold text-yellow-700 hover:bg-yellow-300"
+						>
+							{copied ? 'Copied!' : 'Copy'}
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+}
+
 function ChatDetailsDocumentsTab({
 	chatbot,
 	setChatbotDocuments,

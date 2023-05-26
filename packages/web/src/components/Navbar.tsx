@@ -22,9 +22,8 @@ const NavBar = () => {
 	const navigation = [
 		{ name: 'Overview', href: '/' },
 		{ name: 'Editor', href: '/app/' },
-		// { name: 'Files', href: '/files/' },
 		// { name: 'Chat', href: '/chat/' },
-		{ name: 'Gallery', href: '/gallery/' },
+		// { name: 'Gallery', href: '/gallery/' },
 	];
 	const [location] = useLocation();
 	const params = useQueryParams();

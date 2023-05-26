@@ -184,41 +184,6 @@ export default function Overview() {
 							</Menu.Items>
 						</Transition>
 					</Menu> */}
-					<button
-						type="button"
-						onClick={async () => {
-							const id = nanoid();
-							const { data, error } = await supabase
-								.from('workflows')
-								.insert({
-									name: `New ${id}`,
-									id,
-									// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-									user_id: session!.user.id,
-								})
-								.select()
-								.single();
-							if (data) {
-								const newChatbot = {
-									id: data.id,
-									name: data.name,
-									description: '',
-									is_public: true,
-									user_id: data.user_id,
-									updated_at: data.updated_at,
-								};
-								setWorkflows([newChatbot, ...workflows]);
-								setCurrentPage('chatbot');
-								setChatbot(newChatbot);
-								setShowPanel(true);
-							} else if (error) {
-								setNotificationMessage(error.message);
-							}
-						}}
-						className="rounded-md bg-slate-600 px-2.5 py-1.5 font-semibold text-white shadow-sm hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600"
-					>
-						+ New Chatbot
-					</button>
 					{chatbot && (
 						<button
 							type="button"
@@ -233,6 +198,43 @@ export default function Overview() {
 							Go to Editor
 						</button>
 					)}
+					{!chatbot && (
+						<button
+							type="button"
+							onClick={async () => {
+								const id = nanoid();
+								const { data, error } = await supabase
+									.from('workflows')
+									.insert({
+										name: `New ${id}`,
+										id,
+										// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+										user_id: session!.user.id,
+									})
+									.select()
+									.single();
+								if (data) {
+									const newChatbot = {
+										id: data.id,
+										name: data.name,
+										description: '',
+										is_public: true,
+										user_id: data.user_id,
+										updated_at: data.updated_at,
+									};
+									setWorkflows([newChatbot, ...workflows]);
+									setCurrentPage('chatbot');
+									setChatbot(newChatbot);
+									setShowPanel(true);
+								} else if (error) {
+									setNotificationMessage(error.message);
+								}
+							}}
+							className="rounded-md bg-slate-600 px-2.5 py-1.5 font-semibold text-white shadow-sm hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600"
+						>
+							+ New Chatbot
+						</button>
+					)}
 				</div>
 			</header>
 			{isLoading && <div className=" px-4 sm:px-6 lg:px-8">Loading chatbots...</div>}
@@ -242,74 +244,96 @@ export default function Overview() {
 					<ChatbotDetails session={session} chatbot={chatbot} />
 				)}
 				{currentPage === 'home' && (
-					<ul role="list" className="divide-y divide-white/5">
-						{workflows.map((currentChatbot) => (
-							<li
-								key={currentChatbot.id}
-								onClick={() => {
-									// window.open(
-									// 	`/app/?user_id=${session?.user.id}&id=${currentChatbot.id}`,
-									// 	'_self',
-									// );
-									setChatbot(currentChatbot);
-									setCurrentPage('chatbot');
-								}}
-								className="group relative flex flex-grow cursor-pointer items-center space-x-4 px-4 py-4 hover:bg-slate-100 sm:px-6 lg:px-8"
-							>
-								<div className="min-w-0 grow">
-									<div className="flex items-center gap-x-3">
-										<div
-											className={conditionalClassNames(
-												'flex-none rounded-full p-1',
-											)}
-										>
-											<div className="h-2 w-2 rounded-full bg-current" />
-										</div>
-										<h2 className="flex min-w-0 gap-x-2 font-semibold leading-6 text-slate-600">
-											<span className="truncate">{currentChatbot.name}</span>
-										</h2>
-									</div>
-									<div className="mt-3 flex items-center gap-x-2.5 leading-5 text-slate-400">
-										<p className="truncate">{currentChatbot.description}</p>
-										<svg
-											viewBox="0 0 2 2"
-											className="h-0.5 w-0.5 flex-none fill-slate-300"
-										>
-											<circle cx={1} cy={1} r={1} />
-										</svg>
-									</div>
-								</div>
-
-								<div className="flex flex-none items-center gap-x-4">
-									<div
-										className={conditionalClassNames(
-											'flex-none rounded-full px-2 py-1 text-xs font-medium ring-1 ring-inset',
-										)}
-									>
-										Draft
-										{/* {chatbot.environment} */}
-									</div>
-									{/* <a
-							href={'#'}
-							className="hidden rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:block"
-						>
-							Publish
-						</a> */}
-									<ChatbotMenu
-										chatbot={currentChatbot}
-										setChatbot={setChatbot}
-										session={session as Session}
-										workflows={workflows}
-										setWorkflows={setWorkflows}
-										setShowPanel={setShowPanel}
-										setPropertyName={setPropertyName}
-									/>
-								</div>
-							</li>
-						))}
-					</ul>
+					<ChatbotList
+						workflows={workflows}
+						setChatbot={setChatbot}
+						setCurrentPage={setCurrentPage}
+						session={session}
+						setWorkflows={setWorkflows}
+						setShowPanel={setShowPanel}
+						setPropertyName={setPropertyName}
+					/>
 				)}
 			</div>
 		</main>
+	);
+}
+function ChatbotList({
+	workflows,
+	setChatbot,
+	setCurrentPage,
+	session,
+	setWorkflows,
+	setShowPanel,
+	setPropertyName,
+}: {
+	workflows: SimpleWorkflow[];
+	setChatbot: React.Dispatch<React.SetStateAction<SimpleWorkflow | undefined>>;
+	setCurrentPage: React.Dispatch<React.SetStateAction<string>>;
+	session: Session | null;
+	setWorkflows: (workflows: SimpleWorkflow[]) => void;
+	setShowPanel: React.Dispatch<React.SetStateAction<boolean>>;
+	setPropertyName: React.Dispatch<React.SetStateAction<keyof SimpleWorkflow>>;
+}) {
+	return (
+		<ul role="list" className="divide-y divide-white/5">
+			{workflows.map((currentChatbot) => (
+				<li
+					key={currentChatbot.id}
+					onClick={() => {
+						// window.open(
+						// 	`/app/?user_id=${session?.user.id}&id=${currentChatbot.id}`,
+						// 	'_self',
+						// );
+						setChatbot(currentChatbot);
+						setCurrentPage('chatbot');
+					}}
+					className="group relative flex flex-grow cursor-pointer items-center space-x-4 px-4 py-4 hover:bg-slate-100 sm:px-6 lg:px-8"
+				>
+					<div className="min-w-0 grow">
+						<div className="flex items-center gap-x-3">
+							<div className={conditionalClassNames('flex-none rounded-full p-1')}>
+								<div className="h-2 w-2 rounded-full bg-current" />
+							</div>
+							<h2 className="flex min-w-0 gap-x-2 font-semibold leading-6 text-slate-600">
+								<span className="truncate">{currentChatbot.name}</span>
+							</h2>
+						</div>
+						<div className="mt-3 flex items-center gap-x-2.5 leading-5 text-slate-400">
+							<p className="truncate">{currentChatbot.description}</p>
+							<svg viewBox="0 0 2 2" className="h-0.5 w-0.5 flex-none fill-slate-300">
+								<circle cx={1} cy={1} r={1} />
+							</svg>
+						</div>
+					</div>
+
+					<div className="flex flex-none items-center gap-x-4">
+						<div
+							className={conditionalClassNames(
+								'flex-none rounded-full px-2 py-1 text-xs font-medium ring-1 ring-inset',
+							)}
+						>
+							Draft
+							{/* {chatbot.environment} */}
+						</div>
+						{/* <a
+        href={'#'}
+        className="hidden rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:block"
+    >
+        Publish
+    </a> */}
+						<ChatbotMenu
+							chatbot={currentChatbot}
+							setChatbot={setChatbot}
+							session={session as Session}
+							workflows={workflows}
+							setWorkflows={setWorkflows}
+							setShowPanel={setShowPanel}
+							setPropertyName={setPropertyName}
+						/>
+					</div>
+				</li>
+			))}
+		</ul>
 	);
 }

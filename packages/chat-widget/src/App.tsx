@@ -143,8 +143,12 @@ function App({
         }} />
         )}
         {!isChatbotOpen && (
-        <ChatBubbleLeftIcon className="bg-blue-400 rounded-full p-4 w-16 h-16 m-4 text-blue-50 cursor-pointer hover:text-blue-100" onClick={() => {
+        <ChatBubbleLeftIcon className="bg-blue-400 rounded-full p-4 w-16 h-16 m-4 text-blue-50 cursor-pointer hover:text-blue-100" onClick={async () => {
           setIsChatbotOpen(true);
+          // await onUserSendMessage({
+          //   role: 'user',
+          //   content: 'hello',
+          // })
         }} />
         )}
       </div>

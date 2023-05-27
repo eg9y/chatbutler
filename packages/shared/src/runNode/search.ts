@@ -25,10 +25,6 @@ const search = async (
 ) => {
   try {
     const inputs = node.data.inputs;
-    const inputNodes = getNodes(nodes, inputs.inputs);
-    const docsLoaderNodeIndex = inputNodes.findIndex(
-      (node) => node.type === "docsLoader"
-    );
     const inputIds = inputs.inputs.filter((input) => input !== "docsLoader");
     const searchNode = node.data as SearchDataType;
     const userQuestion = parsePromptInputs(nodes, inputIds, searchNode.text);
@@ -45,14 +41,21 @@ const search = async (
       throw new Error(session.error.message);
     }
 
-    let model = new ChatOpenAI({
+    const openAiOptions: any = {
       // TODO: need to let user set the openai settings
       modelName: node.data.model,
-      maxTokens: node.data.max_tokens,
+      maxTokens:  Math.floor(node.data.max_tokens),
       temperature: node.data.temperature,
-      stop: node.data.stop,
       openAIApiKey: openAiKey,
-    });
+    }
+
+    if (node.data.stop) {
+      openAiOptions.stop = node.data.stop;
+    }
+
+
+
+    let model = new ChatOpenAI(openAiOptions);
 
     const { runtime } = await getRuntimeEnvironment();
 
@@ -87,10 +90,7 @@ const search = async (
           openAIApiKey: session.data.session.access_token,
         });
         model = new ChatOpenAI({
-          modelName: node.data.model,
-          maxTokens: node.data.max_tokens,
-          temperature: node.data.temperature,
-          stop: node.data.stop,
+          ...openAiOptions,
           // this is the supabase session key, the real openAI key is set in the proxy #ifitworksitworks
           openAIApiKey: session.data.session.access_token,
         });

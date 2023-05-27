@@ -104,6 +104,7 @@ export class RunNodeProcessor {
       this.chatGateway.sendUpdate(sessionId, returnMessage);
     } catch (error) {
       console.error(error);
+      console.error('error message:', error.message);
       this.chatGateway.sendUpdate(sessionId, { error: error.message });
     }
   }

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { CustomNode, InputNode } from '@chatbutler/shared';
-import { Connection, addEdge, MarkerType, Edge, Node } from 'reactflow';
+import { CustomNode } from '@chatbutler/shared';
+import { Connection, addEdge, MarkerType, Edge } from 'reactflow';
 
 import { RFState, UseStoreSetType } from './useStore';
 
@@ -18,7 +18,6 @@ function isCycle(nodes: CustomNode[], targetNodeIndex: number): boolean {
 		visited[currentNodeIndex] = true;
 		recursionStack[currentNodeIndex] = true;
 
-		console.log(nodes[currentNodeIndex]);
 		for (const childId of nodes[currentNodeIndex].data.children) {
 			const childNodeIndex = nodes.findIndex((node) => node.id === childId);
 			if (dfs(childNodeIndex, visited, recursionStack)) {
@@ -36,17 +35,54 @@ function isCycle(nodes: CustomNode[], targetNodeIndex: number): boolean {
 }
 
 // recursively assigning the parentNode and loopId for nodes in a loop
-function assignLoopChildren(nodes: CustomNode[], targetNodeIndex: number, loopNodeIndex: number) {
+function assignChildren(
+	nodes: CustomNode[],
+	targetNodeIndex: number,
+	cb: (node: CustomNode) => void,
+) {
 	// Set target node's position to parent node's position
-	nodes[targetNodeIndex].data.loopId = nodes[loopNodeIndex].id;
-	// Iterate through target node's children and call assignLoopChildren recursively
+	cb(nodes[targetNodeIndex]);
+	// Iterate through target node's children and call assignChildren recursively
 	nodes[targetNodeIndex].data.children.forEach((childId) => {
 		const childNodeIndex = nodes.findIndex((node) => node.id === childId);
 		if (childNodeIndex !== -1) {
-			assignLoopChildren(nodes, childNodeIndex, loopNodeIndex);
+			assignChildren(nodes, childNodeIndex, cb);
 		}
 	});
 	return nodes;
+}
+
+export function assignInputsToChildren(
+	nodes: CustomNode[],
+	edge: {
+		source: string;
+		target: string;
+	},
+): void {
+	const sourceNode = nodes.find((node) => node.id === edge.source);
+	const targetNode = nodes.find((node) => node.id === edge.target);
+
+	if (sourceNode && targetNode) {
+		// Add source node's ID to target node's parents, if it isn't already there
+		if (!targetNode.data.inputs.inputs.includes(sourceNode.id)) {
+			targetNode.data.inputs.addInput(sourceNode.id, nodes);
+		}
+
+		// Add source node's parents to target node's parents, if they aren't already there
+		sourceNode.data.inputs.inputs.forEach((parentId) => {
+			if (!targetNode.data.inputs.inputs.includes(parentId)) {
+				targetNode.data.inputs.addInput(parentId, nodes);
+			}
+		});
+
+		// Update target node's children
+		targetNode.data.children.forEach((childId) => {
+			const childNode = nodes.find((node) => node.id === childId);
+			if (childNode) {
+				assignInputsToChildren(nodes, { source: sourceNode.id, target: childId });
+			}
+		});
+	}
 }
 
 function isNodePartOfHandle(
@@ -55,7 +91,6 @@ function isNodePartOfHandle(
 	currentIndex: number,
 	handle: string,
 ): boolean {
-	console.log(nodes[currentIndex]);
 	const sourceParentHandles = edges.filter((edge) => {
 		return edge.target === nodes[currentIndex].id;
 	});
@@ -65,7 +100,6 @@ function isNodePartOfHandle(
 	}
 
 	for (const edge of sourceParentHandles) {
-		console.log('edge.sourceHandle', edge.sourceHandle);
 		if (edge.sourceHandle === handle) {
 			return true;
 		}
@@ -234,10 +268,10 @@ const onConnect = (
 	// placeholder logic
 	if (connection.source) {
 		if ('inputs' in nodes[targetNodeIndex].data) {
-			(nodes[targetNodeIndex] as InputNode).data.inputs.addInput(
-				connection.source,
-				nodes as InputNode[],
-			);
+			assignInputsToChildren(nodes, {
+				source: connection.source,
+				target: connection.target!,
+			});
 		}
 		// remove any edges with the same source and the targetHandle placeholder
 		const placeholderToDelete = edges.find((edge) => {
@@ -307,7 +341,9 @@ const onConnect = (
 			return false;
 		}
 		nodes[targetNodeIndex].data.loopId = nodes[sourceNodeIndex].id;
-		nodes = assignLoopChildren(nodes, targetNodeIndex, sourceNodeIndex);
+		nodes = assignChildren(nodes, targetNodeIndex, (node) => {
+			node.data.loopId = node.id;
+		});
 	}
 
 	// if source is part of a loop
@@ -316,7 +352,9 @@ const onConnect = (
 			(node) => node.id === nodes[sourceNodeIndex].data.loopId,
 		);
 		if (loopNodeIndex !== -1) {
-			nodes = assignLoopChildren(nodes, targetNodeIndex, loopNodeIndex);
+			nodes = assignChildren(nodes, targetNodeIndex, (node) => {
+				node.data.loopId = node.id;
+			});
 		}
 		nodes[loopNodeIndex].data.inputs.deleteInputs([nodes[sourceNodeIndex].id]);
 	}

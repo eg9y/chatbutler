@@ -1,10 +1,50 @@
+import { CustomNode, NodeTypesEnum } from '@chatbutler/shared';
 import { getAllChildren } from '@chatbutler/shared/src/utils/getAllChildren';
 
+import { assignInputsToChildren } from './onConnect';
 import { UseStoreSetType, RFState } from './useStore';
+
+function deleteInputsFromChildren(
+	nodes: CustomNode[],
+	edge: {
+		source: string;
+		target: string;
+	},
+): void {
+	const sourceNode = nodes.find((node) => node.id === edge.source);
+	const targetNode = nodes.find((node) => node.id === edge.target);
+
+	if (sourceNode && targetNode) {
+		// Prepare a list of input IDs to delete
+		const inputsToDelete: string[] = [sourceNode.id, ...sourceNode.data.inputs.inputs];
+
+		// if source is classifyCategories, include classify as well since they're one entity
+		if (sourceNode.type === NodeTypesEnum.classifyCategories) {
+			inputsToDelete.push(sourceNode.data.inputs.inputs[0]);
+		}
+
+		// Delete inputs from target node and its descendants
+		deleteInputsFromNodeAndDescendants(nodes, targetNode, inputsToDelete);
+	}
+}
+
+function deleteInputsFromNodeAndDescendants(
+	nodes: CustomNode[],
+	node: CustomNode,
+	inputsToDelete: string[],
+): void {
+	node.data.inputs.deleteInputs(inputsToDelete);
+	node.data.children.forEach((childId) => {
+		const childNode = nodes.find((node) => node.id === childId);
+		if (childNode) {
+			deleteInputsFromNodeAndDescendants(nodes, childNode, inputsToDelete);
+		}
+	});
+}
 
 const onEdgesDelete = (get: () => RFState, set: UseStoreSetType, edges: RFState['edges']) => {
 	const nodes = get().nodes;
-	let selectedNode = get().selectedNode;
+	const selectedNode = get().selectedNode;
 
 	const updatedNodes = nodes.map((node) => {
 		const edgesToDelete = edges.filter((edge) => edge.target === node.id);
@@ -43,14 +83,13 @@ const onEdgesDelete = (get: () => RFState, set: UseStoreSetType, edges: RFState[
 			}
 		});
 
-		// remove input nodes
-		const inputsToDelete = edgesToDelete.map((edge) => edge.source);
-		if (node.data.inputs && inputsToDelete) {
-			node.data.inputs.deleteInputs(inputsToDelete);
-			if (node.id === get().selectedNode?.id) {
-				selectedNode = node;
-			}
-		}
+		// For each edge to delete
+		edgesToDelete.forEach((edgeToDelete) => {
+			// Assuming "edges" is your list of edges and "edgeToDelete" is the edge you're deleting
+			const remainingEdges = get().edges.filter((edge) => edge.id !== edgeToDelete.id); // Delete the edge
+			deleteInputsFromChildren(nodes, edgeToDelete); // Remove related inputs
+			remainingEdges.forEach((edge) => assignInputsToChildren(nodes, edge)); // Recompute inputs based on remaining edges
+		});
 
 		return node;
 	});

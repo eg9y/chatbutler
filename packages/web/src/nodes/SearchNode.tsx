@@ -72,6 +72,7 @@ const Search: FC<NodeProps<SearchDataType>> = (props) => {
 							</div>
 							<>
 								<div className="py-4">
+									Ask User
 									<Switch.Group as="div" className="flex items-center">
 										<Switch
 											checked={askUser}

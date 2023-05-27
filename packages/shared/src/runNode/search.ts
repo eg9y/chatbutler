@@ -1,5 +1,5 @@
 import { ConversationalRetrievalQAChain } from "langchain/chains";
-import { ChatOpenAI } from "langchain/chat_models/openai";
+import { AzureOpenAIInput, ChatOpenAI, OpenAIChatInput } from "langchain/chat_models/openai";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { Node } from "reactflow";
 import { getNodes } from "../getNodes";
@@ -14,6 +14,7 @@ import { setupSupabaseClient } from "../utils/setupSupabaseClient";
 import { SupabaseVectorStoreWithFilter } from "../utils/vectorStores/SupabaseVectorStoreWithFilter";
 import { getRuntimeEnvironment } from "../utils/env";
 import { SupabaseSettingsType } from "../types/SupabaseSettingsType";
+import { BaseChatModelParams } from "langchain/dist/chat_models/base";
 
 const search = async (
   state: TraversalStateType,
@@ -23,6 +24,23 @@ const search = async (
   openAiKey: string,
   supabaseSettings: SupabaseSettingsType
 ) => {
+  const openAiOptions: Partial<OpenAIChatInput> & Partial<AzureOpenAIInput> & BaseChatModelParams & {
+    concurrency?: number;
+    cache?: boolean;
+    openAIApiKey?: string;
+}
+   = {
+    // TODO: need to let user set the openai settings
+    modelName: node.data.model,
+    maxTokens:  Math.floor(node.data.max_tokens),
+    temperature: node.data.temperature,
+    openAIApiKey: openAiKey,
+  }
+
+  if (node.data.stop.length > 0) {
+    openAiOptions.stop = node.data.stop;
+  }
+
   try {
     const inputs = node.data.inputs;
     const inputIds = inputs.inputs.filter((input) => input !== "docsLoader");
@@ -41,19 +59,7 @@ const search = async (
       throw new Error(session.error.message);
     }
 
-    const openAiOptions: any = {
-      // TODO: need to let user set the openai settings
-      modelName: node.data.model,
-      maxTokens:  Math.floor(node.data.max_tokens),
-      temperature: node.data.temperature,
-      openAIApiKey: openAiKey,
-    }
-
-    if (node.data.stop) {
-      openAiOptions.stop = node.data.stop;
-    }
-
-
+    
 
     let model = new ChatOpenAI(openAiOptions);
 
@@ -77,7 +83,7 @@ const search = async (
         );
         model = new ChatOpenAI(
           {
-            modelName: "gpt-3.5-turbo",
+           ...openAiOptions,
             // this is the supabase session key, the real openAI key is set in the proxy #ifitworksitworks
             openAIApiKey: session.data.session.access_token,
           },

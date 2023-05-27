@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 import { Chat } from './components/Chat/Chat'
 import { Message } from './types';
 import { v4 as uuidv4 } from 'uuid';
+import { ChatBubbleLeftIcon, XMarkIcon } from '@heroicons/react/20/solid';
 
 function App({
   chatbotId
@@ -13,6 +14,7 @@ function App({
   const [isLoading, setIsLoading] = useState(false);
   const [nextNodeId, setNextNodeId] = useState<string>("");
   const [sessionId, setSessionId] = useState<string>(uuidv4());
+  const [isChatbotOpen, setIsChatbotOpen] = useState<boolean>(false);
 
   const ws = useRef<WebSocket | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -128,12 +130,24 @@ function App({
   }, [messages]);
 
   return (
-      <div className="fixed bottom-0 right-0 overflow-auto sm:px-10 pb-4 sm:pb-10">
-          <div className="max-w-[800px] mx-auto mt-4 sm:mt-12">
-        <Chat messages={messages} loading={isLoading} onSend={onUserSendMessage} onReset={onReset} />
-            <div ref={messagesEndRef} />
-          </div>
+      <div className="fixed flex flex-col items-end bottom-0 right-0 overflow-auto sm:px-10 pb-4 sm:pb-10">
+        {isChatbotOpen && (
+        <div className="max-w-[800px] mx-auto mt-4 sm:mt-12">
+          <Chat messages={messages} loading={isLoading} onSend={onUserSendMessage} onReset={onReset} />
+          <div ref={messagesEndRef} />
         </div>
+        )}
+        {isChatbotOpen && (
+        <XMarkIcon className="bg-blue-400 rounded-full p-4 w-16 h-16 m-4 text-blue-50 cursor-pointer hover:text-blue-100" onClick={() => {
+          setIsChatbotOpen(false);
+        }} />
+        )}
+        {!isChatbotOpen && (
+        <ChatBubbleLeftIcon className="bg-blue-400 rounded-full p-4 w-16 h-16 m-4 text-blue-50 cursor-pointer hover:text-blue-100" onClick={() => {
+          setIsChatbotOpen(true);
+        }} />
+        )}
+      </div>
   )
 }
 

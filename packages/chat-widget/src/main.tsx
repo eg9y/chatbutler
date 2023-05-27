@@ -20,6 +20,6 @@ export function initializeChatbot({ chatBotId }: { chatBotId: string }) {
 
 window.initializeChatbot = initializeChatbot
 
-// initializeChatbot({
-//   chatBotId: 'c1y7TY43AFzO7AFf0MSdY'
-// });
+initializeChatbot({
+  chatBotId: 'c1y7TY43AFzO7AFf0MSdY'
+});

@@ -1,3 +1,4 @@
+import { SimpleWorkflow } from '@chatbutler/shared';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Session } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
@@ -6,7 +7,6 @@ import ChatbotDetailsTabs from './ChatbotDetailsTabs';
 import DocumentUploader from './DocumentUploader';
 import { ReactComponent as Loading } from '../../../assets/loading.svg';
 import useSupabase from '../../../auth/supabaseClient';
-import { SimpleWorkflow } from '../../../db/dbTypes';
 import { conditionalClassNames } from '../../../utils/classNames';
 
 export default function ChatbotDetails({

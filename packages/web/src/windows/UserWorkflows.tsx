@@ -1,15 +1,14 @@
+import { CustomNode, SimpleWorkflow } from '@chatbutler/shared';
 import { Dialog, Transition } from '@headlessui/react';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { nanoid } from 'nanoid';
 import { Fragment, useState } from 'react';
 import { ReactFlowInstance } from 'reactflow';
+import selectWorkflow from 'src/db/selectWorkflow';
 import { shallow } from 'zustand/shallow';
 
 import { ReactComponent as Loading } from '../assets/loading.svg';
 import useSupabase from '../auth/supabaseClient';
-import { SimpleWorkflow, GlobalVariableType } from '../db/dbTypes';
-import selectWorkflow from '../db/selectWorkflow';
-import { CustomNode } from '@chatbutler/shared';
 import { useStore, useStoreSecret, selectorSecret, selector } from '../store';
 import { RFState } from '../store/useStore';
 
@@ -28,8 +27,10 @@ export default function UserWorkflows({
 	setOpen: (open: boolean) => void;
 	reactFlowInstance: RFState['reactFlowInstance'];
 }) {
-	const { setNotificationMessage, setGlobalVariables, workflows, setNodes, setEdges, nodes, edges } =
-		useStore(selector, shallow);
+	const { setNotificationMessage, workflows, setNodes, setEdges, nodes, edges } = useStore(
+		selector,
+		shallow,
+	);
 	const { session } = useStoreSecret(selectorSecret, shallow);
 
 	const supabase = useSupabase();
@@ -72,7 +73,6 @@ export default function UserWorkflows({
 												currentWorkflow,
 												setNotificationMessage,
 												setCurrentWorkflow,
-												setGlobalVariables,
 												setNodes,
 												setEdges,
 												supabase,
@@ -150,7 +150,7 @@ export default function UserWorkflows({
 									height: workflowNameWindowOpen ? '20vh' : '70vh',
 									width: workflowNameWindowOpen ? '20vw' : '100%',
 								}}
-								className="relative mx-10 flex max-w-full transform flex-col overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:p-6"
+								className="relative mx-10 flex max-w-full transform flex-col overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:p-6"
 							>
 								{workflowNameWindowOpen && (
 									<>
@@ -200,7 +200,6 @@ export default function UserWorkflows({
 													currentWorkflow,
 													setNotificationMessage,
 													setCurrentWorkflow,
-													setGlobalVariables,
 													setNodes,
 													setEdges,
 													supabase,
@@ -309,7 +308,6 @@ async function openWorkflow(
 	currentWorkflow: SimpleWorkflow | null,
 	setNotificationMessage: (message: string | null) => void,
 	setCurrentWorkflow: (workflow: SimpleWorkflow | null) => void,
-	setGlobalVariables: (variables: GlobalVariableType) => void,
 	setNodes: (nodes: CustomNode[]) => void,
 	setEdges: RFState['setEdges'],
 	supabase: any,
@@ -325,7 +323,6 @@ async function openWorkflow(
 		currentWorkflow,
 		setNotificationMessage,
 		setCurrentWorkflow,
-		setGlobalVariables,
 		setNodes,
 		setEdges,
 		supabase,

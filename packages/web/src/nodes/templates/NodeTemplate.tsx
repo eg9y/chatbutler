@@ -68,8 +68,6 @@ function getBorderColor(color: string) {
 function tabSupportedBlocks(type: string) {
 	if (
 		[
-			NodeTypesEnum.globalVariable,
-			NodeTypesEnum.setVariable,
 			// NodeTypesEnum.classify,
 			NodeTypesEnum.loop,
 		].includes(type as NodeTypesEnum)

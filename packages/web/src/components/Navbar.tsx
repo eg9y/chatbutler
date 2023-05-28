@@ -145,10 +145,7 @@ const NavBar = () => {
 						target="_blank"
 						rel="noreferrer"
 					>
-						GitHub{' '}
-						<span>
-							<ArrowTopRightOnSquareIcon className="h-4 w-4" aria-hidden="true" />
-						</span>
+						Profile
 					</a>
 					<a
 						href="#"

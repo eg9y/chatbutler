@@ -1,10 +1,12 @@
 import {
+	ChatSessionType,
 	CustomNode,
-	GlobalVariableDataType,
+	DocumentDbSchema,
 	InputNode,
 	LLMPromptNodeDataType,
 	LoopDataType,
 	NodeTypesEnum,
+	SimpleWorkflow,
 	TextNodeDataType,
 } from '@chatbutler/shared';
 import {
@@ -32,12 +34,6 @@ import onNodesChange from './onNodesChange';
 import onPlaceholderAdd from './onPlaceholderAdd';
 import storage from './storage';
 import updateNode from './updateNode';
-import {
-	ChatSessionType,
-	DocumentDbSchema,
-	GlobalVariableType,
-	SimpleWorkflow,
-} from '../db/dbTypes';
 import { runFlow } from '../utils/runFlow';
 import { Message } from '../windows/ChatPanel/Chat/types';
 
@@ -64,8 +60,6 @@ export interface RFState {
 	setDocuments: (documents: DocumentDbSchema[]) => void;
 	workflows: SimpleWorkflow[];
 	setWorkflows: (workflows: SimpleWorkflow[]) => void;
-	globalVariables: GlobalVariableType;
-	setGlobalVariables: (variables: GlobalVariableType) => void;
 	currentWorkflow: SimpleWorkflow | null;
 	setCurrentWorkflow: (workflow: SimpleWorkflow | null) => void;
 	reactFlowInstance: ReactFlowInstance | null;
@@ -163,12 +157,6 @@ const useStore = create<RFState>()(
 					waitingUserResponse: waiting,
 				});
 			},
-			globalVariables: {},
-			setGlobalVariables: (variables: GlobalVariableType) => {
-				set({
-					globalVariables: { ...variables },
-				});
-			},
 			// eslint-disable-next-line @typescript-eslint/no-empty-function
 			pauseResolver: (value: string) => {},
 			setPauseResolver: (resolver: (value: string) => void) => {
@@ -206,7 +194,6 @@ const useStore = create<RFState>()(
 					nodes: [],
 					edges: [],
 					selectedNode: null,
-					globalVariables: {},
 					chatApp: [],
 				});
 			},
@@ -334,18 +321,7 @@ const useStore = create<RFState>()(
 			clearAllNodeResponses: () => {
 				const nodes = get().nodes;
 				const updatedNodes = nodes.map((node) => {
-					if (node.type !== NodeTypesEnum.globalVariable) {
-						node.data.response = '';
-					} else {
-						const globalVariableData = node.data as GlobalVariableDataType;
-						if (globalVariableData.type === 'text') {
-							globalVariableData.value = '';
-						} else if (globalVariableData.type === 'list') {
-							globalVariableData.value = [];
-						}
-						node.data = { ...globalVariableData };
-					}
-
+					node.data.response = '';
 					if (node.type === NodeTypesEnum.counter) {
 						node.data.response = '-1';
 					} else if (node.type === NodeTypesEnum.loop) {

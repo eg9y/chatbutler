@@ -30,8 +30,6 @@ export type AllDataTypes =
   | ConditionalDataType
   | CounterDataType
   | LoopDataType
-  | GlobalVariableDataType
-  | SetVariableDataType
   | SingleChatPromptDataType
   | FileTextDataType;
 
@@ -117,23 +115,13 @@ export type LoopDataType = {
   loopMax: number;
 } & DefaultNodeDataType;
 
-export type GlobalVariableDataType = {
-  type: "text" | "list";
-  initialValue: string | { id: string; value: string }[];
-  value: string | { id: string; value: string }[];
-} & DefaultNodeDataType;
-
 export type listOperation =
   | "+ Add to end"
   | "+ Add to start"
   | "- Remove last"
   | "- Remove first";
-export type SetVariableDataType = {
-  variableId: string;
-  listOperation?: listOperation;
-} & DefaultNodeDataType;
 
-export enum DocSource {
+  export enum DocSource {
   websiteUrl = "Website URL",
   pdfUrl = "PDF URL",
   pdf = "PDF File",
@@ -153,8 +141,6 @@ export enum NodeTypesEnum {
   counter = "counter",
   inputText = "inputText",
   outputText = "outputText",
-  globalVariable = "globalVariable",
-  setVariable = "setVariable",
   fileText = "fileText",
   search = "search",
   combine = "combine",

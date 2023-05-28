@@ -2,12 +2,9 @@ import {
 	ClassifyNodeCategoriesDataType,
 	ConditionalBooleanOperation,
 	CustomNode,
-	DocSource,
-	GlobalVariableDataType,
 	NodeTypesEnum,
 	PlaceholderDataType,
 	SearchDataType,
-	SetVariableDataType,
 } from '@chatbutler/shared';
 import { nanoid } from 'nanoid';
 import { addEdge, MarkerType, Node } from 'reactflow';
@@ -266,67 +263,6 @@ const onAdd = (
 				isDetailMode: true,
 			},
 		};
-	} else if (type === NodeTypesEnum.globalVariable) {
-		node = {
-			id: generateUniqueId(type),
-			type,
-			position: {
-				x,
-				y,
-			},
-			data: {
-				name: `test var`,
-				text: `value`,
-				children: [],
-				inputs: new Inputs(),
-				response: `value`,
-				isLoading: false,
-				isBreakpoint: false,
-				isDetailMode: true,
-				initialValue: '',
-				value: '',
-				type: 'text',
-			},
-		};
-
-		// 1. iterate all nodes
-		// 2. insert global variable as input to all nodes
-		// 3. update all nodes
-		const globalVariables = get().globalVariables;
-		globalVariables[node.id] = {
-			name: node.data.name,
-			type: (node.data as GlobalVariableDataType).type,
-		};
-		set({
-			globalVariables: { ...globalVariables },
-		});
-	} else if (type === NodeTypesEnum.setVariable) {
-		// get last global variablee
-		const globalVariable =
-			Object.keys(get().globalVariables).length > 0
-				? Object.keys(get().globalVariables)[0]
-				: null;
-		node = {
-			id: generateUniqueId(type),
-			type,
-			position: {
-				x,
-				y,
-			},
-			data: {
-				name: `test var`,
-				text: `value`,
-				children: [],
-				inputs: new Inputs(),
-				response: `value`,
-				isLoading: false,
-				isBreakpoint: false,
-				isDetailMode: true,
-			},
-		};
-		if (globalVariable) {
-			(node.data as SetVariableDataType).variableId = globalVariable;
-		}
 	} else if (type === NodeTypesEnum.counter) {
 		node = {
 			id: generateUniqueId(type),

@@ -21,16 +21,5 @@ export function getRootNodes(nodes: CustomNode[]): CustomNode[] {
     }
   }
 
-  // sort such that those with type == globalVariable are at the start
-  rootNodes.sort((a, b) => {
-    if (a.type === NodeTypesEnum.globalVariable) {
-      return -1;
-    }
-    if (b.type === NodeTypesEnum.globalVariable) {
-      return 1;
-    }
-    return 0;
-  });
-
   return rootNodes;
 }

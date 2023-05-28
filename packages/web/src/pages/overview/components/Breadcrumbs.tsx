@@ -1,4 +1,4 @@
-import { SimpleWorkflow } from '../../../db/dbTypes';
+import { SimpleWorkflow } from '@chatbutler/shared';
 
 export default function Breadcrumbs({
 	chatbot,

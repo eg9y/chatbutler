@@ -6,7 +6,6 @@ import llmPrompt from "./llmPrompt";
 import loop from "./loop";
 import outputText from "./outputText";
 import search from "./search";
-import setVariable from "./setVariable";
 import singleChatPrompt from "./singleChatPrompt";
 
 export {
@@ -16,7 +15,6 @@ export {
   loop,
   outputText,
   search,
-  setVariable,
   singleChatPrompt,
   inputText,
   counter,

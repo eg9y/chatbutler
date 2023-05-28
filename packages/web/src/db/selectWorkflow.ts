@@ -1,8 +1,7 @@
-import { CustomNode, Database } from '@chatbutler/shared';
+import { CustomNode, Database, WorkflowDbSchema } from '@chatbutler/shared';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { Edge, Node } from 'reactflow';
 
-import { GlobalVariableType, WorkflowDbSchema } from './dbTypes';
 import { Inputs } from '../nodes/types/Input';
 import { RFState } from '../store/useStore';
 
@@ -13,7 +12,6 @@ const selectWorkflow = async (
 	currentWorkflow: RFState['currentWorkflow'],
 	setNotificationMessage: RFState['setNotificationMessage'],
 	setCurrentWorkflow: RFState['setCurrentWorkflow'],
-	setGlobalVariables: RFState['setGlobalVariables'],
 	setNodes: RFState['setNodes'],
 	setEdges: RFState['setEdges'],
 	supabase: SupabaseClient<Database>,
@@ -50,7 +48,7 @@ const selectWorkflow = async (
 	}
 
 	// set graph
-	updateWorkflowStates(data, setNodes, setEdges, setGlobalVariables, setCurrentWorkflow);
+	updateWorkflowStates(data, setNodes, setEdges, setCurrentWorkflow);
 };
 
 export default selectWorkflow;
@@ -59,7 +57,6 @@ export function updateWorkflowStates(
 	workflow: WorkflowDbSchema,
 	setNodes: RFState['setNodes'],
 	setEdges: RFState['setEdges'],
-	setGlobalVariables: RFState['setGlobalVariables'],
 	setCurrentWorkflow: RFState['setCurrentWorkflow'],
 ) {
 	let parsedNodes: Node[] = [];
@@ -101,23 +98,6 @@ export function updateWorkflowStates(
 	} else {
 		setEdges(workflow.edges as unknown as Edge[]);
 	}
-
-	// set global variables
-	const globalVariables = parsedNodes
-		.filter((node) => node.type === 'globalVariable')
-		.map((node) => ({
-			id: node.id,
-			data: node.data,
-		}))
-		.reduce((acc, node) => {
-			acc[node.id] = {
-				name: node.data.name,
-				type: node.data.type,
-			};
-			return acc;
-		}, {} as GlobalVariableType);
-
-	setGlobalVariables(globalVariables);
 
 	setCurrentWorkflow({
 		id: workflow.id,

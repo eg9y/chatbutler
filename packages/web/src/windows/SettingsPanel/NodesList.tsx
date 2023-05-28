@@ -289,10 +289,6 @@ const NodeType: FC<{
 			`bg-rose-200 border-1 border-rose-400 hover:border-rose-500 hover:bg-rose-300/70`,
 		nodeType === NodeTypesEnum.loop &&
 			`bg-emerald-200 border-1 border-emerald-400 hover:border-emerald-500 hover:bg-emerald-300/70`,
-		nodeType === NodeTypesEnum.globalVariable &&
-			`bg-slate-200 border-1 border-slate-400 hover:border-slate-500 hover:bg-slate-300/70`,
-		nodeType === NodeTypesEnum.setVariable &&
-			`bg-slate-200 border-1 border-slate-400 hover:border-slate-500 hover:bg-slate-300/70`,
 		nodeType === NodeTypesEnum.counter &&
 			`bg-emerald-200 border-1 border-emerald-400 hover:border-emerald-500 hover:bg-emerald-300/70`,
 		nodeType === NodeTypesEnum.text &&

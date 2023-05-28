@@ -19,9 +19,8 @@ const InputNodesList = ({
 	setText: (text: string) => void;
 	type: string;
 }) => {
-	const { getNodes, globalVariables } = useStore(selector, shallow);
+	const { getNodes } = useStore(selector, shallow);
 	const inputNodes = getNodes(data.inputs.inputs);
-	const globalVariableNodes = getNodes(Object.keys(globalVariables));
 
 	function addInputToTextBox(
 		id: string,
@@ -86,8 +85,6 @@ const InputNodesList = ({
 							'bg-emerald-600 text-white hover:bg-emerald-700',
 						inputNode.type === NodeTypesEnum.llmPrompt &&
 							'bg-amber-600 text-white hover:bg-amber-700',
-						inputNode.type === NodeTypesEnum.setVariable &&
-							'bg-slate-600 text-white hover:bg-slate-700',
 						inputNode.type === NodeTypesEnum.chatPrompt &&
 							'bg-purple-600 text-white hover:bg-purple-700',
 						inputNode.type === NodeTypesEnum.singleChatPrompt &&
@@ -110,7 +107,6 @@ const InputNodesList = ({
 							inputNode.type === NodeTypesEnum.outputText) &&
 							'bg-emerald-400',
 						inputNode.type === NodeTypesEnum.llmPrompt && 'bg-amber-400',
-						inputNode.type === NodeTypesEnum.setVariable && 'bg-slate-400',
 						inputNode.type === NodeTypesEnum.chatPrompt && 'bg-purple-400',
 						inputNode.type === NodeTypesEnum.singleChatPrompt && 'bg-purple-400',
 						inputNode.type === NodeTypesEnum.chatMessage && 'bg-purple-300',
@@ -146,31 +142,6 @@ const InputNodesList = ({
 						</div>
 					);
 				})}
-			{globalVariableNodes.map((variableNode: CustomNode) => {
-				const colorClass = conditionalClassNames(
-					'bg-slate-300 p-1 rounded font-semibold shadow-sm flex items-center h-full',
-				);
-
-				return (
-					<div key={variableNode.id}>
-						<button
-							type="button"
-							// convert below to use color for both bg and text
-							className={colorClass}
-							onClick={addInputToTextBox(
-								id,
-								dataFieldName,
-								variableNode,
-								setText,
-								updateNode,
-								data,
-							)}
-						>
-							<div className="p-1">{variableNode.data.name}</div>
-						</button>
-					</div>
-				);
-			})}
 		</div>
 	);
 };

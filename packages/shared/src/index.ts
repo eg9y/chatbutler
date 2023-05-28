@@ -9,3 +9,4 @@ export * from "./initializeFlowState";
 export * from "./getNextNode";
 export * from "./getNodes";
 export * from './utils/setupSupabaseClient'
+export * from './types/dbTypes'

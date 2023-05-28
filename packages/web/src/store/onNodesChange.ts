@@ -1,4 +1,3 @@
-import { NodeTypesEnum } from '@chatbutler/shared';
 import { OnNodesChange, NodeChange, applyNodeChanges } from 'reactflow';
 
 import { RFState } from './useStore';
@@ -21,15 +20,6 @@ function onNodesChange(
 		};
 		if (isSelectedNodeDeleted) {
 			update.selectedNode = null;
-			if (selectedNode && selectedNode.type === NodeTypesEnum.globalVariable) {
-				const globalVariables = get().globalVariables;
-				// find newGlobalVariable with id of selectedNode.id and delete it
-				const newGlobalVariables = globalVariables;
-				delete newGlobalVariables[selectedNode.id];
-				set({
-					globalVariables: { ...newGlobalVariables },
-				});
-			}
 		}
 		set(update);
 	};

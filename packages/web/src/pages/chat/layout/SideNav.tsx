@@ -1,3 +1,4 @@
+import { ChatSessionType } from '@chatbutler/shared';
 import { Dialog, Transition } from '@headlessui/react';
 import { PlusIcon } from '@heroicons/react/20/solid';
 import { Bars3Icon, ChatBubbleLeftEllipsisIcon, XMarkIcon } from '@heroicons/react/24/outline';
@@ -5,7 +6,6 @@ import { nanoid } from 'nanoid';
 import { Fragment, useState } from 'react';
 import { shallow } from 'zustand/shallow';
 
-import { ChatSessionType } from '../../../db/dbTypes';
 import { updateWorkflowStates } from '../../../db/selectWorkflow';
 import useStore, { RFState, selector } from '../../../store/useStore';
 import { conditionalClassNames } from '../../../utils/classNames';
@@ -26,10 +26,7 @@ export default function SideNav({
 	currentChatSessionIndex: RFState['currentChatSessionIndex'];
 	setCurrentChatSessionIndex: RFState['setCurrentChatSessionIndex'];
 }) {
-	const { setCurrentWorkflow, setGlobalVariables, setNodes, setEdges, setChatApp } = useStore(
-		selector,
-		shallow,
-	);
+	const { setCurrentWorkflow, setNodes, setEdges, setChatApp } = useStore(selector, shallow);
 
 	const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -288,7 +285,6 @@ export default function SideNav({
 																session.workflow,
 																setNodes,
 																setEdges,
-																setGlobalVariables,
 																setCurrentWorkflow,
 															);
 															abortControllerRef.current?.abort();

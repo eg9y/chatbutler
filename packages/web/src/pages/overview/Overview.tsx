@@ -1,3 +1,4 @@
+import { SimpleWorkflow } from '@chatbutler/shared';
 import { Session } from '@supabase/supabase-js';
 import { nanoid } from 'nanoid';
 import { useEffect, useState } from 'react';
@@ -9,7 +10,6 @@ import ChatbotMenu from './components/ChatbotMenu';
 import ChatbotMenuPanel from './components/ChatbotMenuPanel';
 import useSupabase from '../../auth/supabaseClient';
 import Notification from '../../components/Notification';
-import { SimpleWorkflow } from '../../db/dbTypes';
 import populateUserWorkflows from '../../db/populateUserWorkflows';
 import { useStore, useStoreSecret, selector, selectorSecret } from '../../store';
 import { conditionalClassNames } from '../../utils/classNames';

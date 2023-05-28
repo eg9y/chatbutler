@@ -1,4 +1,5 @@
-import { WorkflowDbSchema } from '../../db/dbTypes';
+import { WorkflowDbSchema } from '@chatbutler/shared';
+
 import { conditionalClassNames } from '../../utils/classNames';
 
 export default function ChatBotList({

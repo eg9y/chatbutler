@@ -1,3 +1,4 @@
+import { WorkflowDbSchema } from '@chatbutler/shared';
 import { useEffect, useRef, useState } from 'react';
 import { shallow } from 'zustand/shallow';
 
@@ -7,7 +8,6 @@ import { ReactComponent as Loading } from '../../assets/loading.svg';
 import useSupabase from '../../auth/supabaseClient';
 import Notification from '../../components/Notification';
 import RunFromStart from '../../components/RunFromStart';
-import { WorkflowDbSchema } from '../../db/dbTypes';
 import { updateWorkflowStates } from '../../db/selectWorkflow';
 import { useStore, useStoreSecret, selector, selectorSecret } from '../../store';
 import { conditionalClassNames } from '../../utils/classNames';
@@ -28,7 +28,6 @@ export default function ChatMain() {
 		currentChatSessionIndex,
 		setNodes,
 		setEdges,
-		setGlobalVariables,
 		setCurrentWorkflow,
 	} = useStore(selector, shallow);
 	const { setSession, setOpenAiKey } = useStoreSecret(selectorSecret, shallow);
@@ -222,7 +221,6 @@ export default function ChatMain() {
 												newChatSessions[currentChatSessionIndex].workflow!,
 												setNodes,
 												setEdges,
-												setGlobalVariables,
 												setCurrentWorkflow,
 											);
 										}}

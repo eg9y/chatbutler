@@ -8,7 +8,6 @@ import {
   loop,
   outputText,
   search,
-  setVariable,
   singleChatPrompt,
   inputText,
   counter,
@@ -18,7 +17,6 @@ import { TraversalStateType } from "../traversalStateType";
 import {
   CustomNode,
   NodeTypesEnum,
-  GlobalVariableDataType,
   SearchDataType,
 } from "../types/NodeTypes";
 import { parsePromptInputs } from "../utils/parsePromptInput";
@@ -41,23 +39,11 @@ export async function runNode(
     case NodeTypesEnum.inputText:
       await inputText(state, nodes, node);
       break;
-    case NodeTypesEnum.globalVariable:
-      // set node.data.value to initialValue
-      (node.data as GlobalVariableDataType).value = [
-        ...((node.data as GlobalVariableDataType).initialValue as {
-          id: string;
-          value: string;
-        }[]),
-      ];
-      break;
     case NodeTypesEnum.conditional:
       node.data = {
         ...node.data,
         response: node.data.text,
       };
-      break;
-    case NodeTypesEnum.setVariable:
-      setVariable(nodes, node);
       break;
     case NodeTypesEnum.outputText:
       outputText(state, nodes, node);

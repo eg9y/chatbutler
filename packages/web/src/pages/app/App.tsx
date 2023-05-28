@@ -27,14 +27,12 @@ import CombineNode from '../../nodes/CombineNode';
 import ConditionalNode from '../../nodes/ConditionalNode';
 import CounterNode from '../../nodes/CounterNode';
 import FileNode from '../../nodes/FileTextNode';
-import GlobalVariableNode from '../../nodes/GlobalVariableNode';
 import InputTextNode from '../../nodes/InputTextNode';
 import LLMPromptNode from '../../nodes/LLMPromptNode';
 import LoopNode from '../../nodes/LoopNode';
 import OutputTextNode from '../../nodes/OutputTextNode';
 import PlaceholderNode from '../../nodes/PlaceholderNode';
 import SearchNode from '../../nodes/SearchNode';
-import SetVariableNode from '../../nodes/SetVariableNode';
 import SingleChatPromptNode from '../../nodes/SingleChatPromptNode';
 import TextNode from '../../nodes/TextNode';
 import { useStore, useStoreSecret, selector, selectorSecret } from '../../store';
@@ -62,8 +60,6 @@ const nodeTypes = {
 	conditional: ConditionalNode,
 	placeholder: PlaceholderNode,
 	counter: CounterNode,
-	globalVariable: GlobalVariableNode,
-	setVariable: SetVariableNode,
 };
 
 export default function App() {
@@ -89,7 +85,6 @@ export default function App() {
 		workflows,
 		setWorkflows,
 		setChatApp,
-		setGlobalVariables,
 	} = useStore(selector, shallow);
 	const { session, setSession, setOpenAiKey } = useStoreSecret(selectorSecret, shallow);
 
@@ -125,7 +120,6 @@ export default function App() {
 					currentWorkflow,
 					setNotificationMessage,
 					setCurrentWorkflow,
-					setGlobalVariables,
 					setNodes,
 					setEdges,
 					supabase,
@@ -138,7 +132,6 @@ export default function App() {
 					currentWorkflow,
 					setNotificationMessage,
 					setCurrentWorkflow,
-					setGlobalVariables,
 					setNodes,
 					setEdges,
 					supabase,
@@ -375,10 +368,6 @@ export default function App() {
 									return 'rgb(186 230 253)';
 								} else if (node.type === NodeTypesEnum.combine) {
 									return 'rgb(186 230 253)';
-								} else if (node.type === NodeTypesEnum.globalVariable) {
-									return 'rgb(226 232 240)';
-								} else if (node.type === NodeTypesEnum.setVariable) {
-									return 'rgb(226 232 240)';
 								}
 								return 'rgb(230,230,230)';
 							}}

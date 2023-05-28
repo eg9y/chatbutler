@@ -1,11 +1,11 @@
+import { SimpleWorkflow } from '@chatbutler/shared';
 import { Menu, Transition } from '@headlessui/react';
 import { EllipsisVerticalIcon } from '@heroicons/react/20/solid';
 import { Session } from '@supabase/supabase-js';
-import { Fragment, useState } from 'react';
+import { Fragment } from 'react';
 
 import ChatbotMenuPanel from './ChatbotMenuPanel';
 import useSupabase from '../../../auth/supabaseClient';
-import { SimpleWorkflow } from '../../../db/dbTypes';
 import { RFState } from '../../../store/useStore';
 import { conditionalClassNames } from '../../../utils/classNames';
 

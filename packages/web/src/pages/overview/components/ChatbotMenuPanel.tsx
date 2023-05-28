@@ -1,9 +1,9 @@
+import { SimpleWorkflow } from '@chatbutler/shared';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useEffect, useRef, useState } from 'react';
 
 import { ReactComponent as Loading } from '../../../assets/loading.svg';
 import useSupabase from '../../../auth/supabaseClient';
-import { SimpleWorkflow } from '../../../db/dbTypes';
 import { RFState } from '../../../store/useStore';
 
 export default function ChatbotMenuPanel({

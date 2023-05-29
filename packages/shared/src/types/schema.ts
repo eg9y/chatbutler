@@ -97,19 +97,19 @@ export interface Database {
           id: number
           nonce: string | null
           open_ai_key: string | null
-          user_id: string | null
+          user_id: string
         }
         Insert: {
           id?: number
           nonce?: string | null
           open_ai_key?: string | null
-          user_id?: string | null
+          user_id: string
         }
         Update: {
           id?: number
           nonce?: string | null
           open_ai_key?: string | null
-          user_id?: string | null
+          user_id?: string
         }
       }
       workflows: {
@@ -123,7 +123,6 @@ export interface Database {
           nodes: Json | null
           updated_at: string
           usages: number
-          use_user_api_key: boolean
           user_id: string
         }
         Insert: {
@@ -136,7 +135,6 @@ export interface Database {
           nodes?: Json | null
           updated_at?: string
           usages?: number
-          use_user_api_key?: boolean
           user_id: string
         }
         Update: {
@@ -149,7 +147,6 @@ export interface Database {
           nodes?: Json | null
           updated_at?: string
           usages?: number
-          use_user_api_key?: boolean
           user_id?: string
         }
       }

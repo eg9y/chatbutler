@@ -127,12 +127,12 @@ const NodeTemplate: FC<
 				{(data as DefaultNodeDataType & OpenAIAPIRequest).model && (
 					<div className="flex gap-2">
 						<p className="text-slate-600">
-							credits:{' '}
 							{(data as DefaultNodeDataType & OpenAIAPIRequest).model.startsWith(
 								'gpt-4',
 							)
 								? '10'
-								: '1'}
+								: '1'}{' '}
+							credit
 						</p>
 					</div>
 				)}

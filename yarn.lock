@@ -578,9 +578,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@chatbutler/prod-supabase@workspace:packages/prod-supabase":
+"@chatbutler/prod-supabase@workspace:packages/supabase":
   version: 0.0.0-use.local
-  resolution: "@chatbutler/prod-supabase@workspace:packages/prod-supabase"
+  resolution: "@chatbutler/prod-supabase@workspace:packages/supabase"
   languageName: unknown
   linkType: soft
 

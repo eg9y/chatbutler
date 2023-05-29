@@ -113,28 +113,6 @@ const NodeTemplate: FC<
 				<Loading className="h-12 w-12 animate-spin text-green-500" />
 			</NodeToolbar>
 			<NodeToolbar
-				position={Position.Bottom}
-				isVisible={
-					!!type &&
-					[
-						NodeTypesEnum.chatPrompt,
-						NodeTypesEnum.singleChatPrompt,
-						NodeTypesEnum.classify,
-						NodeTypesEnum.llmPrompt,
-						NodeTypesEnum.search,
-					].includes(type as NodeTypesEnum)
-				}
-			>
-				{(data as DefaultNodeDataType & OpenAIAPIRequest).model && data.text.length > 0 && (
-					<div className="flex gap-2">
-						<p className="text-slate-600">
-							{'>'}
-							{calculateCreditsRequired(data, data.text)} credit
-						</p>
-					</div>
-				)}
-			</NodeToolbar>
-			<NodeToolbar
 				position={Position.Right}
 				isVisible={!!data.loopId && data.children.length === 0}
 				className="flex grow items-center"
@@ -157,7 +135,7 @@ const NodeTemplate: FC<
 					selected
 						? `${getBorderColor(color)} border-8 border-t-8`
 						: 'border-2 border-slate-400',
-					'flex grow flex-col bg-slate-50',
+					'flex grow flex-col bg-slate-50 shadow-lg',
 				)}
 			>
 				<div
@@ -258,6 +236,22 @@ const NodeTemplate: FC<
 					</>
 				)}
 			</div>
+			{!!type &&
+				[
+					NodeTypesEnum.chatPrompt,
+					NodeTypesEnum.singleChatPrompt,
+					NodeTypesEnum.classify,
+					NodeTypesEnum.llmPrompt,
+					NodeTypesEnum.search,
+				].includes(type as NodeTypesEnum) &&
+				data.text.length > 0 && (
+					<div className="mx-auto flex gap-2 pt-4">
+						<p className="text-3xl font-semibold text-slate-600">
+							{'>'}
+							{calculateCreditsRequired(data, data.text)} credit
+						</p>
+					</div>
+				)}
 		</div>
 	);
 };

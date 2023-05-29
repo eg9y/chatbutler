@@ -35,18 +35,14 @@ function isCycle(nodes: CustomNode[], targetNodeIndex: number): boolean {
 }
 
 // recursively assigning the parentNode and loopId for nodes in a loop
-function assignChildren(
-	nodes: CustomNode[],
-	targetNodeIndex: number,
-	cb: (node: CustomNode) => void,
-) {
+function assignLoopChildren(nodes: CustomNode[], targetNodeIndex: number, loopNodeIndex: number) {
 	// Set target node's position to parent node's position
-	cb(nodes[targetNodeIndex]);
-	// Iterate through target node's children and call assignChildren recursively
+	nodes[targetNodeIndex].data.loopId = nodes[loopNodeIndex].id;
+	// Iterate through target node's children and call assignLoopChildren recursively
 	nodes[targetNodeIndex].data.children.forEach((childId) => {
 		const childNodeIndex = nodes.findIndex((node) => node.id === childId);
 		if (childNodeIndex !== -1) {
-			assignChildren(nodes, childNodeIndex, cb);
+			assignLoopChildren(nodes, childNodeIndex, loopNodeIndex);
 		}
 	});
 	return nodes;
@@ -341,9 +337,7 @@ const onConnect = (
 			return false;
 		}
 		nodes[targetNodeIndex].data.loopId = nodes[sourceNodeIndex].id;
-		nodes = assignChildren(nodes, targetNodeIndex, (node) => {
-			node.data.loopId = node.id;
-		});
+		nodes = assignLoopChildren(nodes, targetNodeIndex, sourceNodeIndex);
 	}
 
 	// if source is part of a loop
@@ -352,9 +346,7 @@ const onConnect = (
 			(node) => node.id === nodes[sourceNodeIndex].data.loopId,
 		);
 		if (loopNodeIndex !== -1) {
-			nodes = assignChildren(nodes, targetNodeIndex, (node) => {
-				node.data.loopId = node.id;
-			});
+			nodes = assignLoopChildren(nodes, targetNodeIndex, loopNodeIndex);
 		}
 		nodes[loopNodeIndex].data.inputs.deleteInputs([nodes[sourceNodeIndex].id]);
 	}

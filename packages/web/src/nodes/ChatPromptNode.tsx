@@ -12,12 +12,7 @@ const ChatPrompt: FC<NodeProps<ChatPromptNodeDataType>> = (props) => {
 	const [showFullScreen, setShowFullScreen] = useState(false);
 
 	return (
-		<div
-			className={conditionalClassNames(
-				data.isDetailMode && 'h-[40rem] w-[35rem]',
-				`m-3 shadow-lg`,
-			)}
-		>
+		<div className={conditionalClassNames(data.isDetailMode && 'h-[40rem] w-[35rem]', `m-3`)}>
 			<NodeTemplate
 				{...props}
 				title="Chat"

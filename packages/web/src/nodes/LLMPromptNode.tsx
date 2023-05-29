@@ -26,7 +26,7 @@ const LLMPrompt: FC<NodeProps<LLMPromptNodeDataType>> = (props) => {
 			<div
 				className={conditionalClassNames(
 					data.isDetailMode && 'h-[40rem] w-[35rem]',
-					`m-3 shadow-lg`,
+					`m-3 `,
 				)}
 			>
 				{RunnableToolbarTemplate(data, selected, updateNode, id)}

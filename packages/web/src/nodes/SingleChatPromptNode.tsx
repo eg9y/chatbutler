@@ -21,7 +21,7 @@ const SingleChatPrompt: FC<NodeProps<SingleChatPromptDataType>> = (props) => {
 			<div
 				className={conditionalClassNames(
 					data.isDetailMode && 'h-[40rem] w-[35rem]',
-					`m-3 shadow-lg`,
+					`m-3 `,
 				)}
 			>
 				{/* how to spread  */}

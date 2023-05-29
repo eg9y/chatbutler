@@ -1,4 +1,4 @@
-import { NodeTypesEnum } from '@chatbutler/shared';
+import { NodeTypesEnum } from '@chatbutler/shared/src/index';
 
 export enum MessageType {
 	CHATBOT_CHANGE = 'chatbot_change',

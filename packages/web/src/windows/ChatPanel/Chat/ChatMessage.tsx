@@ -1,4 +1,4 @@
-import { NodeTypesEnum } from '@chatbutler/shared';
+import { NodeTypesEnum } from '@chatbutler/shared/src/index';
 import { FC } from 'react';
 
 import SearchMessage from './MessageTypes/SearchMessage';

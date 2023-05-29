@@ -1,4 +1,4 @@
-import { AllDataTypes, LLMPromptNodeDataType } from '@chatbutler/shared';
+import { AllDataTypes, LLMPromptNodeDataType } from '@chatbutler/shared/src/index';
 import { GlobeAltIcon, BeakerIcon } from '@heroicons/react/20/solid';
 import { Node } from 'reactflow';
 

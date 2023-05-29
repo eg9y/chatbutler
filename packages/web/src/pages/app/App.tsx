@@ -1,4 +1,4 @@
-import { NodeTypesEnum } from '@chatbutler/shared';
+import { NodeTypesEnum } from '@chatbutler/shared/src/index';
 import { ChevronDoubleRightIcon } from '@heroicons/react/20/solid';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import ReactFlow, {

@@ -1,4 +1,4 @@
-import { ConditionalDataType, ConditionalBooleanOperation } from '@chatbutler/shared';
+import { ConditionalDataType, ConditionalBooleanOperation } from '@chatbutler/shared/src/index';
 import { CheckIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { memo, FC, useState } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';

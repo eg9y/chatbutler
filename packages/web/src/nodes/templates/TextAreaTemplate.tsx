@@ -1,4 +1,4 @@
-import { DefaultNodeDataType } from '@chatbutler/shared';
+import { DefaultNodeDataType } from '@chatbutler/shared/src/index';
 import { memo, FC } from 'react';
 import { NodeProps } from 'reactflow';
 import { shallow } from 'zustand/shallow';

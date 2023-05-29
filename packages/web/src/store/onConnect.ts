@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { CustomNode } from '@chatbutler/shared';
+import { CustomNode } from '@chatbutler/shared/src/index';
 import { Connection, addEdge, MarkerType, Edge } from 'reactflow';
 
 import { RFState, UseStoreSetType } from './useStore';

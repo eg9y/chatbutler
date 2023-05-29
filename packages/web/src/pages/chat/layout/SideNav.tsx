@@ -1,4 +1,4 @@
-import { ChatSessionType } from '@chatbutler/shared';
+import { ChatSessionType } from '@chatbutler/shared/src/index';
 import { Dialog, Transition } from '@headlessui/react';
 import { PlusIcon } from '@heroicons/react/20/solid';
 import { Bars3Icon, ChatBubbleLeftEllipsisIcon, XMarkIcon } from '@heroicons/react/24/outline';

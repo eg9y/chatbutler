@@ -1,4 +1,4 @@
-import { WorkflowDbSchema } from '@chatbutler/shared';
+import { WorkflowDbSchema } from '@chatbutler/shared/src/index';
 
 import { conditionalClassNames } from '../../utils/classNames';
 

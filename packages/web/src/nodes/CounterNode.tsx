@@ -1,4 +1,4 @@
-import { CounterDataType } from '@chatbutler/shared';
+import { CounterDataType } from '@chatbutler/shared/src/index';
 import { PlusIcon } from '@heroicons/react/20/solid';
 import { memo, FC, useState } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';

@@ -1,4 +1,4 @@
-import { InputNode, LLMPromptNodeDataType, TextNodeDataType } from '@chatbutler/shared';
+import { InputNode, LLMPromptNodeDataType, TextNodeDataType } from '@chatbutler/shared/src/index';
 import { Node } from 'reactflow';
 
 import { RFState, UseStoreSetType } from './useStore';

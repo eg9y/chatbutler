@@ -1,4 +1,4 @@
-import { NodeTypesEnum, DefaultNodeDataType } from '@chatbutler/shared';
+import { NodeTypesEnum, DefaultNodeDataType, OpenAIAPIRequest } from '@chatbutler/shared/src/index';
 import {
 	ArrowPathIcon,
 	ArrowsPointingOutIcon,
@@ -110,6 +110,32 @@ const NodeTemplate: FC<
 		>
 			<NodeToolbar position={Position.Top} isVisible={data.isLoading}>
 				<Loading className="h-12 w-12 animate-spin text-green-500" />
+			</NodeToolbar>
+			<NodeToolbar
+				position={Position.Bottom}
+				isVisible={
+					!!type &&
+					[
+						NodeTypesEnum.chatPrompt,
+						NodeTypesEnum.singleChatPrompt,
+						NodeTypesEnum.classify,
+						NodeTypesEnum.llmPrompt,
+						NodeTypesEnum.search,
+					].includes(type as NodeTypesEnum)
+				}
+			>
+				{(data as DefaultNodeDataType & OpenAIAPIRequest).model && (
+					<div className="flex gap-2">
+						<p className="text-slate-600">
+							credits:{' '}
+							{(data as DefaultNodeDataType & OpenAIAPIRequest).model.startsWith(
+								'gpt-4',
+							)
+								? '10'
+								: '1'}
+						</p>
+					</div>
+				)}
 			</NodeToolbar>
 			<NodeToolbar
 				position={Position.Right}

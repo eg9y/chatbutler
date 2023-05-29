@@ -1,4 +1,4 @@
-import { SearchDataType } from '@chatbutler/shared';
+import { SearchDataType } from '@chatbutler/shared/src/index';
 import { Switch } from '@headlessui/react';
 import { memo, FC, useState } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';

@@ -1,4 +1,4 @@
-import { InputNode } from '@chatbutler/shared';
+import { InputNode } from '@chatbutler/shared/src/index';
 
 type InputExample = {
 	[key: string]: {

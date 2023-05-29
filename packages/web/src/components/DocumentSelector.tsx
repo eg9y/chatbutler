@@ -1,4 +1,4 @@
-import { SearchDataType } from '@chatbutler/shared';
+import { SearchDataType } from '@chatbutler/shared/src/index';
 import { Dialog, Transition } from '@headlessui/react';
 import { CheckIcon } from '@heroicons/react/24/outline';
 import { Fragment, useEffect, useRef, useState } from 'react';

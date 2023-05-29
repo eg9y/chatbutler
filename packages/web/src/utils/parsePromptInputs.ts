@@ -1,4 +1,4 @@
-import { CustomNode } from '@chatbutler/shared';
+import { CustomNode } from '@chatbutler/shared/src/index';
 
 import { RFState } from '../store/useStore';
 

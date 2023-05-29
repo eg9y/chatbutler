@@ -8,7 +8,7 @@ import {
 	NodeTypesEnum,
 	SimpleWorkflow,
 	TextNodeDataType,
-} from '@chatbutler/shared';
+} from '@chatbutler/shared/src/index';
 import {
 	Connection,
 	Edge,

@@ -1,8 +1,8 @@
-import { AllDataTypes, ChatPromptNodeDataType } from '@chatbutler/shared';
+import { AllDataTypes, ChatPromptNodeDataType } from '@chatbutler/shared/src/index';
 import { GlobeAltIcon } from '@heroicons/react/20/solid';
 import { Node } from 'reactflow';
 
-import ApiTab from './tabs/ApiTab';
+import ApiTab from '../../../../components/ApiTab';
 import { handleChange } from '../../../../utils/handleFormChange';
 import TabsTemplate from '../TabsTemplate';
 

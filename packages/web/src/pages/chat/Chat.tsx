@@ -1,4 +1,4 @@
-import { WorkflowDbSchema } from '@chatbutler/shared';
+import { WorkflowDbSchema } from '@chatbutler/shared/src/index';
 import { useEffect, useRef, useState } from 'react';
 import { shallow } from 'zustand/shallow';
 

@@ -1,4 +1,4 @@
-import { LLMPromptNodeDataType, TextNodeDataType } from '@chatbutler/shared';
+import { LLMPromptNodeDataType, TextNodeDataType } from '@chatbutler/shared/src/index';
 import { PlayIcon } from '@heroicons/react/20/solid';
 import { Node } from 'reactflow';
 import { shallow } from 'zustand/shallow';

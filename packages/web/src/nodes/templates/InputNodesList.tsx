@@ -1,4 +1,9 @@
-import { DefaultNodeDataType, InputNode, NodeTypesEnum, CustomNode } from '@chatbutler/shared';
+import {
+	DefaultNodeDataType,
+	InputNode,
+	NodeTypesEnum,
+	CustomNode,
+} from '@chatbutler/shared/src/index';
 import { shallow } from 'zustand/shallow';
 
 import useStore, { selector } from '../../store/useStore';

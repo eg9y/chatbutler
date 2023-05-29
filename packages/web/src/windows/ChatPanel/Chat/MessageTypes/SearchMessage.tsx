@@ -1,4 +1,4 @@
-import { DocSource } from '@chatbutler/shared';
+import { DocSource } from '@chatbutler/shared/src/index';
 import { useEffect, useState } from 'react';
 import { shallow } from 'zustand/shallow';
 

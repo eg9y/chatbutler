@@ -1,4 +1,4 @@
-import { LoopDataType, NodeTypesEnum } from '@chatbutler/shared';
+import { LoopDataType, NodeTypesEnum } from '@chatbutler/shared/src/index';
 import { useRef, useState } from 'react';
 
 import RunFromStart from '../../components/RunFromStart';

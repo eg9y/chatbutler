@@ -1,4 +1,4 @@
-import { AllDataTypes, TextNodeDataType } from '@chatbutler/shared';
+import { AllDataTypes, TextNodeDataType } from '@chatbutler/shared/src/index';
 import { Node } from 'reactflow';
 
 import TabsTemplate from '../TabsTemplate';

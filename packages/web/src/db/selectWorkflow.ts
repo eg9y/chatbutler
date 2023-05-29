@@ -1,4 +1,4 @@
-import { CustomNode, Database, WorkflowDbSchema } from '@chatbutler/shared';
+import { CustomNode, Database, WorkflowDbSchema } from '@chatbutler/shared/src/index';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { Edge, Node } from 'reactflow';
 

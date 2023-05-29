@@ -1,4 +1,4 @@
-import { NodeTypesEnum } from '@chatbutler/shared';
+import { NodeTypesEnum } from '@chatbutler/shared/src/index';
 import { Disclosure } from '@headlessui/react';
 import {
 	ChevronRightIcon,

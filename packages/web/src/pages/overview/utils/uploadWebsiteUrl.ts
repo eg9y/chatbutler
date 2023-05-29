@@ -1,4 +1,4 @@
-import { DocSource, SimpleWorkflow } from '@chatbutler/shared';
+import { DocSource, SimpleWorkflow } from '@chatbutler/shared/src/index';
 import { Session } from '@supabase/supabase-js';
 
 import { RFState } from '../../../store/useStore';

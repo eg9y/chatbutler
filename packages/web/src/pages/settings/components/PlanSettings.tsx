@@ -1,4 +1,4 @@
-import { Database } from '@chatbutler/shared';
+import { Database } from '@chatbutler/shared/src/index';
 import { CheckCircleIcon } from '@heroicons/react/20/solid';
 import { SupabaseClient } from '@supabase/supabase-js';
 

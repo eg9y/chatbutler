@@ -1,4 +1,4 @@
-import { OutputTextDataType } from '@chatbutler/shared';
+import { OutputTextDataType } from '@chatbutler/shared/src/index';
 import { memo, FC, useState } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
 import useUndo from 'use-undo';

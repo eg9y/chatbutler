@@ -1,4 +1,4 @@
-import { CustomNode, SimpleWorkflow } from '@chatbutler/shared';
+import { CustomNode, SimpleWorkflow } from '@chatbutler/shared/src/index';
 import { Dialog, Transition } from '@headlessui/react';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { nanoid } from 'nanoid';

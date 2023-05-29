@@ -1,4 +1,4 @@
-import { Database } from '@chatbutler/shared';
+import { Database } from '@chatbutler/shared/src/index';
 import { SupabaseClient } from '@supabase/supabase-js';
 
 import { RFState } from '../store/useStore';

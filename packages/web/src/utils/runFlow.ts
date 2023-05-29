@@ -6,8 +6,8 @@ import {
 	initializeFlowState,
 	getNodes,
 	SearchDataType,
-} from '@chatbutler/shared';
-import { CustomNode, NodeTypesEnum } from '@chatbutler/shared';
+} from '@chatbutler/shared/src/index';
+import { CustomNode, NodeTypesEnum } from '@chatbutler/shared/src/index';
 import { Edge } from 'reactflow';
 
 import { RFState } from '../store/useStore';

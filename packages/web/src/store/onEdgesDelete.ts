@@ -1,4 +1,4 @@
-import { CustomNode, NodeTypesEnum } from '@chatbutler/shared';
+import { CustomNode, NodeTypesEnum } from '@chatbutler/shared/src/index';
 import { getAllChildren } from '@chatbutler/shared/src/utils/getAllChildren';
 
 import { assignInputsToChildren } from './onConnect';

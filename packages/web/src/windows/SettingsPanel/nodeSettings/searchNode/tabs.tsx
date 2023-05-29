@@ -1,9 +1,8 @@
-import { AllDataTypes, SearchDataType } from '@chatbutler/shared';
+import { SearchDataType, AllDataTypes } from '@chatbutler/shared/src/types/NodeTypes';
 import { GlobeAltIcon } from '@heroicons/react/20/solid';
-import { useState } from 'react';
 import { Node } from 'reactflow';
 
-import ApiTab from './tabs/ApiTab';
+import ApiTab from '../../../../components/ApiTab';
 import { handleChange } from '../../../../utils/handleFormChange';
 import TabsTemplate from '../TabsTemplate';
 

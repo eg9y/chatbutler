@@ -1,4 +1,4 @@
-import { Database } from '@chatbutler/shared';
+import { Database } from '@chatbutler/shared/src/index';
 import { CubeIcon, UserCircleIcon } from '@heroicons/react/24/outline';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';

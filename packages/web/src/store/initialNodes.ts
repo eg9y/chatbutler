@@ -1,4 +1,4 @@
-import { CustomNode, NodeTypesEnum } from '@chatbutler/shared';
+import { CustomNode, NodeTypesEnum } from '@chatbutler/shared/src/index';
 
 import { Inputs } from '../nodes/types/Input';
 

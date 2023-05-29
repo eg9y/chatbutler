@@ -1,4 +1,4 @@
-import { SimpleWorkflow } from '@chatbutler/shared';
+import { SimpleWorkflow } from '@chatbutler/shared/src/index';
 import { Menu, Transition } from '@headlessui/react';
 import { EllipsisVerticalIcon } from '@heroicons/react/20/solid';
 import { Session } from '@supabase/supabase-js';

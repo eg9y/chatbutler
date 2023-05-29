@@ -1,4 +1,4 @@
-import { ChatPromptNodeDataType } from '@chatbutler/shared';
+import { ChatPromptNodeDataType } from '@chatbutler/shared/src/index';
 import { SignalIcon, ClipboardIcon } from '@heroicons/react/20/solid';
 import { memo, FC, useState } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';

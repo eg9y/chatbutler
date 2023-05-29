@@ -1,8 +1,8 @@
 import { Node } from 'reactflow';
 
-import { chatModels } from '../../../../../openai/models';
-import ChipsInput from '../../../../ChatPanel/inputs/ChipsInput';
-import RangeInput from '../../../../ChatPanel/inputs/RangeInput';
+import { chatModels } from '../openai/models';
+import ChipsInput from '../windows/ChatPanel/inputs/ChipsInput';
+import RangeInput from '../windows/ChatPanel/inputs/RangeInput';
 
 export default function ApiPromptTab({
 	selectedNode,

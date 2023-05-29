@@ -1,4 +1,4 @@
-import { CustomNode } from '@chatbutler/shared';
+import { CustomNode } from '@chatbutler/shared/src/index';
 import { PersistStorage } from 'zustand/middleware';
 
 import { RFState } from './useStore';

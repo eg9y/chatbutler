@@ -1,4 +1,4 @@
-import { SimpleWorkflow } from '@chatbutler/shared';
+import { SimpleWorkflow } from '@chatbutler/shared/src/index';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useEffect, useRef, useState } from 'react';
 

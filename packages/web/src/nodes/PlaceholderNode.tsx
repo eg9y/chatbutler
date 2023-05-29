@@ -1,4 +1,4 @@
-import { NodeTypesEnum, PlaceholderDataType } from '@chatbutler/shared';
+import { NodeTypesEnum, PlaceholderDataType } from '@chatbutler/shared/src/index';
 import { PlusIcon } from '@heroicons/react/20/solid';
 import { FC } from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';

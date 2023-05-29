@@ -1,4 +1,4 @@
-import { ChatMessageNodeDataType, NodeTypesEnum } from '@chatbutler/shared';
+import { ChatMessageNodeDataType, NodeTypesEnum } from '@chatbutler/shared/src/index';
 import { MarkerType } from 'reactflow';
 
 import { RFState, UseStoreSetType } from './useStore';

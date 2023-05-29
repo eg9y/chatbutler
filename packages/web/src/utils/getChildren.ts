@@ -1,4 +1,4 @@
-import { CustomNode } from '@chatbutler/shared';
+import { CustomNode } from '@chatbutler/shared/src/index';
 
 // Helper function to collect all children of the skipped nodes that has no other parents to lead to them
 export function getAllChildren(

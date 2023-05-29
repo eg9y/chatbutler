@@ -36,7 +36,7 @@ export type AllDataTypes =
 export type CustomNode = Node<AllDataTypes>;
 export type InputNode = Node<AllDataTypes>;
 
-type OpenAIAPIRequest = {
+export type OpenAIAPIRequest = {
   model: string;
   temperature: number;
   top_p: number;

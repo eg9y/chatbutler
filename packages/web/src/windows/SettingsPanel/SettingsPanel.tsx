@@ -1,4 +1,4 @@
-import { Database } from '@chatbutler/shared';
+import { Database } from '@chatbutler/shared/src/index';
 import {
 	ChatPromptNodeDataType,
 	ClassifyNodeDataType,
@@ -7,7 +7,7 @@ import {
 	NodeTypesEnum,
 	SearchDataType,
 	SingleChatPromptDataType,
-} from '@chatbutler/shared';
+} from '@chatbutler/shared/src/index';
 import { Switch } from '@headlessui/react';
 import { Cog6ToothIcon, BeakerIcon, AcademicCapIcon, TrashIcon } from '@heroicons/react/20/solid';
 import { SupabaseClient } from '@supabase/supabase-js';

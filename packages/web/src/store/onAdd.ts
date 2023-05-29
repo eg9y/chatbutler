@@ -5,7 +5,7 @@ import {
 	NodeTypesEnum,
 	PlaceholderDataType,
 	SearchDataType,
-} from '@chatbutler/shared';
+} from '@chatbutler/shared/src/index';
 import { nanoid } from 'nanoid';
 import { addEdge, MarkerType, Node } from 'reactflow';
 

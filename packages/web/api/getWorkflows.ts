@@ -1,4 +1,4 @@
-import { Database } from '@chatbutler/shared';
+import { Database } from '@chatbutler/shared/src/index';
 import { createClient } from '@supabase/supabase-js';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 

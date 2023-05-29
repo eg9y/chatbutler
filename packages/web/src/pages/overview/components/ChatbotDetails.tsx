@@ -1,4 +1,4 @@
-import { SimpleWorkflow } from '@chatbutler/shared';
+import { SimpleWorkflow } from '@chatbutler/shared/src/index';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Session } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';

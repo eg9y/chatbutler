@@ -1,4 +1,4 @@
-import { SimpleWorkflow } from '@chatbutler/shared';
+import { SimpleWorkflow } from '@chatbutler/shared/src/index';
 
 export default function Breadcrumbs({
 	chatbot,

@@ -1,4 +1,4 @@
-import { ClassifyNodeCategoriesDataType, NodeTypesEnum } from '@chatbutler/shared';
+import { ClassifyNodeCategoriesDataType, NodeTypesEnum } from '@chatbutler/shared/src/index';
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/20/solid';
 import { Fragment, memo, FC, useState, useEffect } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';

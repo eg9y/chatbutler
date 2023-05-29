@@ -1,4 +1,4 @@
-import { CustomNode, NodeTypesEnum, LoopDataType } from '@chatbutler/shared';
+import { CustomNode, NodeTypesEnum, LoopDataType } from '@chatbutler/shared/src/index';
 import { ChevronDoubleRightIcon } from '@heroicons/react/20/solid';
 import { shallow } from 'zustand/shallow';
 

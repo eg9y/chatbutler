@@ -1,5 +1,5 @@
 // src/supabaseClient.js
-import { Database } from '@chatbutler/shared';
+import { Database } from '@chatbutler/shared/src/index';
 import { createClient } from '@supabase/supabase-js';
 import { useMemo } from 'react';
 

@@ -1,4 +1,4 @@
-import { DocSource, SimpleWorkflow } from '@chatbutler/shared';
+import { DocSource, SimpleWorkflow } from '@chatbutler/shared/src/index';
 import { useState } from 'react';
 import { shallow } from 'zustand/shallow';
 

@@ -1,4 +1,4 @@
-import { ClassifyNodeDataType, NodeTypesEnum } from '@chatbutler/shared';
+import { ClassifyNodeDataType, NodeTypesEnum } from '@chatbutler/shared/src/index';
 import { memo, FC, useState } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
 import useUndo from 'use-undo';

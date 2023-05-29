@@ -1,4 +1,4 @@
-import { SimpleWorkflow } from '@chatbutler/shared';
+import { SimpleWorkflow } from '@chatbutler/shared/src/index';
 import { Session } from '@supabase/supabase-js';
 import { nanoid } from 'nanoid';
 import { useEffect, useState } from 'react';

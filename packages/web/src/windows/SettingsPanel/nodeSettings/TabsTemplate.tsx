@@ -1,4 +1,4 @@
-import { AllDataTypes } from '@chatbutler/shared';
+import { AllDataTypes } from '@chatbutler/shared/src/index';
 import { PencilIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
 import { Node } from 'reactflow';

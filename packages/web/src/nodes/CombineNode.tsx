@@ -1,4 +1,4 @@
-import { CombineDataType } from '@chatbutler/shared';
+import { CombineDataType } from '@chatbutler/shared/src/index';
 import { Disclosure } from '@headlessui/react';
 import { SignalIcon, ClipboardIcon } from '@heroicons/react/20/solid';
 import { memo, FC, useState } from 'react';

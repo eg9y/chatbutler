@@ -18,7 +18,10 @@ import UsernamePrompt from '../app/UsernamePrompt';
 export default function Overview() {
 	const { workflows, setNotificationMessage, setUsername, setWorkflows, setCurrentWorkflow } =
 		useStore(selector, shallow);
-	const { session, setSession, setOpenAiKey } = useStoreSecret(selectorSecret, shallow);
+	const { session, setSession, setOpenAiKey, setUserCredits } = useStoreSecret(
+		selectorSecret,
+		shallow,
+	);
 
 	const supabase = useSupabase();
 
@@ -50,6 +53,10 @@ export default function Overview() {
 				} else {
 					setUsername(profile.first_name);
 				}
+				setUserCredits({
+					plan: (profile.plan as 'free' | 'essential' | 'premium') || 'free',
+					credits: profile.remaining_message_credits || 0,
+				});
 			}
 		};
 

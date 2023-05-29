@@ -126,18 +126,18 @@ export async function runFlow(
 				const remainingCredits =
 					userCredits.credits - creditsUsed > 0 ? userCredits.credits - creditsUsed : 0;
 
-				const { data: updatedUser, error } = await supabase
+				const { error } = await supabase
 					.from('profiles')
-					.update({ remaining_message_credits: remainingCredits });
+					.update({ remaining_message_credits: remainingCredits })
+					.eq('id', session.user.id);
 
 				if (error) {
 					console.log(error);
-				} else if (updatedUser) {
-					setUserCredits({
-						...userCredits,
-						credits: remainingCredits,
-					});
 				}
+				setUserCredits({
+					...userCredits,
+					credits: remainingCredits,
+				});
 			}
 
 			node.data.isLoading = false;

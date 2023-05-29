@@ -1,10 +1,5 @@
 import { Dialog } from '@headlessui/react';
-import {
-	ArrowTopRightOnSquareIcon,
-	Bars3Icon,
-	DocumentTextIcon,
-	XMarkIcon,
-} from '@heroicons/react/20/solid';
+import { Bars3Icon, DocumentTextIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
 import { useLocation } from 'wouter';
 import { shallow } from 'zustand/shallow';
@@ -41,7 +36,7 @@ const NavBar = () => {
 		setNotificationMessage,
 		setUsername,
 	} = useStore(selector, shallow);
-	const { session, setSession } = useStoreSecret(selectorSecret, shallow);
+	const { session, setSession, userCredits } = useStoreSecret(selectorSecret, shallow);
 
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -139,6 +134,14 @@ const NavBar = () => {
 				</div>
 
 				<div className="flex flex-1 items-center justify-end gap-4">
+					{session && userCredits.credits > 0 && (
+						<a
+							className="flex cursor-pointer items-center gap-1 hover:font-semibold"
+							rel="noreferrer"
+						>
+							credits: {userCredits.credits}
+						</a>
+					)}
 					<a
 						className="flex cursor-pointer items-center gap-1 hover:font-semibold"
 						onClick={() => {

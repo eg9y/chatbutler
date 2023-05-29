@@ -65,23 +65,29 @@ export interface Database {
       }
       profiles: {
         Row: {
+          date_subscribed: string
           first_name: string | null
           id: string
           last_name: string | null
+          open_ai_key: string | null
           plan: string
           remaining_message_credits: number
         }
         Insert: {
+          date_subscribed?: string
           first_name?: string | null
           id: string
           last_name?: string | null
+          open_ai_key?: string | null
           plan?: string
           remaining_message_credits?: number
         }
         Update: {
+          date_subscribed?: string
           first_name?: string | null
           id?: string
           last_name?: string | null
+          open_ai_key?: string | null
           plan?: string
           remaining_message_credits?: number
         }
@@ -149,6 +155,38 @@ export interface Database {
       }
     }
     Views: {
+      decrypted_profiles: {
+        Row: {
+          date_subscribed: string | null
+          decrypted_open_ai_key: string | null
+          first_name: string | null
+          id: string | null
+          last_name: string | null
+          open_ai_key: string | null
+          plan: string | null
+          remaining_message_credits: number | null
+        }
+        Insert: {
+          date_subscribed?: string | null
+          decrypted_open_ai_key?: never
+          first_name?: string | null
+          id?: string | null
+          last_name?: string | null
+          open_ai_key?: string | null
+          plan?: string | null
+          remaining_message_credits?: number | null
+        }
+        Update: {
+          date_subscribed?: string | null
+          decrypted_open_ai_key?: never
+          first_name?: string | null
+          id?: string | null
+          last_name?: string | null
+          open_ai_key?: string | null
+          plan?: string | null
+          remaining_message_credits?: number | null
+        }
+      }
       user_documents: {
         Row: {
           chatbot_id: string | null
@@ -200,6 +238,10 @@ export interface Database {
           metadata: Json
           similarity: number
         }[]
+      }
+      update_remaining_message_credits: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
       }
     }
     Enums: {

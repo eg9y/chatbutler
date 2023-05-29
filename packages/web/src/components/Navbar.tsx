@@ -52,7 +52,7 @@ const NavBar = () => {
 			style={{
 				height: '5vh',
 			}}
-			className="z-20 border-b-1 border-slate-400/50 bg-slate-200/50"
+			className="z-20 border-b-1 border-slate-400/20 bg-slate-200/40"
 		>
 			<nav
 				className="mx-auto flex h-full items-center justify-between p-1 lg:px-2"
@@ -141,11 +141,17 @@ const NavBar = () => {
 				<div className="flex flex-1 items-center justify-end gap-4">
 					<a
 						className="flex cursor-pointer items-center gap-1 hover:font-semibold"
-						href="https://github.com/eg9y/promptsandbox.io"
-						target="_blank"
+						onClick={() => {
+							// if authenticated, go to /settings/. else, go to /auth/
+							if (session) {
+								window.open('/settings/', '_self');
+							} else {
+								window.open('/auth/', '_self');
+							}
+						}}
 						rel="noreferrer"
 					>
-						Profile
+						Settings
 					</a>
 					<a
 						href="#"

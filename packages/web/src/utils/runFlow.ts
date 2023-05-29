@@ -118,7 +118,10 @@ export async function runFlow(
 				state.chatHistory = [...get().chatApp];
 			}
 
-			if (session?.user.user_metadata.edit_with_api_key && isNodeDoOpenAICall(node)) {
+			if (
+				session?.user.user_metadata.edit_with_api_key === false &&
+				isNodeDoOpenAICall(node)
+			) {
 				const creditsUsed = calculateCreditsRequired(
 					node.data,
 					node.data.text + node.data.response,

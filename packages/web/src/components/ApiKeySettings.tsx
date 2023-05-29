@@ -122,7 +122,7 @@ export default function ApiKeySettings({
 										`}
 									</p>
 									<div className="mt-4">
-										<Switch.Group as="div" className="flex items-center">
+										<Switch.Group as="div" className="flex items-center gap-2">
 											<Switch
 												checked={isEditWithMyKey === true}
 												onChange={async () => {

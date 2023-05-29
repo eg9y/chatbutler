@@ -35,7 +35,7 @@ export default function RunFromStart({
 	}
 
 	async function runFromStart() {
-		if (getSecret().openAiKey.trim() === '') {
+		if (!getSecret().session && getSecret().openAiKey.trim() === '') {
 			setNotificationMessage('Please enter an OpenAI API key in the left panel.');
 			return;
 		}

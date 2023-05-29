@@ -9,7 +9,7 @@ import {
 	SingleChatPromptDataType,
 } from '@chatbutler/shared/src/index';
 import { Switch } from '@headlessui/react';
-import { Cog6ToothIcon, BeakerIcon, AcademicCapIcon, TrashIcon } from '@heroicons/react/20/solid';
+import { Cog6ToothIcon, AcademicCapIcon, TrashIcon } from '@heroicons/react/20/solid';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { useState } from 'react';
 import { ReactFlowInstance, Node } from 'reactflow';
@@ -25,6 +25,7 @@ import TabsTemplate from './nodeSettings/TabsTemplate';
 import TextTabs from './nodeSettings/textNode/tabs';
 import NodesList from './NodesList';
 import SandboxSettings from './SandboxSettings';
+import ApiKeySettings from '../../components/ApiKeySettings';
 import { useStore, useStoreSecret, selector, selectorSecret } from '../../store';
 import { conditionalClassNames } from '../../utils/classNames';
 import Tutorial from '../Tutorial';
@@ -53,6 +54,7 @@ export default function LeftSidePanel({
 
 	const [openWorkflows, setOpenWorkflows] = useState(!currentWorkflow);
 	const [openTutorials, setOpenTutorials] = useState(false);
+	const [openApiKeySettings, setOpenApiKeySettings] = useState(false);
 
 	const [currentPage, setCurrentPage] = useState('Blocks');
 
@@ -92,7 +94,11 @@ export default function LeftSidePanel({
 				/>
 			)} */}
 			<Tutorial open={openTutorials} setOpen={setOpenTutorials} />
-
+			<ApiKeySettings
+				supabase={supabase}
+				open={openApiKeySettings}
+				setOpen={setOpenApiKeySettings}
+			/>
 			<div className="flex h-full flex-col justify-start border-1 ">
 				<div className="flex flex-col bg-slate-50">
 					{/* <div className="">
@@ -138,28 +144,7 @@ export default function LeftSidePanel({
 							className="bg group flex cursor-pointer items-center justify-start px-2 py-1 text-sm 
 							font-medium text-slate-700 hover:bg-slate-100 hover:font-bold hover:text-slate-900"
 							onClick={async () => {
-								const currentKey = openAiKey || '';
-								const newOpenAIKey = window.prompt(
-									'Enter your OpenAI Key here',
-									currentKey,
-								);
-
-								if (newOpenAIKey === null) {
-									return;
-								}
-
-								if (newOpenAIKey === '') {
-									console.log('No key entered');
-								} else {
-									if (session) {
-										await supabase.functions.invoke('insert-api-key', {
-											body: {
-												api_key: newOpenAIKey,
-											},
-										});
-									}
-									setOpenAiKey(newOpenAIKey);
-								}
+								setOpenApiKeySettings(true);
 							}}
 						>
 							<Cog6ToothIcon
@@ -168,7 +153,7 @@ export default function LeftSidePanel({
 								}
 								aria-hidden="true"
 							/>
-							<span className="truncate">OpenAI Key</span>
+							<span className="truncate"> Use my own OpenAI Key</span>
 						</a>
 					</div>
 					<div className="flex items-center justify-evenly gap-2 py-2">

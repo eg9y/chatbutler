@@ -9,11 +9,17 @@ export type UseSecretStoreSetType = (
 	replace?: boolean | undefined,
 ) => void;
 
+export type UserCreditsType = {
+	credits: number;
+	plan: 'free' | 'essential' | 'premium';
+};
 export interface RFStateSecret {
 	session: Session | null;
 	setSession: (session: Session | null) => void;
 	openAiKey: string;
 	setOpenAiKey: (key: string) => Promise<void>;
+	userCredits: UserCreditsType;
+	setUserCredits: (userCredits: UserCreditsType) => void;
 }
 
 const useStoreSecret = create<RFStateSecret>()((set, get) => ({
@@ -33,6 +39,15 @@ const useStoreSecret = create<RFStateSecret>()((set, get) => ({
 		}
 		set({
 			openAiKey: key,
+		});
+	},
+	userCredits: {
+		credits: 0,
+		plan: 'free',
+	},
+	setUserCredits: (credits: UserCreditsType) => {
+		set({
+			userCredits: credits,
 		});
 	},
 }));

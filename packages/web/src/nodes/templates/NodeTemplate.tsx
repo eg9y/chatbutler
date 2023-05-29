@@ -14,6 +14,7 @@ import { ReactComponent as Loading } from '../../assets/loading.svg';
 import FullScreenEditor from '../../components/FullScreenEditor';
 import useStore, { selector } from '../../store/useStore';
 import { conditionalClassNames } from '../../utils/classNames';
+import { calculateCreditsRequired } from '../../utils/userCredits';
 
 interface NodeTemplateInterface {
 	title: string;
@@ -124,15 +125,11 @@ const NodeTemplate: FC<
 					].includes(type as NodeTypesEnum)
 				}
 			>
-				{(data as DefaultNodeDataType & OpenAIAPIRequest).model && (
+				{(data as DefaultNodeDataType & OpenAIAPIRequest).model && data.text.length > 0 && (
 					<div className="flex gap-2">
 						<p className="text-slate-600">
-							{(data as DefaultNodeDataType & OpenAIAPIRequest).model.startsWith(
-								'gpt-4',
-							)
-								? '10'
-								: '1'}{' '}
-							credit
+							{'>'}
+							{calculateCreditsRequired(data, data.text)} credit
 						</p>
 					</div>
 				)}

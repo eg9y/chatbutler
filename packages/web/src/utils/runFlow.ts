@@ -6,10 +6,16 @@ import {
 	initializeFlowState,
 	getNodes,
 	SearchDataType,
+	DefaultNodeDataType,
+	OpenAIAPIRequest,
+	Database,
 } from '@chatbutler/shared/src/index';
 import { CustomNode, NodeTypesEnum } from '@chatbutler/shared/src/index';
+import { SupabaseClient } from '@supabase/supabase-js';
 import { Edge } from 'reactflow';
+import { RFStateSecret } from 'src/store/useStoreSecret';
 
+import { calculateCreditsRequired, isNodeDoOpenAICall, isUserCreditsEnough } from './userCredits';
 import { RFState } from '../store/useStore';
 
 function inputTextPauser(node: CustomNode, get: () => RFState): Promise<string> {
@@ -44,11 +50,18 @@ function docsLoaderPauser(node: CustomNode, get: () => RFState): Promise<string>
 
 export async function runFlow(
 	get: () => RFState,
+	getSecret: () => RFStateSecret,
 	nodes: CustomNode[],
 	edges: Edge[],
-	openAiKey: string,
+	supabase: SupabaseClient<Database>,
 ) {
 	const state = initializeFlowState(nodes, edges);
+
+	const userCredits = getSecret().userCredits;
+	const setUserCredits = getSecret().setUserCredits;
+	const openAiKey = getSecret().openAiKey;
+	const session = getSecret().session;
+
 	while (state.stack.length > 0) {
 		const nodeId = getNextNode(state, nodes); // nodeId is now redefined in each iteration
 		if (nodeId !== null) {
@@ -77,11 +90,22 @@ export async function runFlow(
 				get().setNotificationMessage('Search block can only be used in existing chatbots');
 				return;
 			}
+
+			// TODO: check user's message credit
+			const enoughCredit = isUserCreditsEnough(node, node.data.text, userCredits);
+			if (session?.user.user_metadata.edit_with_api_key && !enoughCredit) {
+				get().setNotificationMessage(
+					'You have reached your free plan limit. Please upgrade your plan to continue using Chatbot Butler.',
+				);
+				return;
+			}
+
 			await runNode(state, get().currentWorkflow?.id, nodes, nodeId, openAiKey, {
 				url: import.meta.env.VITE_SUPABASE_URL,
 				key: import.meta.env.VITE_SUPABASE_PUBLIC_API,
 				functionUrl: import.meta.env.VITE_SUPABASE_FUNCTION_URL,
 			});
+
 			get().setChatApp([...state.chatHistory]);
 			if (node.type === NodeTypesEnum.inputText) {
 				await inputTextPauser(node, get);
@@ -92,6 +116,28 @@ export async function runFlow(
 			) {
 				await docsLoaderPauser(node, get);
 				state.chatHistory = [...get().chatApp];
+			}
+
+			if (session?.user.user_metadata.edit_with_api_key && isNodeDoOpenAICall(node)) {
+				const creditsUsed = calculateCreditsRequired(
+					node.data,
+					node.data.text + node.data.response,
+				);
+				const remainingCredits =
+					userCredits.credits - creditsUsed > 0 ? userCredits.credits - creditsUsed : 0;
+
+				const { data: updatedUser, error } = await supabase
+					.from('profiles')
+					.update({ remaining_message_credits: remainingCredits });
+
+				if (error) {
+					console.log(error);
+				} else if (updatedUser) {
+					setUserCredits({
+						...userCredits,
+						credits: remainingCredits,
+					});
+				}
 			}
 
 			node.data.isLoading = false;

@@ -1,6 +1,7 @@
 import {
 	ChatSessionType,
 	CustomNode,
+	Database,
 	DocumentDbSchema,
 	InputNode,
 	LLMPromptNodeDataType,
@@ -9,6 +10,7 @@ import {
 	SimpleWorkflow,
 	TextNodeDataType,
 } from '@chatbutler/shared/src/index';
+import { SupabaseClient } from '@supabase/supabase-js';
 import {
 	Connection,
 	Edge,
@@ -34,6 +36,7 @@ import onNodesChange from './onNodesChange';
 import onPlaceholderAdd from './onPlaceholderAdd';
 import storage from './storage';
 import updateNode from './updateNode';
+import { RFStateSecret } from './useStoreSecret';
 import { runFlow } from '../utils/runFlow';
 import { Message } from '../windows/ChatPanel/Chat/types';
 
@@ -101,9 +104,10 @@ export interface RFState {
 	updateNode: any;
 	updateInputExample: any;
 	runFlow: (
+		getSecret: () => RFStateSecret,
 		nodes: CustomNode[],
 		edges: Edge[],
-		openAiKey: string,
+		supabase: SupabaseClient<Database>,
 		signal: AbortSignal,
 	) => Promise<void>;
 	clearAllNodeResponses: () => void;
@@ -128,7 +132,6 @@ const useStore = create<RFState>()(
 					};
 					return node;
 				});
-
 				set({
 					nodes: newNodes,
 				});
@@ -311,12 +314,13 @@ const useStore = create<RFState>()(
 				});
 			},
 			runFlow: async (
+				getSecret: () => RFStateSecret,
 				nodes: CustomNode[],
 				edges: Edge[],
-				openAiKey: string,
+				supabase: SupabaseClient<Database>,
 				signal: AbortSignal,
 			): Promise<void> => {
-				await runFlow(get, nodes, edges, openAiKey);
+				await runFlow(get, getSecret, nodes, edges, supabase);
 			},
 			clearAllNodeResponses: () => {
 				const nodes = get().nodes;

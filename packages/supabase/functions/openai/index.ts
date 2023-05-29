@@ -41,7 +41,12 @@ serve(async (req) => {
 
 	let openAiApiKey = '';
 	try {
-		openAiApiKey = await getOpenAiKey(supabase, user);
+		if (user.user_metadata.edit_with_api_key) {
+			openAiApiKey = await getOpenAiKey(supabase, user);
+		} else {
+			// user can opt out of storing their api key for their editor and use the app's api key instead
+			openAiApiKey = Deno.env.get('OPEN_AI_KEY') ?? '';
+		}
 	} catch (err) {
 		return new Response(JSON.stringify(err), {
 			status: 500,

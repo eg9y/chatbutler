@@ -86,7 +86,10 @@ export default function App() {
 		setWorkflows,
 		setChatApp,
 	} = useStore(selector, shallow);
-	const { session, setSession, setOpenAiKey } = useStoreSecret(selectorSecret, shallow);
+	const { session, setSession, setOpenAiKey, setUserCredits } = useStoreSecret(
+		selectorSecret,
+		shallow,
+	);
 
 	const [settingsView, setSettingsView] = useState(true);
 
@@ -137,6 +140,21 @@ export default function App() {
 					supabase,
 				);
 			}
+			const { data: credits, error: creditsError } = await supabase
+				.from('profiles')
+				.select('plan, remaining_message_credits')
+				.eq('id', session?.user?.id)
+				.single();
+
+			if (creditsError) {
+				setNotificationMessage(creditsError.message);
+				throw creditsError;
+			}
+
+			setUserCredits({
+				plan: (credits?.plan as 'free' | 'essential' | 'premium') || 'free',
+				credits: credits?.remaining_message_credits || 0,
+			});
 			setIsLoading(false);
 		}
 		if (params) {
@@ -226,7 +244,6 @@ export default function App() {
 			<div className="absolute flex w-full justify-center p-4">
 				<SandboxExecutionPanel nodes={nodes} setNodes={setNodes} setChatApp={setChatApp} />
 			</div>
-
 			<div
 				className="grid grid-cols-2"
 				style={{

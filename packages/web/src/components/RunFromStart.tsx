@@ -3,6 +3,7 @@ import { ChevronDoubleRightIcon } from '@heroicons/react/20/solid';
 import { shallow } from 'zustand/shallow';
 
 import { ReactComponent as Loading } from '../assets/loading.svg';
+import useSupabase from '../auth/supabaseClient';
 import { useStore, useStoreSecret, selector, selectorSecret } from '../store';
 import { conditionalClassNames } from '../utils/classNames';
 
@@ -26,10 +27,15 @@ export default function RunFromStart({
 		runFlow,
 		edges,
 	} = useStore(selector, shallow);
-	const { openAiKey } = useStoreSecret(selectorSecret, shallow);
+	const secret = useStoreSecret(selectorSecret, shallow);
+	const supabase = useSupabase();
+
+	function getSecret() {
+		return secret;
+	}
 
 	async function runFromStart() {
-		if (openAiKey.trim() === '') {
+		if (getSecret().openAiKey.trim() === '') {
 			setNotificationMessage('Please enter an OpenAI API key in the left panel.');
 			return;
 		}
@@ -43,7 +49,7 @@ export default function RunFromStart({
 			abortControllerRef.current = new AbortController();
 			const signal = abortControllerRef.current.signal;
 			setUnlockGraph(false);
-			await runFlow(nodes, edges, openAiKey, signal);
+			await runFlow(getSecret, nodes, edges, supabase, signal);
 			setUnlockGraph(true);
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} catch (error: any) {

@@ -66,6 +66,7 @@ export interface Database {
       profiles: {
         Row: {
           date_subscribed: string
+          edit_with_own_key: boolean
           first_name: string | null
           id: string
           last_name: string | null
@@ -75,6 +76,7 @@ export interface Database {
         }
         Insert: {
           date_subscribed?: string
+          edit_with_own_key?: boolean
           first_name?: string | null
           id: string
           last_name?: string | null
@@ -84,6 +86,7 @@ export interface Database {
         }
         Update: {
           date_subscribed?: string
+          edit_with_own_key?: boolean
           first_name?: string | null
           id?: string
           last_name?: string | null
@@ -156,6 +159,7 @@ export interface Database {
         Row: {
           date_subscribed: string | null
           decrypted_open_ai_key: string | null
+          edit_with_own_key: boolean | null
           first_name: string | null
           id: string | null
           last_name: string | null
@@ -166,6 +170,7 @@ export interface Database {
         Insert: {
           date_subscribed?: string | null
           decrypted_open_ai_key?: never
+          edit_with_own_key?: boolean | null
           first_name?: string | null
           id?: string | null
           last_name?: string | null
@@ -176,6 +181,7 @@ export interface Database {
         Update: {
           date_subscribed?: string | null
           decrypted_open_ai_key?: never
+          edit_with_own_key?: boolean | null
           first_name?: string | null
           id?: string | null
           last_name?: string | null

@@ -21,6 +21,8 @@ export default function Settings() {
 	const supabase = useSupabase();
 	const { session } = useStoreSecret(selectorSecret, shallow);
 	const [username, setUsername] = useState('');
+	const [userPlan, setUserPlan] = useState('');
+	const [userRemainingCredits, setUserRemainingCredits] = useState(0);
 
 	const [currentTab, setCurrentTab] = useState('General');
 
@@ -39,6 +41,8 @@ export default function Settings() {
 				}
 				if (userProfile && userProfile.first_name) {
 					setUsername(userProfile.first_name);
+					setUserPlan(userProfile.plan);
+					setUserRemainingCredits(userProfile.remaining_message_credits);
 				}
 			}
 		};
@@ -57,7 +61,15 @@ export default function Settings() {
 							setUsername={setUsername}
 						/>
 					)}
-					{currentTab === 'Plan' && <PlanSettings username={username} />}
+					{currentTab === 'Plan' && (
+						<PlanSettings
+							supabase={supabase}
+							userPlan={userPlan}
+							setUserPlan={setUserPlan}
+							userRemainingCredits={userRemainingCredits}
+							setUserRemainingCredits={setUserRemainingCredits}
+						/>
+					)}
 				</main>
 			</div>
 		</>

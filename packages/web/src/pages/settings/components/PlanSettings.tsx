@@ -1,4 +1,6 @@
+import { Database } from '@chatbutler/shared';
 import { CheckCircleIcon } from '@heroicons/react/20/solid';
+import { SupabaseClient } from '@supabase/supabase-js';
 
 const tiers = [
 	{
@@ -53,7 +55,19 @@ const tiers = [
 	},
 ];
 
-export const PlanSettings = ({ username }: { username: string }) => {
+export const PlanSettings = ({
+	supabase,
+	userPlan,
+	setUserPlan,
+	userRemainingCredits,
+	setUserRemainingCredits,
+}: {
+	supabase: SupabaseClient<Database>;
+	userPlan: string;
+	setUserPlan: (plan: string) => void;
+	userRemainingCredits: number;
+	setUserRemainingCredits: (credits: number) => void;
+}) => {
 	return (
 		<div className="mx-auto max-w-2xl space-y-16 sm:space-y-20 lg:mx-0 lg:max-w-none">
 			<div>
@@ -66,7 +80,15 @@ export const PlanSettings = ({ username }: { username: string }) => {
 							Current Plan
 						</dt>
 						<dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-							<div className="text-gray-900">{username}</div>
+							<div className="text-gray-900">{userPlan}</div>
+						</dd>
+					</div>
+					<div className="pt-2 sm:flex">
+						<dt className="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
+							Remaining Message Credits
+						</dt>
+						<dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
+							<div className="text-gray-900">{userRemainingCredits}</div>
 						</dd>
 					</div>
 				</dl>
